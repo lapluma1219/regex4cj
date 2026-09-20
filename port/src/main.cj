@@ -22,10 +22,33 @@ public func escape(text: String): String {
 }
 
 main(args: Array<String>): Int64 {
-    if (args.size != 2 || args[0] != "escape") {
-        eprintln("usage: cjregex escape TEXT")
+    try {
+        if (args.size == 2 && args[0] == "escape") {
+            println(escape(args[1]))
+            return 0
+        }
+        if (args.size == 3 && args[0] == "find") {
+            let regex = Regex(args[1])
+            for (m in regex.findAll(args[2])) {
+                println("${m.start}\t${m.end}\t${m.text}")
+            }
+            return 0
+        }
+        if (args.size == 3 && args[0] == "first") {
+            match (Regex(args[1]).find(args[2])) {
+                case Some(m) => println("${m.start}\t${m.end}\t${m.text}")
+                case None => ()
+            }
+            return 0
+        }
+        if (args.size == 3 && args[0] == "is-match") {
+            println(Regex(args[1]).isMatch(args[2]))
+            return 0
+        }
+        eprintln("usage: cjregex escape TEXT | find PATTERN TEXT | first PATTERN TEXT | is-match PATTERN TEXT")
+        return 2
+    } catch (e: Exception) {
+        eprintln(e.toString())
         return 2
     }
-    println(escape(args[1]))
-    return 0
 }

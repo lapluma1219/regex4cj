@@ -43,7 +43,6 @@ for pattern, text, expected in fixtures:
     assert run(RUST, 'find', pattern, text) == expected.encode(), (pattern, text)
 report = {'escape_differential_passed': len(cases), 'literal_roundtrip_passed': 4,
           'rust_only_matching_fixtures_passed': len(fixtures),
-          'cangjie_matching_engine_implemented': False,
           'limitations': ['CLI cannot transport NUL; arbitrary bytes API is not implemented',
                          'Passing escape tests does not establish matching-engine compatibility']}
 (Path(os.environ['REGEX4CJ_LOCAL']) / 'work/verification.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')

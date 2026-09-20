@@ -6,13 +6,14 @@
 
 ## 当前实现
 
-- 仓颉原生 `escape` 和辅助函数 `isMetaCharacter`，不调用 Rust 或 `std.regex`。
-- Rust 参照程序：转义、查找、订单字段捕获及替换演示。
-- 336 条转义差分用例、4 条字面值匹配验证。
-- 6 条匹配行为参照用例目前只在 Rust 上执行，不能算作仓颉引擎通过。
-- 尚未实现正则解析、NFA/PikeVM、捕获、替换、bytes 和 RegexSet。
+- 仓颉原生 `escape` 和辅助函数 `isMetaCharacter`。
+- 基础正则解析 → Thompson NFA → 有序匹配链路，不调用 Rust 或 `std.regex`。
+- `Regex.find`、`Regex.isMatch`、`Regex.findAll`；查找结果使用 UTF-8 字节区间。
+- 支持字面量、连接、分支、普通／非捕获分组、贪婪／非贪婪 `* + ?`、点号及整段文本锚点。
+- Unicode 字面量与点号以标量值匹配；尚未支持 Unicode 属性表、字符类、计数重复、捕获结果、替换、bytes、RegexSet 和 DFA 优化。
+- 原有转义验证及新增匹配差分测试均由 `scripts/verify.sh` 执行，详细范围见 [第一个引擎里程碑](docs/milestone-1.md)。未支持语法明确报错。
 
-例如，两个程序都将 `a+b.txt` 转换成 `a\+b\.txt`，使其能作为正则中的字面值。
+本阶段是上游核心算法的受限语义移植，解析器及数据结构有简化，不是完整 AST/HIR/PikeVM API 的逐行翻译。括号可用于匹配，但尚不能提取分组内容。
 
 ## 环境与运行
 
@@ -40,8 +41,8 @@ bash scripts/demo.sh
 
 ```sh
 source scripts/env.sh
-"$CARGO_TARGET_DIR/debug/regex-oracle" find '[A-Z]{2}-[0-9]{3}' 'order=AB-123; order=CD-456'
-"$CARGO_TARGET_DIR/debug/regex-oracle" find '中' 'a中b'
+port/target/release/bin/main find '(AB|CD)-.+?;' 'order=AB-123; order=CD-456;'
+port/target/release/bin/main find '中' 'a中b'
 "$CARGO_TARGET_DIR/debug/regex-oracle" escape 'a+b.txt'
 port/target/release/bin/main escape 'a+b.txt'
 ```
@@ -64,7 +65,7 @@ port/target/release/bin/main escape 'a+b.txt'
 
 ## 下一步
 
-打通 AST/HIR → Thompson NFA → 搜索，先支持字面量、连接、分支与简单重复，再将匹配用例接入仓颉实现。未支持语法应明确报错。
+下一阶段加入字符类与计数重复，再推进捕获和完整 Unicode 语义。匹配引擎目前只覆盖明确记录的语法子集。
 
 ## 来源与许可
 
