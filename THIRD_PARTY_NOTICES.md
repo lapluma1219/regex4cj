@@ -1,6 +1,6 @@
 # Third-party notices
 
-The functions `escape` and `isMetaCharacter` in `port/src/main.cj` are adapted
+The functions `escape` and `isMetaCharacter` in `port/src/escape.cj` are adapted
 from `regex-syntax/src/lib.rs` in https://github.com/rust-lang/regex,
 commit `72d650cb0a880a01ab6dc2137c0888e8f89740f7`.
 
@@ -19,7 +19,7 @@ Replacement expansion in `captures.cj` adapts
 `regex-automata/src/util/interpolate.rs`. Replacement and splitting in `nfa.cj`
 follow `src/regex/string.rs` and `regex-automata/src/meta/regex.rs` from the same
 commit, with eager string results and Cangjie callback functions.
-See `docs/milestone-1.md` through `docs/milestone-4.md` for symbol-level provenance.
+See `docs/milestone-1.md` through `docs/milestone-5.md` for symbol-level provenance.
 
 Copyright (c) 2014 The Rust Project Developers.
 

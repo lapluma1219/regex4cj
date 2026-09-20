@@ -4,8 +4,9 @@
 
 | 范围 | 当前状态 | 主要剩余工作 |
 |---|---|---|
-| escape | 已实现 | 补充非 CLI 输入测试 |
-| find / is_match / find_iter 的基本行为 | 已有 find/isMatch/findAll | 惰性迭代器、更多输入与配置接口，拆出可依赖库包 |
+| escape | 已实现，含原生 NUL 验证 | 更多非 CLI 生成测试 |
+| find / is_match / find_iter 的基本行为 | 已有 find/isMatch/findAll | 惰性迭代器、更多输入与配置接口 |
+| 库交付 | 第五步提供 cjregex 静态库、独立 CLI 和外部消费包测试 | 包发布、跨平台验证、完整 API 清单 |
 | 基础语法、分支、分组 | 已实现子集 | 完整语法、AST/HIR 公开结构、精确错误类型与位置 |
 | 字符类与集合运算 | 第二步完成基本标量区间与代数 | POSIX、Unicode 属性、字符类转义全集 |
 | 重复 | 支持 * + ? 与 {m,n} 等及非贪婪 | 计数空白、堆叠量词、与上游一致的配置限制 |
@@ -18,4 +19,4 @@
 | 性能与资源管理 | 基础有序 NFA 与原型限制 | 工作区复用、字节 NFA、DFA、lazy DFA、预过滤等 |
 | 其他仓库包 | 未移植 | regex-lite、C API、开发 CLI 及底层全量公开接口按最终范围推进 |
 
-来源与实现差异详见 milestone-1.md（历史阶段）和 milestone-2.md（历史阶段）、milestone-3.md（历史阶段）及 milestone-4.md（当前阶段）。固定上游版本见 baseline.json。
+来源与实现差异详见 milestone-1.md（历史阶段）和 milestone-2.md（历史阶段）、milestone-3.md（历史阶段）、milestone-4.md（历史阶段）及 milestone-5.md（当前阶段）。固定上游版本见 baseline.json。

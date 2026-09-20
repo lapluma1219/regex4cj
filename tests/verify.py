@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RUST = Path(os.environ['CARGO_TARGET_DIR']) / 'debug/regex-oracle'
-CJ = ROOT / 'port/target/release/bin/main'
+CJ = ROOT / 'cli/target/release/bin/main'
 
 def run(binary, *args):
     env = os.environ.copy()

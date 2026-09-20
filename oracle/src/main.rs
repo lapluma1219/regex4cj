@@ -104,3 +104,30 @@ fn main() {
         _ => { eprintln!("usage: regex-oracle escape TEXT | find PATTERN TEXT | first PATTERN TEXT | is-match PATTERN TEXT | captures PATTERN TEXT | capture-first PATTERN TEXT | capture-name PATTERN TEXT NAME | split PATTERN TEXT | split-n PATTERN TEXT LIMIT | replace/replace-all/expand PATTERN TEXT TEMPLATE | replace-n/replace-literal PATTERN TEXT TEMPLATE LIMIT | replace-with PATTERN TEXT LIMIT | demo"); std::process::exit(2); }
     }
 }
+
+#[cfg(test)]
+mod native_tests {
+    use regex::Regex;
+
+    #[test]
+    fn nul_matching_and_escape() {
+        let text = "中\0🙂";
+        let m = Regex::new(&regex::escape("\0")).unwrap().find(text).unwrap();
+        assert_eq!((m.start(), m.end(), m.as_str()), (3, 4, "\0"));
+        assert_eq!(regex::escape("\0"), "\0");
+        assert_eq!(Regex::new(".").unwrap().find_iter(text).count(), 3);
+    }
+
+    #[test]
+    fn nul_replacement_split_and_expand() {
+        let re = Regex::new("\0").unwrap();
+        assert_eq!(re.replace_all("a\0b", "!"), "a!b");
+        assert_eq!(Regex::new("a").unwrap().replace_all("a", regex::NoExpand("\0")), "\0");
+        assert_eq!(re.split("\0a\0").collect::<Vec<_>>(), vec!["", "a", ""]);
+        let capture_re = Regex::new("(\0)").unwrap();
+        let caps = capture_re.captures("\0").unwrap();
+        let mut out = String::new();
+        caps.expand("$1", &mut out);
+        assert_eq!(out, "\0");
+    }
+}

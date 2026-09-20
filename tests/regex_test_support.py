@@ -6,7 +6,7 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 RUST = Path(os.environ['CARGO_TARGET_DIR']) / 'debug/regex-oracle'
-CJ = ROOT / 'port/target/release/bin/main'
+CJ = ROOT / 'cli/target/release/bin/main'
 ENV = os.environ.copy()
 if ENV.get('REGEX4CJ_DYLD_LIBRARY_PATH'):
     ENV['DYLD_LIBRARY_PATH'] = ENV['REGEX4CJ_DYLD_LIBRARY_PATH']

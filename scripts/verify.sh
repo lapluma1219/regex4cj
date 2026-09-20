@@ -3,7 +3,10 @@ set -euo pipefail
 source "$(dirname "$0")/env.sh"
 cd "$PROJECT_ROOT"
 cargo build --locked --manifest-path oracle/Cargo.toml
+cargo test --locked --manifest-path oracle/Cargo.toml
 (cd port && cjpm build)
+(cd cli && cjpm build)
+(cd examples/consumer && cjpm build && cjpm test && cjpm run)
 "${PYTHON:-python3}" tests/verify.py
 "${PYTHON:-python3}" tests/verify_matching.py
 "${PYTHON:-python3}" tests/verify_classes.py
