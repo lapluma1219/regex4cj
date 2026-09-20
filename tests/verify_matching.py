@@ -53,7 +53,7 @@ for p, text, expected in golden:
 
 # Unsupported valid Rust patterns must be rejected, never silently reinterpreted.
 unsupported = [r'\d', r'\w', r'\p{Han}', r'\b',
-               r'\x41', '(?i)a', '(?s).', 'a**']
+               r'\x41', '(?i)a', 'a**']
 for p in unsupported:
     assert invoke(RUST, 'find', p, 'aaa').returncode == 0, p
     result = invoke(CJ, 'find', p, 'aaa')

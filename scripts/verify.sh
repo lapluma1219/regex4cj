@@ -12,3 +12,4 @@ cargo test --locked --manifest-path oracle/Cargo.toml
 "${PYTHON:-python3}" tests/verify_classes.py
 "${PYTHON:-python3}" tests/verify_captures.py
 "${PYTHON:-python3}" tests/verify_text_ops.py
+"${PYTHON:-python3}" tests/verify_flags.py

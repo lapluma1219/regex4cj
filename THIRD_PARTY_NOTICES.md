@@ -19,7 +19,10 @@ Replacement expansion in `captures.cj` adapts
 `regex-automata/src/util/interpolate.rs`. Replacement and splitting in `nfa.cj`
 follow `src/regex/string.rs` and `regex-automata/src/meta/regex.rs` from the same
 commit, with eager string results and Cangjie callback functions.
-See `docs/milestone-1.md` through `docs/milestone-5.md` for symbol-level provenance.
+Inline m/s/U flags and lexical scope additionally follow `regex-syntax/src/ast/parse.rs`
+and `regex-syntax/src/hir/translate.rs`; LF assertions follow
+`regex-automata/src/util/look.rs`.
+See `docs/milestone-1.md` through `docs/milestone-6.md` for symbol-level provenance.
 
 Copyright (c) 2014 The Rust Project Developers.
 

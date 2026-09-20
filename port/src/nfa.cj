@@ -5,7 +5,7 @@ import std.collection.*
 // Adapted from regex-automata's Thompson compiler and ordered PikeVM.
 // See docs/milestone-1.md for exact upstream symbols and representation changes.
 enum Op {
-    Literal(Rune) | CharacterClass(CharSet) | Any | Begin | End | Split | Save(Int64) | Accept
+    Literal(Rune) | CharacterClass(CharSet) | Any(Bool) | Begin(Bool) | End(Bool) | Split | Save(Int64) | Accept
 }
 
 class State {
@@ -49,9 +49,9 @@ class Compiler {
             case ExprKind.Empty => return next
             case ExprKind.Literal => return add(Op.Literal(expr.ch), next, -1)
             case ExprKind.CharacterClass => return add(Op.CharacterClass(expr.charset), next, -1)
-            case ExprKind.Any => return add(Op.Any, next, -1)
-            case ExprKind.Begin => return add(Op.Begin, next, -1)
-            case ExprKind.End => return add(Op.End, next, -1)
+            case ExprKind.Any => return add(Op.Any(expr.dotAll), next, -1)
+            case ExprKind.Begin => return add(Op.Begin(expr.multiline), next, -1)
+            case ExprKind.End => return add(Op.End(expr.multiline), next, -1)
             case ExprKind.Concat =>
                 var start = next
                 var i = expr.children.size
@@ -209,7 +209,7 @@ public class Regex {
     }
     // Iterative ordered closure. The first path to a state wins, including slots.
     private func closure(out: ArrayList<Thread>, seen: Array<Bool>, state: Int64, start: Int64, slots: Array<Int64>,
-        pos: Int64, length: Int64): Unit {
+        pos: Int64, input: Input): Unit {
         let stack = ArrayList<Thread>()
         stack.add(Thread(state, start, slots))
         while (!stack.isEmpty()) {
@@ -232,12 +232,12 @@ public class Regex {
                         updated[slot] = pos
                         stack.add(Thread(s.first, start, updated))
                     }
-                case Op.Begin =>
-                    if (pos == 0) {
+                case Op.Begin(multiline) =>
+                    if (pos == 0 || (multiline && input.chars[pos - 1] == r'\n')) {
                         stack.add(Thread(s.first, start, frame.slots))
                     }
-                case Op.End =>
-                    if (pos == length) {
+                case Op.End(multiline) =>
+                    if (pos == input.chars.size || (multiline && input.chars[pos] == r'\n')) {
                         stack.add(Thread(s.first, start, frame.slots))
                     }
                 case _ => out.add(frame)
@@ -257,7 +257,7 @@ public class Regex {
         }, repeat: -1)
         while (pos <= input.chars.size) {
             if (!found) {
-                closure(current, seen, startState, pos, slots, pos, input.chars.size)
+                closure(current, seen, startState, pos, slots, pos, input)
             }
             let next = ArrayList<Thread>()
             let nextSeen = Array<Bool>(states.size, repeat: false)
@@ -271,11 +271,11 @@ public class Regex {
                         break
                     case Op.Literal(c) => consume = pos < input.chars.size && input.chars[pos] == c
                     case Op.CharacterClass(set) => consume = pos < input.chars.size && set.contains(input.chars[pos])
-                    case Op.Any => consume = pos < input.chars.size && input.chars[pos] != r'\n'
+                    case Op.Any(dotAll) => consume = pos < input.chars.size && (dotAll || input.chars[pos] != r'\n')
                     case _ => ()
                 }
                 if (consume) {
-                    closure(next, nextSeen, s.first, thread.start, thread.slots, pos + 1, input.chars.size)
+                    closure(next, nextSeen, s.first, thread.start, thread.slots, pos + 1, input)
                 }
             }
             if (found && next.isEmpty()) {

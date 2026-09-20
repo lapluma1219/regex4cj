@@ -16,6 +16,9 @@ class Expr {
     var minimum: Int64 = 0
     var maximum: Int64 = 0 // -1 means unbounded
     var charset = CharSet()
+    var multiline = false
+    var dotAll = false
+    var flagOnly = false
     var captureIndex: Int64 = -1
     init(kind: ExprKind, ch: Rune, children: Array<Expr>, greedy: Bool) {
         this.kind = kind
@@ -30,6 +33,9 @@ class Parser {
     let captureNames = ArrayList<String>()
     var pos: Int64 = 0
     var depth: Int64 = 0
+    var multiline = false
+    var dotAll = false
+    var swapGreed = false
     init(pattern: String) {
         captureNames.add("") // group 0 denotes the entire match
         if (pattern.size > 4096) {
@@ -74,6 +80,9 @@ class Parser {
     func repetition(): Expr {
         var expr = atom()
         if (at(r'*') || at(r'+') || at(r'?') || at(r'{')) {
+            if (expr.flagOnly) {
+                fail("repetition without an expression")
+            }
             let quantifier = chars[pos]
             pos++
             var minimum: Int64 = 0
@@ -101,9 +110,9 @@ class Parser {
                     }
                 case _ => ()
             }
-            var greedy = true
+            var greedy = !swapGreed
             if (at(r'?')) {
-                greedy = false
+                greedy = !greedy
                 pos++
             }
             expr = Expr(ExprKind.Repeat, quantifier, [expr], greedy)
@@ -134,6 +143,9 @@ class Parser {
         pos++
         match (c) {
             case r'(' =>
+                let oldMultiline = multiline
+                let oldDotAll = dotAll
+                let oldSwapGreed = swapGreed
                 depth++
                 if (depth > 64) {
                     fail("group nesting exceeds 64")
@@ -145,7 +157,7 @@ class Parser {
                     if (at(r':')) {
                         capturing = false
                         pos++
-                    } else {
+                    } else if (at(r'<') || at(r'P')) {
                         if (at(r'P')) {
                             pos++
                         }
@@ -154,6 +166,17 @@ class Parser {
                         }
                         pos++
                         name = captureName()
+                    } else {
+                        parseFlags()
+                        capturing = false
+                        if (at(r')')) {
+                            pos++;
+                            depth--
+                            let directive = leaf(ExprKind.Empty, r' ')
+                            directive.flagOnly = true
+                            return directive
+                        }
+                        pos++ // ':' begins a scoped noncapturing group
                     }
                 }
                 var index: Int64 = -1
@@ -177,15 +200,27 @@ class Parser {
                 }
                 pos++
                 depth--
+                multiline = oldMultiline
+                dotAll = oldDotAll
+                swapGreed = oldSwapGreed
                 if (!capturing) {
                     return expr
                 }
                 let group = Expr(ExprKind.Capture, r' ', [expr], true)
                 group.captureIndex = index
                 return group
-            case r'.' => return leaf(ExprKind.Any, c)
-            case r'^' => return leaf(ExprKind.Begin, c)
-            case r'$' => return leaf(ExprKind.End, c)
+            case r'.' =>
+                let expr = leaf(ExprKind.Any, c)
+                expr.dotAll = dotAll
+                return expr
+            case r'^' | r'$' =>
+                let expr = leaf(if (c == r'^') {
+                    ExprKind.Begin
+                } else {
+                    ExprKind.End
+                }, c)
+                expr.multiline = multiline
+                return expr
             case r'\\' => return escaped()
             case r'[' =>
                 let expr = leaf(ExprKind.CharacterClass, c)
@@ -194,6 +229,49 @@ class Parser {
             case r'{' => fail("repetition without an expression")
             case r'*' | r'+' | r'?' => fail("repetition without an expression")
             case _ => return leaf(ExprKind.Literal, c)
+        }
+    }
+    // Inline flags alter the remainder of the current group, including later
+    // alternatives. Every actual group restores its outer lexical flag state.
+    func parseFlags(): Unit {
+        var enabled = true
+        var negation = false
+        var dangling = false
+        let seen = ArrayList<Rune>()
+        if (at(r')')) {
+            fail("empty flag directive")
+        }
+        while (!at(r':') && !at(r')')) {
+            if (pos == chars.size) {
+                fail("unclosed flags")
+            }
+            let c = chars[pos]
+            pos++
+            if (c == r'-') {
+                if (negation) {
+                    fail("repeated flag negation")
+                }
+                negation = true
+                enabled = false
+                dangling = true
+                continue
+            }
+            for (previous in seen) {
+                if (previous == c) {
+                    fail("duplicate flag")
+                }
+            }
+            seen.add(c)
+            dangling = false
+            match (c) {
+                case r'm' => multiline = enabled
+                case r's' => dotAll = enabled
+                case r'U' => swapGreed = enabled
+                case _ => fail("unsupported flag (only m, s and U are implemented)")
+            }
+        }
+        if (dangling) {
+            fail("dangling flag negation")
         }
     }
     func captureName(): String {

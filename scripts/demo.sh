@@ -36,3 +36,11 @@ echo 'Rust and Cangjie: split into at most two fields, keeping the remainder'
 cli/target/release/bin/main split-n ',' 'a,b,c' 2 | "${PYTHON:-python3}" scripts/show_text.py
 echo 'Cangjie: zero-width split preserves Unicode scalars'
 cli/target/release/bin/main split '' '中🙂' | "${PYTHON:-python3}" scripts/show_text.py
+echo 'Rust and Cangjie: multiline anchors'
+"$CARGO_TARGET_DIR/debug/regex-oracle" find '(?m)^[A-Z]+$' $'AB\nCD\n'
+cli/target/release/bin/main find '(?m)^[A-Z]+$' $'AB\nCD\n'
+echo 'Rust and Cangjie: swapped greed and explicit reversal'
+"$CARGO_TARGET_DIR/debug/regex-oracle" find '(?U)a+' 'aaa'
+cli/target/release/bin/main find '(?U)a+' 'aaa'
+"$CARGO_TARGET_DIR/debug/regex-oracle" find '(?U)a+?' 'aaa'
+cli/target/release/bin/main find '(?U)a+?' 'aaa'
