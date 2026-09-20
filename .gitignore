@@ -1,0 +1,15 @@
+# Local SDKs, reference repositories, downloaded content and generated artifacts
+/tools/
+/upstream/
+/work/
+/regex4cj-local/
+**/target/
+**/__pycache__/
+*.pyc
+.DS_Store
+# Machine-specific configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key

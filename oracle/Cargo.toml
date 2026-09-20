@@ -1,0 +1,6 @@
+[package]
+name = "regex-oracle"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+regex = { git = "https://github.com/rust-lang/regex.git", rev = "72d650cb0a880a01ab6dc2137c0888e8f89740f7" }
