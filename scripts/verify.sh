@@ -6,3 +6,4 @@ cargo build --locked --manifest-path oracle/Cargo.toml
 (cd port && cjpm build)
 "${PYTHON:-python3}" tests/verify.py
 "${PYTHON:-python3}" tests/verify_matching.py
+"${PYTHON:-python3}" tests/verify_classes.py

@@ -8,7 +8,10 @@ The Thompson construction, ordered NFA simulation and empty-match iteration in
 `port/src/nfa.cj` are adapted from the same commit's
 `regex-automata/src/nfa/thompson/compiler.rs`, `pikevm.rs` and `util/iter.rs`.
 `port/src/parser.cj` is a new restricted syntax adapter, not a translation of the
-complete upstream parser. See `docs/milestone-1.md` for symbol-level provenance.
+complete upstream parser. Character class and repetition behavior additionally
+follows `regex-syntax/src/ast/parse.rs`; `port/src/charset.cj` adapts the interval-set
+semantics of `regex-syntax/src/hir/interval.rs` to Cangjie, without its generic
+in-place implementation or case-folding support. See `docs/milestone-1.md` and `docs/milestone-2.md` for symbol-level provenance.
 
 Copyright (c) 2014 The Rust Project Developers.
 

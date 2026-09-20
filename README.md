@@ -9,9 +9,10 @@
 - 仓颉原生 `escape` 和辅助函数 `isMetaCharacter`。
 - 基础正则解析 → Thompson NFA → 有序匹配链路，不调用 Rust 或 `std.regex`。
 - `Regex.find`、`Regex.isMatch`、`Regex.findAll`；查找结果使用 UTF-8 字节区间。
-- 支持字面量、连接、分支、普通／非捕获分组、贪婪／非贪婪 `* + ?`、点号及整段文本锚点。
-- Unicode 字面量与点号以标量值匹配；尚未支持 Unicode 属性表、字符类、计数重复、捕获结果、替换、bytes、RegexSet 和 DFA 优化。
-- 原有转义验证及新增匹配差分测试均由 `scripts/verify.sh` 执行，详细范围见 [第一个引擎里程碑](docs/milestone-1.md)。未支持语法明确报错。
+- 支持字面量、连接、分支、普通／非捕获分组、贪婪／非贪婪重复、点号及整段文本锚点。
+- 支持 `[A-Z]` 等字符类、取反、嵌套、交集／差集／对称差，以及 `{m}`、`{m,n}`、`{m,}` 计数重复。
+- Unicode 字面量与点号以标量值匹配；尚未支持 Unicode 属性表、POSIX 命名类、捕获结果、替换、bytes、RegexSet 和 DFA 优化。
+- 原有转义验证及新增匹配差分测试均由 `scripts/verify.sh` 执行，详细范围见 [第二个引擎里程碑](docs/milestone-2.md)和[兼容路线图](docs/compatibility.md)。未支持语法明确报错。
 
 本阶段是上游核心算法的受限语义移植，解析器及数据结构有简化，不是完整 AST/HIR/PikeVM API 的逐行翻译。括号可用于匹配，但尚不能提取分组内容。
 
@@ -41,7 +42,7 @@ bash scripts/demo.sh
 
 ```sh
 source scripts/env.sh
-port/target/release/bin/main find '(AB|CD)-.+?;' 'order=AB-123; order=CD-456;'
+port/target/release/bin/main find '[A-Z]{2}-[0-9]{3}' 'order=AB-123; order=CD-456'
 port/target/release/bin/main find '中' 'a中b'
 "$CARGO_TARGET_DIR/debug/regex-oracle" escape 'a+b.txt'
 port/target/release/bin/main escape 'a+b.txt'
@@ -65,7 +66,7 @@ port/target/release/bin/main escape 'a+b.txt'
 
 ## 下一步
 
-下一阶段加入字符类与计数重复，再推进捕获和完整 Unicode 语义。匹配引擎目前只覆盖明确记录的语法子集。
+下一阶段加入捕获槽、命名分组和捕获 API，再推进标志、完整 Unicode、替换和分割。匹配引擎目前只覆盖明确记录的语法子集。
 
 ## 来源与许可
 
