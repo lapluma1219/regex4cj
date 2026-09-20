@@ -17,7 +17,7 @@
 ## 环境与运行
 
 准备 Git、Rust/Cargo、仓颉 1.0.5 SDK（`cjc`、`cjpm`）和 Python 3.6+。
-先按仓颉官方安装说明配置 SDK 环境，然后：
+先按仓颉官方安装说明配置 SDK 环境，并将 `CANGJIE_HOME` 指向 SDK 根目录（用于定位运行库），然后：
 
 ```sh
 git clone https://github.com/lapluma1219/regex4cj.git

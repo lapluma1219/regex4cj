@@ -10,11 +10,16 @@ if [ -d "$REGEX4CJ_LOCAL/tools/rustup" ]; then
 fi
 export CARGO_TARGET_DIR="$REGEX4CJ_LOCAL/work/rust-target"
 export TMPDIR="$REGEX4CJ_LOCAL/work"
-if [ -d "$REGEX4CJ_LOCAL/tools/cangjie" ]; then
+if [ -z "${CANGJIE_HOME:-}" ] && [ -d "$REGEX4CJ_LOCAL/tools/cangjie" ]; then
   export CANGJIE_HOME="$REGEX4CJ_LOCAL/tools/cangjie"
+fi
+if [ -n "${CANGJIE_HOME:-}" ]; then
   export PATH="$CANGJIE_HOME/bin:$CANGJIE_HOME/tools/bin:$PATH"
   if [ "$(uname -s)" = Darwin ]; then
-    export DYLD_LIBRARY_PATH="$CANGJIE_HOME/runtime/lib/darwin_aarch64_cjnative:$CANGJIE_HOME/tools/lib:${DYLD_LIBRARY_PATH:-}"
+    cj_arch="$(uname -m)"
+    if [ "$cj_arch" = arm64 ]; then cj_arch=aarch64; fi
+    export DYLD_LIBRARY_PATH="$CANGJIE_HOME/runtime/lib/darwin_${cj_arch}_cjnative:$CANGJIE_HOME/tools/lib:${DYLD_LIBRARY_PATH:-}"
+    unset cj_arch
   fi
 fi
 # Cangjie 1.0.5's linker cannot read the macOS 26.5 SDK stubs.
