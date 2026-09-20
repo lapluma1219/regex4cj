@@ -5,7 +5,7 @@ import std.collection.*
 // Adapted from regex-automata's Thompson compiler and ordered PikeVM.
 // See docs/milestone-1.md for exact upstream symbols and representation changes.
 enum Op {
-    Literal(Rune) | CharacterClass(CharSet) | Any | Begin | End | Split | Accept
+    Literal(Rune) | CharacterClass(CharSet) | Any | Begin | End | Split | Save(Int64) | Accept
 }
 
 class State {
@@ -42,6 +42,10 @@ class Compiler {
             throw Exception("regex compilation exceeds 65536 work units")
         }
         match (expr.kind) {
+            case ExprKind.Capture =>
+                let end = add(Op.Save(expr.captureIndex * 2 + 1), next, -1)
+                let body = compile(expr.children[0], end)
+                return add(Op.Save(expr.captureIndex * 2), body, -1)
             case ExprKind.Empty => return next
             case ExprKind.Literal => return add(Op.Literal(expr.ch), next, -1)
             case ExprKind.CharacterClass => return add(Op.CharacterClass(expr.charset), next, -1)
@@ -108,12 +112,27 @@ class Compiler {
     }
 }
 
+// Slot arrays are immutable after publication: Save clones before modifying.
+// This is simpler than upstream PikeVM's mutable slots plus restore frames.
 class Thread {
     let state: Int64
     let start: Int64
-    init(state: Int64, start: Int64) {
+    let slots: Array<Int64>
+    init(state: Int64, start: Int64, slots: Array<Int64>) {
         this.state = state
         this.start = start
+        this.slots = slots
+    }
+}
+
+class SearchMatch {
+    let start: Int64
+    let end: Int64
+    let slots: Array<Int64>
+    init(start: Int64, end: Int64, slots: Array<Int64>) {
+        this.start = start
+        this.end = end
+        this.slots = slots
     }
 }
 
@@ -155,20 +174,47 @@ public class RegexMatch {
 public class Regex {
     private let states: Array<State>
     private let startState: Int64
+    private let groupNames: Array<String>
     public init(pattern: String) {
-        let tree = Parser(pattern).parse()
+        let parser = Parser(pattern)
+        let tree = parser.parse()
+        normalizeWidth(tree)
         let compiler = Compiler()
         let accept = compiler.add(Op.Accept, -1, -1)
         startState = compiler.compile(tree, accept)
         states = compiler.states.toArray()
+        // HIR removes groups underneath {0}. Keep surviving original indices,
+        // including holes, but omit trailing removed groups and their names.
+        let live = Array<Bool>(parser.captureNames.size, repeat: false)
+        live[0] = true
+        var last: Int64 = 0
+        for (state in states) {
+            match (state.op) {
+                case Op.Save(slot) =>
+                    let index = slot / 2
+                    live[index] = true
+                    if (index > last) {
+                        last = index
+                    }
+                case _ => ()
+            }
+        }
+        groupNames = Array<String>(last + 1, {
+            i => if (live[i]) {
+            parser.captureNames[i]
+        } else {
+            ""
+        }
+        })
     }
-    // Iterative epsilon closure: visit each state only once per input position.
-    private func closure(out: ArrayList<Thread>, seen: Array<Bool>, state: Int64, start: Int64, pos: Int64,
-        length: Int64): Unit {
-        let stack = ArrayList<Int64>()
-        stack.add(state)
+    // Iterative ordered closure. The first path to a state wins, including slots.
+    private func closure(out: ArrayList<Thread>, seen: Array<Bool>, state: Int64, start: Int64, slots: Array<Int64>,
+        pos: Int64, length: Int64): Unit {
+        let stack = ArrayList<Thread>()
+        stack.add(Thread(state, start, slots))
         while (!stack.isEmpty()) {
-            let id = stack.remove(at: stack.size - 1)
+            let frame = stack.remove(at: stack.size - 1)
+            let id = frame.state
             if (seen[id]) {
                 continue
             }
@@ -176,29 +222,42 @@ public class Regex {
             let s = states[id]
             match (s.op) {
                 case Op.Split =>
-                    stack.add(s.second);
-                    stack.add(s.first)
+                    stack.add(Thread(s.second, start, frame.slots))
+                    stack.add(Thread(s.first, start, frame.slots))
+                case Op.Save(slot) =>
+                    if (frame.slots.size == 0) {
+                        stack.add(Thread(s.first, start, frame.slots))
+                    } else {
+                        let updated = frame.slots.clone()
+                        updated[slot] = pos
+                        stack.add(Thread(s.first, start, updated))
+                    }
                 case Op.Begin =>
                     if (pos == 0) {
-                        stack.add(s.first)
+                        stack.add(Thread(s.first, start, frame.slots))
                     }
                 case Op.End =>
                     if (pos == length) {
-                        stack.add(s.first)
+                        stack.add(Thread(s.first, start, frame.slots))
                     }
-                case _ => out.add(Thread(id, start))
+                case _ => out.add(frame)
             }
         }
     }
-    private func search(input: Input, from: Int64): Option<(Int64, Int64)> {
+    private func search(input: Input, from: Int64, capture: Bool): Option<SearchMatch> {
         var current = ArrayList<Thread>()
         var seen = Array<Bool>(states.size, repeat: false)
-        var best: Option<(Int64, Int64)> = None
+        var best: Option<SearchMatch> = None
         var found = false
         var pos = from
+        let slots = Array<Int64>(if (capture) {
+            groupNames.size * 2
+        } else {
+            0
+        }, repeat: -1)
         while (pos <= input.chars.size) {
             if (!found) {
-                closure(current, seen, startState, pos, pos, input.chars.size)
+                closure(current, seen, startState, pos, slots, pos, input.chars.size)
             }
             let next = ArrayList<Thread>()
             let nextSeen = Array<Bool>(states.size, repeat: false)
@@ -207,7 +266,7 @@ public class Regex {
                 var consume = false
                 match (s.op) {
                     case Op.Accept =>
-                        best = Some((thread.start, pos))
+                        best = Some(SearchMatch(thread.start, pos, thread.slots))
                         found = true
                         break
                     case Op.Literal(c) => consume = pos < input.chars.size && input.chars[pos] == c
@@ -216,7 +275,7 @@ public class Regex {
                     case _ => ()
                 }
                 if (consume) {
-                    closure(next, nextSeen, s.first, thread.start, pos + 1, input.chars.size)
+                    closure(next, nextSeen, s.first, thread.start, thread.slots, pos + 1, input.chars.size)
                 }
             }
             if (found && next.isEmpty()) {
@@ -230,8 +289,10 @@ public class Regex {
     }
     public func find(text: String): Option<RegexMatch> {
         let input = Input(text)
-        match (search(input, 0)) {
-            case Some((start, end)) =>
+        match (search(input, 0, false)) {
+            case Some(hit) =>
+                let start = hit.start
+                let end = hit.end
                 let a = input.offsets[start]
                 let b = input.offsets[end]
                 return Some(RegexMatch(a, b, text[a..b]))
@@ -251,9 +312,11 @@ public class Regex {
         var cursor: Int64 = 0
         var previousEnd: Int64 = -1
         while (cursor <= input.chars.size) {
-            match (search(input, cursor)) {
+            match (search(input, cursor, false)) {
                 case None => break
-                case Some((start, end)) =>
+                case Some(hit) =>
+                    let start = hit.start
+                    let end = hit.end
                     if (start == end && end == previousEnd) {
                         cursor = end + 1
                         continue
@@ -263,6 +326,68 @@ public class Regex {
                     result.add(RegexMatch(a, b, text[a..b]))
                     previousEnd = end
                     cursor = end
+            }
+        }
+        return result.toArray()
+    }
+    public func capturesLen(): Int64 {
+        groupNames.size
+    }
+    public func captureNames(): Array<Option<String>> {
+        Array<Option<String>>(groupNames.size, {
+            i => if (groupNames[i] == "") {
+                None
+            } else {
+                Some(groupNames[i])
+            }
+        })
+    }
+    private func checkCaptureWorkspace(): Unit {
+        if (states.size * groupNames.size * 2 > 1048576) {
+            throw Exception("capture workspace exceeds 1048576 state-slot units")
+        }
+    }
+    private func captureResult(text: String, input: Input, hit: SearchMatch): Captures {
+        let groups = Array<Option<RegexMatch>>(groupNames.size, repeat: None)
+        let start = input.offsets[hit.start]
+        let end = input.offsets[hit.end]
+        groups[0] = Some(RegexMatch(start, end, text[start..end]))
+        for (i in 1..groupNames.size) {
+            let a = hit.slots[i * 2]
+            let b = hit.slots[i * 2 + 1]
+            if (a >= 0 && b >= 0) {
+                let left = input.offsets[a]
+                let right = input.offsets[b]
+                groups[i] = Some(RegexMatch(left, right, text[left..right]))
+            }
+        }
+        return Captures(groups, groupNames)
+    }
+    public func captures(text: String): Option<Captures> {
+        checkCaptureWorkspace()
+        let input = Input(text)
+        match (search(input, 0, true)) {
+            case Some(hit) => return Some(captureResult(text, input, hit))
+            case None => return None
+        }
+    }
+    public func capturesAll(text: String): Array<Captures> {
+        checkCaptureWorkspace()
+        let input = Input(text)
+        let result = ArrayList<Captures>()
+        var cursor: Int64 = 0
+        var previousEnd: Int64 = -1
+        while (cursor <= input.chars.size) {
+            match (search(input, cursor, true)) {
+                case None => break
+                case Some(hit) =>
+                    if (hit.start == hit.end && hit.end == previousEnd) {
+                        cursor = hit.end + 1
+                        continue
+                    }
+                    result.add(captureResult(text, input, hit))
+                    previousEnd = hit.end
+                    cursor = hit.end
             }
         }
         return result.toArray()

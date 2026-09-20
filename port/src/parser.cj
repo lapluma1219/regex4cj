@@ -5,7 +5,7 @@ import std.collection.*
 // A deliberately restricted syntax adapter. This is not a port of the full
 // regex-syntax AST/HIR API. Unsupported constructs fail before execution.
 enum ExprKind {
-    Empty | Literal | CharacterClass | Any | Begin | End | Concat | Alternate | Repeat
+    Empty | Literal | CharacterClass | Any | Begin | End | Concat | Alternate | Repeat | Capture
 }
 
 class Expr {
@@ -16,6 +16,7 @@ class Expr {
     var minimum: Int64 = 0
     var maximum: Int64 = 0 // -1 means unbounded
     var charset = CharSet()
+    var captureIndex: Int64 = -1
     init(kind: ExprKind, ch: Rune, children: Array<Expr>, greedy: Bool) {
         this.kind = kind
         this.ch = ch
@@ -26,9 +27,11 @@ class Expr {
 
 class Parser {
     let chars = ArrayList<Rune>()
+    let captureNames = ArrayList<String>()
     var pos: Int64 = 0
     var depth: Int64 = 0
     init(pattern: String) {
+        captureNames.add("") // group 0 denotes the entire match
         if (pattern.size > 4096) {
             throw Exception("pattern exceeds 4096 UTF-8 bytes")
         }
@@ -135,12 +138,38 @@ class Parser {
                 if (depth > 64) {
                     fail("group nesting exceeds 64")
                 }
+                var capturing = true
+                var name = ""
                 if (at(r'?')) {
                     pos++
-                    if (!at(r':')) {
-                        fail("only (?:...) group prefixes are supported")
+                    if (at(r':')) {
+                        capturing = false
+                        pos++
+                    } else {
+                        if (at(r'P')) {
+                            pos++
+                        }
+                        if (!at(r'<')) {
+                            fail("unsupported group prefix or flags")
+                        }
+                        pos++
+                        name = captureName()
                     }
-                    pos++
+                }
+                var index: Int64 = -1
+                if (capturing) {
+                    if (captureNames.size >= 129) {
+                        fail("capture group count exceeds 128")
+                    }
+                    if (name != "") {
+                        for (existing in captureNames) {
+                            if (existing == name) {
+                                fail("duplicate capture group name")
+                            }
+                        }
+                    }
+                    index = captureNames.size
+                    captureNames.add(name)
                 }
                 let expr = alternate()
                 if (!at(r')')) {
@@ -148,7 +177,12 @@ class Parser {
                 }
                 pos++
                 depth--
-                return expr
+                if (!capturing) {
+                    return expr
+                }
+                let group = Expr(ExprKind.Capture, r' ', [expr], true)
+                group.captureIndex = index
+                return group
             case r'.' => return leaf(ExprKind.Any, c)
             case r'^' => return leaf(ExprKind.Begin, c)
             case r'$' => return leaf(ExprKind.End, c)
@@ -161,6 +195,32 @@ class Parser {
             case r'*' | r'+' | r'?' => fail("repetition without an expression")
             case _ => return leaf(ExprKind.Literal, c)
         }
+    }
+    func captureName(): String {
+        let name = StringBuilder()
+        var first = true
+        while (pos < chars.size && !at(r'>')) {
+            let c = chars[pos]
+            if (UInt32(c) > 127) {
+                fail("Unicode capture names are not supported yet")
+            }
+            let alpha = (c >= r'a' && c <= r'z') || (c >= r'A' && c <= r'Z')
+            let tail = (c >= r'0' && c <= r'9') || c == r'.' || c == r'[' || c == r']'
+            if (!(alpha || c == r'_' || (!first && tail))) {
+                fail("invalid capture group name")
+            }
+            name.append(c)
+            pos++
+            first = false
+        }
+        if (first) {
+            fail("empty capture group name")
+        }
+        if (!at(r'>')) {
+            fail("unclosed capture group name")
+        }
+        pos++
+        return name.toString()
     }
     func classOperator(): Bool {
         if (pos + 1 >= chars.size || chars[pos] != chars[pos + 1]) {

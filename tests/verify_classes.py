@@ -75,7 +75,7 @@ for p in unsupported:
     r = invoke(CJ, 'find', p, 'aaa')
     assert r.returncode == 2 and r.stderr and not r.stdout, (p, r)
 limits = [('a{10001}', 'repetition count'), ('a{10000}a{10000}', 'NFA exceeds'),
-          ('((?:){10000}){10000}', 'work units'), ('[' * 65 + 'a' + ']' * 65, 'nesting')]
+          ('(?:' * 40 + 'a' + ')' * 40 + '{1000}', 'work units'), ('[' * 65 + 'a' + ']' * 65, 'nesting')]
 for p, message in limits:
     r = invoke(CJ, 'find', p, '')
     assert r.returncode == 2 and message in r.stderr.decode() and not r.stdout, (p, r)
@@ -89,6 +89,6 @@ report.update({'class_repetition_differential_passed': count, 'class_repetition_
                'class_repetition_api_checks_passed': 10, 'class_repetition_invalid_rejected': len(invalid),
                'class_repetition_unsupported_rejected': len(unsupported),
                'class_repetition_resource_limits_checked': len(limits),
-               'matching_scope': 'Unicode-scalar NFA with class set algebra and counted repetitions; no captures/properties/flags/bytes/DFA'})
+               'matching_scope': 'Unicode-scalar NFA with class set algebra and counted repetitions; no properties/flags/bytes/DFA'})
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)

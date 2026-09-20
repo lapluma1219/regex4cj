@@ -53,7 +53,7 @@ for p, text, expected in golden:
 
 # Unsupported valid Rust patterns must be rejected, never silently reinterpreted.
 unsupported = [r'\d', r'\w', r'\p{Han}', r'\b',
-               r'\x41', '(?i)a', '(?s).', '(?<name>a)', 'a**']
+               r'\x41', '(?i)a', '(?s).', 'a**']
 for p in unsupported:
     assert invoke(RUST, 'find', p, 'aaa').returncode == 0, p
     result = invoke(CJ, 'find', p, 'aaa')
@@ -77,8 +77,8 @@ report.update({'matching_differential_passed': count, 'find_and_is_match_checks_
                'matching_golden_passed': len(golden), 'unsupported_patterns_rejected': len(unsupported),
                'invalid_patterns_rejected': len(invalid), 'resource_limits_checked': 2,
                'cangjie_matching_engine_implemented': True,
-               'matching_scope': 'restricted Unicode-scalar Thompson NFA; no captures/Unicode-properties/flags/bytes/DFA',
+               'matching_scope': 'restricted Unicode-scalar Thompson NFA; no Unicode-properties/flags/bytes/DFA',
                'limitations': ['CLI cannot transport NUL', 'findAll is eager',
-                              'This is not full regex compatibility; see docs/milestone-2.md']})
+                              'This is not full regex compatibility; see docs/milestone-3.md']})
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)

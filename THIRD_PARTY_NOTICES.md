@@ -11,7 +11,12 @@ The Thompson construction, ordered NFA simulation and empty-match iteration in
 complete upstream parser. Character class and repetition behavior additionally
 follows `regex-syntax/src/ast/parse.rs`; `port/src/charset.cj` adapts the interval-set
 semantics of `regex-syntax/src/hir/interval.rs` to Cangjie, without its generic
-in-place implementation or case-folding support. See `docs/milestone-1.md` and `docs/milestone-2.md` for symbol-level provenance.
+in-place implementation or case-folding support. Capture numbering, names and
+capture slot semantics in `parser.cj`, `nfa.cj` and `captures.cj` follow the same
+upstream parser, Thompson compiler and PikeVM. `normalize.cj` adapts the empty-only
+repetition simplification from `regex-syntax/src/hir/mod.rs` (`Hir::repetition`).
+See `docs/milestone-1.md`, `docs/milestone-2.md` and `docs/milestone-3.md` for
+symbol-level provenance.
 
 Copyright (c) 2014 The Rust Project Developers.
 

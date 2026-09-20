@@ -12,8 +12,8 @@ if ENV.get('REGEX4CJ_DYLD_LIBRARY_PATH'):
     ENV['DYLD_LIBRARY_PATH'] = ENV['REGEX4CJ_DYLD_LIBRARY_PATH']
 REPORT = Path(os.environ['REGEX4CJ_LOCAL']) / 'work/verification.json'
 
-def invoke(binary, mode, pattern, text):
-    return subprocess.run([str(binary), mode, pattern, text], env=ENV,
+def invoke(binary, mode, pattern, text, *extra):
+    return subprocess.run([str(binary), mode, pattern, text, *extra], env=ENV,
                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=15)
 
 def compare(pattern, text, mode='find'):

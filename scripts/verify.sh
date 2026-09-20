@@ -7,3 +7,4 @@ cargo build --locked --manifest-path oracle/Cargo.toml
 "${PYTHON:-python3}" tests/verify.py
 "${PYTHON:-python3}" tests/verify_matching.py
 "${PYTHON:-python3}" tests/verify_classes.py
+"${PYTHON:-python3}" tests/verify_captures.py

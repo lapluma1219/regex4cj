@@ -60,6 +60,9 @@ class CharSet {
         }
         ranges = merged
     }
+    func isEmpty(): Bool {
+        ranges.isEmpty()
+    }
     func contains(c: Rune): Bool {
         let code = Int64(UInt32(c))
         var lo: Int64 = 0

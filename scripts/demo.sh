@@ -22,3 +22,9 @@ port/target/release/bin/main find '[A-Z]{2}-[0-9]{3}' 'order=AB-123; order=CD-45
 echo 'Cangjie: class intersection and lazy counted repetition'
 port/target/release/bin/main find '[a-z&&[^aeiou]]+' 'abcde'
 port/target/release/bin/main find 'a{2,3}?' 'aaaaa'
+echo 'Rust: named capture fields (UTF-8 byte ranges)'
+"$CARGO_TARGET_DIR/debug/regex-oracle" captures '(?<prefix>[A-Z]{2})-(?<number>[0-9]{3})' 'order=AB-123; order=CD-456' | "${PYTHON:-python3}" scripts/show_captures.py
+echo 'Cangjie: the same named capture fields'
+port/target/release/bin/main captures '(?<prefix>[A-Z]{2})-(?<number>[0-9]{3})' 'order=AB-123; order=CD-456' | "${PYTHON:-python3}" scripts/show_captures.py
+echo 'Cangjie: unmatched group versus captured empty string'
+port/target/release/bin/main captures '(a)?(b*)' '' | "${PYTHON:-python3}" scripts/show_captures.py
