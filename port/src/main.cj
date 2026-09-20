@@ -1,5 +1,7 @@
 package cjregex
 
+import std.convert.*
+
 // Ported from regex-syntax/src/lib.rs at 72d650cb0a880a01ab6dc2137c0888e8f89740f7.
 // Upstream copyright and license: see repository-root LICENSE-MIT and LICENSE-APACHE.
 public func isMetaCharacter(c: Rune): Bool {
@@ -112,8 +114,63 @@ main(args: Array<String>): Int64 {
             }
             return 0
         }
+        if (args.size == 3 && args[0] == "split") {
+            for (part in Regex(args[1]).split(args[2])) {
+                println(hexText(part))
+            }
+            return 0
+        }
+        if (args.size == 4 && args[0] == "split-n") {
+            for (part in Regex(args[1]).splitN(args[2], Int64.parse(args[3]))) {
+                println(hexText(part))
+            }
+            return 0
+        }
+        if (args.size == 4 && args[0] == "replace-with") {
+            let calls = [0]
+            let output = Regex(args[1]).replaceWith(
+                args[2],
+                Int64.parse(args[3]),
+                {
+                    caps =>
+                        calls[0]++
+                        "${calls[0]}:" + caps.expand("<$0>[$1]")
+                }
+            )
+            println(hexText(output))
+            println(calls[0])
+            return 0
+        }
+        if (args.size == 4 && args[0] == "expand") {
+            match (Regex(args[1]).captures(args[2])) {
+                case Some(caps) => println(hexText(caps.expand(args[3])))
+                case None => ()
+            }
+            return 0
+        }
+        if (args.size == 4 && (args[0] == "replace" || args[0] == "replace-all")) {
+            let regex = Regex(args[1])
+            let output = if (args[0] == "replace") {
+                regex.replace(args[2], args[3])
+            } else {
+                regex.replaceAll(args[2], args[3])
+            }
+            println(hexText(output))
+            return 0
+        }
+        if (args.size == 5 && (args[0] == "replace-n" || args[0] == "replace-literal")) {
+            let regex = Regex(args[1])
+            let limit = Int64.parse(args[4])
+            let output = if (args[0] == "replace-n") {
+                regex.replaceN(args[2], limit, args[3])
+            } else {
+                regex.replaceLiteral(args[2], limit, args[3])
+            }
+            println(hexText(output))
+            return 0
+        }
         eprintln(
-            "usage: cjregex escape TEXT | find PATTERN TEXT | first PATTERN TEXT | is-match PATTERN TEXT | captures PATTERN TEXT | capture-first PATTERN TEXT | capture-name PATTERN TEXT NAME")
+            "usage: cjregex escape TEXT | find PATTERN TEXT | first PATTERN TEXT | is-match PATTERN TEXT | captures PATTERN TEXT | capture-first PATTERN TEXT | capture-name PATTERN TEXT NAME | split PATTERN TEXT | split-n PATTERN TEXT LIMIT | replace/replace-all/expand PATTERN TEXT TEMPLATE | replace-n/replace-literal PATTERN TEXT TEMPLATE LIMIT | replace-with PATTERN TEXT LIMIT")
         return 2
     } catch (e: Exception) {
         eprintln(e.toString())

@@ -12,8 +12,9 @@
 - 支持字面量、连接、分支、普通／非捕获分组、贪婪／非贪婪重复、点号及整段文本锚点。
 - 支持 `[A-Z]` 等字符类、取反、嵌套、交集／差集／对称差，以及 `{m}`、`{m,n}`、`{m,}` 计数重复。
 - 编号／命名捕获、`captures`、`capturesAll`、`Captures.get/name`，以及捕获数量和名称查询。
-- Unicode 字面量与点号以标量值匹配；尚未支持 Unicode 属性表、POSIX 命名类、替换、bytes、RegexSet 和 DFA 优化。
-- 原有转义验证及新增匹配差分测试均由 `scripts/verify.sh` 执行，详细范围见 [第三个引擎里程碑](docs/milestone-3.md)和[兼容路线图](docs/compatibility.md)。未支持语法明确报错。
+- 替换模板、字面量／回调替换、限定次数替换、`Captures.expand`、`split` / `splitN`。
+- Unicode 字面量与点号以标量值匹配；尚未支持 Unicode 属性表、POSIX 命名类、bytes、RegexSet 和 DFA 优化。
+- 原有转义验证及新增匹配差分测试均由 `scripts/verify.sh` 执行，详细范围见 [第四个里程碑](docs/milestone-4.md)和[兼容路线图](docs/compatibility.md)。未支持语法明确报错。
 
 本阶段是上游核心算法的受限语义移植，解析器及数据结构有简化，不是完整 AST/HIR/PikeVM API 的逐行翻译。捕获组可提取字段；命名组名称目前限 ASCII，结果立即收集，尚未提供惰性迭代器。
 
@@ -59,6 +60,15 @@ port/target/release/bin/main captures '(?<prefix>[A-Z]{2})-(?<number>[0-9]{3})' 
 
 第一条匹配的 `prefix` 为 `AB`、`number` 为 `123`，第二条为 `CD`、`456`。`bash scripts/demo.sh` 同时展示 Rust 与仓颉结果。
 
+替换与分割示例：
+
+```sh
+port/target/release/bin/main replace-all '(?<prefix>[A-Z]{2})-[0-9]{3}' 'AB-123 CD-456' '${prefix}-***' | python3 scripts/show_text.py
+port/target/release/bin/main split-n ',' 'a,b,c' 2 | python3 scripts/show_text.py
+```
+
+分别得到 `"AB-*** CD-***"`，以及两段 `"a"`、`"b,c"`。替换次数 0 表示无限制；分割段数 0 表示不返回字段。替换模板的 `$` 规则和完整接口见第四个里程碑。
+
 测试报告位于 `$REGEX4CJ_LOCAL/work/verification.json`。CLI 不支持传入 NUL，当前未覆盖这个边界。有限用例通过不能证明整个库等价。
 
 ## 仓库结构
@@ -75,7 +85,7 @@ port/target/release/bin/main captures '(?<prefix>[A-Z]{2})-(?<number>[0-9]{3})' 
 
 ## 下一步
 
-下一阶段推进替换／分割及可依赖库包，再扩展标志、完整 Unicode、bytes、RegexSet 和优化引擎。匹配引擎目前只覆盖明确记录的语法子集。
+下一阶段拆出可依赖库包与独立 CLI，补充原生 API 测试，再扩展标志、完整 Unicode、bytes、RegexSet 和优化引擎。匹配引擎目前只覆盖明确记录的语法子集。
 
 ## 来源与许可
 

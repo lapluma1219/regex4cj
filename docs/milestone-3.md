@@ -1,5 +1,7 @@
 # 第三步：编号／命名捕获与路径状态
 
+这是第三步的历史记录。替换和分割已在第四步实现，当前范围见 milestone-4.md。
+
 本阶段在现有仓颉 NFA 中实现捕获，不调用 Rust 或 std.regex。仍是受限语义移植，不是完整 regex、regex-syntax、regex-automata 仓库的交付。
 
 ## 已实现的接口

@@ -201,10 +201,10 @@ public class Regex {
         }
         groupNames = Array<String>(last + 1, {
             i => if (live[i]) {
-            parser.captureNames[i]
-        } else {
-            ""
-        }
+                parser.captureNames[i]
+            } else {
+                ""
+            }
         })
     }
     // Iterative ordered closure. The first path to a state wins, including slots.
@@ -390,6 +390,104 @@ public class Regex {
                     cursor = hit.end
             }
         }
+        return result.toArray()
+    }
+    public func replace(text: String, replacement: String): String {
+        replaceN(text, 1, replacement)
+    }
+    public func replaceAll(text: String, replacement: String): String {
+        replaceN(text, 0, replacement)
+    }
+    // A zero limit means unlimited replacements, as in Rust replacen.
+    public func replaceN(text: String, limit: Int64, replacement: String): String {
+        var expansion = false
+        for (c in replacement.runes()) {
+            if (c == r'$') {
+                expansion = true
+                break
+            }
+        }
+        if (!expansion) {
+            return replaceLiteral(text, limit, replacement)
+        }
+        return replaceWith(text, limit, {caps => caps.expand(replacement)})
+    }
+    public func replaceLiteral(text: String, limit: Int64, replacement: String): String {
+        replaceImpl(text, limit, false, {_, _ => replacement})
+    }
+    public func replaceWith(text: String, limit: Int64, replacer: (Captures) -> String): String {
+        replaceImpl(text, limit, true, {input, hit => replacer(captureResult(text, input, hit))})
+    }
+    private func replaceImpl(text: String, limit: Int64, capture: Bool, render: (Input, SearchMatch) -> String): String {
+        if (limit < 0) {
+            throw Exception("replacement limit must be nonnegative")
+        }
+        if (capture) {
+            checkCaptureWorkspace()
+        }
+        let input = Input(text)
+        let out = StringBuilder()
+        var cursor: Int64 = 0
+        var previousEnd: Int64 = -1
+        var lastByte: Int64 = 0
+        var count: Int64 = 0
+        while (cursor <= input.chars.size && (limit == 0 || count < limit)) {
+            match (search(input, cursor, capture)) {
+                case None => break
+                case Some(hit) =>
+                    if (hit.start == hit.end && hit.end == previousEnd) {
+                        cursor = hit.end + 1
+                        continue
+                    }
+                    out.append(text[lastByte..input.offsets[hit.start]])
+                    out.append(render(input, hit))
+                    lastByte = input.offsets[hit.end]
+                    previousEnd = hit.end
+                    cursor = hit.end
+                    count++
+            }
+        }
+        out.append(text[lastByte..text.size])
+        return out.toString()
+    }
+    public func split(text: String): Array<String> {
+        splitImpl(text, 0, false)
+    }
+    // Unlike replaceN, splitN(0) returns zero fields and splitN(1) the input.
+    public func splitN(text: String, limit: Int64): Array<String> {
+        if (limit < 0) {
+            throw Exception("split limit must be nonnegative")
+        }
+        splitImpl(text, limit, true)
+    }
+    private func splitImpl(text: String, limit: Int64, bounded: Bool): Array<String> {
+        let result = ArrayList<String>()
+        if (bounded && limit == 0) {
+            return result.toArray()
+        }
+        if (bounded && limit == 1) {
+            result.add(text);
+            return result.toArray()
+        }
+        let input = Input(text)
+        var cursor: Int64 = 0
+        var previousEnd: Int64 = -1
+        var lastByte: Int64 = 0
+        while (cursor <= input.chars.size && (!bounded || result.size < limit - 1)) {
+            match (search(input, cursor, false)) {
+                case None => break
+                case Some(hit) =>
+                    if (hit.start == hit.end && hit.end == previousEnd) {
+                        cursor = hit.end + 1
+                        continue
+                    }
+                    result.add(text[lastByte..input.offsets[hit.start]])
+                    lastByte = input.offsets[hit.end]
+                    previousEnd = hit.end
+                    cursor = hit.end
+            }
+        }
+        result.add(text[lastByte..text.size])
         return result.toArray()
     }
 }

@@ -16,11 +16,11 @@ def invoke(binary, mode, pattern, text, *extra):
     return subprocess.run([str(binary), mode, pattern, text, *extra], env=ENV,
                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=15)
 
-def compare(pattern, text, mode='find'):
-    rust = invoke(RUST, mode, pattern, text)
-    cj = invoke(CJ, mode, pattern, text)
+def compare(pattern, text, mode='find', *extra):
+    rust = invoke(RUST, mode, pattern, text, *extra)
+    cj = invoke(CJ, mode, pattern, text, *extra)
     if rust.returncode != 0 or cj.returncode != 0 or rust.stdout != cj.stdout:
-        failure = {'mode': mode, 'pattern': pattern, 'text': text,
+        failure = {'mode': mode, 'extra': extra, 'pattern': pattern, 'text': text,
                    'rust': rust.stdout.decode(), 'cangjie': cj.stdout.decode(),
                    'rust_error': rust.stderr.decode(), 'cangjie_error': cj.stderr.decode(),
                    'rust_code': rust.returncode, 'cangjie_code': cj.returncode}

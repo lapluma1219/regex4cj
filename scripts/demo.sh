@@ -28,3 +28,11 @@ echo 'Cangjie: the same named capture fields'
 port/target/release/bin/main captures '(?<prefix>[A-Z]{2})-(?<number>[0-9]{3})' 'order=AB-123; order=CD-456' | "${PYTHON:-python3}" scripts/show_captures.py
 echo 'Cangjie: unmatched group versus captured empty string'
 port/target/release/bin/main captures '(a)?(b*)' '' | "${PYTHON:-python3}" scripts/show_captures.py
+echo 'Rust and Cangjie: replace order numbers using the named prefix'
+"$CARGO_TARGET_DIR/debug/regex-oracle" replace-all '(?<prefix>[A-Z]{2})-[0-9]{3}' 'order=AB-123; order=CD-456' '${prefix}-***' | "${PYTHON:-python3}" scripts/show_text.py
+port/target/release/bin/main replace-all '(?<prefix>[A-Z]{2})-[0-9]{3}' 'order=AB-123; order=CD-456' '${prefix}-***' | "${PYTHON:-python3}" scripts/show_text.py
+echo 'Rust and Cangjie: split into at most two fields, keeping the remainder'
+"$CARGO_TARGET_DIR/debug/regex-oracle" split-n ',' 'a,b,c' 2 | "${PYTHON:-python3}" scripts/show_text.py
+port/target/release/bin/main split-n ',' 'a,b,c' 2 | "${PYTHON:-python3}" scripts/show_text.py
+echo 'Cangjie: zero-width split preserves Unicode scalars'
+port/target/release/bin/main split '' '中🙂' | "${PYTHON:-python3}" scripts/show_text.py

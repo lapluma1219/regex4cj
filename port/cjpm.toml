@@ -1,7 +1,7 @@
 [package]
   cjc-version = "1.0.5"
   name = "cjregex"
-  description = "Minimal Rust regex escape port and validation CLI"
+  description = "Native Cangjie regex prototype and differential validation CLI"
   version = "0.1.0"
   target-dir = ""
   output-type = "executable"

@@ -9,13 +9,13 @@
 | 基础语法、分支、分组 | 已实现子集 | 完整语法、AST/HIR 公开结构、精确错误类型与位置 |
 | 字符类与集合运算 | 第二步完成基本标量区间与代数 | POSIX、Unicode 属性、字符类转义全集 |
 | 重复 | 支持 * + ? 与 {m,n} 等及非贪婪 | 计数空白、堆叠量词、与上游一致的配置限制 |
-| 捕获 | 第三步支持编号、ASCII 名称、Captures、captures/capturesAll | Unicode 组名、惰性迭代、extract/expand、可复用捕获工作区 |
+| 捕获 | 第三步支持编号、ASCII 名称、Captures、captures/capturesAll | Unicode 组名、惰性迭代、extract、可复用捕获工作区 |
 | Unicode | 标量扫描、字面量、范围和字节偏移 | 固定 Unicode 数据、属性、大小写折叠、词边界 |
 | Builder / flags | 未实现 | 大小写、多行、dot-all、CRLF、Unicode 开关等 |
-| 替换、分割 | 未实现 | 替换模板、回调、零宽匹配细节 |
+| 替换、分割 | 第四步支持模板展开、字面量／回调替换、次数限制、split/splitN | 惰性分割迭代器、Replacer trait 对应设计、模板预编译与分配优化 |
 | bytes | 未实现 | 任意字节输入与禁用 Unicode 的语义 |
 | RegexSet | 未实现 | 多模式编译与结果 API |
 | 性能与资源管理 | 基础有序 NFA 与原型限制 | 工作区复用、字节 NFA、DFA、lazy DFA、预过滤等 |
 | 其他仓库包 | 未移植 | regex-lite、C API、开发 CLI 及底层全量公开接口按最终范围推进 |
 
-来源与实现差异详见 milestone-1.md（历史阶段）和 milestone-2.md（历史阶段）及 milestone-3.md（当前阶段）。固定上游版本见 baseline.json。
+来源与实现差异详见 milestone-1.md（历史阶段）和 milestone-2.md（历史阶段）、milestone-3.md（历史阶段）及 milestone-4.md（当前阶段）。固定上游版本见 baseline.json。

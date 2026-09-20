@@ -15,8 +15,11 @@ in-place implementation or case-folding support. Capture numbering, names and
 capture slot semantics in `parser.cj`, `nfa.cj` and `captures.cj` follow the same
 upstream parser, Thompson compiler and PikeVM. `normalize.cj` adapts the empty-only
 repetition simplification from `regex-syntax/src/hir/mod.rs` (`Hir::repetition`).
-See `docs/milestone-1.md`, `docs/milestone-2.md` and `docs/milestone-3.md` for
-symbol-level provenance.
+Replacement expansion in `captures.cj` adapts
+`regex-automata/src/util/interpolate.rs`. Replacement and splitting in `nfa.cj`
+follow `src/regex/string.rs` and `regex-automata/src/meta/regex.rs` from the same
+commit, with eager string results and Cangjie callback functions.
+See `docs/milestone-1.md` through `docs/milestone-4.md` for symbol-level provenance.
 
 Copyright (c) 2014 The Rust Project Developers.
 
