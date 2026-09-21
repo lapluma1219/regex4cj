@@ -234,3 +234,16 @@ func unicodeScripts(): Unit {
     @Expect(Regex(#"\p{Han}+"#).replaceAll("a中文b", "!"), "a!b")
     @Expect(Regex(#"[\p{scx=Hira}--\p{sc=Hira}]"#).isMatch("ー"), true)
 }
+
+@Test
+func unicodeBinaryProperties(): Unit {
+    let nul = String([Rune(UInt32(0))])
+    @Expect(Regex(#"\P{Alphabetic}"#).isMatch(nul), true)
+    @Expect(Regex(#"\p{Alphabetic}"#).isMatch(nul), false)
+    @Expect(Regex(#"\p{Alphabetic}"#).isMatch("ͅ"), true)
+    @Expect(Regex(#"\pL"#).isMatch("ͅ"), false)
+    @Expect(Regex(#"\p{Uppercase}"#).isMatch("Ⅰ"), true)
+    @Expect(Regex(#"\p{Lu}"#).isMatch("Ⅰ"), false)
+    @Expect(Regex(#"\p{Emoji}+"#).replaceAll("a1🙂b", "!"), "a!b")
+    @Expect(Regex(#"[\p{White_Space}~~\s]"#).isMatch(" "), false)
+}

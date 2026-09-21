@@ -79,3 +79,7 @@ cli/target/release/bin/main find '\P{gc!=L}+' 'ab12'
 "$CARGO_TARGET_DIR/debug/regex-oracle" find '\p{scx=Hira}' 'ー'
 "$PROJECT_ROOT/cli/target/release/bin/main" find '\p{scx=Hira}' 'ー'
 "$PROJECT_ROOT/cli/target/release/bin/main" find '\p{Han}+' 'A中文α'
+
+# Emoji is a character property, and also includes ASCII digits.
+"$CARGO_TARGET_DIR/debug/regex-oracle" find '\p{Emoji}+' 'a1🙂b'
+"$PROJECT_ROOT/cli/target/release/bin/main" find '\p{Emoji}+' 'a1🙂b'

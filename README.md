@@ -19,8 +19,8 @@
 - 支持 14 种 POSIX ASCII 命名类（如 `[[:digit:]]`），以及取反和集合运算。
 - 支持 Unicode 16.0.0 的 `\d` / `\s` / `\w` 及取反形式；数据快照和生成脚本随仓库提供。
 - 支持 Unicode `\b` / `\B` 词边界，复用固定版本的单词字符表。
-- 支持 Unicode 通用类别 `\p{L}`、`\p{gc=Nd}`、`\P{...}` 及 Any/ASCII/Assigned；支持 Script / Script_Extensions（如 `\p{Han}`、`\p{scx=Hira}`）。暂不支持二元属性、bytes、RegexSet 和 DFA 优化。
-- 原有转义验证及新增匹配差分测试均由 `scripts/verify.sh` 执行，详细范围见 [第十二个里程碑](docs/milestone-12.md)和[兼容路线图](docs/compatibility.md)。未支持语法明确报错。
+- 支持 Unicode 通用类别 `\p{L}`、`\p{gc=Nd}`、`\P{...}` 及 Any/ASCII/Assigned；支持 Script / Script_Extensions（如 `\p{Han}`、`\p{scx=Hira}`）。支持 Alphabetic、White_Space、Emoji 等 64 个二元属性。暂不支持完整属性系统、bytes、RegexSet 和 DFA 优化。
+- 原有转义验证及新增匹配差分测试均由 `scripts/verify.sh` 执行，详细范围见 [第十三个里程碑](docs/milestone-13.md)和[兼容路线图](docs/compatibility.md)。未支持语法明确报错。
 
 本阶段是上游核心算法的受限语义移植，解析器及数据结构有简化，不是完整 AST/HIR/PikeVM API 的逐行翻译。捕获组可提取字段；命名组名称目前限 ASCII，结果立即收集，尚未提供惰性迭代器。
 
@@ -107,13 +107,13 @@ cli/target/release/bin/main split-n ',' 'a,b,c' 2 | python3 scripts/show_text.py
 | tests | 差分测试及匹配验收用例 |
 | scripts | 环境、构建和演示入口 |
 | docs | 上游版本记录、工具评估 |
-| data/unicode | Unicode 简写类、通用类别、书写系统区间、来源校验与许可证 |
+| data/unicode | Unicode 类别、书写系统、二元属性区间、来源校验与许可证 |
 
 完整上游仓库、参考语料、SDK、下载文件和缓存均不随本仓库发布。开发机将它们保存在同级的 `regex4cj-local/`，运行当前测试不需要参考语料。
 
 ## 下一步
 
-下一阶段扩展 Unicode 二元属性，再推进方向性边界、大小写折叠、其余标志、bytes、RegexSet、惰性迭代和优化引擎。
+后续按语法兼容、顶层 API、集中验收、交付与性能基线合并推进。核心交付与完整上游转译的范围及估算见[交付计划](docs/delivery-plan.md)；bytes、RegexSet、底层全量接口和优化引擎仍需后续实现。
 
 ## 来源与许可
 

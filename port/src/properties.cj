@@ -80,6 +80,16 @@ func unicodeProperty(text: String, negated: Bool): CharSet {
         }
     }
     let normalized = normalizePropertyName(name)
+    if (key == "") {
+        match (binaryProperty(normalized)) {
+            case Some(set) => return if (invert) {
+                set.negated()
+            } else {
+                set
+            }
+            case None => ()
+        }
+    }
     let set = if (key == "scx" || key == "scriptextensions") {
         unicodeScript_Extensions(normalized)
     } else if (key == "sc" || key == "script" || (key == "" && isScriptName(normalized))) {

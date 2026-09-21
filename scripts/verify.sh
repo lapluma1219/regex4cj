@@ -5,6 +5,7 @@ cd "$PROJECT_ROOT"
 "${PYTHON:-python3}" scripts/generate_unicode.py --check
 "${PYTHON:-python3}" scripts/generate_categories.py --check
 "${PYTHON:-python3}" scripts/generate_scripts.py --check
+"${PYTHON:-python3}" scripts/generate_binary.py --check
 "${PYTHON:-python3}" -m unittest discover -s tests -p test_category_generator.py
 cargo build --locked --manifest-path oracle/Cargo.toml
 cargo test --locked --manifest-path oracle/Cargo.toml
@@ -23,3 +24,4 @@ cargo test --locked --manifest-path oracle/Cargo.toml
 "${PYTHON:-python3}" tests/verify_boundaries.py
 "${PYTHON:-python3}" tests/verify_properties.py
 "${PYTHON:-python3}" tests/verify_scripts.py
+"${PYTHON:-python3}" tests/verify_binary.py

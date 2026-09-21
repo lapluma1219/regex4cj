@@ -71,3 +71,11 @@ and the Script / Script_Extensions alias sections in `property_values.rs`.
 The snapshot records source hashes and revision; `scripts/generate_scripts.py`
 provides reproducible import and generation. Unicode 16.0.0 data is covered by
 the retained `data/unicode/LICENSE-UNICODE` notice.
+
+## Unicode binary-property tables
+
+`data/unicode/binary_properties.json` and `port/src/unicode_binary.cj` derive
+from the pinned upstream `regex-syntax/src/unicode_tables/property_bool.rs`
+and the relevant aliases in `property_names.rs`. Source hashes and revision
+are recorded in the snapshot; `scripts/generate_binary.py` reproduces import
+and generation. Unicode 16.0.0 data retains `data/unicode/LICENSE-UNICODE`.
