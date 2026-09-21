@@ -188,3 +188,13 @@ func posixClassesAreAsciiAndNamesCanFallBack(): Unit {
     @Expect(Regex("[[:digitt:]]").isMatch(":"), true)
     @Expect(Regex("[[:space:]--[:blank:]]").isMatch("\n"), true)
 }
+
+@Test
+func unicodeShorthandsAndNul(): Unit {
+    let nul = String([Rune(UInt32(0))])
+    @Expect(Regex(#"\D\W\S"#).isMatch(nul + nul + nul), true)
+    @Expect(Regex(#"[\d\s\w]"#).isMatch(nul), false)
+    @Expect(Regex(#"\d+"#).replaceAll("a３٣b", "!"), "a!b")
+    @Expect(Regex(#"\w+"#).isMatch("中文"), true)
+    @Expect(Regex(#"\w"#).isMatch("🙂"), false)
+}

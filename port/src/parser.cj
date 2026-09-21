@@ -362,6 +362,14 @@ class Parser {
                 }
                 continue
             }
+            if (at(r'\\') && pos + 1 < chars.size && shorthand(chars[pos + 1])) {
+                pos++
+                result.unionWith(escaped().charset)
+                if (at(r'-') && pos + 1 < chars.size && chars[pos + 1] != r']' && chars[pos + 1] != r'-') {
+                    fail("range endpoints must be literal characters")
+                }
+                continue
+            }
             let low = classLiteral()
             var high = low
             if (at(r'-') && pos + 1 < chars.size && chars[pos + 1] != r']' && chars[pos + 1] != r'-') {
@@ -421,7 +429,7 @@ class Parser {
         let expr = escaped()
         match (expr.kind) {
             case ExprKind.Literal => return expr.ch
-            case _ => fail("assertions cannot be used inside character classes")
+            case _ => fail("range endpoints must be literal characters")
         }
     }
     // Fixed-width and braced Unicode scalar escapes share the class/literal path.
@@ -485,6 +493,24 @@ class Parser {
         let c = chars[pos]
         pos++
         match (c) {
+            case r'd' | r'D' | r's' | r'S' | r'w' | r'W' =>
+                let lower = if (c == r'D') {
+                    r'd'
+                } else if (c == r'S') {
+                    r's'
+                } else if (c == r'W') {
+                    r'w'
+                } else {
+                    c
+                }
+                let expr = leaf(ExprKind.CharacterClass, c)
+                let set = unicodeClass(lower)
+                expr.charset = if (lower == c) {
+                    set
+                } else {
+                    set.negated()
+                }
+                return expr
             case r'x' | r'u' | r'U' => return leaf(ExprKind.Literal, hexScalar(c))
             case r'a' => return leaf(ExprKind.Literal, Rune(UInt32(7)))
             case r'f' => return leaf(ExprKind.Literal, Rune(UInt32(12)))
@@ -504,4 +530,8 @@ class Parser {
                 fail("unsupported escape (Unicode classes, boundaries and backreferences are not implemented)")
         }
     }
+}
+
+func shorthand(c: Rune): Bool {
+    c == r'd' || c == r'D' || c == r's' || c == r'S' || c == r'w' || c == r'W'
 }

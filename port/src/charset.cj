@@ -3,7 +3,7 @@ package cjregex
 import std.collection.*
 
 // Scalar interval representation corresponding to regex-syntax HIR classes.
-// No Unicode property database is included at this stage.
+// Unicode shorthand tables use the same normalized scalar range representation.
 class CodeRange {
     let low: Int64
     let high: Int64
@@ -15,6 +15,26 @@ class CodeRange {
 
 class CharSet {
     private var ranges = ArrayList<CodeRange>()
+
+    init() {}
+    // Validated, sorted generated pairs; linear construction avoids repeated union.
+    init(data: Array<Int64>) {
+        if (data.size % 2 != 0) {
+            throw Exception("invalid scalar range pairs")
+        }
+        var i: Int64 = 0
+        var last: Int64 = -1
+        while (i < data.size) {
+            let low = data[i]
+            let high = data[i + 1]
+            if (low <= last || low < 0 || high < low || high > 0x10FFFF || (low <= 0xDFFF && high >= 0xD800)) {
+                throw Exception("invalid scalar range table")
+            }
+            ranges.add(CodeRange(low, high))
+            last = high
+            i += 2
+        }
+    }
 
     // Keep ranges sorted, disjoint and non-adjacent. Exclude surrogate code points.
     func addRange(low: Int64, high: Int64): Unit {

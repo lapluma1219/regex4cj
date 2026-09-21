@@ -38,3 +38,15 @@ The Rust oracle resolves the original repository as a pinned Git dependency;
 its source and other dependencies are not vendored here. Reference tools and
 corpora (CangjieSkills, CangjieCorpus) and SDK distributions are local development
 resources, not included in this repository and not relicensed by this project.
+
+Unicode shorthand data in `data/unicode/perl_classes.json` and the generated
+`port/src/unicode_classes.cj` is derived from the pinned upstream's
+`regex-syntax/src/unicode_tables/perl_decimal.rs`, `perl_space.rs` and
+`perl_word.rs` (Unicode 16.0.0). Source file hashes are recorded in the JSON.
+The upstream Unicode data license is retained verbatim in
+`data/unicode/LICENSE-UNICODE`, including its copyright notice:
+Copyright © 1991-2018 Unicode, Inc. All rights reserved.
+These data retain their Unicode license; the project's MIT OR Apache-2.0
+license does not replace it. Shorthand semantics follow `perl_digit`,
+`perl_space` and `perl_word` in `regex-syntax/src/unicode.rs`.
+See `docs/milestone-9.md` for the import and generation workflow.

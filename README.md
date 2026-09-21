@@ -17,8 +17,9 @@
 - 内联 `m`（多行）、`s`（点号含 LF）、`U`（交换贪婪）标志，支持启用／禁用与局部分组。
 - 支持 `\xNN`、`\uNNNN`、`\UNNNNNNNN` 和花括号码点转义，以及 `\a` / `\f` / `\v` 控制字符。
 - 支持 14 种 POSIX ASCII 命名类（如 `[[:digit:]]`），以及取反和集合运算。
-- Unicode 字面量与点号以标量值匹配；尚未支持 Unicode 属性表、bytes、RegexSet 和 DFA 优化。
-- 原有转义验证及新增匹配差分测试均由 `scripts/verify.sh` 执行，详细范围见 [第八个里程碑](docs/milestone-8.md)和[兼容路线图](docs/compatibility.md)。未支持语法明确报错。
+- 支持 Unicode 16.0.0 的 `\d` / `\s` / `\w` 及取反形式；数据快照和生成脚本随仓库提供。
+- 尚未支持完整 Unicode 属性语法、bytes、RegexSet 和 DFA 优化。
+- 原有转义验证及新增匹配差分测试均由 `scripts/verify.sh` 执行，详细范围见 [第九个里程碑](docs/milestone-9.md)和[兼容路线图](docs/compatibility.md)。未支持语法明确报错。
 
 本阶段是上游核心算法的受限语义移植，解析器及数据结构有简化，不是完整 AST/HIR/PikeVM API 的逐行翻译。捕获组可提取字段；命名组名称目前限 ASCII，结果立即收集，尚未提供惰性迭代器。
 
@@ -105,13 +106,14 @@ cli/target/release/bin/main split-n ',' 'a,b,c' 2 | python3 scripts/show_text.py
 | tests | 差分测试及匹配验收用例 |
 | scripts | 环境、构建和演示入口 |
 | docs | 上游版本记录、工具评估 |
+| data/unicode | Unicode 简写类区间、来源校验与许可证 |
 
 完整上游仓库、参考语料、SDK、下载文件和缓存均不随本仓库发布。开发机将它们保存在同级的 `regex4cj-local/`，运行当前测试不需要参考语料。
 
 ## 下一步
 
-下一阶段建立固定版本的 Unicode 数据生成流程，再推进属性、简写类、大小写折叠、其余标志、bytes、RegexSet、惰性迭代和优化引擎。匹配引擎目前只覆盖明确记录的语法子集。
+下一阶段扩展 Unicode 属性名称与数据表，再推进词边界、大小写折叠、其余标志、bytes、RegexSet、惰性迭代和优化引擎。
 
 ## 来源与许可
 
-MIT OR Apache-2.0。移植代码保留上游版权声明与许可证，详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)、[LICENSE-MIT](LICENSE-MIT)、[LICENSE-APACHE](LICENSE-APACHE)。
+代码采用 MIT OR Apache-2.0；Unicode 数据另保留 [Unicode 许可证](data/unicode/LICENSE-UNICODE)。移植代码保留上游版权声明与许可证，详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)、[LICENSE-MIT](LICENSE-MIT)、[LICENSE-APACHE](LICENSE-APACHE)。

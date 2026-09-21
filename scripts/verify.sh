@@ -2,6 +2,7 @@
 set -euo pipefail
 source "$(dirname "$0")/env.sh"
 cd "$PROJECT_ROOT"
+"${PYTHON:-python3}" scripts/generate_unicode.py --check
 cargo build --locked --manifest-path oracle/Cargo.toml
 cargo test --locked --manifest-path oracle/Cargo.toml
 (cd port && cjpm build)
@@ -15,3 +16,4 @@ cargo test --locked --manifest-path oracle/Cargo.toml
 "${PYTHON:-python3}" tests/verify_flags.py
 "${PYTHON:-python3}" tests/verify_escapes.py
 "${PYTHON:-python3}" tests/verify_ascii_classes.py
+"${PYTHON:-python3}" tests/verify_unicode.py
