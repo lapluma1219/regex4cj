@@ -13,3 +13,5 @@
 !.env.example
 *.pem
 *.key
+# Local release archives and extracted clean-build verification
+/dist/

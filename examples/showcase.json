@@ -1,0 +1,11 @@
+[
+  {"title":"从文本中找出订单号","args":["find","[A-Z]{2}-[0-9]{3}","order=AB-123; order=CD-456"],"expected":[[6,12,"AB-123"],[20,26,"CD-456"]],"note":"每条结果是 [起始字节, 结束字节, 文本]，结束位置不包含在匹配内。"},
+  {"title":"按名称提取订单编号","args":["capture-name","(?<prefix>[A-Z]{2})-(?<number>[0-9]{3})","order=AB-123","number"],"expected":[9,12,"123"],"note":"捕获组把匹配拆成有名字的字段。"},
+  {"title":"保留前缀，对编号脱敏","args":["replace-all","(?<prefix>[A-Z]{2})-[0-9]{3}","order=AB-123; order=CD-456","${prefix}-***"],"expected":"order=AB-***; order=CD-***","note":"替换模板引用捕获字段；模板不是仓颉或 shell 的变量。"},
+  {"title":"按不同分隔符拆分文本","args":["split","[,;]\\s*","a, b;c"],"expected":["a","b","c"],"note":"分隔符可以是逗号或分号，并吸收后面的空白。"},
+  {"title":"查找汉字并解释 UTF-8 偏移","args":["find","\\p{Han}+","A中文α"],"expected":[[1,7,"中文"]],"note":"中文是两个字符、六个 UTF-8 字节，范围是 [1,7)。"},
+  {"title":"只匹配完整单词","args":["find","\\bcat\\b","cat cats cat"],"expected":[[0,3,"cat"],[9,12,"cat"]],"note":"词边界让 cats 中的 cat 不参与匹配。"},
+  {"title":"区分书写系统与扩展集合","args":["find","\\p{scx=Hira}","ー"],"expected":[[0,3,"ー"]],"note":"长音符可用于平假名；把 scx 改为 sc 后应该没有结果。"},
+  {"title":"没有匹配也是正常结果","args":["find","[0-9]+","abc"],"expected":[],"note":"空结果不是运行错误。"},
+  {"title":"明确显示当前版本边界","args":["find","(?i)abc","ABC"],"reject":true,"note":"v0.1.0 暂不支持大小写折叠 i；报错，不悄悄按其他含义执行。"}
+]
