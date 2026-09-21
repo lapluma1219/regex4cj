@@ -159,3 +159,13 @@ func scopedGreedAndAbsoluteAnchors(): Unit {
     @Expect(Regex("((?s).)." ).isMatch("\n\n"), false)
     @Expect(Regex("(?m)^a$").replaceAll("a\na", "b"), "b\nb")
 }
+
+@Test
+func escapedNulAndUnicodeScalars(): Unit {
+    let nul = String([Rune(UInt32(0))])
+    @Expect(Regex(#"\x00"#).isMatch(nul), true)
+    @Expect(Regex(#"\u0000"#).replaceAll(nul, "!"), "!")
+    @Expect(Regex(#"[\U00000000]"#).split(nul).size, 2)
+    @Expect(Regex(#"\x{0}"#).isMatch(nul), true)
+    @Expect(requiredMatch(Regex(#"\xFF"#).find("ÿ")).end, 2)
+}

@@ -9,6 +9,7 @@
 | 库交付 | 第五步提供 cjregex 静态库、独立 CLI 和外部消费包测试 | 包发布、跨平台验证、完整 API 清单 |
 | 基础语法、分支、分组 | 已实现子集 | 完整语法、AST/HIR 公开结构、精确错误类型与位置 |
 | 字符类与集合运算 | 第二步完成基本标量区间与代数 | POSIX、Unicode 属性、字符类转义全集 |
+| 字符转义 | 第七步支持 x/u/U 定长与花括号形式及 a/f/v | Unicode 属性类、简写类和词边界 |
 | 重复 | 支持 * + ? 与 {m,n} 等及非贪婪 | 计数空白、堆叠量词、与上游一致的配置限制 |
 | 捕获 | 第三步支持编号、ASCII 名称、Captures、captures/capturesAll | Unicode 组名、惰性迭代、extract、可复用捕获工作区 |
 | Unicode | 标量扫描、字面量、范围和字节偏移 | 固定 Unicode 数据、属性、大小写折叠、词边界 |
@@ -19,4 +20,4 @@
 | 性能与资源管理 | 基础有序 NFA 与原型限制 | 工作区复用、字节 NFA、DFA、lazy DFA、预过滤等 |
 | 其他仓库包 | 未移植 | regex-lite、C API、开发 CLI 及底层全量公开接口按最终范围推进 |
 
-来源与实现差异详见 milestone-1.md（历史阶段）和 milestone-2.md（历史阶段）、milestone-3.md（历史阶段）、milestone-4.md（历史阶段）、milestone-5.md（历史阶段）及 milestone-6.md（当前阶段）。固定上游版本见 baseline.json。
+来源与实现差异详见 milestone-1.md（历史阶段）和 milestone-2.md（历史阶段）、milestone-3.md（历史阶段）、milestone-4.md（历史阶段）、milestone-5.md（历史阶段）、milestone-6.md（历史阶段）及 milestone-7.md（当前阶段）。固定上游版本见 baseline.json。

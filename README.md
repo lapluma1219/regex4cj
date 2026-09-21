@@ -15,8 +15,9 @@
 - 编号／命名捕获、`captures`、`capturesAll`、`Captures.get/name`，以及捕获数量和名称查询。
 - 替换模板、字面量／回调替换、限定次数替换、`Captures.expand`、`split` / `splitN`。
 - 内联 `m`（多行）、`s`（点号含 LF）、`U`（交换贪婪）标志，支持启用／禁用与局部分组。
+- 支持 `\xNN`、`\uNNNN`、`\UNNNNNNNN` 和花括号码点转义，以及 `\a` / `\f` / `\v` 控制字符。
 - Unicode 字面量与点号以标量值匹配；尚未支持 Unicode 属性表、POSIX 命名类、bytes、RegexSet 和 DFA 优化。
-- 原有转义验证及新增匹配差分测试均由 `scripts/verify.sh` 执行，详细范围见 [第六个里程碑](docs/milestone-6.md)和[兼容路线图](docs/compatibility.md)。未支持语法明确报错。
+- 原有转义验证及新增匹配差分测试均由 `scripts/verify.sh` 执行，详细范围见 [第七个里程碑](docs/milestone-7.md)和[兼容路线图](docs/compatibility.md)。未支持语法明确报错。
 
 本阶段是上游核心算法的受限语义移植，解析器及数据结构有简化，不是完整 AST/HIR/PikeVM API 的逐行翻译。捕获组可提取字段；命名组名称目前限 ASCII，结果立即收集，尚未提供惰性迭代器。
 
@@ -108,7 +109,7 @@ cli/target/release/bin/main split-n ',' 'a,b,c' 2 | python3 scripts/show_text.py
 
 ## 下一步
 
-下一阶段扩展转义与字符类语法，再推进 Unicode 属性、大小写折叠、其余标志、bytes、RegexSet、惰性迭代和优化引擎。匹配引擎目前只覆盖明确记录的语法子集。
+下一阶段扩展命名字符类与 Unicode 数据支持，再推进 Unicode 属性、大小写折叠、其余标志、bytes、RegexSet、惰性迭代和优化引擎。匹配引擎目前只覆盖明确记录的语法子集。
 
 ## 来源与许可
 

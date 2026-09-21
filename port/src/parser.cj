@@ -393,6 +393,60 @@ class Parser {
             case _ => fail("assertions cannot be used inside character classes")
         }
     }
+    // Fixed-width and braced Unicode scalar escapes share the class/literal path.
+    func hexScalar(kind: Rune): Rune {
+        let braced = at(r'{')
+        if (braced) {
+            pos++
+        }
+        let width: Int64 = if (kind == r'x') {
+            2
+        } else if (kind == r'u') {
+            4
+        } else {
+            8
+        }
+        var count: Int64 = 0
+        var value: Int64 = 0
+        while (if (braced) {
+                !at(r'}')
+            } else {
+                count < width
+            }) {
+            if (pos == chars.size) {
+                fail("incomplete hexadecimal escape")
+            }
+            let c = chars[pos]
+            var digit: Int64 = -1
+            if (c >= r'0' && c <= r'9') {
+                digit = Int64(UInt32(c) - UInt32(r'0'))
+            } else if (c >= r'a' && c <= r'f') {
+                digit = Int64(UInt32(c) - UInt32(r'a')) + 10
+            } else if (c >= r'A' && c <= r'F') {
+                digit = Int64(UInt32(c) - UInt32(r'A')) + 10
+            }
+            if (digit < 0) {
+                fail("invalid hexadecimal digit")
+            }
+            value = value * 16 + digit
+            // Check on each digit before a subsequent multiplication can overflow.
+            if (value > 0x10FFFF) {
+                fail("hexadecimal escape exceeds Unicode range")
+            }
+            pos++;
+            count++
+        }
+        if (count == 0) {
+            fail("empty hexadecimal escape")
+        }
+        if (braced) {
+            pos++
+        }
+        if (value >= 0xD800 && value <= 0xDFFF) {
+            fail("surrogate is not a Unicode scalar")
+        }
+        return Rune(UInt32(value))
+    }
     func escaped(): Expr {
         if (pos == chars.size) {
             fail("trailing escape")
@@ -400,6 +454,10 @@ class Parser {
         let c = chars[pos]
         pos++
         match (c) {
+            case r'x' | r'u' | r'U' => return leaf(ExprKind.Literal, hexScalar(c))
+            case r'a' => return leaf(ExprKind.Literal, Rune(UInt32(7)))
+            case r'f' => return leaf(ExprKind.Literal, Rune(UInt32(12)))
+            case r'v' => return leaf(ExprKind.Literal, Rune(UInt32(11)))
             case r'n' => return leaf(ExprKind.Literal, r'\n')
             case r'r' => return leaf(ExprKind.Literal, r'\r')
             case r't' => return leaf(ExprKind.Literal, r'\t')
@@ -412,8 +470,7 @@ class Parser {
                 if (n >= 32 && n <= 126 && !alpha && !digit) {
                     return leaf(ExprKind.Literal, c)
                 }
-                fail(
-                    "unsupported escape (Unicode classes, boundaries, hex escapes and backreferences are not implemented)")
+                fail("unsupported escape (Unicode classes, boundaries and backreferences are not implemented)")
         }
     }
 }

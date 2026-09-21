@@ -22,7 +22,9 @@ commit, with eager string results and Cangjie callback functions.
 Inline m/s/U flags and lexical scope additionally follow `regex-syntax/src/ast/parse.rs`
 and `regex-syntax/src/hir/translate.rs`; LF assertions follow
 `regex-automata/src/util/look.rs`.
-See `docs/milestone-1.md` through `docs/milestone-6.md` for symbol-level provenance.
+Hexadecimal and control-character escapes follow `parse_hex`, `parse_hex_digits`,
+`parse_hex_brace` and `parse_escape` in the same upstream AST parser.
+See `docs/milestone-1.md` through `docs/milestone-7.md` for symbol-level provenance.
 
 Copyright (c) 2014 The Rust Project Developers.
 
