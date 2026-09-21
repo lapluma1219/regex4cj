@@ -74,3 +74,8 @@ cli/target/release/bin/main find '\p{L}+' 'A中3🙂'
 cli/target/release/bin/main find '\p{N}+' 'a²٣'
 echo 'Cangjie: double-negated general category'
 cli/target/release/bin/main find '\P{gc!=L}+' 'ab12'
+
+# Script and Script_Extensions differ on the Japanese prolonged sound mark.
+"$CARGO_TARGET_DIR/debug/regex-oracle" find '\p{scx=Hira}' 'ー'
+"$PROJECT_ROOT/cli/target/release/bin/main" find '\p{scx=Hira}' 'ー'
+"$PROJECT_ROOT/cli/target/release/bin/main" find '\p{Han}+' 'A中文α'

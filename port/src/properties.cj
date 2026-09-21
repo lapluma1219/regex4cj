@@ -53,6 +53,7 @@ func unicodeProperty(text: String, negated: Bool): CharSet {
         equal
     }
     var name = text
+    var key = ""
     var invert = negated
     if (split >= 0) {
         let property = StringBuilder()
@@ -68,8 +69,9 @@ func unicodeProperty(text: String, negated: Bool): CharSet {
         for (i in start..chars.size) {
             value.append(chars[i])
         }
-        let key = normalizePropertyName(property.toString())
-        if (key != "gc" && key != "generalcategory") {
+        key = normalizePropertyName(property.toString())
+        if (key != "gc" && key != "generalcategory" && key != "sc" && key != "script" && key != "scx" && key !=
+            "scriptextensions") {
             throw Exception("unsupported Unicode property: " + key)
         }
         name = value.toString()
@@ -77,7 +79,14 @@ func unicodeProperty(text: String, negated: Bool): CharSet {
             invert = !invert
         }
     }
-    let set = generalCategory(normalizePropertyName(name))
+    let normalized = normalizePropertyName(name)
+    let set = if (key == "scx" || key == "scriptextensions") {
+        unicodeScript_Extensions(normalized)
+    } else if (key == "sc" || key == "script" || (key == "" && isScriptName(normalized))) {
+        unicodeScript(normalized)
+    } else {
+        generalCategory(normalized)
+    }
     return if (invert) {
         set.negated()
     } else {

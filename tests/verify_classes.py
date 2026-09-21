@@ -69,7 +69,7 @@ for p in invalid:
     assert rust.returncode != 0, ('fixture unexpectedly valid in Rust', p)
     result = invoke(CJ, 'find', p, '')
     assert result.returncode == 2 and result.stderr and not result.stdout, (p, result)
-unsupported = [r'[\p{Han}]', 'a{ 2 }', 'a{2}*']
+unsupported = [r'[\p{Alphabetic}]', 'a{ 2 }', 'a{2}*']
 for p in unsupported:
     assert invoke(RUST, 'find', p, 'aaa').returncode == 0, p
     r = invoke(CJ, 'find', p, 'aaa')

@@ -222,3 +222,15 @@ func unicodeGeneralCategories(): Unit {
     @Expect(Regex(#"[\p{L}--\p{Lu}]+"#).isMatch("é中"), true)
     @Expect(Regex(#"\p{Unassigned}"#).isMatch(String([Rune(UInt32(0x0378))])), true)
 }
+
+@Test
+func unicodeScripts(): Unit {
+    let nul = String([Rune(UInt32(0))])
+    @Expect(Regex(#"\p{sc=Common}"#).isMatch(nul), true)
+    @Expect(Regex(#"\p{scx=Common}"#).isMatch(nul), true)
+    @Expect(Regex(#"\p{sc=Hira}"#).isMatch("ー"), false)
+    @Expect(Regex(#"\p{scx=Hira}"#).isMatch("ー"), true)
+    @Expect(Regex(#"\p{scx=Kana}"#).isMatch("ー"), true)
+    @Expect(Regex(#"\p{Han}+"#).replaceAll("a中文b", "!"), "a!b")
+    @Expect(Regex(#"[\p{scx=Hira}--\p{sc=Hira}]"#).isMatch("ー"), true)
+}

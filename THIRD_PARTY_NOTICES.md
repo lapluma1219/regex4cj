@@ -62,3 +62,12 @@ upstream Unicode table directory. The source hashes are recorded in the JSON;
 these data retain `data/unicode/LICENSE-UNICODE`. Property parsing and name
 normalization follow `regex-syntax/src/ast/parse.rs` and `unicode.rs`.
 See `docs/milestone-11.md` for the limited property scope and generation steps.
+
+## Unicode Script / Script_Extensions tables
+
+`data/unicode/scripts.json` and `port/src/unicode_scripts.cj` derive from the
+pinned upstream `regex-syntax/src/unicode_tables/script.rs`, `script_extension.rs`
+and the Script / Script_Extensions alias sections in `property_values.rs`.
+The snapshot records source hashes and revision; `scripts/generate_scripts.py`
+provides reproducible import and generation. Unicode 16.0.0 data is covered by
+the retained `data/unicode/LICENSE-UNICODE` notice.

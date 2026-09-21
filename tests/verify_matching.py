@@ -52,7 +52,7 @@ for p, text, expected in golden:
     assert result.returncode == 0 and result.stdout == expected.encode(), (p, result)
 
 # Unsupported valid Rust patterns must be rejected, never silently reinterpreted.
-unsupported = [r'\p{Han}',
+unsupported = [r'\p{Alphabetic}',
                '(?i)a', 'a**']
 for p in unsupported:
     assert invoke(RUST, 'find', p, 'aaa').returncode == 0, p
