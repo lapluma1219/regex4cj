@@ -169,3 +169,22 @@ func escapedNulAndUnicodeScalars(): Unit {
     @Expect(Regex(#"\x{0}"#).isMatch(nul), true)
     @Expect(requiredMatch(Regex(#"\xFF"#).find("ÿ")).end, 2)
 }
+
+@Test
+func posixClassesWithNul(): Unit {
+    let nul = String([Rune(UInt32(0))])
+    @Expect(Regex("[[:ascii:]]").isMatch(nul), true)
+    @Expect(Regex("[[:cntrl:]]").isMatch(nul), true)
+    @Expect(Regex("[[:print:]]").isMatch(nul), false)
+    @Expect(Regex("[[:^ascii:]]").isMatch(nul), false)
+    @Expect(Regex("[[:^digit:]]").isMatch(nul), true)
+}
+
+@Test
+func posixClassesAreAsciiAndNamesCanFallBack(): Unit {
+    @Expect(Regex("[[:digit:]]").isMatch("٣４"), false)
+    @Expect(Regex("[[:alpha:]]").isMatch("中é"), false)
+    @Expect(Regex("[[:^ascii:]]+").replaceAll("a中🙂b", "!"), "a!b")
+    @Expect(Regex("[[:digitt:]]").isMatch(":"), true)
+    @Expect(Regex("[[:space:]--[:blank:]]").isMatch("\n"), true)
+}

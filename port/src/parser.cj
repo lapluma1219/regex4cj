@@ -356,10 +356,10 @@ class Parser {
         while (pos < chars.size && !at(r']') && !classOperator()) {
             if (at(r'[')) {
                 pos++
-                if (at(r':')) {
-                    fail("POSIX named classes are not supported yet")
+                match (namedClass()) {
+                    case Some(named) => result.unionWith(named)
+                    case None => result.unionWith(characterClass())
                 }
-                result.unionWith(characterClass())
                 continue
             }
             let low = classLiteral()
@@ -374,6 +374,37 @@ class Parser {
             result.addRange(Int64(UInt32(low)), Int64(UInt32(high)))
         }
         return result
+    }
+    // '[' is already consumed. Probe without advancing on failure: unknown
+    // names and incomplete delimiters fall back to ordinary nested classes.
+    func namedClass(): Option<CharSet> {
+        if (!at(r':')) {
+            return None
+        }
+        var cursor = pos + 1
+        var negate = false
+        if (cursor < chars.size && chars[cursor] == r'^') {
+            negate = true
+            cursor++
+        }
+        let name = StringBuilder()
+        while (cursor < chars.size && chars[cursor] != r':') {
+            name.append(chars[cursor]);
+            cursor++
+        }
+        if (cursor + 1 >= chars.size || chars[cursor + 1] != r']') {
+            return None
+        }
+        match (asciiClass(name.toString())) {
+            case None => return None
+            case Some(set) =>
+                pos = cursor + 2
+                return Some(if (negate) {
+                    set.negated()
+                } else {
+                    set
+                })
+        }
     }
     func classLiteral(): Rune {
         if (pos == chars.size) {

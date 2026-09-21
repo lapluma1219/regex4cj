@@ -24,7 +24,9 @@ and `regex-syntax/src/hir/translate.rs`; LF assertions follow
 `regex-automata/src/util/look.rs`.
 Hexadecimal and control-character escapes follow `parse_hex`, `parse_hex_digits`,
 `parse_hex_brace` and `parse_escape` in the same upstream AST parser.
-See `docs/milestone-1.md` through `docs/milestone-7.md` for symbol-level provenance.
+POSIX classes in `ascii_classes.cj` adapt `ascii_class` in the upstream HIR
+translator; parser fallback follows `maybe_parse_ascii_class` in its AST parser.
+See `docs/milestone-1.md` through `docs/milestone-8.md` for symbol-level provenance.
 
 Copyright (c) 2014 The Rust Project Developers.
 
