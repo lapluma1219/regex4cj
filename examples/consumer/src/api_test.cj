@@ -198,3 +198,16 @@ func unicodeShorthandsAndNul(): Unit {
     @Expect(Regex(#"\w+"#).isMatch("中文"), true)
     @Expect(Regex(#"\w"#).isMatch("🙂"), false)
 }
+
+@Test
+func unicodeWordBoundaries(): Unit {
+    let nul = String([Rune(UInt32(0))])
+    let text = "中" + nul + "a"
+    let hits = Regex(#"\b"#).findAll(text)
+    @Expect(hits.size, 4)
+    @Expect(hits[1].start, 3)
+    @Expect(hits[2].start, 4)
+    @Expect(Regex(#"\B"#).isMatch(""), true)
+    @Expect(Regex(#"\b"#).isMatch(""), false)
+    @Expect(Regex(#"\b"#).replaceAll("中文", "|"), "|中文|")
+}

@@ -5,7 +5,8 @@ import std.collection.*
 // Adapted from regex-automata's Thompson compiler and ordered PikeVM.
 // See docs/milestone-1.md for exact upstream symbols and representation changes.
 enum Op {
-    Literal(Rune) | CharacterClass(CharSet) | Any(Bool) | Begin(Bool) | End(Bool) | Split | Save(Int64) | Accept
+    Literal(Rune) | CharacterClass(CharSet) | Any(Bool) | Begin(Bool) | End(Bool) | WordBoundary(Bool) | Split | Save(
+        Int64) | Accept
 }
 
 class State {
@@ -46,6 +47,7 @@ class Compiler {
                 let end = add(Op.Save(expr.captureIndex * 2 + 1), next, -1)
                 let body = compile(expr.children[0], end)
                 return add(Op.Save(expr.captureIndex * 2), body, -1)
+            case ExprKind.WordBoundary => return add(Op.WordBoundary(expr.ch == r'b'), next, -1)
             case ExprKind.Empty => return next
             case ExprKind.Literal => return add(Op.Literal(expr.ch), next, -1)
             case ExprKind.CharacterClass => return add(Op.CharacterClass(expr.charset), next, -1)
@@ -174,6 +176,7 @@ public class RegexMatch {
 public class Regex {
     private let states: Array<State>
     private let startState: Int64
+    private let wordCharacters: CharSet
     private let groupNames: Array<String>
     public init(pattern: String) {
         let parser = Parser(pattern)
@@ -188,8 +191,10 @@ public class Regex {
         let live = Array<Bool>(parser.captureNames.size, repeat: false)
         live[0] = true
         var last: Int64 = 0
+        var hasBoundary = false
         for (state in states) {
             match (state.op) {
+                case Op.WordBoundary(_) => hasBoundary = true
                 case Op.Save(slot) =>
                     let index = slot / 2
                     live[index] = true
@@ -198,6 +203,11 @@ public class Regex {
                     }
                 case _ => ()
             }
+        }
+        wordCharacters = if (hasBoundary) {
+            unicodeClass(r'w')
+        } else {
+            CharSet()
         }
         groupNames = Array<String>(last + 1, {
             i => if (live[i]) {
@@ -231,6 +241,12 @@ public class Regex {
                         let updated = frame.slots.clone()
                         updated[slot] = pos
                         stack.add(Thread(s.first, start, updated))
+                    }
+                case Op.WordBoundary(positive) =>
+                    let before = pos > 0 && wordCharacters.contains(input.chars[pos - 1])
+                    let after = pos < input.chars.size && wordCharacters.contains(input.chars[pos])
+                    if ((before != after) == positive) {
+                        stack.add(Thread(s.first, start, frame.slots))
                     }
                 case Op.Begin(multiline) =>
                     if (pos == 0 || (multiline && input.chars[pos - 1] == r'\n')) {

@@ -18,8 +18,9 @@
 - 支持 `\xNN`、`\uNNNN`、`\UNNNNNNNN` 和花括号码点转义，以及 `\a` / `\f` / `\v` 控制字符。
 - 支持 14 种 POSIX ASCII 命名类（如 `[[:digit:]]`），以及取反和集合运算。
 - 支持 Unicode 16.0.0 的 `\d` / `\s` / `\w` 及取反形式；数据快照和生成脚本随仓库提供。
+- 支持 Unicode `\b` / `\B` 词边界，复用固定版本的单词字符表。
 - 尚未支持完整 Unicode 属性语法、bytes、RegexSet 和 DFA 优化。
-- 原有转义验证及新增匹配差分测试均由 `scripts/verify.sh` 执行，详细范围见 [第九个里程碑](docs/milestone-9.md)和[兼容路线图](docs/compatibility.md)。未支持语法明确报错。
+- 原有转义验证及新增匹配差分测试均由 `scripts/verify.sh` 执行，详细范围见 [第十个里程碑](docs/milestone-10.md)和[兼容路线图](docs/compatibility.md)。未支持语法明确报错。
 
 本阶段是上游核心算法的受限语义移植，解析器及数据结构有简化，不是完整 AST/HIR/PikeVM API 的逐行翻译。捕获组可提取字段；命名组名称目前限 ASCII，结果立即收集，尚未提供惰性迭代器。
 
@@ -112,7 +113,7 @@ cli/target/release/bin/main split-n ',' 'a,b,c' 2 | python3 scripts/show_text.py
 
 ## 下一步
 
-下一阶段扩展 Unicode 属性名称与数据表，再推进词边界、大小写折叠、其余标志、bytes、RegexSet、惰性迭代和优化引擎。
+下一阶段扩展 Unicode 属性名称与数据表，再推进方向性边界、大小写折叠、其余标志、bytes、RegexSet、惰性迭代和优化引擎。
 
 ## 来源与许可
 

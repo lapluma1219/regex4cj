@@ -5,7 +5,7 @@ package cjregex
 // Assertions are conservatively treated as zero-width, as in HIR properties.
 func normalizeWidth(expr: Expr): Int64 {
     match (expr.kind) {
-        case ExprKind.Empty | ExprKind.Begin | ExprKind.End => return 0
+        case ExprKind.Empty | ExprKind.Begin | ExprKind.End | ExprKind.WordBoundary => return 0
         case ExprKind.Literal | ExprKind.Any => return 1
         case ExprKind.CharacterClass => return if (expr.charset.isEmpty()) {
             -1

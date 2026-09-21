@@ -5,7 +5,7 @@ import std.collection.*
 // A deliberately restricted syntax adapter. This is not a port of the full
 // regex-syntax AST/HIR API. Unsupported constructs fail before execution.
 enum ExprKind {
-    Empty | Literal | CharacterClass | Any | Begin | End | Concat | Alternate | Repeat | Capture
+    Empty | Literal | CharacterClass | Any | Begin | End | WordBoundary | Concat | Alternate | Repeat | Capture
 }
 
 class Expr {
@@ -518,6 +518,7 @@ class Parser {
             case r'n' => return leaf(ExprKind.Literal, r'\n')
             case r'r' => return leaf(ExprKind.Literal, r'\r')
             case r't' => return leaf(ExprKind.Literal, r'\t')
+            case r'b' | r'B' => return leaf(ExprKind.WordBoundary, c)
             case r'A' => return leaf(ExprKind.Begin, c)
             case r'z' => return leaf(ExprKind.End, c)
             case _ =>
@@ -527,7 +528,8 @@ class Parser {
                 if (n >= 32 && n <= 126 && !alpha && !digit) {
                     return leaf(ExprKind.Literal, c)
                 }
-                fail("unsupported escape (Unicode classes, boundaries and backreferences are not implemented)")
+                fail(
+                    "unsupported escape (Unicode properties, advanced boundaries and backreferences are not implemented)")
         }
     }
 }

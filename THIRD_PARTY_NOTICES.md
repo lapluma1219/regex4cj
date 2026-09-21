@@ -50,3 +50,7 @@ These data retain their Unicode license; the project's MIT OR Apache-2.0
 license does not replace it. Shorthand semantics follow `perl_digit`,
 `perl_space` and `perl_word` in `regex-syntax/src/unicode.rs`.
 See `docs/milestone-9.md` for the import and generation workflow.
+
+Unicode word boundary assertions follow `is_word_unicode` and
+`is_word_unicode_negate` in the pinned `regex-automata/src/util/look.rs`.
+See `docs/milestone-10.md` for scalar-based representation differences.
