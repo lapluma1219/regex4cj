@@ -211,3 +211,14 @@ func unicodeWordBoundaries(): Unit {
     @Expect(Regex(#"\b"#).isMatch(""), false)
     @Expect(Regex(#"\b"#).replaceAll("中文", "|"), "|中文|")
 }
+
+@Test
+func unicodeGeneralCategories(): Unit {
+    let nul = String([Rune(UInt32(0))])
+    @Expect(Regex(#"\p{Control}"#).isMatch(nul), true)
+    @Expect(Regex(#"\p{Any}"#).isMatch(nul), true)
+    @Expect(Regex(#"\p{gc=Nd}"#).isMatch("٣"), true)
+    @Expect(Regex(#"\P{gc!=L}+"#).replaceAll("中文3", "!"), "!3")
+    @Expect(Regex(#"[\p{L}--\p{Lu}]+"#).isMatch("é中"), true)
+    @Expect(Regex(#"\p{Unassigned}"#).isMatch(String([Rune(UInt32(0x0378))])), true)
+}

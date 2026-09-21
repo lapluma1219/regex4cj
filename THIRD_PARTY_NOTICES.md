@@ -54,3 +54,11 @@ See `docs/milestone-9.md` for the import and generation workflow.
 Unicode word boundary assertions follow `is_word_unicode` and
 `is_word_unicode_negate` in the pinned `regex-automata/src/util/look.rs`.
 See `docs/milestone-10.md` for scalar-based representation differences.
+
+Unicode general-category data in `data/unicode/general_categories.json` and
+`port/src/unicode_categories.cj` derives from `general_category.rs` and the
+General_Category aliases in `property_values.rs` under the same pinned
+upstream Unicode table directory. The source hashes are recorded in the JSON;
+these data retain `data/unicode/LICENSE-UNICODE`. Property parsing and name
+normalization follow `regex-syntax/src/ast/parse.rs` and `unicode.rs`.
+See `docs/milestone-11.md` for the limited property scope and generation steps.

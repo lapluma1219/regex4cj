@@ -362,7 +362,7 @@ class Parser {
                 }
                 continue
             }
-            if (at(r'\\') && pos + 1 < chars.size && shorthand(chars[pos + 1])) {
+            if (at(r'\\') && pos + 1 < chars.size && classEscape(chars[pos + 1])) {
                 pos++
                 result.unionWith(escaped().charset)
                 if (at(r'-') && pos + 1 < chars.size && chars[pos + 1] != r']' && chars[pos + 1] != r'-') {
@@ -486,6 +486,29 @@ class Parser {
         }
         return Rune(UInt32(value))
     }
+    func propertyClass(negated: Bool): Expr {
+        let name = StringBuilder()
+        if (at(r'{')) {
+            pos++
+            while (pos < chars.size && !at(r'}')) {
+                name.append(chars[pos]);
+                pos++
+            }
+            if (!at(r'}')) {
+                fail("unclosed Unicode property")
+            }
+            pos++
+        } else {
+            if (pos == chars.size) {
+                fail("missing Unicode property")
+            }
+            name.append(chars[pos]);
+            pos++
+        }
+        let expr = leaf(ExprKind.CharacterClass, r' ')
+        expr.charset = unicodeProperty(name.toString(), negated)
+        return expr
+    }
     func escaped(): Expr {
         if (pos == chars.size) {
             fail("trailing escape")
@@ -518,6 +541,7 @@ class Parser {
             case r'n' => return leaf(ExprKind.Literal, r'\n')
             case r'r' => return leaf(ExprKind.Literal, r'\r')
             case r't' => return leaf(ExprKind.Literal, r'\t')
+            case r'p' | r'P' => return propertyClass(c == r'P')
             case r'b' | r'B' => return leaf(ExprKind.WordBoundary, c)
             case r'A' => return leaf(ExprKind.Begin, c)
             case r'z' => return leaf(ExprKind.End, c)
@@ -534,6 +558,6 @@ class Parser {
     }
 }
 
-func shorthand(c: Rune): Bool {
-    c == r'd' || c == r'D' || c == r's' || c == r'S' || c == r'w' || c == r'W'
+func classEscape(c: Rune): Bool {
+    c == r'p' || c == r'P' || c == r'd' || c == r'D' || c == r's' || c == r'S' || c == r'w' || c == r'W'
 }
