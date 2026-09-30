@@ -41,6 +41,23 @@ func printCaptureResult(regex: Regex, caps: Captures): Unit {
 
 main(args: Array<String>): Int64 {
     try {
+        // Set protocol: TEXT followed by zero or more PATTERN arguments.
+        if (args.size >= 2 && (args[0] == "set-matches" || args[0] == "set-is-match")) {
+            let patterns = Array<String>(args.size - 2, {i => args[i + 2]})
+            let set = RegexSet(patterns)
+            if (args[0] == "set-is-match") {
+                println(set.isMatch(args[1]))
+            } else {
+                let result = set.matches(args[1])
+                println("patterns\t${result.len()}")
+                println("any\t${result.matchedAny()}")
+                println("all\t${result.matchedAll()}")
+                for (id in result.indices()) {
+                    println("hit\t${id}")
+                }
+            }
+            return 0
+        }
         if (args.size == 2 && args[0] == "escape") {
             println(escape(args[1]))
             return 0
@@ -150,7 +167,7 @@ main(args: Array<String>): Int64 {
             return 0
         }
         eprintln(
-            "usage: cjregex escape TEXT | find PATTERN TEXT | first PATTERN TEXT | is-match PATTERN TEXT | captures PATTERN TEXT | capture-first PATTERN TEXT | capture-name PATTERN TEXT NAME | split PATTERN TEXT | split-n PATTERN TEXT LIMIT | replace/replace-all/expand PATTERN TEXT TEMPLATE | replace-n/replace-literal PATTERN TEXT TEMPLATE LIMIT | replace-with PATTERN TEXT LIMIT")
+            "usage: cjregex set-matches TEXT [PATTERN ...] | set-is-match TEXT [PATTERN ...] | escape TEXT | find PATTERN TEXT | first PATTERN TEXT | is-match PATTERN TEXT | captures PATTERN TEXT | capture-first PATTERN TEXT | capture-name PATTERN TEXT NAME | split PATTERN TEXT | split-n PATTERN TEXT LIMIT | replace/replace-all/expand PATTERN TEXT TEMPLATE | replace-n/replace-literal PATTERN TEXT TEMPLATE LIMIT | replace-with PATTERN TEXT LIMIT")
         return 2
     } catch (e: Exception) {
         eprintln(e.toString())

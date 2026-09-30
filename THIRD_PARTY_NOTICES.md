@@ -79,3 +79,11 @@ from the pinned upstream `regex-syntax/src/unicode_tables/property_bool.rs`
 and the relevant aliases in `property_names.rs`. Source hashes and revision
 are recorded in the snapshot; `scripts/generate_binary.py` reproduces import
 and generation. Unicode 16.0.0 data retains `data/unicode/LICENSE-UNICODE`.
+
+## RegexSet API and multi-pattern execution
+
+`port/src/regex_set.cj` follows the observable RegexSet / SetMatches contracts
+in the pinned upstream `src/regexset/string.rs`. It reuses this project's
+adapted Thompson compiler and assertion semantics with a new scalar-based
+multi-pattern executor. Result arrays, fixed resource limits and unsupported
+advanced interfaces differ from the Rust API; see `docs/regex-set.md`.

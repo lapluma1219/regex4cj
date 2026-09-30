@@ -39,4 +39,11 @@ main(): Unit {
     let literal = "a+b.txt"
     println("  转义后：" + escape(literal))
     println("  是否匹配原文：${Regex(escape(literal)).isMatch(literal)}")
+
+    println("7. 多规则文本分类：")
+    let rules = RegexSet(["退款", "发票", "[A-Z]{2}-[0-9]{3}"])
+    let labels = ["退款相关", "发票相关", "包含订单号"]
+    for (id in rules.matches("订单 AB-123 需要退款").indices()) {
+        println("  规则 ${id}：${labels[id]}")
+    }
 }

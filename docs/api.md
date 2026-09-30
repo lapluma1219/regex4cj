@@ -1,4 +1,4 @@
-# v0.1.0 公共 API
+# v0.2.0 公共 API
 
 使用 `import cjregex.*`。下面记录当前仓颉接口，不是 Rust 全量 API 清单。可运行调用见 `examples/consumer/src/main.cj`。
 
@@ -60,3 +60,7 @@ text、replacement 的类型均为 String；所有替换返回 String。次数/�
 库通过 Exception 报告非法语法、未支持的特性和资源超限；未找到匹配通常返回 None/空数组/false。CLI 将错误打印到 stderr 并返回退出码 2。当前没有上游完整的精确错误类型和位置 API。
 
 资源保护包括：模式最多 4096 字节、嵌套 64 层、重复计数 10000、NFA 最多 16384 个状态、编译工作量 65536、显式捕获最多 128 个，以及捕获状态槽规模限制。它们是本版实现限制，不是对 Rust 默认配置的完整复刻。
+
+## 多规则接口
+
+新增 `RegexSet` 和 `SetMatches`。构造、查询、结果语义及与 Rust 的逐项映射见 [RegexSet 契约](regex-set.md)。现有单模式接口保持不变。

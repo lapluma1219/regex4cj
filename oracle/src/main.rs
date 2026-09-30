@@ -18,6 +18,21 @@ fn print_capture_result(re: &Regex, caps: &regex::Captures<'_>) {
 fn main() {
     let a: Vec<String> = std::env::args().skip(1).collect();
     match a.first().map(String::as_str) {
+        Some("set-matches" | "set-is-match") if a.len() >= 2 => {
+            match regex::RegexSet::new(&a[2..]) {
+                Ok(set) => {
+                    if a[0] == "set-is-match" { println!("{}", set.is_match(&a[1])); }
+                    else {
+                        let result = set.matches(&a[1]);
+                        println!("patterns\t{}", result.len());
+                        println!("any\t{}", result.matched_any());
+                        println!("all\t{}", result.matched_all());
+                        for id in result.iter() { println!("hit\t{id}"); }
+                    }
+                }
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            }
+        },
         Some("escape") if a.len() == 2 => println!("{}", regex::escape(&a[1])),
         Some("find") if a.len() == 3 => {
             match Regex::new(&a[1]) {
@@ -101,7 +116,7 @@ fn main() {
             }
             println!("{}", re.replace_all(text, "${prefix}-***"));
         },
-        _ => { eprintln!("usage: regex-oracle escape TEXT | find PATTERN TEXT | first PATTERN TEXT | is-match PATTERN TEXT | captures PATTERN TEXT | capture-first PATTERN TEXT | capture-name PATTERN TEXT NAME | split PATTERN TEXT | split-n PATTERN TEXT LIMIT | replace/replace-all/expand PATTERN TEXT TEMPLATE | replace-n/replace-literal PATTERN TEXT TEMPLATE LIMIT | replace-with PATTERN TEXT LIMIT | demo"); std::process::exit(2); }
+        _ => { eprintln!("usage: regex-oracle set-matches TEXT [PATTERN ...] | set-is-match TEXT [PATTERN ...] | escape TEXT | find PATTERN TEXT | first PATTERN TEXT | is-match PATTERN TEXT | captures PATTERN TEXT | capture-first PATTERN TEXT | capture-name PATTERN TEXT NAME | split PATTERN TEXT | split-n PATTERN TEXT LIMIT | replace/replace-all/expand PATTERN TEXT TEMPLATE | replace-n/replace-literal PATTERN TEXT TEMPLATE LIMIT | replace-with PATTERN TEXT LIMIT | demo"); std::process::exit(2); }
     }
 }
 
@@ -130,4 +145,15 @@ mod native_tests {
         caps.expand("$1", &mut out);
         assert_eq!(out, "\0");
     }
+    #[test]
+    fn set_nul_empty_and_overlap() {
+        let empty = regex::RegexSet::new(Vec::<String>::new()).unwrap();
+        assert!(!empty.is_match(""));
+        assert!(empty.matches("").matched_all());
+        let set = regex::RegexSet::new(["\0", r"\p{Han}", r"\b中\b", r"\p{Emoji}", r"\A\z"]).unwrap();
+        assert_eq!(set.matches("\0中🙂").iter().collect::<Vec<_>>(), vec![0, 1, 2, 3]);
+        let set = regex::RegexSet::new(["foo", "bar", "foobar", "foo", "z"]).unwrap();
+        assert_eq!(set.matches("bar foobar foo").iter().collect::<Vec<_>>(), vec![0, 1, 2, 3]);
+    }
+
 }

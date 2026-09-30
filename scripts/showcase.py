@@ -52,7 +52,7 @@ def main():
     local = Path(os.environ.get('REGEX4CJ_LOCAL', str(ROOT.parent / 'regex4cj-local')))
     report = local / 'work/showcase.json'
     report.parent.mkdir(parents=True, exist_ok=True)
-    report.write_text(json.dumps({'version': '0.1.0', 'cases': results}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    report.write_text(json.dumps({'version': (ROOT / 'VERSION').read_text().strip(), 'cases': results}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     passed = sum(item['passed'] for item in results)
     print('\n场景验收：{}/{} 通过；报告：{}'.format(passed, len(results), report))
     return 0 if passed == len(results) else 1
