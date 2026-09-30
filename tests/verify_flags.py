@@ -49,7 +49,7 @@ for p in invalid:
     assert invoke(RUST, 'find', p, '').returncode != 0, p
     r = invoke(CJ, 'find', p, '')
     assert r.returncode == 2 and r.stderr and not r.stdout, (p,r)
-unsupported = ['(?i)a', '(?x)a', '(?R).', '(?u)a', '(?-u:a)', '(?-i)a']
+unsupported = ['(?x)a', '(?R).', '(?u)a', '(?-u:a)']
 for p in unsupported:
     assert invoke(RUST, 'find', p, 'a').returncode == 0, p
     r = invoke(CJ, 'find', p, 'a')
@@ -58,9 +58,9 @@ report = json.loads(REPORT.read_text())
 report.update({'flags_differential_passed': count, 'flags_api_checks_passed': api_checks,
                'flags_golden_passed': len(golden), 'flags_invalid_rejected': len(invalid),
                'flags_unsupported_rejected': len(unsupported),
-               'matching_scope': 'Unicode-scalar NFA, classes, repeats, captures and scoped m/s/U flags; no Unicode properties/case folding/bytes/DFA',
+               'matching_scope': 'Unicode-scalar NFA, classes, repeats, captures and scoped i/m/s/U flags; no x/R/u, bytes or DFA',
                'limitations': ['CLI cannot transport NUL; native tests cover selected NUL cases',
                                'findAll/capturesAll/split are eager', 'ASCII capture names only',
-                               'Only m/s/U flags; see docs/milestone-6.md for remaining scope']})
+                               'Inline i uses Unicode simple case folding; x/R/u and Builder remain unsupported']})
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n')
 print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)

@@ -24,6 +24,8 @@ for (m in re.findAll("AB-123 CD-456")) {
 
 RegexMatch 公开只读字段 `start: Int64`、`end: Int64`、`text: String`。区间 `[start,end)` 使用原输入的 UTF-8 字节偏移。API 返回数组而非惰性迭代器，大量匹配会占用内存。
 
+内联标志 `i`、`m`、`s`、`U` 可以写在模式里，例如 `(?i)k` 或 `(?i:k)ey`。`i` 使用 Unicode 简单大小写折叠：`k`、`K` 和开尔文符号可以互配，捕获和替换仍返回原文。`(?i)[a-z--c]` 也不会匹配 `C`。`x`、`R`、`u` 以及 Builder 仍会在构造时失败。和 Rust 的逐项对照见 [公共契约清单](api-coverage.md)。
+
 ## 捕获
 
 | Captures 接口 | 含义 |

@@ -12,7 +12,7 @@
 bash scripts/run.sh demo
 ```
 
-脚本自动构建，展示九个原有场景与六个分类场景的输入、预期和实际结果。最后应显示 **9/9 通过**与**多规则分类 6/6 通过**。第一次运行、环境配置和故障处理见[上手指南](docs/getting-started.md)。
+脚本自动构建，展示十个单模式场景与六个分类场景的输入、预期和实际结果。最后应显示 **10/10 通过**与**多规则分类 6/6 通过**。第一次运行、环境配置和故障处理见[上手指南](docs/getting-started.md)。
 
 ```sh
 # 运行真正导入 cjregex 的仓颉示例；可修改源码再运行
@@ -22,7 +22,7 @@ bash scripts/run.sh example
 bash scripts/run.sh find '\p{Han}+' 'A中文α'
 bash scripts/run.sh replace-all '(?<prefix>[A-Z]{2})-[0-9]{3}' 'AB-123 CD-456' '${prefix}-***'
 
-# 快速验收：26 项仓颉原生测试 + 15 个演示场景，不需要 Rust
+# 快速验收：27 项仓颉原生测试 + 16 个演示场景，不需要 Rust
 bash scripts/run.sh check
 
 # 完整验收：另需 Git、Rust/Cargo；首次获取依赖需要网络
@@ -35,7 +35,7 @@ bash scripts/run.sh verify
 
 1. [上手指南](docs/getting-started.md)：运行、改输入、理解结果。
 2. [学习指南](docs/learning-guide.md)：这个库做什么、从模式到结果如何实现、如何证明当前行为正确。
-3. [当前 API](docs/api.md)：在自己的仓颉程序中调用。
+3. [当前 API](docs/api.md)：在自己的仓颉程序中调用。和 Rust 的逐项对照见 [公共契约清单](docs/api-coverage.md)。
 4. [多规则分类与 RegexSet](docs/regex-set.md)：如何配置规则与获取命中编号。
 5. [版本说明](docs/release-0.2.0.md)：交付内容、支持边界和验收证据。
 
@@ -58,9 +58,10 @@ bash scripts/run.sh classify '订单 AB-123 需要退款，也需要开发票'
 - 模板、字面量和回调替换，以及分割文本。
 - 字符类、集合运算、分支、分组、贪婪/非贪婪重复和计数重复。
 - 锚点、Unicode 词边界，内联 `m` / `s` / `U` 标志。
+- 内联 `(?i)` / `(?-i)` 的 Unicode 简单大小写折叠。匹配文本保持原样；`ß` 不会展开成两个字符的 `SS`。
 - Unicode 16.0.0 的 d/s/w、通用类别、Script/Script_Extensions 和 64 个二元属性。
 
-**本版不支持** `(?i)` 大小写折叠、x/R/u 标志、前后查找、反向引用、任意字节 API、完整 RegexSet 配置/进阶接口、Builder、惰性迭代器及全部上游底层接口。前后查找和反向引用也不属于 Rust regex 的支持范围。未支持的模式应报错，不应当作其他含义执行。
+**当前仍不支持** x/R/u 标志、Builder、起点搜索、惰性迭代器、Unicode 捕获名、方向性词边界、Age/Break 查询、任意字节 API，以及全部上游底层接口。前后查找和反向引用也不属于 Rust regex 的支持范围。未支持的模式应报错，不应当作其他含义执行。逐项归属见 [公共契约清单](docs/api-coverage.md)。仓库版本号仍是 v0.2.0，上述 `(?i)` 是走向 v0.3.0 的增量，不是新的完整交付。
 
 ## 作为库依赖
 
@@ -75,7 +76,7 @@ cjregex = { path = "../regex4cj/port" }
 
 ## 交付与验证
 
-本机验证环境为 Apple Silicon macOS、仓颉 1.0.5。完整套件包含 **10,105 条差分用例、26 项仓颉原生测试、3 项 Rust 原生测试和 4 项 Python 数据导入测试**，另有黄金预期和错误检查。通过有限测试不等于完全兼容上游。
+本机验证环境为 Apple Silicon macOS、仓颉 1.0.5。v0.2.0 冻结验收是 10,105 条差分；当前工作区另有 721 条内联 `(?i)` 大小写折叠差分，以及 27 项仓颉原生测试、3 项 Rust 原生测试和 4 项 Python 数据导入测试。通过有限测试不等于完全兼容上游。数字记录的是已经跑过的检查，不是完成百分比。
 
 构建缓存和报告默认写到同级 `regex4cj-local/`；可用 `REGEX4CJ_LOCAL` 指定其他位置。仓颉构建产物位于各包 `target/`。以上都不进入源码包。
 

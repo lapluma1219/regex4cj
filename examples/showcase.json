@@ -7,5 +7,6 @@
   {"title":"只匹配完整单词","args":["find","\\bcat\\b","cat cats cat"],"expected":[[0,3,"cat"],[9,12,"cat"]],"note":"词边界让 cats 中的 cat 不参与匹配。"},
   {"title":"区分书写系统与扩展集合","args":["find","\\p{scx=Hira}","ー"],"expected":[[0,3,"ー"]],"note":"长音符可用于平假名；把 scx 改为 sc 后应该没有结果。"},
   {"title":"没有匹配也是正常结果","args":["find","[0-9]+","abc"],"expected":[],"note":"空结果不是运行错误。"},
-  {"title":"明确显示当前版本边界","args":["find","(?i)abc","ABC"],"reject":true,"note":"当前版本暂不支持大小写折叠 i；报错，不悄悄按其他含义执行。"}
+  {"title":"大小写不敏感但仍返回原文","args":["find","(?i)abc","ABC"],"expected":[[0,3,"ABC"]],"note":"简单大小写折叠让 ABC 命中；结果文本仍是输入里的 ABC。"},
+  {"title":"明确显示当前版本边界","args":["find","(?x)abc","ABC"],"reject":true,"note":"扩展模式 x 仍未实现；报错，不把空白和注释删掉后继续执行。"}
 ]

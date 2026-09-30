@@ -63,7 +63,7 @@ for patterns, text, ids in golden:
     expected = ('patterns\t{}\nany\t{}\nall\t{}\n'.format(len(patterns), str(bool(ids)).lower(), str(len(ids) == len(patterns)).lower()) +
                 ''.join('hit\t{}\n'.format(i) for i in ids)).encode()
     assert output.returncode == 0 and output.stdout == expected, (patterns, output)
-for patterns in [['ok', '('], ['ok', '(?i)a'], ['ok', r'\p{age=16.0}']]:
+for patterns in [['ok', '('], ['ok', '(?x)a'], ['ok', r'\p{age=16.0}']]:
     r = invoke(CJ, 'set-matches', patterns, 'ok')
     assert r.returncode == 2 and b'pattern 1:' in r.stderr and not r.stdout, r
 limits = [(['a'] * 257, b'256 patterns'), (['a' * 4000] * 17, b'65536 pattern bytes'),

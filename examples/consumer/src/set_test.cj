@@ -21,7 +21,9 @@ func setOverlapDuplicatesAndOrdering(): Unit {
     let result = RegexSet(["foo", "bar", "foobar", "foo", "z"]).matches("bar foobar foo")
     @Expect(result.len(), 5)
     @Expect(result.indices().size, 4)
-    for (i in 0..4) { @Expect(result.indices()[i], i) }
+    for (i in 0..4) {
+        @Expect(result.indices()[i], i)
+    }
     @Expect(result.matched(4), false)
     @Expect(result.matchedAll(), false)
     @Expect(result.matchedAny(), true)
@@ -51,16 +53,17 @@ func setNulAndUnicode(): Unit {
     let nul = String([Rune(UInt32(0))])
     let set = RegexSet([nul, #"\p{Han}"#, #"\b中\b"#, #"\p{Emoji}"#, #"\A\z"#])
     let result = set.matches(nul + "中🙂")
-    for (i in 0..4) { @Expect(result.matched(i), true) }
+    for (i in 0..4) {
+        @Expect(result.matched(i), true)
+    }
     @Expect(result.matched(4), false)
     @Expect(set.isMatch(nul), true)
 }
 
 @Test
 func setAgreesWithIndependentRegexes(): Unit {
-    let patterns = ["", "a|ab", "(a?)*", "a+b", "(?m)^a$", "(?s).+", "a{2,3}?",
-        #"\Aab\z"#, #"\bcat\b"#, #"\B"#, #"[a-z&&[^aeiou]]"#,
-        #"\p{Han}+"#, #"\p{Alphabetic}"#, "(?<id>a+)", "(?U)a+", "$"]
+    let patterns = ["", "a|ab", "(a?)*", "a+b", "(?m)^a$", "(?s).+", "a{2,3}?", #"\Aab\z"#, #"\bcat\b"#, #"\B"#,
+        #"[a-z&&[^aeiou]]"#, #"\p{Han}+"#, #"\p{Alphabetic}"#, "(?<id>a+)", "(?U)a+", "$"]
     let set = RegexSet(patterns)
     for (text in ["", "a", "ab", "aaaa", "x\na\ny", "cat cats", "中文🙂", "123", "\n"]) {
         let result = set.matches(text)
@@ -79,15 +82,27 @@ func setInvalidIndexAndConstruction(): Unit {
     let result = RegexSet(["a"]).matches("a")
     for (index in [-1, 1]) {
         var rejected = false
-        try { result.matched(index) } catch (_: Exception) { rejected = true }
+        try {
+            result.matched(index)
+        } catch (_: Exception) {
+            rejected = true
+        }
         @Expect(rejected, true)
     }
-    for (pattern in ["(", "(?i)a"]) {
+    for (pattern in ["(", "(?x)a"]) {
         var rejected = false
-        try { RegexSet(["ok", pattern]) } catch (_: Exception) { rejected = true }
+        try {
+            RegexSet(["ok", pattern])
+        } catch (_: Exception) {
+            rejected = true
+        }
         @Expect(rejected, true)
     }
     var rejected = false
-    try { RegexSet(Array<String>(257, { _ => "a" })) } catch (_: Exception) { rejected = true }
+    try {
+        RegexSet(Array<String>(257, {_ => "a"}))
+    } catch (_: Exception) {
+        rejected = true
+    }
     @Expect(rejected, true)
 }

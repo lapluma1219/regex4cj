@@ -11,7 +11,9 @@ The Thompson construction, ordered NFA simulation and empty-match iteration in
 complete upstream parser. Character class and repetition behavior additionally
 follows `regex-syntax/src/ast/parse.rs`; `port/src/charset.cj` adapts the interval-set
 semantics of `regex-syntax/src/hir/interval.rs` to Cangjie, without its generic
-in-place implementation or case-folding support. Capture numbering, names and
+in-place implementation. Unicode simple case folding is applied by the parser
+before negation and before class intersection or difference, following
+`ClassUnicodeRange::case_fold_simple` and `Translator::unicode_fold_and_negate`. Capture numbering, names and
 capture slot semantics in `parser.cj`, `nfa.cj` and `captures.cj` follow the same
 upstream parser, Thompson compiler and PikeVM. `normalize.cj` adapts the empty-only
 repetition simplification from `regex-syntax/src/hir/mod.rs` (`Hir::repetition`).
@@ -79,6 +81,14 @@ from the pinned upstream `regex-syntax/src/unicode_tables/property_bool.rs`
 and the relevant aliases in `property_names.rs`. Source hashes and revision
 are recorded in the snapshot; `scripts/generate_binary.py` reproduces import
 and generation. Unicode 16.0.0 data retains `data/unicode/LICENSE-UNICODE`.
+
+## Unicode simple case folding
+
+`data/unicode/case_folding_simple.json` and `port/src/case_fold.cj` derive from
+the pinned upstream `regex-syntax/src/unicode_tables/case_folding_simple.rs`
+(Unicode 16.0.0). The snapshot records the source hash and revision;
+`scripts/generate_case_fold.py` reproduces the import. These data retain
+`data/unicode/LICENSE-UNICODE`.
 
 ## RegexSet API and multi-pattern execution
 

@@ -18,7 +18,7 @@ bash scripts/run.sh classify '订单 AB-123 需要退款，也需要开发票'
 
 可复制并修改文件，运行 `bash scripts/run.sh classify '你的文本' --rules /绝对路径/rules.json`。JSON 字符串中的反斜线要写成 `\\`，例如 `"pattern":"\\d+"`。规则文件中的次序决定编号，从 0 开始。标签由 Python 演示程序管理，实际正则编译和所有规则的命中判断由仓颉 RegexSet 完成。
 
-`bash scripts/run.sh demo` 同时运行九个原有场景与六个分类场景；`check` 还会执行仓颉原生测试。CLI 也可直接传模式，无需 JSON：
+`bash scripts/run.sh demo` 同时运行十个单模式场景与六个分类场景；`check` 还会执行仓颉原生测试。CLI 也可直接传模式，无需 JSON：
 
 ```sh
 bash scripts/run.sh set-matches '订单 AB-123 退款' '退款' '发票' '[A-Z]{2}-[0-9]{3}'
@@ -64,7 +64,7 @@ for (id in result.indices()) {
 
 匹配对象与返回数组都是独立快照。修改构造时传入的模式数组、`patterns()` 或 `indices()` 的返回值，不会改变集合或此前结果。String 为不可变值。
 
-本版没有移植 matches_at / is_match_at、matches_read_at、RegexSetBuilder、bytes::RegexSet 及完整 Rust trait 表面。只接受原单模式库已支持的语法；加入 RegexSet 不意味着 `(?i)` 等此前未支持的语法突然可用。原有模式限制继续生效。
+本版没有移植 matches_at / is_match_at、matches_read_at、RegexSetBuilder、bytes::RegexSet 及完整 Rust trait 表面。RegexSet 接受单模式库已经支持的语法，因此模式中的内联 `(?i)` 会按简单大小写折叠生效。`(?x)`、`(?R)`、`(?u)` 仍然会让整个集合构造失败。原有模式限制继续生效。
 
 ## 实现原则
 

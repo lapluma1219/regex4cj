@@ -8,11 +8,36 @@ func requiredMatch(value: Option<RegexMatch>): RegexMatch {
         case None => throw Exception("expected match")
     }
 }
+
 func requiredCaptures(value: Option<Captures>): Captures {
     match (value) {
         case Some(c) => return c
         case None => throw Exception("expected captures")
     }
+}
+
+@Test
+func simpleCaseFoldingKeepsOriginalText(): Unit {
+    let folded = Regex("(?i)a")
+    let matchA = requiredMatch(folded.find("A"))
+    @Expect(matchA.text, "A")
+    @Expect(matchA.start, 0)
+    @Expect(matchA.end, 1)
+    @Expect(folded.isMatch("b"), false)
+    @Expect(Regex("(?i)ß").isMatch("SS"), false)
+    @Expect(Regex("(?i)ß").isMatch("ẞ"), true)
+    @Expect(Regex("(?i)[^k]").isMatch("K"), false)
+    @Expect(Regex("(?i)[^k]").isMatch("a"), true)
+    @Expect(Regex("(?i)[a-z--c]").isMatch("C"), false)
+    @Expect(Regex("(?i)[a-z--c]").isMatch("D"), true)
+    @Expect(Regex("(?i)(?-i:a)").isMatch("A"), false)
+    @Expect(Regex("a(?i)b").isMatch("aB"), true)
+    @Expect(Regex("a(?i)b").isMatch("Ab"), false)
+    let kelvin = String([Rune(UInt32(0x212A))])
+    @Expect(Regex("(?i)K").isMatch(kelvin), true)
+    let caps = requiredCaptures(Regex("(?i)(?<n>a)").captures("A"))
+    @Expect(requiredMatch(caps.name("n")).text, "A")
+    @Expect(caps.expand(#"${n}"#), "A")
 }
 
 @Test
@@ -82,10 +107,15 @@ func retainedCaptureAndTemplateExpansion(): Unit {
 func callbackLimitAndNoMatch(): Unit {
     let calls = [0]
     let regex = Regex("(a)")
-    let result = regex.replaceWith("aaa", 2, { caps =>
-        calls[0]++
-        requiredMatch(caps.get(1)).text + calls[0].toString()
-    })
+    let result = regex.replaceWith(
+        "aaa",
+        2,
+        {
+            caps =>
+                calls[0]++
+                requiredMatch(caps.get(1)).text + calls[0].toString()
+        }
+    )
     @Expect(result, "a1a2a")
     @Expect(calls[0], 2)
     @Expect(regex.replaceWith("bbb", 0, { _ => calls[0]++; "!" }), "bbb")
@@ -98,11 +128,18 @@ func callbackExceptionAndReuse(): Unit {
     let calls = [0]
     var caught = false
     try {
-        regex.replaceWith("aaa", 0, { _ =>
-            calls[0]++
-            throw Exception("callback failed")
-        })
-    } catch (_: Exception) { caught = true }
+        regex.replaceWith(
+            "aaa",
+            0,
+            {
+                _ =>
+                    calls[0]++
+                    throw Exception("callback failed")
+            }
+        )
+    } catch (_: Exception) {
+        caught = true
+    }
     @Expect(caught, true)
     @Expect(calls[0], 1)
     @Expect(regex.replaceAll("aa", "!"), "!!")
@@ -132,10 +169,18 @@ func zeroWidthUnicodeAndLimits(): Unit {
 @Test
 func invalidPatternAndNegativeLimit(): Unit {
     var badPattern = false
-    try { Regex("(") } catch (_: Exception) { badPattern = true }
+    try {
+        Regex("(")
+    } catch (_: Exception) {
+        badPattern = true
+    }
     @Expect(badPattern, true)
     var badLimit = false
-    try { Regex("a").replaceN("a", -1, "b") } catch (_: Exception) { badLimit = true }
+    try {
+        Regex("a").replaceN("a", -1, "b")
+    } catch (_: Exception) {
+        badLimit = true
+    }
     @Expect(badLimit, true)
 }
 

@@ -12,9 +12,9 @@
 | 字符转义 | 第七步支持 x/u/U 定长与花括号形式及 a/f/v | 其余 Unicode 属性和方向性边界 |
 | 重复 | 支持 * + ? 与 {m,n} 等及非贪婪 | 计数空白、堆叠量词、与上游一致的配置限制 |
 | 捕获 | 第三步支持编号、ASCII 名称、Captures、captures/capturesAll | Unicode 组名、惰性迭代、extract、可复用捕获工作区 |
-| Unicode | Unicode 16.0.0 d/s/w、字节偏移、通用类别、Script/Script_Extensions 及第十三步二元属性 | Age/Break 枚举属性、大小写折叠、方向性边界 |
+| Unicode | Unicode 16.0.0 d/s/w、字节偏移、通用类别、Script/Script_Extensions、64 个二元属性，以及内联 i 的简单大小写折叠 | Age/Break 枚举属性、方向性边界、关闭 Unicode 后的 ASCII 折叠 |
 | 词边界 | 第十步支持 Unicode b/B | start/end、半边界和 ASCII 模式 |
-| Builder / flags | 第六步支持内联 m/s/U、禁用与局部作用域 | Builder、大小写折叠 i、扩展模式 x、CRLF R、Unicode 开关 u 等 |
+| Builder / flags | 内联 i/m/s/U、禁用与局部作用域 | Builder、扩展模式 x、CRLF R、Unicode 开关 u。接口归属见 [api-coverage.md](api-coverage.md) |
 | 替换、分割 | 第四步支持模板展开、字面量／回调替换、次数限制、split/splitN | 惰性分割迭代器、Replacer trait 对应设计、模板预编译与分配优化 |
 | bytes | 未实现 | 任意字节输入与禁用 Unicode 的语义 |
 | RegexSet | v0.2.0 支持多模式统一扫描、成员查询与编号数组 | Builder、起点搜索、复用缓冲区、惰性迭代及 bytes Set |

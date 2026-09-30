@@ -36,6 +36,7 @@ class Parser {
     var multiline = false
     var dotAll = false
     var swapGreed = false
+    var caseInsensitive = false
     init(pattern: String) {
         captureNames.add("") // group 0 denotes the entire match
         if (pattern.size > 4096) {
@@ -146,6 +147,7 @@ class Parser {
                 let oldMultiline = multiline
                 let oldDotAll = dotAll
                 let oldSwapGreed = swapGreed
+                let oldCaseInsensitive = caseInsensitive
                 depth++
                 if (depth > 64) {
                     fail("group nesting exceeds 64")
@@ -203,6 +205,7 @@ class Parser {
                 multiline = oldMultiline
                 dotAll = oldDotAll
                 swapGreed = oldSwapGreed
+                caseInsensitive = oldCaseInsensitive
                 if (!capturing) {
                     return expr
                 }
@@ -221,14 +224,19 @@ class Parser {
                 }, c)
                 expr.multiline = multiline
                 return expr
-            case r'\\' => return escaped()
+            case r'\\' =>
+                let expr = escaped()
+                match (expr.kind) {
+                    case ExprKind.Literal => return finishLiteral(expr.ch)
+                    case _ => return expr
+                }
             case r'[' =>
                 let expr = leaf(ExprKind.CharacterClass, c)
                 expr.charset = characterClass()
                 return expr
             case r'{' => fail("repetition without an expression")
             case r'*' | r'+' | r'?' => fail("repetition without an expression")
-            case _ => return leaf(ExprKind.Literal, c)
+            case _ => return finishLiteral(c)
         }
     }
     // Inline flags alter the remainder of the current group, including later
@@ -264,10 +272,11 @@ class Parser {
             seen.add(c)
             dangling = false
             match (c) {
+                case r'i' => caseInsensitive = enabled
                 case r'm' => multiline = enabled
                 case r's' => dotAll = enabled
                 case r'U' => swapGreed = enabled
-                case _ => fail("unsupported flag (only m, s and U are implemented)")
+                case _ => fail("unsupported flag (only i, m, s and U are implemented)")
             }
         }
         if (dangling) {
@@ -334,6 +343,10 @@ class Parser {
             let op = chars[pos]
             pos += 2
             let rhs = classUnion()
+            // Fold each operand before intersection or difference. Folding only
+            // the final set would drop equivalents that the other side removed.
+            foldClass(first)
+            foldClass(rhs)
             match (op) {
                 case r'&' => first = first.intersect(rhs)
                 case r'-' => first = first.difference(rhs)
@@ -345,11 +358,32 @@ class Parser {
         }
         pos++
         depth--
+        foldClass(first)
         return if (negate) {
             first.negated()
         } else {
             first
         }
+    }
+    func foldClass(set: CharSet): Unit {
+        if (caseInsensitive) {
+            set.caseFoldSimple()
+        }
+    }
+    func finishLiteral(c: Rune): Expr {
+        if (!caseInsensitive) {
+            return leaf(ExprKind.Literal, c)
+        }
+        let code = Int64(UInt32(c))
+        let set = CharSet()
+        set.addRange(code, code)
+        set.caseFoldSimple()
+        if (set.isOnly(code)) {
+            return leaf(ExprKind.Literal, c)
+        }
+        let expr = leaf(ExprKind.CharacterClass, c)
+        expr.charset = set
+        return expr
     }
     func classUnion(): CharSet {
         let result = CharSet()
@@ -407,6 +441,7 @@ class Parser {
             case None => return None
             case Some(set) =>
                 pos = cursor + 2
+                foldClass(set)
                 return Some(if (negate) {
                     set.negated()
                 } else {
@@ -506,7 +541,7 @@ class Parser {
             pos++
         }
         let expr = leaf(ExprKind.CharacterClass, r' ')
-        expr.charset = unicodeProperty(name.toString(), negated)
+        expr.charset = unicodeProperty(name.toString(), negated, caseInsensitive)
         return expr
     }
     func escaped(): Expr {

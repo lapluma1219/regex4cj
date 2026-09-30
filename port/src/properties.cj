@@ -28,7 +28,7 @@ func normalizePropertyName(text: String): String {
     }
 }
 
-func unicodeProperty(text: String, negated: Bool): CharSet {
+func unicodeProperty(text: String, negated: Bool, caseInsensitive: Bool): CharSet {
     let chars = Input(text).chars
     // Operator precedence follows the AST parser: != before : before =.
     var notEqual: Int64 = -1
@@ -82,11 +82,7 @@ func unicodeProperty(text: String, negated: Bool): CharSet {
     let normalized = normalizePropertyName(name)
     if (key == "") {
         match (binaryProperty(normalized)) {
-            case Some(set) => return if (invert) {
-                set.negated()
-            } else {
-                set
-            }
+            case Some(set) => return finishProperty(set, invert, caseInsensitive)
             case None => ()
         }
     }
@@ -96,6 +92,13 @@ func unicodeProperty(text: String, negated: Bool): CharSet {
         unicodeScript(normalized)
     } else {
         generalCategory(normalized)
+    }
+    return finishProperty(set, invert, caseInsensitive)
+}
+
+func finishProperty(set: CharSet, invert: Bool, caseInsensitive: Bool): CharSet {
+    if (caseInsensitive) {
+        set.caseFoldSimple()
     }
     return if (invert) {
         set.negated()

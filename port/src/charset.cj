@@ -151,4 +151,46 @@ class CharSet {
         result.unionWith(other.difference(this))
         return result
     }
+    func containsCode(code: Int64): Bool {
+        var lo: Int64 = 0
+        var hi = ranges.size
+        while (lo < hi) {
+            let mid = lo + (hi - lo) / 2
+            let range = ranges[mid]
+            if (code < range.low) {
+                hi = mid
+            } else if (code > range.high) {
+                lo = mid + 1
+            } else {
+                return true
+            }
+        }
+        return false
+    }
+    func isOnly(code: Int64): Bool {
+        ranges.size == 1 && ranges[0].low == code && ranges[0].high == code
+    }
+    // Unicode simple case folding, matching regex-syntax ClassUnicodeRange::case_fold_simple.
+    // The table stores each scalar's full equivalence class, so one pass closes the set.
+    // Callers must fold before negation and before class intersection or difference.
+    func caseFoldSimple(): Unit {
+        let data = caseFoldTable()
+        let extra = CharSet()
+        var i: Int64 = 0
+        while (i < data.size) {
+            let key = data[i]
+            let count = data[i + 1]
+            i += 2
+            if (containsCode(key)) {
+                var j: Int64 = 0
+                while (j < count) {
+                    let fold = data[i + j]
+                    extra.addRange(fold, fold)
+                    j++
+                }
+            }
+            i += count
+        }
+        unionWith(extra)
+    }
 }
