@@ -12,7 +12,7 @@ if ENV.get('REGEX4CJ_DYLD_LIBRARY_PATH'):
 
 
 def decode(mode, output):
-    if mode in ('find', 'first'):
+    if mode in ('find', 'first', 'find-at'):
         return [[int(a), int(b), text] for a, b, text in
                 (line.split('\t', 2) for line in output.splitlines())]
     if mode == 'capture-name':

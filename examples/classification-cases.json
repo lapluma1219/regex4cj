@@ -4,5 +4,6 @@
   {"text":"订单 AB-123 需要退款，也需要开发票","expected_ids":[0,1,2]},
   {"text":"订单 AB-123 和 CD-456 都需要退款","expected_ids":[0,2]},
   {"text":"你好，请问有人吗","expected_ids":[]},
-  {"text":"","expected_ids":[]}
+  {"text":"","expected_ids":[]},
+  {"text":"ERROR disk full","expected_ids":[3]}
 ]

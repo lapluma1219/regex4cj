@@ -20,6 +20,10 @@ class Expr {
     var dotAll = false
     var flagOnly = false
     var captureIndex: Int64 = -1
+    var modeKind: Int64 = 0
+    var modeTerm: Rune = r'\n'
+    var modeUnicode: Bool = true
+    var modePositive: Bool = true
     init(kind: ExprKind, ch: Rune, children: Array<Expr>, greedy: Bool) {
         this.kind = kind
         this.ch = ch
@@ -28,20 +32,64 @@ class Expr {
     }
 }
 
+// Shared by Regex and RegexSet. Defaults match Regex(pattern): Unicode on,
+// octal off, LF line terminator, and the historical nest limit of 64.
+class PatternOptions {
+    var caseInsensitive = false
+    var multiLine = false
+    var dotAll = false
+    var swapGreed = false
+    var ignoreWhitespace = false
+    var crlf = false
+    var unicode = true
+    var octal = false
+    var lineTerminator: Rune = r'\n'
+    var nestLimit: Int64 = 64
+}
+
 class Parser {
     let chars = ArrayList<Rune>()
     let captureNames = ArrayList<String>()
+    let whitespace = binaryWhite_Space()
     var pos: Int64 = 0
     var depth: Int64 = 0
     var multiline = false
     var dotAll = false
     var swapGreed = false
     var caseInsensitive = false
+    var ignoreWhitespace = false
+    var crlf = false
+    var unicode = true
+    var octal = false
+    var lineTerminator: Rune = r'\n'
+    var nestLimit: Int64 = 64
+    var nameReady = false
+    var alphabetic = CharSet()
+    var nameNumbers = CharSet()
     init(pattern: String) {
+        this(pattern, PatternOptions())
+    }
+    init(pattern: String, options: PatternOptions) {
         captureNames.add("") // group 0 denotes the entire match
         if (pattern.size > 4096) {
             throw Exception("pattern exceeds 4096 UTF-8 bytes")
         }
+        if (UInt32(options.lineTerminator) > 127) {
+            throw Exception("line terminator must be an ASCII byte in string mode")
+        }
+        if (options.nestLimit < 1) {
+            throw Exception("nest limit must be positive")
+        }
+        multiline = options.multiLine
+        dotAll = options.dotAll
+        swapGreed = options.swapGreed
+        caseInsensitive = options.caseInsensitive
+        ignoreWhitespace = options.ignoreWhitespace
+        crlf = options.crlf
+        unicode = options.unicode
+        octal = options.octal
+        lineTerminator = options.lineTerminator
+        nestLimit = options.nestLimit
         for (c in pattern.runes()) {
             chars.add(c)
         }
@@ -52,11 +100,45 @@ class Parser {
     func at(c: Rune): Bool {
         pos < chars.size && chars[pos] == c
     }
+    // x mode ignores Unicode White_Space and # comments through the newline.
+    // Callers must not use this between a backslash and its escaped character,
+    // or inside capture names, flag letters, or hexadecimal digits.
+    func skipSpace(): Unit {
+        if (!ignoreWhitespace) {
+            return
+        }
+        while (pos < chars.size) {
+            let c = chars[pos]
+            if (whitespace.contains(c)) {
+                pos++
+                continue
+            }
+            if (c != r'#') {
+                break
+            }
+            pos++
+            while (pos < chars.size) {
+                let comment = chars[pos]
+                pos++
+                if (comment == r'\n') {
+                    break
+                }
+            }
+        }
+    }
     func leaf(kind: ExprKind, ch: Rune): Expr {
         Expr(kind, ch, [], true)
     }
+    func stamp(expr: Expr, kind: Int64): Expr {
+        expr.modeKind = kind
+        expr.modeTerm = lineTerminator
+        expr.modeUnicode = unicode
+        expr.modePositive = true
+        return expr
+    }
     func parse(): Expr {
         let result = alternate()
+        skipSpace()
         if (pos != chars.size) {
             fail("unexpected closing parenthesis")
         }
@@ -65,7 +147,11 @@ class Parser {
     func alternate(): Expr {
         let parts = ArrayList<Expr>()
         parts.add(concat())
-        while (at(r'|')) {
+        while (true) {
+            skipSpace()
+            if (!at(r'|')) {
+                break
+            }
             pos++
             parts.add(concat())
         }
@@ -73,13 +159,18 @@ class Parser {
     }
     func concat(): Expr {
         let parts = ArrayList<Expr>()
-        while (pos < chars.size && !at(r'|') && !at(r')')) {
+        while (true) {
+            skipSpace()
+            if (pos >= chars.size || at(r'|') || at(r')')) {
+                break
+            }
             parts.add(repetition())
         }
         return Expr(ExprKind.Concat, r' ', parts.toArray(), true)
     }
     func repetition(): Expr {
         var expr = atom()
+        skipSpace()
         if (at(r'*') || at(r'+') || at(r'?') || at(r'{')) {
             if (expr.flagOnly) {
                 fail("repetition without an expression")
@@ -112,6 +203,7 @@ class Parser {
                 case _ => ()
             }
             var greedy = !swapGreed
+            skipSpace()
             if (at(r'?')) {
                 greedy = !greedy
                 pos++
@@ -119,6 +211,7 @@ class Parser {
             expr = Expr(ExprKind.Repeat, quantifier, [expr], greedy)
             expr.minimum = minimum
             expr.maximum = maximum
+            skipSpace()
             if (at(r'*') || at(r'+') || at(r'?') || at(r'{')) {
                 fail("stacked repetitions are not supported; use explicit groups")
             }
@@ -126,8 +219,9 @@ class Parser {
         return expr
     }
     func decimal(): Int64 {
+        skipSpace()
         if (pos == chars.size || chars[pos] < r'0' || chars[pos] > r'9') {
-            fail("expected an ASCII repetition count (whitespace is not supported)")
+            fail("expected an ASCII repetition count")
         }
         var value: Int64 = 0
         while (pos < chars.size && chars[pos] >= r'0' && chars[pos] <= r'9') {
@@ -136,6 +230,7 @@ class Parser {
                 fail("repetition count exceeds 10000")
             }
             pos++
+            skipSpace()
         }
         return value
     }
@@ -148,9 +243,12 @@ class Parser {
                 let oldDotAll = dotAll
                 let oldSwapGreed = swapGreed
                 let oldCaseInsensitive = caseInsensitive
+                let oldIgnoreWhitespace = ignoreWhitespace
+                let oldCrlf = crlf
+                let oldUnicode = unicode
                 depth++
-                if (depth > 64) {
-                    fail("group nesting exceeds 64")
+                if (depth > nestLimit) {
+                    fail("group nesting exceeds ${nestLimit}")
                 }
                 var capturing = true
                 var name = ""
@@ -206,24 +304,17 @@ class Parser {
                 dotAll = oldDotAll
                 swapGreed = oldSwapGreed
                 caseInsensitive = oldCaseInsensitive
+                ignoreWhitespace = oldIgnoreWhitespace
+                crlf = oldCrlf
+                unicode = oldUnicode
                 if (!capturing) {
                     return expr
                 }
                 let group = Expr(ExprKind.Capture, r' ', [expr], true)
                 group.captureIndex = index
                 return group
-            case r'.' =>
-                let expr = leaf(ExprKind.Any, c)
-                expr.dotAll = dotAll
-                return expr
-            case r'^' | r'$' =>
-                let expr = leaf(if (c == r'^') {
-                    ExprKind.Begin
-                } else {
-                    ExprKind.End
-                }, c)
-                expr.multiline = multiline
-                return expr
+            case r'.' => return dot()
+            case r'^' | r'$' => return anchor(c == r'^')
             case r'\\' =>
                 let expr = escaped()
                 match (expr.kind) {
@@ -238,6 +329,51 @@ class Parser {
             case r'*' | r'+' | r'?' => fail("repetition without an expression")
             case _ => return finishLiteral(c)
         }
+    }
+    func dot(): Expr {
+        if (!unicode) {
+            fail("pattern can match invalid UTF-8")
+        }
+        var kind: Int64 = 0
+        if (dotAll) {
+            kind = 1
+        } else if (crlf) {
+            kind = 2
+        }
+        return stamp(leaf(ExprKind.Any, r'.'), kind)
+    }
+    func anchor(begin: Bool): Expr {
+        var kind: Int64 = if (begin) {
+            0
+        } else {
+            1
+        }
+        if (multiline) {
+            if (crlf) {
+                kind = if (begin) {
+                    4
+                } else {
+                    5
+                }
+            } else {
+                kind = if (begin) {
+                    2
+                } else {
+                    3
+                }
+            }
+        }
+        let expr = stamp(leaf(if (begin) {
+            ExprKind.Begin
+        } else {
+            ExprKind.End
+        }, if (begin) {
+            r'^'
+        } else {
+            r'$'
+        }), kind)
+        expr.multiline = multiline
+        return expr
     }
     // Inline flags alter the remainder of the current group, including later
     // alternatives. Every actual group restores its outer lexical flag state.
@@ -276,24 +412,39 @@ class Parser {
                 case r'm' => multiline = enabled
                 case r's' => dotAll = enabled
                 case r'U' => swapGreed = enabled
-                case _ => fail("unsupported flag (only i, m, s and U are implemented)")
+                case r'x' => ignoreWhitespace = enabled
+                case r'R' => crlf = enabled
+                case r'u' => unicode = enabled
+                case _ => fail("unsupported flag (only i, m, s, U, x, R and u are implemented)")
             }
         }
         if (dangling) {
             fail("dangling flag negation")
         }
     }
+    func ensureNameClasses(): Unit {
+        if (nameReady) {
+            return
+        }
+        alphabetic = binaryAlphabetic()
+        nameNumbers = generalCategory("nd")
+        nameNumbers.unionWith(generalCategory("nl"))
+        nameNumbers.unionWith(generalCategory("no"))
+        nameReady = true
+    }
+    func captureChar(c: Rune, first: Bool): Bool {
+        ensureNameClasses()
+        if (first) {
+            return c == r'_' || alphabetic.contains(c)
+        }
+        return c == r'_' || c == r'.' || c == r'[' || c == r']' || alphabetic.contains(c) || nameNumbers.contains(c)
+    }
     func captureName(): String {
         let name = StringBuilder()
         var first = true
         while (pos < chars.size && !at(r'>')) {
             let c = chars[pos]
-            if (UInt32(c) > 127) {
-                fail("Unicode capture names are not supported yet")
-            }
-            let alpha = (c >= r'a' && c <= r'z') || (c >= r'A' && c <= r'Z')
-            let tail = (c >= r'0' && c <= r'9') || c == r'.' || c == r'[' || c == r']'
-            if (!(alpha || c == r'_' || (!first && tail))) {
+            if (!captureChar(c, first)) {
                 fail("invalid capture group name")
             }
             name.append(c)
@@ -319,13 +470,15 @@ class Parser {
     // union (juxtaposition) binds more tightly, as in regex-syntax's class stack.
     func characterClass(): CharSet {
         depth++
-        if (depth > 64) {
-            fail("group/class nesting exceeds 64")
+        if (depth > nestLimit) {
+            fail("group/class nesting exceeds ${nestLimit}")
         }
+        skipSpace()
         var negate = false
         if (at(r'^')) {
             negate = true
             pos++
+            skipSpace()
         }
         var first = CharSet()
         var hasLeadingHyphen = false
@@ -333,10 +486,12 @@ class Parser {
             first.addRange(45, 45)
             hasLeadingHyphen = true
             pos++
+            skipSpace()
         }
         if (!hasLeadingHyphen && at(r']')) {
             first.addRange(93, 93);
             pos++
+            skipSpace()
         }
         first.unionWith(classUnion())
         while (classOperator()) {
@@ -359,25 +514,46 @@ class Parser {
         pos++
         depth--
         foldClass(first)
-        return if (negate) {
+        let folded = if (negate) {
             first.negated()
         } else {
             first
         }
+        return finishAsciiClass(folded)
     }
     func foldClass(set: CharSet): Unit {
-        if (caseInsensitive) {
+        if (!caseInsensitive) {
+            return
+        }
+        if (unicode) {
             set.caseFoldSimple()
+        } else {
+            set.caseFoldAscii()
+        }
+    }
+    func finishAsciiClass(set: CharSet): CharSet {
+        if (!unicode && set.exceedsAscii()) {
+            fail("pattern can match invalid UTF-8")
+        }
+        return set
+    }
+    func rejectClassScalar(c: Rune): Unit {
+        if (!unicode && UInt32(c) > 127) {
+            fail("Unicode not allowed here")
         }
     }
     func finishLiteral(c: Rune): Expr {
-        if (!caseInsensitive) {
+        if (!caseInsensitive || (!unicode && UInt32(c) > 127)) {
             return leaf(ExprKind.Literal, c)
         }
         let code = Int64(UInt32(c))
         let set = CharSet()
         set.addRange(code, code)
-        set.caseFoldSimple()
+        if (unicode) {
+            set.caseFoldSimple()
+        } else {
+            set.caseFoldAscii()
+        }
         if (set.isOnly(code)) {
             return leaf(ExprKind.Literal, c)
         }
@@ -387,7 +563,11 @@ class Parser {
     }
     func classUnion(): CharSet {
         let result = CharSet()
-        while (pos < chars.size && !at(r']') && !classOperator()) {
+        while (true) {
+            skipSpace()
+            if (pos >= chars.size || at(r']') || classOperator()) {
+                break
+            }
             if (at(r'[')) {
                 pos++
                 match (namedClass()) {
@@ -399,6 +579,7 @@ class Parser {
             if (at(r'\\') && pos + 1 < chars.size && classEscape(chars[pos + 1])) {
                 pos++
                 result.unionWith(escaped().charset)
+                skipSpace()
                 if (at(r'-') && pos + 1 < chars.size && chars[pos + 1] != r']' && chars[pos + 1] != r'-') {
                     fail("range endpoints must be literal characters")
                 }
@@ -406,13 +587,17 @@ class Parser {
             }
             let low = classLiteral()
             var high = low
+            skipSpace()
             if (at(r'-') && pos + 1 < chars.size && chars[pos + 1] != r']' && chars[pos + 1] != r'-') {
                 pos++
+                skipSpace()
                 high = classLiteral()
                 if (low > high) {
                     fail("character class range is reversed")
                 }
             }
+            rejectClassScalar(low)
+            rejectClassScalar(high)
             result.addRange(Int64(UInt32(low)), Int64(UInt32(high)))
         }
         return result
@@ -442,11 +627,12 @@ class Parser {
             case Some(set) =>
                 pos = cursor + 2
                 foldClass(set)
-                return Some(if (negate) {
+                let folded = if (negate) {
                     set.negated()
                 } else {
                     set
-                })
+                }
+                return Some(finishAsciiClass(folded))
         }
     }
     func classLiteral(): Rune {
@@ -540,6 +726,9 @@ class Parser {
             name.append(chars[pos]);
             pos++
         }
+        if (!unicode) {
+            fail("Unicode not allowed here")
+        }
         let expr = leaf(ExprKind.CharacterClass, r' ')
         expr.charset = unicodeProperty(name.toString(), negated, caseInsensitive)
         return expr
@@ -551,24 +740,8 @@ class Parser {
         let c = chars[pos]
         pos++
         match (c) {
-            case r'd' | r'D' | r's' | r'S' | r'w' | r'W' =>
-                let lower = if (c == r'D') {
-                    r'd'
-                } else if (c == r'S') {
-                    r's'
-                } else if (c == r'W') {
-                    r'w'
-                } else {
-                    c
-                }
-                let expr = leaf(ExprKind.CharacterClass, c)
-                let set = unicodeClass(lower)
-                expr.charset = if (lower == c) {
-                    set
-                } else {
-                    set.negated()
-                }
-                return expr
+            case r'd' | r'D' | r's' | r'S' | r'w' | r'W' => return perlClass(c)
+            case r'0' | r'1' | r'2' | r'3' | r'4' | r'5' | r'6' | r'7' | r'8' | r'9' => return numberEscape(c)
             case r'x' | r'u' | r'U' => return leaf(ExprKind.Literal, hexScalar(c))
             case r'a' => return leaf(ExprKind.Literal, Rune(UInt32(7)))
             case r'f' => return leaf(ExprKind.Literal, Rune(UInt32(12)))
@@ -577,9 +750,12 @@ class Parser {
             case r'r' => return leaf(ExprKind.Literal, r'\r')
             case r't' => return leaf(ExprKind.Literal, r'\t')
             case r'p' | r'P' => return propertyClass(c == r'P')
-            case r'b' | r'B' => return leaf(ExprKind.WordBoundary, c)
-            case r'A' => return leaf(ExprKind.Begin, c)
-            case r'z' => return leaf(ExprKind.End, c)
+            case r'b' => return wordBoundary(true)
+            case r'B' => return wordBoundary(false)
+            case r'<' => return stamp(leaf(ExprKind.WordBoundary, c), 7)
+            case r'>' => return stamp(leaf(ExprKind.WordBoundary, c), 8)
+            case r'A' => return stamp(leaf(ExprKind.Begin, c), 0)
+            case r'z' => return stamp(leaf(ExprKind.End, c), 1)
             case _ =>
                 let n = UInt32(c)
                 let alpha = (c >= r'a' && c <= r'z') || (c >= r'A' && c <= r'Z')
@@ -587,9 +763,93 @@ class Parser {
                 if (n >= 32 && n <= 126 && !alpha && !digit) {
                     return leaf(ExprKind.Literal, c)
                 }
-                fail(
-                    "unsupported escape (Unicode properties, advanced boundaries and backreferences are not implemented)")
+                fail("unsupported escape")
         }
+    }
+    func perlClass(c: Rune): Expr {
+        let lower = if (c == r'D') {
+            r'd'
+        } else if (c == r'S') {
+            r's'
+        } else if (c == r'W') {
+            r'w'
+        } else {
+            c
+        }
+        let set = if (unicode) {
+            unicodeClass(lower)
+        } else {
+            let name = if (lower == r'd') {
+                "digit"
+            } else if (lower == r's') {
+                "space"
+            } else {
+                "word"
+            }
+            match (asciiClass(name)) {
+                case Some(value) => value
+                case None => fail("missing ASCII class")
+            }
+        }
+        let expr = leaf(ExprKind.CharacterClass, c)
+        expr.charset = finishAsciiClass(if (lower == c) {
+            set
+        } else {
+            set.negated()
+        })
+        return expr
+    }
+    func numberEscape(c: Rune): Expr {
+        if (!octal || c > r'7') {
+            fail("unsupported backreference")
+        }
+        var value = Int64(UInt32(c) - UInt32(r'0'))
+        var digits: Int64 = 1
+        while (digits < 3 && pos < chars.size && chars[pos] >= r'0' && chars[pos] <= r'7') {
+            value = value * 8 + Int64(UInt32(chars[pos]) - UInt32(r'0'))
+            pos++
+            digits++
+        }
+        return finishLiteral(Rune(UInt32(value)))
+    }
+    func wordNameChar(c: Rune): Bool {
+        (c >= r'A' && c <= r'Z') || (c >= r'a' && c <= r'z') || c == r'-'
+    }
+    func wordBoundary(positive: Bool): Expr {
+        let expr = stamp(leaf(ExprKind.WordBoundary, if (positive) {
+            r'b'
+        } else {
+            r'B'
+        }), 6)
+        expr.modePositive = positive
+        if (!positive || !at(r'{')) {
+            return expr
+        }
+        let saved = pos
+        pos++
+        skipSpace()
+        if (pos >= chars.size || !wordNameChar(chars[pos])) {
+            pos = saved
+            return expr
+        }
+        let name = StringBuilder()
+        while (pos < chars.size && wordNameChar(chars[pos])) {
+            name.append(chars[pos])
+            pos++
+            skipSpace()
+        }
+        if (!at(r'}')) {
+            fail("unclosed word boundary")
+        }
+        pos++
+        match (name.toString()) {
+            case "start" => expr.modeKind = 7
+            case "end" => expr.modeKind = 8
+            case "start-half" => expr.modeKind = 9
+            case "end-half" => expr.modeKind = 10
+            case _ => fail("unrecognized word boundary")
+        }
+        return expr
     }
 }
 

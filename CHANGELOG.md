@@ -1,11 +1,15 @@
 # 变更记录
 
-## Unreleased
+## 0.3.0 — 字符串语法与起点搜索版
 
-- 建立字符串层公共契约清单，标明 v0.3.0 必做项、语言适配和本版排除项。
 - 内联 `(?i)` / `(?-i)` 按 Unicode 简单大小写折叠匹配。捕获和替换仍返回原文；`ß` 不展开成 `SS`。
-- 字符类在取反、交集和差集之前折叠，避免 `(?i)[^k]` 或 `(?i)[a-z--c]` 漏掉大写。
-- `x` / `R` / `u`、Builder、起点搜索和惰性迭代仍未实现。包版本号仍是 0.2.0。
+- 字符类在取反、交集和差集之前折叠。
+- 支持 `x`、`R`、`u`、字符串安全的 `(?-u)`、方向性词边界、Unicode 捕获名、八进制（仅 Builder）和 ASCII 行终止符。
+- Age 按版本累积查询；Grapheme/Word/Sentence Break 只做集合查询，不做切分。
+- 增加 `findAt`、`isMatchAt`、`capturesAt`、`shortestMatch`、`next()` 迭代、`staticCapturesLen`、`extract` 和可复用捕获位置。搜索始终对着整段原文。
+- `RegexBuilder` / `RegexSetBuilder` 只包装已经生效的选项。`dfaSizeLimit` 和 `sizeLimit` 会失败，不会静默忽略。
+- RegexSet 的进程计时仍包含启动。`repeat-find` 在同一次进程里分开记录构造和后续查找。
+- 仍然没有任意字节引擎和 DFA。
 
 ## 0.2.0 — 多规则文本分类版
 

@@ -1,15 +1,87 @@
 package cjregex
 
+import std.collection.*
+
 // Capture index 0 is the whole match. Unmatched groups are None; empty groups
 // are Some(RegexMatch) whose start equals end. Results own their string slices.
+public class CaptureSpan {
+    public let start: Int64
+    public let end: Int64
+    init(start: Int64, end: Int64) {
+        this.start = start
+        this.end = end
+    }
+}
+
+public class CaptureLocations {
+    public let size: Int64
+    private let starts: Array<Int64>
+    private let ends: Array<Int64>
+    init(size: Int64) {
+        this.size = size
+        starts = Array<Int64>(size, repeat: -1)
+        ends = Array<Int64>(size, repeat: -1)
+    }
+    public func get(index: Int64): Option<CaptureSpan> {
+        if (index < 0 || index >= size || starts[index] < 0 || ends[index] < 0) {
+            return None
+        }
+        return Some(CaptureSpan(starts[index], ends[index]))
+    }
+    func write(index: Int64, start: Int64, end: Int64): Unit {
+        starts[index] = start
+        ends[index] = end
+    }
+    func clear(index: Int64): Unit {
+        starts[index] = -1
+        ends[index] = -1
+    }
+}
+
 public class Captures {
     private let groups: Array<Option<RegexMatch>>
     private let names: Array<String>
+    private let staticLen: Int64
     public let size: Int64
-    init(groups: Array<Option<RegexMatch>>, names: Array<String>) {
+    init(groups: Array<Option<RegexMatch>>, names: Array<String>, staticLen: Int64) {
         this.groups = groups
         this.names = names
+        this.staticLen = staticLen
         this.size = groups.size
+    }
+    public func getMatch(): RegexMatch {
+        match (get(0)) {
+            case Some(item) => item
+            case None => throw Exception("capture has no match")
+        }
+    }
+    // Index 0 is the whole match. The remaining count strings are the groups
+    // that participated, in index order. count must equal staticCapturesLen() - 1.
+    public func extract(count: Int64): Array<String> {
+        if (staticLen < 0) {
+            throw Exception("the number of capture groups can vary in a match")
+        }
+        if (count != staticLen - 1) {
+            throw Exception("extract asked for ${count} groups, but must ask for ${staticLen - 1}")
+        }
+        let whole = getMatch()
+        let matched = ArrayList<String>()
+        for (i in 1..size) {
+            match (get(i)) {
+                case Some(item) => matched.add(item.text)
+                case None => ()
+            }
+        }
+        if (matched.size < count) {
+            throw Exception("too few matching groups")
+        }
+        return Array<String>(count + 1, {
+            i => if (i == 0) {
+            whole.text
+        } else {
+            matched[i - 1]
+        }
+        })
     }
     public func get(index: Int64): Option<RegexMatch> {
         if (index < 0 || index >= size) {

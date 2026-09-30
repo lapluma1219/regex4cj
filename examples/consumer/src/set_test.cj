@@ -89,7 +89,7 @@ func setInvalidIndexAndConstruction(): Unit {
         }
         @Expect(rejected, true)
     }
-    for (pattern in ["(", "(?x)a"]) {
+    for (pattern in ["(", "(?=a)"]) {
         var rejected = false
         try {
             RegexSet(["ok", pattern])

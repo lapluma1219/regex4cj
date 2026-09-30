@@ -2,6 +2,7 @@ package regex_cli
 
 import cjregex.*
 import std.convert.*
+import std.time.*
 
 func hexText(text: String): String {
     let result = StringBuilder()
@@ -42,6 +43,23 @@ func printCaptureResult(regex: Regex, caps: Captures): Unit {
 main(args: Array<String>): Int64 {
     try {
         // Set protocol: TEXT followed by zero or more PATTERN arguments.
+        if (args.size >= 3 && (args[0] == "set-matches-at" || args[0] == "set-is-match-at")) {
+            let patterns = Array<String>(args.size - 3, {i => args[i + 3]})
+            let set = RegexSet(patterns)
+            let start = Int64.parse(args[2])
+            if (args[0] == "set-is-match-at") {
+                println(set.isMatchAt(args[1], start))
+            } else {
+                let result = set.matchesAt(args[1], start)
+                println("patterns\t${result.len()}")
+                println("any\t${result.matchedAny()}")
+                println("all\t${result.matchedAll()}")
+                for (id in result.indices()) {
+                    println("hit\t${id}")
+                }
+            }
+            return 0
+        }
         if (args.size >= 2 && (args[0] == "set-matches" || args[0] == "set-is-match")) {
             let patterns = Array<String>(args.size - 2, {i => args[i + 2]})
             let set = RegexSet(patterns)
@@ -69,6 +87,31 @@ main(args: Array<String>): Int64 {
             }
             return 0
         }
+        if (args.size == 4 && args[0] == "repeat-find") {
+            let times = Int64.parse(args[3])
+            if (times < 1) {
+                throw Exception("repeat count must be positive")
+            }
+            let beforeCompile = MonoTime.now()
+            let regex = Regex(args[1])
+            let afterCompile = MonoTime.now()
+            var line = ""
+            let beforeSearch = MonoTime.now()
+            for (_ in 0..times) {
+                match (regex.find(args[2])) {
+                    case Some(m) => line = "${m.start}\t${m.end}\t${m.text}"
+                    case None => line = ""
+                }
+            }
+            let afterSearch = MonoTime.now()
+            if (!line.isEmpty()) {
+                println(line)
+            }
+            println("compile_ns\t${(afterCompile - beforeCompile).toNanoseconds()}")
+            println("search_ns\t${(afterSearch - beforeSearch).toNanoseconds()}")
+            println("repeats\t${times}")
+            return 0
+        }
         if (args.size == 3 && args[0] == "first") {
             match (Regex(args[1]).find(args[2])) {
                 case Some(m) => println("${m.start}\t${m.end}\t${m.text}")
@@ -78,6 +121,61 @@ main(args: Array<String>): Int64 {
         }
         if (args.size == 3 && args[0] == "is-match") {
             println(Regex(args[1]).isMatch(args[2]))
+            return 0
+        }
+        if (args.size == 4 && (args[0] == "find-at" || args[0] == "is-match-at" || args[0] == "shortest-at")) {
+            let regex = Regex(args[1])
+            let start = Int64.parse(args[3])
+            if (args[0] == "is-match-at") {
+                println(regex.isMatchAt(args[2], start))
+            } else if (args[0] == "shortest-at") {
+                match (regex.shortestMatchAt(args[2], start)) {
+                    case Some(end) => println(end)
+                    case None => ()
+                }
+            } else {
+                match (regex.findAt(args[2], start)) {
+                    case Some(m) => println("${m.start}\t${m.end}\t${m.text}")
+                    case None => ()
+                }
+            }
+            return 0
+        }
+        if (args.size == 3 && args[0] == "shortest") {
+            match (Regex(args[1]).shortestMatch(args[2])) {
+                case Some(end) => println(end)
+                case None => ()
+            }
+            return 0
+        }
+        if (args.size == 2 && args[0] == "static-len") {
+            match (Regex(args[1]).staticCapturesLen()) {
+                case Some(count) => println("some\t${count}")
+                case None => println("none")
+            }
+            return 0
+        }
+        if (args.size == 4 && args[0] == "captures-at") {
+            let regex = Regex(args[1])
+            println("groups\t${regex.capturesLen()}")
+            match (regex.capturesAt(args[2], Int64.parse(args[3]))) {
+                case Some(caps) => printCaptureResult(regex, caps)
+                case None => ()
+            }
+            return 0
+        }
+        if (args.size == 3 && args[0] == "octal-find") {
+            let regex = RegexBuilder(args[1]).octal(true).build()
+            for (m in regex.findAll(args[2])) {
+                println("${m.start}\t${m.end}\t${m.text}")
+            }
+            return 0
+        }
+        if (args.size == 4 && args[0] == "term-find") {
+            let regex = RegexBuilder(args[2]).lineTerminator(Rune(UInt32(Int64.parse(args[1])))).build()
+            for (m in regex.findAll(args[3])) {
+                println("${m.start}\t${m.end}\t${m.text}")
+            }
             return 0
         }
         if (args.size == 3 && (args[0] == "captures" || args[0] == "capture-first")) {

@@ -52,9 +52,13 @@ public class RegexSet {
     private let sourcePatterns: Array<String>
     private let states: Array<State>
     private let starts: Array<Int64>
-    private let wordCharacters: CharSet
+    private let unicodeWords: CharSet
+    private let asciiWords: CharSet
 
     public init(patterns: Array<String>) {
+        this(patterns, PatternOptions())
+    }
+    init(patterns: Array<String>, options: PatternOptions) {
         if (patterns.size > 256) {
             throw Exception("RegexSet exceeds 256 patterns")
         }
@@ -70,7 +74,7 @@ public class RegexSet {
         let roots = ArrayList<Int64>()
         for (i in 0..patterns.size) {
             try {
-                let tree = Parser(patterns[i]).parse()
+                let tree = Parser(patterns[i], options).parse()
                 normalizeWidth(tree)
                 let accept = compiler.add(Op.Accept, i, -1)
                 roots.add(compiler.compile(tree, accept))
@@ -80,15 +84,31 @@ public class RegexSet {
         }
         states = compiler.states.toArray()
         starts = roots.toArray()
-        var hasBoundary = false
+        var needUnicode = false
+        var needAscii = false
         for (state in states) {
             match (state.op) {
-                case Op.WordBoundary(_) => hasBoundary = true
+                case Op.Look(mode) =>
+                    if (mode.kind >= 6) {
+                        if (mode.unicode) {
+                            needUnicode = true
+                        } else {
+                            needAscii = true
+                        }
+                    }
                 case _ => ()
             }
         }
-        wordCharacters = if (hasBoundary) {
+        unicodeWords = if (needUnicode) {
             unicodeClass(r'w')
+        } else {
+            CharSet()
+        }
+        asciiWords = if (needAscii) {
+            match (asciiClass("word")) {
+                case Some(set) => set
+                case None => throw Exception("missing ASCII word class")
+            }
         } else {
             CharSet()
         }
@@ -103,10 +123,16 @@ public class RegexSet {
         sourcePatterns.clone()
     }
     public func isMatch(text: String): Bool {
-        scan(text, true).matchedAny()
+        scan(text, 0, true).matchedAny()
+    }
+    public func isMatchAt(text: String, start: Int64): Bool {
+        scan(text, start, true).matchedAny()
     }
     public func matches(text: String): SetMatches {
-        scan(text, false)
+        scan(text, 0, false)
+    }
+    public func matchesAt(text: String, start: Int64): SetMatches {
+        scan(text, start, false)
     }
 
     private func closure(out: ArrayList<Int64>, seen: Array<Bool>, root: Int64, pos: Int64, input: Input): Unit {
@@ -124,34 +150,25 @@ public class RegexSet {
                     stack.add(state.second)
                     stack.add(state.first)
                 case Op.Save(_) => stack.add(state.first)
-                case Op.Begin(multiline) =>
-                    if (pos == 0 || (multiline && input.chars[pos - 1] == r'\n')) {
-                        stack.add(state.first)
-                    }
-                case Op.End(multiline) =>
-                    if (pos == input.chars.size || (multiline && input.chars[pos] == r'\n')) {
-                        stack.add(state.first)
-                    }
-                case Op.WordBoundary(positive) =>
-                    let before = pos > 0 && wordCharacters.contains(input.chars[pos - 1])
-                    let after = pos < input.chars.size && wordCharacters.contains(input.chars[pos])
-                    if ((before != after) == positive) {
+                case Op.Look(mode) =>
+                    if (passesLook(mode, pos, input.chars, unicodeWords, asciiWords)) {
                         stack.add(state.first)
                     }
                 case _ => out.add(id)
             }
         }
     }
-    private func scan(text: String, stopAtFirst: Bool): SetMatches {
+    private func scan(text: String, start: Int64, stopAtFirst: Bool): SetMatches {
         let hits = Array<Bool>(starts.size, repeat: false)
         if (starts.isEmpty()) {
             return SetMatches(hits)
         }
         let input = Input(text)
+        let from = input.boundary(start)
         var current = ArrayList<Int64>()
         var seen = Array<Bool>(states.size, repeat: false)
         var count: Int64 = 0
-        for (pos in 0..input.chars.size + 1) {
+        for (pos in from..input.chars.size + 1) {
             for (i in 0..starts.size) {
                 if (!hits[i]) {
                     closure(current, seen, starts[i], pos, input)
@@ -173,7 +190,7 @@ public class RegexSet {
                         }
                     case Op.Literal(c) => consume = pos < input.chars.size && input.chars[pos] == c
                     case Op.CharacterClass(set) => consume = pos < input.chars.size && set.contains(input.chars[pos])
-                    case Op.Any(dotAll) => consume = pos < input.chars.size && (dotAll || input.chars[pos] != r'\n')
+                    case Op.Any(mode) => consume = pos < input.chars.size && passesDot(mode, input.chars[pos])
                     case _ => ()
                 }
                 if (consume) {

@@ -5,8 +5,7 @@ import std.collection.*
 // Adapted from regex-automata's Thompson compiler and ordered PikeVM.
 // See docs/milestone-1.md for exact upstream symbols and representation changes.
 enum Op {
-    Literal(Rune) | CharacterClass(CharSet) | Any(Bool) | Begin(Bool) | End(Bool) | WordBoundary(Bool) | Split | Save(
-        Int64) | Accept
+    Literal(Rune) | CharacterClass(CharSet) | Any(AtomMode) | Look(AtomMode) | Split | Save(Int64) | Accept
 }
 
 class State {
@@ -37,6 +36,9 @@ class Compiler {
         return add(Op.Split, second, first)
     }
     // Continuation-based construction replaces Rust's fragment patch lists.
+    func mode(expr: Expr): AtomMode {
+        AtomMode(expr.modeKind, expr.modeTerm, expr.modeUnicode, expr.modePositive)
+    }
     func compile(expr: Expr, next: Int64): Int64 {
         work++
         if (work > 65536) {
@@ -47,13 +49,11 @@ class Compiler {
                 let end = add(Op.Save(expr.captureIndex * 2 + 1), next, -1)
                 let body = compile(expr.children[0], end)
                 return add(Op.Save(expr.captureIndex * 2), body, -1)
-            case ExprKind.WordBoundary => return add(Op.WordBoundary(expr.ch == r'b'), next, -1)
+            case ExprKind.WordBoundary | ExprKind.Begin | ExprKind.End => return add(Op.Look(mode(expr)), next, -1)
             case ExprKind.Empty => return next
             case ExprKind.Literal => return add(Op.Literal(expr.ch), next, -1)
             case ExprKind.CharacterClass => return add(Op.CharacterClass(expr.charset), next, -1)
-            case ExprKind.Any => return add(Op.Any(expr.dotAll), next, -1)
-            case ExprKind.Begin => return add(Op.Begin(expr.multiline), next, -1)
-            case ExprKind.End => return add(Op.End(expr.multiline), next, -1)
+            case ExprKind.Any => return add(Op.Any(mode(expr)), next, -1)
             case ExprKind.Concat =>
                 var start = next
                 var i = expr.children.size
@@ -160,6 +160,74 @@ class Input {
             offsets.add(offset)
         }
     }
+    func boundary(byteOffset: Int64): Int64 {
+        let limit = offsets[offsets.size - 1]
+        if (byteOffset < 0 || byteOffset > limit) {
+            throw Exception("search start is outside the haystack")
+        }
+        var lo: Int64 = 0
+        var hi = offsets.size
+        while (lo < hi) {
+            let mid = (lo + hi) / 2
+            if (offsets[mid] < byteOffset) {
+                lo = mid + 1
+            } else {
+                hi = mid
+            }
+        }
+        if (lo >= offsets.size || offsets[lo] != byteOffset) {
+            throw Exception("search start is not a char boundary")
+        }
+        return lo
+    }
+}
+
+func staticExplicit(expr: Expr): Option<Int64> {
+    match (expr.kind) {
+        case ExprKind.Capture => match (staticExplicit(expr.children[0])) {
+            case Some(count) => return Some(count + 1)
+            case None => return None
+        }
+        case ExprKind.Concat =>
+            var sum: Int64 = 0
+            for (child in expr.children) {
+                match (staticExplicit(child)) {
+                    case Some(count) => sum += count
+                    case None => return None
+                }
+            }
+            return Some(sum)
+        case ExprKind.Alternate =>
+            if (expr.children.size == 0) {
+                return Some(0)
+            }
+            var expected: Int64 = -1
+            for (child in expr.children) {
+                match (staticExplicit(child)) {
+                    case None => return None
+                    case Some(count) =>
+                        if (expected < 0) {
+                            expected = count
+                        } else if (count != expected) {
+                            return None
+                        }
+                }
+            }
+            return Some(expected)
+        case ExprKind.Repeat => match (staticExplicit(expr.children[0])) {
+            case None => return None
+            case Some(count) =>
+                if (expr.minimum == 0 && count > 0) {
+                    return if (expr.maximum == 0) {
+                        Some(0)
+                    } else {
+                        None
+                    }
+                }
+                return Some(count)
+        }
+        case _ => return Some(0)
+    }
 }
 
 public class RegexMatch {
@@ -171,17 +239,37 @@ public class RegexMatch {
         this.end = end
         this.text = text
     }
+    public func isEmpty(): Bool {
+        start == end
+    }
+    public func len(): Int64 {
+        end - start
+    }
+    public func asStr(): String {
+        text
+    }
 }
 
 public class Regex {
+    private let source: String
     private let states: Array<State>
     private let startState: Int64
-    private let wordCharacters: CharSet
+    private let unicodeWords: CharSet
+    private let asciiWords: CharSet
     private let groupNames: Array<String>
+    private let staticLen: Int64
     public init(pattern: String) {
-        let parser = Parser(pattern)
+        this(pattern, PatternOptions())
+    }
+    init(pattern: String, options: PatternOptions) {
+        source = pattern
+        let parser = Parser(pattern, options)
         let tree = parser.parse()
         normalizeWidth(tree)
+        staticLen = match (staticExplicit(tree)) {
+            case Some(count) => count + 1
+            case None => -1
+        }
         let compiler = Compiler()
         let accept = compiler.add(Op.Accept, -1, -1)
         startState = compiler.compile(tree, accept)
@@ -191,10 +279,18 @@ public class Regex {
         let live = Array<Bool>(parser.captureNames.size, repeat: false)
         live[0] = true
         var last: Int64 = 0
-        var hasBoundary = false
+        var needUnicode = false
+        var needAscii = false
         for (state in states) {
             match (state.op) {
-                case Op.WordBoundary(_) => hasBoundary = true
+                case Op.Look(mode) =>
+                    if (mode.kind >= 6) {
+                        if (mode.unicode) {
+                            needUnicode = true
+                        } else {
+                            needAscii = true
+                        }
+                    }
                 case Op.Save(slot) =>
                     let index = slot / 2
                     live[index] = true
@@ -204,8 +300,16 @@ public class Regex {
                 case _ => ()
             }
         }
-        wordCharacters = if (hasBoundary) {
+        unicodeWords = if (needUnicode) {
             unicodeClass(r'w')
+        } else {
+            CharSet()
+        }
+        asciiWords = if (needAscii) {
+            match (asciiClass("word")) {
+                case Some(set) => set
+                case None => throw Exception("missing ASCII word class")
+            }
         } else {
             CharSet()
         }
@@ -216,6 +320,16 @@ public class Regex {
                 ""
             }
         })
+    }
+    public func asStr(): String {
+        source
+    }
+    public func staticCapturesLen(): Option<Int64> {
+        if (staticLen < 0) {
+            None
+        } else {
+            Some(staticLen)
+        }
     }
     // Iterative ordered closure. The first path to a state wins, including slots.
     private func closure(out: ArrayList<Thread>, seen: Array<Bool>, state: Int64, start: Int64, slots: Array<Int64>,
@@ -242,25 +356,15 @@ public class Regex {
                         updated[slot] = pos
                         stack.add(Thread(s.first, start, updated))
                     }
-                case Op.WordBoundary(positive) =>
-                    let before = pos > 0 && wordCharacters.contains(input.chars[pos - 1])
-                    let after = pos < input.chars.size && wordCharacters.contains(input.chars[pos])
-                    if ((before != after) == positive) {
-                        stack.add(Thread(s.first, start, frame.slots))
-                    }
-                case Op.Begin(multiline) =>
-                    if (pos == 0 || (multiline && input.chars[pos - 1] == r'\n')) {
-                        stack.add(Thread(s.first, start, frame.slots))
-                    }
-                case Op.End(multiline) =>
-                    if (pos == input.chars.size || (multiline && input.chars[pos] == r'\n')) {
+                case Op.Look(mode) =>
+                    if (passesLook(mode, pos, input.chars, unicodeWords, asciiWords)) {
                         stack.add(Thread(s.first, start, frame.slots))
                     }
                 case _ => out.add(frame)
             }
         }
     }
-    private func search(input: Input, from: Int64, capture: Bool): Option<SearchMatch> {
+    private func search(input: Input, from: Int64, capture: Bool, earliest: Bool): Option<SearchMatch> {
         var current = ArrayList<Thread>()
         var seen = Array<Bool>(states.size, repeat: false)
         var best: Option<SearchMatch> = None
@@ -282,12 +386,16 @@ public class Regex {
                 var consume = false
                 match (s.op) {
                     case Op.Accept =>
-                        best = Some(SearchMatch(thread.start, pos, thread.slots))
+                        let hit = SearchMatch(thread.start, pos, thread.slots)
+                        if (earliest) {
+                            return Some(hit)
+                        }
+                        best = Some(hit)
                         found = true
                         break
                     case Op.Literal(c) => consume = pos < input.chars.size && input.chars[pos] == c
                     case Op.CharacterClass(set) => consume = pos < input.chars.size && set.contains(input.chars[pos])
-                    case Op.Any(dotAll) => consume = pos < input.chars.size && (dotAll || input.chars[pos] != r'\n')
+                    case Op.Any(mode) => consume = pos < input.chars.size && passesDot(mode, input.chars[pos])
                     case _ => ()
                 }
                 if (consume) {
@@ -305,7 +413,7 @@ public class Regex {
     }
     public func find(text: String): Option<RegexMatch> {
         let input = Input(text)
-        match (search(input, 0, false)) {
+        match (search(input, 0, false, false)) {
             case Some(hit) =>
                 let start = hit.start
                 let end = hit.end
@@ -321,14 +429,167 @@ public class Regex {
             case None => false
         }
     }
-    // Eager collection for this milestone, not yet Rust's lazy find_iter API.
+    private func matched(text: String, input: Input, hit: SearchMatch): RegexMatch {
+        let a = input.offsets[hit.start]
+        let b = input.offsets[hit.end]
+        RegexMatch(a, b, text[a..b])
+    }
+    public func findAt(text: String, start: Int64): Option<RegexMatch> {
+        let input = Input(text)
+        let from = input.boundary(start)
+        match (search(input, from, false, false)) {
+            case Some(hit) => return Some(matched(text, input, hit))
+            case None => return None
+        }
+    }
+    public func isMatchAt(text: String, start: Int64): Bool {
+        match (findAt(text, start)) {
+            case Some(_) => true
+            case None => false
+        }
+    }
+    public func shortestMatch(text: String): Option<Int64> {
+        shortestMatchAt(text, 0)
+    }
+    public func shortestMatchAt(text: String, start: Int64): Option<Int64> {
+        let input = Input(text)
+        let from = input.boundary(start)
+        match (search(input, from, false, true)) {
+            case Some(hit) => Some(input.offsets[hit.end])
+            case None => None
+        }
+    }
+    public func capturesAt(text: String, start: Int64): Option<Captures> {
+        let input = Input(text)
+        let from = input.boundary(start)
+        checkCaptureWorkspace()
+        match (search(input, from, true, false)) {
+            case Some(hit) => Some(captureResult(text, input, hit))
+            case None => None
+        }
+    }
+    public func findIter(text: String): MatchIter {
+        let input = Input(text)
+        let cursor = [0]
+        let previousEnd = [-1]
+        MatchIter(
+            {
+                =>
+                    while (cursor[0] <= input.chars.size) {
+                        match (search(input, cursor[0], false, false)) {
+                            case None => return None
+                            case Some(hit) =>
+                                if (hit.start == hit.end && hit.end == previousEnd[0]) {
+                                    cursor[0] = hit.end + 1
+                                    continue
+                                }
+                                previousEnd[0] = hit.end
+                                cursor[0] = hit.end
+                                return Some(matched(text, input, hit))
+                        }
+                    }
+                    return None
+            }
+        )
+    }
+    public func capturesIter(text: String): CaptureIter {
+        checkCaptureWorkspace()
+        let input = Input(text)
+        let cursor = [0]
+        let previousEnd = [-1]
+        CaptureIter(
+            {
+                =>
+                    while (cursor[0] <= input.chars.size) {
+                        match (search(input, cursor[0], true, false)) {
+                            case None => return None
+                            case Some(hit) =>
+                                if (hit.start == hit.end && hit.end == previousEnd[0]) {
+                                    cursor[0] = hit.end + 1
+                                    continue
+                                }
+                                previousEnd[0] = hit.end
+                                cursor[0] = hit.end
+                                return Some(captureResult(text, input, hit))
+                        }
+                    }
+                    return None
+            }
+        )
+    }
+    public func splitIter(text: String): SplitIter {
+        let input = Input(text)
+        let cursor = [0]
+        let previousEnd = [-1]
+        let lastByte = [0]
+        let done = [0]
+        SplitIter(
+            {
+                =>
+                    if (done[0] == 2) {
+                        return None
+                    }
+                    while (done[0] == 0 && cursor[0] <= input.chars.size) {
+                        match (search(input, cursor[0], false, false)) {
+                            case None =>
+                                done[0] = 1
+                                break
+                            case Some(hit) =>
+                                if (hit.start == hit.end && hit.end == previousEnd[0]) {
+                                    cursor[0] = hit.end + 1
+                                    continue
+                                }
+                                let part = text[lastByte[0]..input.offsets[hit.start]]
+                                lastByte[0] = input.offsets[hit.end]
+                                previousEnd[0] = hit.end
+                                cursor[0] = hit.end
+                                return Some(part)
+                        }
+                    }
+                    if (done[0] == 1) {
+                        done[0] = 2
+                        return Some(text[lastByte[0]..text.size])
+                    }
+                    return None
+            }
+        )
+    }
+    public func captureLocations(): CaptureLocations {
+        CaptureLocations(groupNames.size)
+    }
+    public func capturesRead(locations: CaptureLocations, text: String): Option<RegexMatch> {
+        capturesReadAt(locations, text, 0)
+    }
+    public func capturesReadAt(locations: CaptureLocations, text: String, start: Int64): Option<RegexMatch> {
+        if (locations.size != groupNames.size) {
+            throw Exception("capture locations were not created by this regex")
+        }
+        let input = Input(text)
+        let from = input.boundary(start)
+        checkCaptureWorkspace()
+        match (search(input, from, true, false)) {
+            case None => return None
+            case Some(hit) =>
+                locations.write(0, input.offsets[hit.start], input.offsets[hit.end])
+                for (i in 1..groupNames.size) {
+                    let a = hit.slots[i * 2]
+                    let b = hit.slots[i * 2 + 1]
+                    if (a >= 0 && b >= 0) {
+                        locations.write(i, input.offsets[a], input.offsets[b])
+                    } else {
+                        locations.clear(i)
+                    }
+                }
+                return Some(matched(text, input, hit))
+        }
+    }
     public func findAll(text: String): Array<RegexMatch> {
         let input = Input(text)
         let result = ArrayList<RegexMatch>()
         var cursor: Int64 = 0
         var previousEnd: Int64 = -1
         while (cursor <= input.chars.size) {
-            match (search(input, cursor, false)) {
+            match (search(input, cursor, false, false)) {
                 case None => break
                 case Some(hit) =>
                     let start = hit.start
@@ -377,12 +638,12 @@ public class Regex {
                 groups[i] = Some(RegexMatch(left, right, text[left..right]))
             }
         }
-        return Captures(groups, groupNames)
+        return Captures(groups, groupNames, staticLen)
     }
     public func captures(text: String): Option<Captures> {
         checkCaptureWorkspace()
         let input = Input(text)
-        match (search(input, 0, true)) {
+        match (search(input, 0, true, false)) {
             case Some(hit) => return Some(captureResult(text, input, hit))
             case None => return None
         }
@@ -394,7 +655,7 @@ public class Regex {
         var cursor: Int64 = 0
         var previousEnd: Int64 = -1
         while (cursor <= input.chars.size) {
-            match (search(input, cursor, true)) {
+            match (search(input, cursor, true, false)) {
                 case None => break
                 case Some(hit) =>
                     if (hit.start == hit.end && hit.end == previousEnd) {
@@ -448,7 +709,7 @@ public class Regex {
         var lastByte: Int64 = 0
         var count: Int64 = 0
         while (cursor <= input.chars.size && (limit == 0 || count < limit)) {
-            match (search(input, cursor, capture)) {
+            match (search(input, cursor, capture, false)) {
                 case None => break
                 case Some(hit) =>
                     if (hit.start == hit.end && hit.end == previousEnd) {
@@ -490,7 +751,7 @@ public class Regex {
         var previousEnd: Int64 = -1
         var lastByte: Int64 = 0
         while (cursor <= input.chars.size && (!bounded || result.size < limit - 1)) {
-            match (search(input, cursor, false)) {
+            match (search(input, cursor, false, false)) {
                 case None => break
                 case Some(hit) =>
                     if (hit.start == hit.end && hit.end == previousEnd) {
@@ -505,5 +766,35 @@ public class Regex {
         }
         result.add(text[lastByte..text.size])
         return result.toArray()
+    }
+}
+
+public class MatchIter {
+    private let pull: () -> Option<RegexMatch>
+    public init(pull: () -> Option<RegexMatch>) {
+        this.pull = pull
+    }
+    public func next(): Option<RegexMatch> {
+        pull()
+    }
+}
+
+public class CaptureIter {
+    private let pull: () -> Option<Captures>
+    public init(pull: () -> Option<Captures>) {
+        this.pull = pull
+    }
+    public func next(): Option<Captures> {
+        pull()
+    }
+}
+
+public class SplitIter {
+    private let pull: () -> Option<String>
+    public init(pull: () -> Option<String>) {
+        this.pull = pull
+    }
+    public func next(): Option<String> {
+        pull()
     }
 }

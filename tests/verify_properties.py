@@ -44,7 +44,7 @@ for p in invalid:
     assert invoke(RUST,'find',p,'').returncode!=0,p
     r=invoke(CJ,'find',p,'')
     assert r.returncode==2 and r.stderr and not r.stdout,(p,r)
-unsupported=[r'\p{age=16.0}']
+unsupported=[]
 for p in unsupported:
     assert invoke(RUST,'find',p,'').returncode==0,p
     r=invoke(CJ,'find',p,'')

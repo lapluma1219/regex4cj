@@ -1,4 +1,4 @@
-# v0.2.0 公共 API
+# v0.3.0 公共 API
 
 使用 `import cjregex.*`。下面记录当前仓颉接口，不是 Rust 全量 API 清单。可运行调用见 `examples/consumer/src/main.cj`。
 
@@ -21,10 +21,15 @@ for (m in re.findAll("AB-123 CD-456")) {
 | `capturesAll(text: String)` | Array&lt;Captures&gt;；收集不重叠匹配的各组 |
 | `capturesLen()` | Int64；分组数，包括完整匹配组 0 |
 | `captureNames()` | Array&lt;Option&lt;String&gt;&gt;；按组号排列，无名称的组为 None |
+| `findAt` / `isMatchAt` / `capturesAt` | 从原文字节偏移继续搜索。偏移必须是字符边界 |
+| `shortestMatch` / `shortestMatchAt` | 最早结束位置，不是贪心匹配的终点 |
+| `findIter` / `capturesIter` / `splitIter` | 调用 `next()` 逐个取结果 |
+| `staticCapturesLen()` | 每次匹配的组数固定时为 Some，否则 None |
+| `asStr()` | 编译时的原始模式 |
 
-RegexMatch 公开只读字段 `start: Int64`、`end: Int64`、`text: String`。区间 `[start,end)` 使用原输入的 UTF-8 字节偏移。API 返回数组而非惰性迭代器，大量匹配会占用内存。
+RegexMatch 还有 `isEmpty()`、`len()` 和 `asStr()`。区间 `[start,end)` 使用原输入的 UTF-8 字节偏移。数组接口仍然会一次收集全部结果。
 
-内联标志 `i`、`m`、`s`、`U` 可以写在模式里，例如 `(?i)k` 或 `(?i:k)ey`。`i` 使用 Unicode 简单大小写折叠：`k`、`K` 和开尔文符号可以互配，捕获和替换仍返回原文。`(?i)[a-z--c]` 也不会匹配 `C`。`x`、`R`、`u` 以及 Builder 仍会在构造时失败。和 Rust 的逐项对照见 [公共契约清单](api-coverage.md)。
+内联标志 `i`、`m`、`s`、`U`、`x`、`R`、`u` 可以写在模式里。`i` 使用 Unicode 简单大小写折叠；`(?-u)` 时只折叠 A–Z。`RegexBuilder` 用来打开八进制、ASCII 行终止符和这些开关。`dfaSizeLimit` 会失败。和 Rust 的逐项对照见 [公共契约清单](api-coverage.md)。
 
 ## 捕获
 
@@ -35,7 +40,7 @@ RegexMatch 公开只读字段 `start: Int64`、`end: Int64`、`text: String`。�
 | `name(value: String)` | 按名字查询；不存在或未参与返回 None |
 | `expand(template: String)` | 展开模板，返回 String |
 
-命名组示例：`(?<number>[0-9]+)`。名称目前限 ASCII。组 0 是完整匹配；未参与匹配与参与但捕获了空文本不同。
+命名组示例：`(?<number>[0-9]+)` 或 `(?<名>a)`。组 0 是完整匹配；未参与匹配与参与但捕获了空文本不同。`getMatch()` 返回组 0。`extract(count)` 的 `count` 必须等于 `staticCapturesLen() - 1`，结果数组的第一项是完整匹配。
 
 ## 替换与分割
 

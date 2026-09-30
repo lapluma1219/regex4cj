@@ -18,6 +18,25 @@ fn print_capture_result(re: &Regex, caps: &regex::Captures<'_>) {
 fn main() {
     let a: Vec<String> = std::env::args().skip(1).collect();
     match a.first().map(String::as_str) {
+        Some("set-matches-at" | "set-is-match-at") if a.len() >= 3 => {
+            let start: usize = match a[2].parse() {
+                Ok(v) => v,
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            };
+            match regex::RegexSet::new(&a[3..]) {
+                Ok(set) => {
+                    if a[0] == "set-is-match-at" { println!("{}", set.is_match_at(&a[1], start)); }
+                    else {
+                        let result = set.matches_at(&a[1], start);
+                        println!("patterns\t{}", result.len());
+                        println!("any\t{}", result.matched_any());
+                        println!("all\t{}", result.matched_all());
+                        for id in result.iter() { println!("hit\t{id}"); }
+                    }
+                }
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            }
+        },
         Some("set-matches" | "set-is-match") if a.len() >= 2 => {
             match regex::RegexSet::new(&a[2..]) {
                 Ok(set) => {
@@ -41,6 +60,56 @@ fn main() {
                 },
                 Err(e) => { eprintln!("{e}"); std::process::exit(2); }
             }
+        },
+        Some("find-at" | "is-match-at" | "shortest" | "shortest-at" | "static-len" | "captures-at" | "octal-find" | "term-find") => {
+            let result = (|| -> Result<(), Box<dyn std::error::Error>> {
+                let mode = a[0].as_str();
+                if mode == "static-len" {
+                    if a.len() != 2 { return Err("invalid argument count".into()); }
+                    let re = Regex::new(&a[1])?;
+                    match re.static_captures_len() {
+                        Some(n) => println!("some\t{n}"),
+                        None => println!("none"),
+                    }
+                    return Ok(());
+                }
+                if mode == "octal-find" {
+                    if a.len() != 3 { return Err("invalid argument count".into()); }
+                    let re = regex::RegexBuilder::new(&a[1]).octal(true).build()?;
+                    for m in re.find_iter(&a[2]) { println!("{}\t{}\t{}", m.start(), m.end(), m.as_str()); }
+                    return Ok(());
+                }
+                if mode == "term-find" {
+                    if a.len() != 4 { return Err("invalid argument count".into()); }
+                    let byte: u8 = a[1].parse()?;
+                    let re = regex::RegexBuilder::new(&a[2]).line_terminator(byte).build()?;
+                    for m in re.find_iter(&a[3]) { println!("{}\t{}\t{}", m.start(), m.end(), m.as_str()); }
+                    return Ok(());
+                }
+                if mode == "shortest" {
+                    if a.len() != 3 { return Err("invalid argument count".into()); }
+                    let re = Regex::new(&a[1])?;
+                    if let Some(end) = re.shortest_match(&a[2]) { println!("{end}"); }
+                    return Ok(());
+                }
+                if a.len() != 4 { return Err("invalid argument count".into()); }
+                let re = Regex::new(&a[1])?;
+                let start: usize = a[3].parse()?;
+                match mode {
+                    "is-match-at" => println!("{}", re.is_match_at(&a[2], start)),
+                    "shortest-at" => if let Some(end) = re.shortest_match_at(&a[2], start) { println!("{end}"); },
+                    "find-at" => if let Some(m) = re.find_at(&a[2], start) {
+                        println!("{}\t{}\t{}", m.start(), m.end(), m.as_str());
+                    },
+                    "captures-at" => {
+                        println!("groups\t{}", re.captures_len());
+                        if let Some(caps) = re.captures_at(&a[2], start) { print_capture_result(&re, &caps); }
+                    }
+                    _ => return Err("unknown mode".into()),
+                }
+                Ok(())
+            })();
+            if let Err(e) = result { eprintln!("{e}"); std::process::exit(2); }
         },
         Some("first" | "is-match") if a.len() == 3 => {
             match Regex::new(&a[1]) {

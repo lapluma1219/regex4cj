@@ -1,8 +1,8 @@
-# regex4cj · v0.2.0
+# regex4cj · v0.3.0
 
-**一个可以运行、验证和学习的仓颉原生正则表达式库。** 将 [Rust regex](https://github.com/rust-lang/regex) 的核心匹配行为移植到仓颉，提供库、命令行入口、调用示例、场景演示和 Rust 差分验证。
+**一个可以运行、验证和学习的仓颉原生正则表达式库。** 将 [Rust regex](https://github.com/rust-lang/regex) 的字符串匹配行为移植到仓颉，提供库、命令行入口、调用示例、场景演示和 Rust 差分验证。
 
-本版冻结已实现的功能，形成可交付的多规则文本分类版本。它不是整个上游仓库的完整转译：支持范围和已知限制见[版本说明](docs/release-0.2.0.md)。匹配过程完全在仓颉中执行，不调用 Rust 或 `std.regex`；Rust 只参与完整差分验收。
+本版在 v0.2.0 的多规则分类之上，补上会改变匹配结果的语法、从原文偏移继续搜索，以及只包装已经生效选项的 Builder。它仍然不是整个上游仓库的完整转译：没有任意字节 API，也没有 DFA。支持范围见[版本说明](docs/release-0.3.0.md)。匹配过程完全在仓颉中执行，不调用 Rust 或 `std.regex`；Rust 只参与完整差分验收。
 
 ## 从这里开始
 
@@ -12,7 +12,7 @@
 bash scripts/run.sh demo
 ```
 
-脚本自动构建，展示十个单模式场景与六个分类场景的输入、预期和实际结果。最后应显示 **10/10 通过**与**多规则分类 6/6 通过**。第一次运行、环境配置和故障处理见[上手指南](docs/getting-started.md)。
+脚本自动构建，展示十三个单模式场景与七个分类场景的输入、预期和实际结果。最后应显示 **13/13 通过**与**多规则分类 7/7 通过**。第一次运行、环境配置和故障处理见[上手指南](docs/getting-started.md)。
 
 ```sh
 # 运行真正导入 cjregex 的仓颉示例；可修改源码再运行
@@ -22,7 +22,7 @@ bash scripts/run.sh example
 bash scripts/run.sh find '\p{Han}+' 'A中文α'
 bash scripts/run.sh replace-all '(?<prefix>[A-Z]{2})-[0-9]{3}' 'AB-123 CD-456' '${prefix}-***'
 
-# 快速验收：27 项仓颉原生测试 + 16 个演示场景，不需要 Rust
+# 快速验收：28 项仓颉原生测试 + 20 个演示场景，不需要 Rust
 bash scripts/run.sh check
 
 # 完整验收：另需 Git、Rust/Cargo；首次获取依赖需要网络
@@ -37,7 +37,7 @@ bash scripts/run.sh verify
 2. [学习指南](docs/learning-guide.md)：这个库做什么、从模式到结果如何实现、如何证明当前行为正确。
 3. [当前 API](docs/api.md)：在自己的仓颉程序中调用。和 Rust 的逐项对照见 [公共契约清单](docs/api-coverage.md)。
 4. [多规则分类与 RegexSet](docs/regex-set.md)：如何配置规则与获取命中编号。
-5. [版本说明](docs/release-0.2.0.md)：交付内容、支持边界和验收证据。
+5. [版本说明](docs/release-0.3.0.md)：这一版交付了什么、仍然不做什么。v0.2.0 的历史说明仍在 [release-0.2.0.md](docs/release-0.2.0.md)。
 
 旧的 `milestone-*.md` 是研发历史，**不需要按顺序读完才能使用**。
 
@@ -47,7 +47,7 @@ bash scripts/run.sh verify
 bash scripts/run.sh classify '订单 AB-123 需要退款，也需要开发票'
 ```
 
-输出命中编号 `[0, 1, 2]` 及退款、发票、订单号标签。修改 `examples/classification-rules.json` 或使用 `--rules /路径/rules.json` 即可换规则。RegexSet 返回规则编号，标签由演示应用配置。
+输出命中编号 `[0, 1, 2]` 及退款、发票、订单号标签。`ERROR disk full` 还会命中不区分大小写的“错误日志”规则。修改 `examples/classification-rules.json` 或使用 `--rules /路径/rules.json` 即可换规则。RegexSet 返回规则编号，标签由演示应用配置。
 
 ## 能做什么
 
@@ -57,11 +57,13 @@ bash scripts/run.sh classify '订单 AB-123 需要退款，也需要开发票'
 - 编号与 ASCII 名称捕获，提取字段、展开模板。
 - 模板、字面量和回调替换，以及分割文本。
 - 字符类、集合运算、分支、分组、贪婪/非贪婪重复和计数重复。
-- 锚点、Unicode 词边界，内联 `m` / `s` / `U` 标志。
-- 内联 `(?i)` / `(?-i)` 的 Unicode 简单大小写折叠。匹配文本保持原样；`ß` 不会展开成两个字符的 `SS`。
-- Unicode 16.0.0 的 d/s/w、通用类别、Script/Script_Extensions 和 64 个二元属性。
+- 锚点、Unicode 词边界，以及内联 `i` / `m` / `s` / `U` / `x` / `R` / `u`。
+- Unicode 简单大小写折叠。匹配文本保持原样；`ß` 不会展开成两个字符的 `SS`。关掉 Unicode 后，大小写只折叠 A–Z。
+- 从原文字节偏移继续搜索，并提供最短匹配、`next()` 迭代、固定捕获数量和可复用捕获位置。
+- `RegexBuilder` / `RegexSetBuilder`。八进制和自定义 ASCII 行终止符只在 Builder 上打开。`dfaSizeLimit` 和 `sizeLimit` 会明确失败。
+- Unicode 16.0.0 的 d/s/w、通用类别、Script/Script_Extensions、二元属性，以及 Age 与三种 Break 的集合查询。
 
-**当前仍不支持** x/R/u 标志、Builder、起点搜索、惰性迭代器、Unicode 捕获名、方向性词边界、Age/Break 查询、任意字节 API，以及全部上游底层接口。前后查找和反向引用也不属于 Rust regex 的支持范围。未支持的模式应报错，不应当作其他含义执行。逐项归属见 [公共契约清单](docs/api-coverage.md)。仓库版本号仍是 v0.2.0，上述 `(?i)` 是走向 v0.3.0 的增量，不是新的完整交付。
+**当前仍不支持** 任意字节 API、DFA、前后查找、反向引用，以及 regex-syntax / regex-automata 的公开类型。未支持的模式应报错，不应当作其他含义执行。逐项归属见 [公共契约清单](docs/api-coverage.md)。通过这些测试不等于与上游逐字节兼容。
 
 ## 作为库依赖
 
@@ -76,11 +78,11 @@ cjregex = { path = "../regex4cj/port" }
 
 ## 交付与验证
 
-本机验证环境为 Apple Silicon macOS、仓颉 1.0.5。v0.2.0 冻结验收是 10,105 条差分；当前工作区另有 721 条内联 `(?i)` 大小写折叠差分，以及 27 项仓颉原生测试、3 项 Rust 原生测试和 4 项 Python 数据导入测试。通过有限测试不等于完全兼容上游。数字记录的是已经跑过的检查，不是完成百分比。
+本机验证环境为 Apple Silicon macOS、仓颉 1.0.5。v0.2.0 冻结验收是 10,105 条差分。v0.3.0 在此之上增加语法、起点和 Builder 检查，并有 28 项仓颉原生测试。完整数字以最近一次 `bash scripts/run.sh verify` 写入的报告为准。通过有限测试不等于完全兼容上游。数字记录的是已经跑过的检查，不是完成百分比。
 
 构建缓存和报告默认写到同级 `regex4cj-local/`；可用 `REGEX4CJ_LOCAL` 指定其他位置。仓颉构建产物位于各包 `target/`。以上都不进入源码包。
 
-Git 工作区干净后运行 `bash scripts/package.sh`，生成 `dist/regex4cj-0.2.0.tar.gz` 和 SHA-256 文件。源码包包含文档、示例、测试、锁文件、Unicode 数据和许可证，不包含 SDK、完整上游仓库或机器专用配置。解压后依然使用同一套命令。
+Git 工作区干净后运行 `bash scripts/package.sh`，生成 `dist/regex4cj-0.3.0.tar.gz` 和 SHA-256 文件。源码包包含文档、示例、测试、锁文件、Unicode 数据和许可证，不包含 SDK、完整上游仓库或机器专用配置。解压后依然使用同一套命令。
 
 | 目录 | 用途 |
 |---|---|

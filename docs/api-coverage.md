@@ -33,7 +33,7 @@ bash scripts/run.sh find '(?i)k' 'kKK'
 bash scripts/run.sh find '(?i)ß' 'SS'
 ```
 
-第一条应有三次匹配；第二条没有匹配行，并且正常退出。`(?x)`、`(?u)`、`(?R)` 仍会报错并以退出码 2 结束。
+第一条应有三次匹配；第二条没有匹配行，并且正常退出。`(?x)a b` 匹配 `ab`。`(?-u)(?i)k` 匹配 `K`，但不匹配开尔文符号。
 
 ## 本版必做与明确排除
 
@@ -62,22 +62,22 @@ v0.3.0 必做，对应工作包 C–G：
 | `new` | string.rs:229 | `Regex(pattern)` | 已验证 | 失败是 Exception，不是 `Result`。错误字符串不要求逐字相同 |
 | `is_match` | :253 | `isMatch` | 部分支持 | 语义已对照。内部仍先找完整匹配，存在性短路属于后续优化，不改变结果 |
 | `find` | :281 | `find` | 已验证 | 最左优先、字面量文本、字节区间 |
-| `find_iter` | :313 | `findAll` 返回数组 | 部分支持 | 功能结果已对照。不是按需迭代，属于工作包 F |
+| `find_iter` | :313 | `findAll` 与 `findIter().next()` | 部分支持 | 数组结果已对照。`next()` 使用同一套空匹配推进；仓颉没有 Rust 的 Iterator trait |
 | `captures` | :404 | `captures` | 已验证 | 组 0 为完整匹配；未参与组与空文本不同 |
 | `captures_iter` | :469 | `capturesAll` | 部分支持 | 同 `find_iter`，结果已收集成数组 |
 | `split` | :602 | `split` | 已验证 | 含首尾空段。返回数组 |
 | `splitn` | :677 | `splitN` | 已验证 | `0` 返回空数组，`1` 返回整段输入。负数抛 Exception |
 | `replace` / `replace_all` / `replacen` | :791 / :891 / :956 | `replace` / `replaceAll` / `replaceN` | 部分支持 | 模板替换已对照。`Replacer` 拆成模板、`replaceLiteral` 和 `replaceWith` 回调。见下文替换 |
-| `shortest_match` / `shortest_match_at` | :1047 / :1082 | 无 | 待实现 | 工作包 E。不是 `find().end` 的别名。先记录固定上游探针，再写保证什么、允许什么引擎差异 |
-| `is_match_at` | :1120 | 无 | 待实现 | 工作包 E。禁止用 `text[start..]` 代替 |
-| `find_at` | :1154 | 无 | 待实现 | 落在多字节字符内部的字节偏移必须按固定上游实测，不能自行四舍五入或一律拒绝 |
-| `captures_at` | :1193 | 无 | 待实现 | 返回范围仍相对完整输入 |
-| `captures_read` / `captures_read_at` | :1243 / :1283 | 无 | 待实现 | 工作包 F。配合可复用位置，不能覆盖已经返回的 `Captures` |
-| `as_str` | :1324 | 无 | 待实现 | 返回编译时的原始模式，不是转义后的形式 |
-| `capture_names` | :1374 | `captureNames()` 返回数组 | 部分支持 | 组 0 为 `None`。名称目前只接受 ASCII。迭代器改为数组是语言适配 |
+| `shortest_match` / `shortest_match_at` | :1047 / :1082 | `shortestMatch` / `shortestMatchAt` | 已验证 | 返回最早接受位置的终点。`a+` 对 `aaaaa` 返回 1。不是贪心 `find` 的终点 |
+| `is_match_at` | :1120 | `isMatchAt` | 已验证 | 搜索整段原文。越界或落在字符中间抛 Exception；上游对应情况会 panic |
+| `find_at` | :1154 | `findAt` | 已验证 | 返回范围相对完整输入 |
+| `captures_at` | :1193 | `capturesAt` | 已验证 | 返回范围仍相对完整输入 |
+| `captures_read` / `captures_read_at` | :1243 / :1283 | `capturesRead` / `capturesReadAt` | 部分支持 | 成功时写入位置。失败时保留上一次位置。已返回的 `Captures` 不会被改写 |
+| `as_str` | :1324 | `asStr` | 已验证 | 返回编译时的原始模式 |
+| `capture_names` | :1374 | `captureNames()` 返回数组 | 已验证 | 组 0 为 `None`。名称可以是 Unicode。迭代器改为数组是语言适配 |
 | `captures_len` | :1405 | `capturesLen()` | 已验证 | 含组 0 |
-| `static_captures_len` | :1445 | 无 | 待实现 | 不等于 `capturesLen()`。分支里捕获数不固定时上游返回 `None` |
-| `capture_locations` / `locations` | :1471 / :1481 | 无 | 待实现 | 工作区不能默认跨另一个 `Regex` 复用；容量不匹配和失败后是否保留旧内容，先按上游写测试 |
+| `static_captures_len` | :1445 | `staticCapturesLen` | 已验证 | 不等于 `capturesLen()`。`(a)|(b)` 为 Some(2)，`(a)|b` 为 None |
+| `capture_locations` / `locations` | :1471 / :1481 | `captureLocations()` | 已验证 | 槽位数必须与捕获组数一致。成功时覆盖全部槽；失败时保留上一次位置 |
 
 `Display`、`Debug`、`FromStr`、`TryFrom<&str>`、`TryFrom<String>` 归入语言适配：仓颉用构造函数和 `Exception`，不实现这些 trait。
 
@@ -88,12 +88,12 @@ v0.3.0 必做，对应工作包 C–G：
 | 上游 | 仓颉 | 状态 | 说明 |
 |---|---|---|---|
 | `start` / `end` | 字段 `start` / `end` | 已验证 | UTF-8 字节，半开区间 |
-| `is_empty` | 无 | 待实现 | `start == end` |
-| `len` | 无 | 待实现 | 字节长度 |
-| `range` | 无 | 待实现 | 可用一对整数或现有字段表达，不引入 Rust `Range` |
+| `is_empty` | `isEmpty` | 已验证 | `start == end` |
+| `len` | `len` | 已验证 | 字节长度 |
+| `range` | 字段 `start` / `end` | 语言适配 | 不引入 Rust `Range` |
 | `as_str` | 字段 `text` | 已验证 | 原输入切片，不是折叠后的文本 |
 
-零宽匹配会继续向后推进，不能停在同一个位置死循环，也不能推进到一个多字节字符的中间。这条在现有空匹配测试里已覆盖；惰性迭代实现后要再测一遍。
+零宽匹配会继续向后推进，不能停在同一个位置死循环，也不能推进到一个多字节字符的中间。`findAll` 和 `findIter().next()` 使用同一条推进规则。
 
 ## Captures
 
@@ -102,9 +102,9 @@ v0.3.0 必做，对应工作包 C–G：
 | 上游 | 仓颉 | 状态 | 说明 |
 |---|---|---|---|
 | `get` | `get` | 已验证 | 未参与、越界返回 `None`。Rust 的 `Index<usize>` 越界会 panic，仓颉不提供会 panic 的下标 |
-| `get_match` | `get(0)` | 部分支持 | 有匹配时组 0 必存在。可另加只取完整匹配的方法，不能把缺失组换成空字符串冒充 |
-| `name` | `name` | 部分支持 | ASCII 名称已验证。Unicode 名称属工作包 D |
-| `extract` | 无 | 待实现 | 仅当捕获组数量在所有分支中固定，且调用方要的组数正好等于“总组数减 1”。不能把未参与组填成空串后声称等价 |
+| `get_match` | `getMatch` | 已验证 | 有匹配时组 0 必存在 |
+| `name` | `name` | 已验证 | 支持 Unicode 名称，不折叠、不规范化 |
+| `extract` | `extract` | 已验证 | 组数必须等于 staticCapturesLen 减 1。第一项是完整匹配，后面是实际参与的组 |
 | `expand` | `expand` | 已验证 | `$0`、`$1`、`${name}`、`$$`。未参与组展开为空。上游写入调用方缓冲区，仓颉返回新字符串 |
 | `iter` | 无 | 待实现 | 按组号给出 `Option<RegexMatch>`，组 0 在有匹配时不是 `None` |
 | `len` | 字段 `size` | 已验证 | 含组 0 |
@@ -116,22 +116,22 @@ v0.3.0 必做，对应工作包 C–G：
 
 | 上游 | 状态 | 要先写清的行为 |
 |---|---|---|
-| `get` / `pos` | 待实现 | 未参与组是 `None`，不是 `(0,0)` |
-| `len` | 待实现 | 槽位数，含组 0 |
+| `get` / `pos` | 已验证 | `get` 对未参与组返回 `None`，不是 `(0,0)` |
+| `len` | 已验证 | 字段 `size`，含组 0 |
 
-`captures_read` 失败时是否留下上一次的位置，以实现时对照固定上游的结果为准，不凭直觉清空或保留。已返回给调用方的 `Captures` 不能被下一次搜索改掉。完成前不宣称线程安全。
+`capturesRead` 失败时保留上一次写入的位置。已经返回的 `Captures` 不会被下一次搜索改写。不宣称线程安全。
 
 ## 迭代器
 
-这些类型都在 `src/regex/string.rs`。当前仓颉用数组一次性收集。v0.3.0 要增加真正的按需接口，并让旧的 `findAll` / `capturesAll` / `split` / `splitN` 走同一套推进规则。
+这些类型都在 `src/regex/string.rs`。数组接口一次收集全部结果。`next()` 按需推进，空匹配规则与数组接口相同。仓颉没有 Rust 的 `for` 迭代协议，调用方使用 `next()`。
 
 | 上游类型 | 产生方式 | 状态 |
 |---|---|---|
-| `Matches` | `find_iter` | 待实现按需接口；数组结果已验证 |
-| `CaptureMatches` | `captures_iter` | 同上 |
-| `Split` / `SplitN` | `split` / `splitn` | 同上。`splitN` 的最后一段是剩余文本 |
-| `CaptureNames` | `capture_names` | 数组已部分支持；名称字符集未完成 |
-| `SubCaptureMatches` | `Captures::iter` | 待实现 |
+| `Matches` | `find_iter` | `findIter().next()` 已验证；`findAll` 仍返回数组 |
+| `CaptureMatches` | `captures_iter` | `capturesIter().next()` 已验证；`capturesAll` 仍返回数组 |
+| `Split` / `SplitN` | `split` / `splitn` | `splitIter().next()` 已验证。`splitN` 仍是数组，最后一段是剩余文本 |
+| `CaptureNames` | `capture_names` | 数组已验证。名称可以是 Unicode |
+| `SubCaptureMatches` | `Captures::iter` | 本版不单独立项。按组号用 `get` |
 
 按需接口的验收包括：只取第一项就停止、两个迭代器交错推进、保留旧匹配再推进后内容不变、空匹配不无限循环、非空匹配后的同位置空匹配跳过规则与上游一致。Rust 生命周期用仓颉对象持有输入副本来适配，文档要写明分配成本。
 
@@ -166,9 +166,9 @@ v0.3.0 必做，对应工作包 C–G：
 | `RegexSet::new` | `RegexSet(patterns)` | 已验证 | 任一条失败则整个构造失败，错误带规则编号 |
 | `empty` / `Default` | `RegexSet([])` | 已验证 | 不另设静态 `empty`。空集合 `matchedAny` 为 false，`matchedAll` 为 true |
 | `is_match` | `isMatch` | 已验证 | 可以提早结束 |
-| `is_match_at` | 无 | 待实现 | 工作包 E |
+| `is_match_at` | `isMatchAt` | 已验证 | 起点是原文字节偏移 |
 | `matches` | `matches` | 已验证 | 重叠规则都算命中 |
-| `matches_at` | 无 | 待实现 | 工作包 E |
+| `matches_at` | `matchesAt` | 已验证 | 起点是原文字节偏移 |
 | `matches_read_at` / `read_matches_at` | 无 | 待实现 | 若做复用缓冲区，要检查长度、旧结果清理和失败后的内容 |
 | `len` / `is_empty` | `len` / `isEmpty` | 已验证 | 原始规则数，不是命中数 |
 | `patterns` | `patterns` | 已验证 | 返回副本。Rust 返回借用切片 |
@@ -186,24 +186,24 @@ RegexSet 不返回位置、文本或捕获。需要这些信息时再对单条�
 
 `src/builders.rs` 的 `string` 模块。`RegexBuilder` 从约第 212 行起，`RegexSetBuilder` 从约第 787 行起。同名方法在 bytes 模块再出现一次，那些不在本清单的实现范围内。
 
-仓颉还没有公开 Builder。在各选项真实生效之前，不提供“能设置但被忽略”的构造器。`Regex(pattern)` 和 `RegexSet(patterns)` 保持现在的默认行为。
+`RegexBuilder(pattern)` 和 `RegexSetBuilder()` 已经公开。`Regex(pattern)` 和 `RegexSet(patterns)` 仍使用原来的默认值。`build()` 复制当时的选项，之后再改 Builder 不影响已经构造好的对象。
 
 默认值来自 `Builder::default` 和 `regex_syntax::ast::parse::ParserBuilder`：Unicode 开，大小写、多行、点号匹配换行、CRLF、交换贪婪、忽略空白、八进制都关，行终止符为 `\n`（字节 0x0A），NFA 大小约 10 MiB，hybrid 缓存约 2 MiB，嵌套限制 250。
 
 | 选项 | 类别 | 内联标志 | v0.3.0 要求 |
 |---|---|---|---|
-| `unicode` | 匹配语义 | `u` | 待实现。关闭后仍不是任意字节 API。字符串接口要拒绝可能匹配非法 UTF-8 的模式 |
-| `case_insensitive` | 匹配语义 | `i` | 内联 `(?i)` / `(?-i)` 已验证简单折叠。Builder 开关和 `(?-u)` 下的 ASCII 折叠仍待实现 |
-| `multi_line` | 匹配语义 | `m` | 内联已验证。Builder 待实现 |
-| `dot_matches_new_line` | 匹配语义 | `s` | 内联已验证。Builder 待实现 |
-| `swap_greed` | 匹配语义 | `U` | 内联已验证。Builder 待实现 |
-| `crlf` | 匹配语义 | `R` | 待实现。不能把输入里的 CRLF 预先替换成 LF |
-| `line_terminator` | 匹配语义 | 无 | 待实现。参数是一个字节，并且要满足字符串 UTF-8 安全约束，不能随意接受任意字符 |
-| `ignore_whitespace` | 匹配语义 | `x` | 待实现。不能先删掉模式里的全部空白 |
-| `octal` | 匹配语义 | 无 | 待实现。允许八进制转义不等于支持反向引用 |
-| `size_limit` | 资源 | 无 | 待实现为诚实适配。仓颉按 NFA 状态和编译工作量限制，不能把“状态个数”说成同上游一样的字节数 |
-| `dfa_size_limit` | 引擎专属 | 无 | 本版没有 DFA。不能提供一个成功但什么都不做的 setter。公开行为应是明确不支持 |
-| `nest_limit` | 资源 | 无 | 待实现。当前固定 64 层，上游默认 250。两者都不是“无限嵌套” |
+| `unicode` | 匹配语义 | `u` | 已验证。关闭后仍不是任意字节 API。点号和会落到非 ASCII 的字符类在构造时失败 |
+| `case_insensitive` | 匹配语义 | `i` | 已验证。Unicode 开时用简单折叠；Unicode 关时只折叠 A–Z |
+| `multi_line` | 匹配语义 | `m` | 已验证。Builder 与内联一致 |
+| `dot_matches_new_line` | 匹配语义 | `s` | 已验证。Builder 与内联一致 |
+| `swap_greed` | 匹配语义 | `U` | 已验证。Builder 与内联一致 |
+| `crlf` | 匹配语义 | `R` | 已验证。不预先替换输入里的 CRLF |
+| `line_terminator` | 匹配语义 | 无 | 已验证。只接受一个 ASCII 字节。大于 127 会失败 |
+| `ignore_whitespace` | 匹配语义 | `x` | 已验证。忽略 Unicode 空白和 `#` 注释，包括字符类内部 |
+| `octal` | 匹配语义 | 无 | 已验证。只由 Builder 打开。最多三位，最大 511。关闭时 `\1` 仍是不支持的反向引用 |
+| `size_limit` | 资源 | 无 | 明确失败。本库用 NFA 状态数限制，不接受字节预算 |
+| `dfa_size_limit` | 引擎专属 | 无 | 明确失败。本版没有 DFA |
+| `nest_limit` | 资源 | 无 | 已验证。默认 64，可以改。它不是上游默认的 250，也不是字节数 |
 
 `build` 必须得到独立对象：之后再改 Builder，不影响已经构造好的 Regex 或 RegexSet。
 
@@ -228,9 +228,9 @@ RegexSet 不返回位置、文本或捕获。需要这些信息时再对单条�
 | 字符类交并差、POSIX ASCII 类 | 已验证 | `tests/verify_classes.py`、`tests/verify_ascii_classes.py` |
 | 内联 `m` / `s` / `U` 及局部作用域 | 已验证 | `tests/verify_flags.py` |
 | 内联 `i` 的 Unicode 简单大小写折叠 | 已验证 | `tests/verify_case.py`，原生测试 `simpleCaseFoldingKeepsOriginalText` |
-| `x` / `R` / `u`、八进制、方向性词边界、Unicode 捕获名 | 待实现 | 现在构造这些模式会失败，不会改成别的含义 |
+| `x` / `R` / `u`、八进制、方向性词边界、Unicode 捕获名 | 已验证 | `tests/verify_syntax.py`、`tests/verify_flags.py`、`tests/verify_captures.py` |
 | Unicode 16.0.0 的 d/s/w、通用类别、Script、Script_Extensions、64 个二元属性 | 已验证 | `tests/verify_unicode.py` 等 |
-| Age、Grapheme_Cluster_Break、Word_Break、Sentence_Break | 待实现 | 查询字符集合，不自动实现分词或断句算法 |
+| Age、Grapheme_Cluster_Break、Word_Break、Sentence_Break | 已验证 | 只查询字符集合，不切分文本。`tests/verify_syntax.py` |
 | 前后查找、反向引用 | 本版排除 | 上游同样拒绝。测试放在非法模式，不放在“未支持” |
 
-简单大小写折叠表来自同一固定提交的 `regex-syntax/src/unicode_tables/case_folding_simple.rs`，生成文件是 `port/src/case_fold.cj`。`(?-u)` 尚未打开，因此 ASCII-only 折叠还没有可观察开关；它随 `u` 一起做，避免出现“Unicode 已关、但 `\w` 仍是 Unicode”的半套行为。
+简单大小写折叠表来自同一固定提交的 `regex-syntax/src/unicode_tables/case_folding_simple.rs`，生成文件是 `port/src/case_fold.cj`。Unicode 打开时用这张表；`(?-u)` 只折叠 A–Z。`(?-u)` 下的 `\w`、`\d`、`\s` 是 ASCII 类。

@@ -5,7 +5,8 @@ from regex_test_support import RUST,CJ,REPORT,compare,invoke
 patterns=[r'\b',r'\B',r'\b\w+\b',r'\B\w+\B',r'\bcat\b',r'(\b)',r'(\B)',
           r'(\b)*',r'(\B)+',r'(\b)?',r'(\b){2,4}',r'(\B){0,3}?',r'\b|\B',
           r'(\b|a)*',r'(\B|.)+',r'\b(\w+)|\B(.)',r'(?m)^\b.*\b$',r'(?s)\B.\B',
-          r'(?U)\b\w+\b',r'\A\B\z',r'\b\b',r'\b\B',r'\b{2}',r'\b.\b']
+          r'(?U)\b\w+\b',r'\A\B\z',r'\b\b',r'\b\B',r'\b{2}',r'\b.\b',
+          r'\b{start}',r'\b{end}',r'\b{start-half}',r'\b{end-half}',r'\<',r'\>',r'(?-u:\b)']
 texts=['','a','ab','!','!!',' cat cats cat ','中文🙂abc','e\u0301','\u0301',
        '\u200c\u200d','٣３_','\nabc\n','🙂🙂','\u00a0a\u00a0']
 count=0
@@ -32,7 +33,7 @@ for p in [r'[\b]',r'[\B]']:
     assert invoke(RUST,'find',p,'').returncode!=0
     r=invoke(CJ,'find',p,'')
     assert r.returncode==2 and r.stderr and not r.stdout,(p,r)
-unsupported=[r'\b{start}',r'\b{end}',r'\b{start-half}',r'\b{end-half}',r'(?-u:\b)']
+unsupported=[]
 for p in unsupported:
     assert invoke(RUST,'find',p,'a').returncode==0,p
     r=invoke(CJ,'find',p,'a')

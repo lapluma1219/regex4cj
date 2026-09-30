@@ -49,7 +49,7 @@ for p in invalid:
     assert invoke(RUST, 'find', p, '').returncode != 0, p
     r = invoke(CJ, 'find', p, '')
     assert r.returncode == 2 and r.stderr and not r.stdout, (p,r)
-unsupported = ['(?x)a', '(?R).', '(?u)a', '(?-u:a)']
+unsupported = []
 for p in unsupported:
     assert invoke(RUST, 'find', p, 'a').returncode == 0, p
     r = invoke(CJ, 'find', p, 'a')
@@ -58,9 +58,8 @@ report = json.loads(REPORT.read_text())
 report.update({'flags_differential_passed': count, 'flags_api_checks_passed': api_checks,
                'flags_golden_passed': len(golden), 'flags_invalid_rejected': len(invalid),
                'flags_unsupported_rejected': len(unsupported),
-               'matching_scope': 'Unicode-scalar NFA, classes, repeats, captures and scoped i/m/s/U flags; no x/R/u, bytes or DFA',
+               'matching_scope': 'Unicode-scalar NFA with i/m/s/U/x/R/u flags',
                'limitations': ['CLI cannot transport NUL; native tests cover selected NUL cases',
-                               'findAll/capturesAll/split are eager', 'ASCII capture names only',
-                               'Inline i uses Unicode simple case folding; x/R/u and Builder remain unsupported']})
+                               'bytes and DFA engines are excluded']})
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n')
 print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)

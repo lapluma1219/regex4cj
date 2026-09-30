@@ -9,6 +9,13 @@ func requiredMatch(value: Option<RegexMatch>): RegexMatch {
     }
 }
 
+func requiredText(value: Option<String>): String {
+    match (value) {
+        case Some(text) => return text
+        case None => throw Exception("expected text")
+    }
+}
+
 func requiredCaptures(value: Option<Captures>): Captures {
     match (value) {
         case Some(c) => return c
@@ -291,4 +298,84 @@ func unicodeBinaryProperties(): Unit {
     @Expect(Regex(#"\p{Lu}"#).isMatch("Ⅰ"), false)
     @Expect(Regex(#"\p{Emoji}+"#).replaceAll("a1🙂b", "!"), "a!b")
     @Expect(Regex(#"[\p{White_Space}~~\s]"#).isMatch(" "), false)
+}
+
+@Test
+func searchFromOffsetAndConfiguredSyntax(): Unit {
+    let anchored = Regex(#"\ba"#)
+    @Expect(anchored.isMatchAt("ba", 1), false)
+    @Expect(requiredMatch(Regex("a").findAt("ba", 1)).start, 1)
+    @Expect(Regex("a+").shortestMatch("aaaaa"), Some(1))
+    let found = Regex("a").findIter("abaca")
+    var seen: Int64 = 0
+    while (true) {
+        match (found.next()) {
+            case Some(_) => seen++
+            case None => break
+        }
+    }
+    @Expect(seen, 3)
+    let parts = Regex(",").splitIter("a,b")
+    @Expect(requiredText(parts.next()), "a")
+    @Expect(requiredText(parts.next()), "b")
+    match (parts.next()) {
+        case None => ()
+        case Some(_) => throw Exception("split iterator did not finish")
+    }
+    let dated = requiredCaptures(Regex(#"([0-9]{4})-([0-9]{2})"#).captures("2010-03"))
+    let extracted = dated.extract(2)
+    @Expect(extracted[0], "2010-03")
+    @Expect(extracted[1], "2010")
+    @Expect(extracted[2], "03")
+    match (Regex("(a)|(b)").staticCapturesLen()) {
+        case Some(count) => @Expect(count, 2)
+        case None => throw Exception("expected a static capture count")
+    }
+    match (Regex("(a)|b").staticCapturesLen()) {
+        case None => ()
+        case Some(_) => throw Exception("capture count varies")
+    }
+    let locations = Regex("a").captureLocations()
+    let kept = requiredMatch(Regex("a").capturesRead(locations, "a"))
+    @Expect(kept.asStr(), "a")
+    match (Regex("a").capturesRead(locations, "b")) {
+        case None => ()
+        case Some(_) => throw Exception("unexpected match")
+    }
+    match (locations.get(0)) {
+        case Some(span) => @Expect(span.start, 0)
+        case None => throw Exception("failed search cleared capture locations")
+    }
+    let named = requiredCaptures(Regex("(?<名>a)").captures("a"))
+    @Expect(requiredMatch(named.name("名")).text, "a")
+    @Expect(Regex(#"\p{age=1.1}"#).isMatch("A"), true)
+    @Expect(Regex(#"\p{gcb=cr}"#).isMatch("\r"), true)
+    @Expect(Regex(#"\p{gcb=cr}"#).isMatch("a"), false)
+    @Expect(requiredMatch(Regex("(?mR)^b").find("a\r\nb")).start, 3)
+    @Expect(RegexBuilder(#"\101"#).octal(true).build().isMatch("A"), true)
+    @Expect(RegexBuilder(#"\w"#).unicode(false).build().isMatch("a"), true)
+    @Expect(RegexBuilder(#"\w"#).unicode(false).build().isMatch("Ω"), false)
+    @Expect(requiredMatch(RegexBuilder("(?m)^b").lineTerminator(r'\r').build().find("a\rb")).start, 2)
+    @Expect(RegexSetBuilder().unicode(false).pattern(#"\w"#).build().isMatch("Ω"), false)
+    var rejected = false
+    try {
+        RegexBuilder("a").dfaSizeLimit(1)
+    } catch (_: Exception) {
+        rejected = true
+    }
+    @Expect(rejected, true)
+    rejected = false
+    try {
+        Regex("a").findAt("中", 1)
+    } catch (_: Exception) {
+        rejected = true
+    }
+    @Expect(rejected, true)
+    rejected = false
+    try {
+        Regex(#"\p{age=na}"#)
+    } catch (_: Exception) {
+        rejected = true
+    }
+    @Expect(rejected, true)
 }

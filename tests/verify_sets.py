@@ -63,7 +63,7 @@ for patterns, text, ids in golden:
     expected = ('patterns\t{}\nany\t{}\nall\t{}\n'.format(len(patterns), str(bool(ids)).lower(), str(len(ids) == len(patterns)).lower()) +
                 ''.join('hit\t{}\n'.format(i) for i in ids)).encode()
     assert output.returncode == 0 and output.stdout == expected, (patterns, output)
-for patterns in [['ok', '('], ['ok', '(?x)a'], ['ok', r'\p{age=16.0}']]:
+for patterns in [['ok', '('], ['ok', '(?=a)'], ['ok', r'\p{age=na}']]:
     r = invoke(CJ, 'set-matches', patterns, 'ok')
     assert r.returncode == 2 and b'pattern 1:' in r.stderr and not r.stdout, r
 limits = [(['a'] * 257, b'256 patterns'), (['a' * 4000] * 17, b'65536 pattern bytes'),
@@ -88,7 +88,37 @@ for n in [8, 64, 256]:
         else: assert r.stdout == expected, r
     measurements.append(row)
     count += 1
-REPORT.with_name('set-benchmark.json').write_text(json.dumps({'scope': 'one process per measurement; includes startup, compile and scan; no throughput claim', 'measurements': measurements}, indent=2) + '\n')
+def repeat_find(times):
+    result = subprocess.run(
+        [str(CJ), 'repeat-find', r'\p{L}+', '字' * 200, str(times)],
+        env=ENV, capture_output=True, timeout=120)
+    assert result.returncode == 0, result
+    rows = {}
+    match_line = None
+    for raw in result.stdout.decode().splitlines():
+        key, _, value = raw.partition('\t')
+        if key in ('compile_ns', 'search_ns', 'repeats'):
+            rows[key] = int(value)
+        else:
+            match_line = raw
+    assert rows.get('repeats') == times and match_line, result.stdout
+    return rows, match_line
+timing, match_line = repeat_find(40)
+start, end, text = match_line.split('\t', 2)
+assert (start, end, text) == ('0', '600', '字' * 200), match_line
+benchmark = {
+    'scope': 'set rows are one process each and include startup, compile and scan. repeat-find times compile and search inside one process.',
+    'measurements': measurements,
+    'repeat_find': {
+        'pattern': r'\p{L}+',
+        'text': 'U+5B57 repeated 200 times',
+        'repeats': timing['repeats'],
+        'compile_seconds': round(timing['compile_ns'] / 1e9, 6),
+        'search_seconds': round(timing['search_ns'] / 1e9, 6),
+        'note': 'compile_seconds is Regex construction. search_seconds is 40 finds after that construction. Process startup is excluded. This is not a throughput claim.',
+    },
+}
+REPORT.with_name('set-benchmark.json').write_text(json.dumps(benchmark, indent=2) + '\n')
 report = json.loads(REPORT.read_text())
 report.update(regex_set_differential_passed=count, regex_set_golden_passed=len(golden),
               regex_set_error_checks_passed=6, regex_set_single_regex_baseline_cases=120)

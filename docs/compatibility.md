@@ -5,22 +5,22 @@
 | 范围 | 当前状态 | 主要剩余工作 |
 |---|---|---|
 | escape | 已实现，含原生 NUL 验证 | 更多非 CLI 生成测试 |
-| find / is_match / find_iter 的基本行为 | 已有 find/isMatch/findAll | 惰性迭代器、更多输入与配置接口 |
+| find / is_match / find_iter 的基本行为 | 已有 find/isMatch/findAll、起点查询、shortestMatch 和 findIter().next() | 更多输入与配置接口 |
 | 库交付 | 第五步提供 cjregex 静态库、独立 CLI 和外部消费包测试 | 包发布、跨平台验证、完整 API 清单 |
 | 基础语法、分支、分组 | 已实现子集 | 完整语法、AST/HIR 公开结构、精确错误类型与位置 |
 | 字符类与集合运算 | 基本标量区间、代数及第八步 POSIX 命名类 | Unicode 属性、字符类转义全集 |
-| 字符转义 | 第七步支持 x/u/U 定长与花括号形式及 a/f/v | 其余 Unicode 属性和方向性边界 |
+| 字符转义 | 第七步支持 x/u/U 定长与花括号形式及 a/f/v；方向性词边界和 Builder 八进制已可用 | 其余未移植的转义 |
 | 重复 | 支持 * + ? 与 {m,n} 等及非贪婪 | 计数空白、堆叠量词、与上游一致的配置限制 |
-| 捕获 | 第三步支持编号、ASCII 名称、Captures、captures/capturesAll | Unicode 组名、惰性迭代、extract、可复用捕获工作区 |
-| Unicode | Unicode 16.0.0 d/s/w、字节偏移、通用类别、Script/Script_Extensions、64 个二元属性，以及内联 i 的简单大小写折叠 | Age/Break 枚举属性、方向性边界、关闭 Unicode 后的 ASCII 折叠 |
-| 词边界 | 第十步支持 Unicode b/B | start/end、半边界和 ASCII 模式 |
-| Builder / flags | 内联 i/m/s/U、禁用与局部作用域 | Builder、扩展模式 x、CRLF R、Unicode 开关 u。接口归属见 [api-coverage.md](api-coverage.md) |
-| 替换、分割 | 第四步支持模板展开、字面量／回调替换、次数限制、split/splitN | 惰性分割迭代器、Replacer trait 对应设计、模板预编译与分配优化 |
+| 捕获 | 编号和 Unicode 名称、Captures、extract、staticCapturesLen、capturesRead、capturesIter().next() | Captures 自身的组迭代 |
+| Unicode | Unicode 16.0.0 d/s/w、字节偏移、通用类别、Script/Script_Extensions、64 个二元属性、简单大小写折叠、累积 Age、三种 Break 集合，以及 `(?-u)` 的 ASCII 折叠 | 文本切分算法 |
+| 词边界 | Unicode 与 `(?-u)` ASCII 的 b/B、start/end 和半边界 | 无 |
+| Builder / flags | 内联 i/m/s/U/x/R/u 与 RegexBuilder / RegexSetBuilder。接口归属见 [api-coverage.md](api-coverage.md) | DFA 字节预算；本库会明确拒绝 |
+| 替换、分割 | 模板展开、字面量／回调替换、次数限制、split/splitN、splitIter().next() | Replacer trait 对应设计、模板预编译与分配优化 |
 | bytes | 未实现 | 任意字节输入与禁用 Unicode 的语义 |
-| RegexSet | v0.2.0 支持多模式统一扫描、成员查询与编号数组 | Builder、起点搜索、复用缓冲区、惰性迭代及 bytes Set |
+| RegexSet | v0.3.0 支持多模式扫描、起点查询和 RegexSetBuilder | 复用布尔缓冲区、bytes Set |
 | 性能与资源管理 | 基础有序 NFA 与原型限制 | 工作区复用、字节 NFA、DFA、lazy DFA、预过滤等 |
 | 其他仓库包 | 未移植 | regex-lite、C API、开发 CLI 及底层全量公开接口按最终范围推进 |
 
-来源与实现差异详见 milestone-1.md（历史阶段）和 milestone-2.md（历史阶段）、milestone-3.md（历史阶段）、milestone-4.md（历史阶段）、milestone-5.md（历史阶段）、milestone-6.md（历史阶段）、milestone-7.md（历史阶段）、milestone-8.md（历史阶段）、milestone-9.md（历史阶段）、milestone-10.md（历史阶段）、milestone-11.md（历史阶段）、milestone-12.md（历史阶段）及 milestone-13.md（v0.1.0 历史阶段）；当前 v0.2.0 见 regex-set.md 与 release-0.2.0.md。固定上游版本见 baseline.json。
+来源与实现差异详见 milestone-1.md（历史阶段）和 milestone-2.md（历史阶段）、milestone-3.md（历史阶段）、milestone-4.md（历史阶段）、milestone-5.md（历史阶段）、milestone-6.md（历史阶段）、milestone-7.md（历史阶段）、milestone-8.md（历史阶段）、milestone-9.md（历史阶段）、milestone-10.md（历史阶段）、milestone-11.md（历史阶段）、milestone-12.md（历史阶段）及 milestone-13.md（v0.1.0 历史阶段）；当前 v0.3.0 见 release-0.3.0.md 与 regex-set.md。固定上游版本见 baseline.json。
 
 交付层次、估算与停止条件见 [delivery-plan.md](delivery-plan.md)。

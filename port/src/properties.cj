@@ -71,7 +71,8 @@ func unicodeProperty(text: String, negated: Bool, caseInsensitive: Bool): CharSe
         }
         key = normalizePropertyName(property.toString())
         if (key != "gc" && key != "generalcategory" && key != "sc" && key != "script" && key != "scx" && key !=
-            "scriptextensions") {
+            "scriptextensions" && key != "age" && key != "gcb" && key != "graphemeclusterbreak" && key != "wb" && key !=
+            "wordbreak" && key != "sb" && key != "sentencebreak") {
             throw Exception("unsupported Unicode property: " + key)
         }
         name = value.toString()
@@ -80,6 +81,18 @@ func unicodeProperty(text: String, negated: Bool, caseInsensitive: Bool): CharSe
         }
     }
     let normalized = normalizePropertyName(name)
+    if (key == "age") {
+        return finishProperty(unicodeAge(normalized), invert, caseInsensitive)
+    }
+    if (key == "gcb" || key == "graphemeclusterbreak") {
+        return finishProperty(graphemeClusterBreak(normalized), invert, caseInsensitive)
+    }
+    if (key == "wb" || key == "wordbreak") {
+        return finishProperty(wordBreak(normalized), invert, caseInsensitive)
+    }
+    if (key == "sb" || key == "sentencebreak") {
+        return finishProperty(sentenceBreak(normalized), invert, caseInsensitive)
+    }
     if (key == "") {
         match (binaryProperty(normalized)) {
             case Some(set) => return finishProperty(set, invert, caseInsensitive)

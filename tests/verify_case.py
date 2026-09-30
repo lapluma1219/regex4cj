@@ -65,7 +65,7 @@ report.update({
     'case_fold_differential_passed': count,
     'case_fold_golden_passed': len(golden),
     'case_fold_invalid_rejected': 2,
-    'case_folding': 'Unicode simple case folding for inline i; ASCII-only folding waits for the u switch',
+    'case_folding': 'Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off',
 })
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 print(json.dumps({k: report[k] for k in report if k.startswith('case_fold')}, ensure_ascii=False), flush=True)

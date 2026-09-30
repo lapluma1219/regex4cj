@@ -21,9 +21,12 @@ Replacement expansion in `captures.cj` adapts
 `regex-automata/src/util/interpolate.rs`. Replacement and splitting in `nfa.cj`
 follow `src/regex/string.rs` and `regex-automata/src/meta/regex.rs` from the same
 commit, with eager string results and Cangjie callback functions.
-Inline m/s/U flags and lexical scope additionally follow `regex-syntax/src/ast/parse.rs`
-and `regex-syntax/src/hir/translate.rs`; LF assertions follow
-`regex-automata/src/util/look.rs`.
+Inline m/s/U/x/R/u flags and lexical scope additionally follow `regex-syntax/src/ast/parse.rs`
+and `regex-syntax/src/hir/translate.rs`. CRLF and word-boundary looks follow
+`regex-automata/src/util/look.rs`. Age and break-property tables in
+`port/src/unicode_age_break.cj` are generated from the pinned
+`regex-syntax/src/unicode_tables` age, grapheme, word and sentence tables.
+Age queries are cumulative, matching `unicode::ages`.
 Hexadecimal and control-character escapes follow `parse_hex`, `parse_hex_digits`,
 `parse_hex_brace` and `parse_escape` in the same upstream AST parser.
 POSIX classes in `ascii_classes.cj` adapt `ascii_class` in the upstream HIR

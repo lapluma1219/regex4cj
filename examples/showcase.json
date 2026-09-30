@@ -8,5 +8,8 @@
   {"title":"区分书写系统与扩展集合","args":["find","\\p{scx=Hira}","ー"],"expected":[[0,3,"ー"]],"note":"长音符可用于平假名；把 scx 改为 sc 后应该没有结果。"},
   {"title":"没有匹配也是正常结果","args":["find","[0-9]+","abc"],"expected":[],"note":"空结果不是运行错误。"},
   {"title":"大小写不敏感但仍返回原文","args":["find","(?i)abc","ABC"],"expected":[[0,3,"ABC"]],"note":"简单大小写折叠让 ABC 命中；结果文本仍是输入里的 ABC。"},
-  {"title":"明确显示当前版本边界","args":["find","(?x)abc","ABC"],"reject":true,"note":"扩展模式 x 仍未实现；报错，不把空白和注释删掉后继续执行。"}
+  {"title":"明确显示当前版本边界","args":["find","(?=a)","a"],"reject":true,"note":"前瞻仍未实现；构造失败，不会把它当成普通分组继续匹配。"},
+  {"title":"按 CRLF 读取错误日志","args":["find","(?mR)^ERROR.*","INFO ok\r\nERROR disk full\r\n"],"expected":[[9,24,"ERROR disk full"]],"note":"R 让 ^ 把回车加换行看成一行的结尾。点号不吃掉回车或换行，所以匹配停在行尾。"},
+  {"title":"从指定字节继续查找","args":["find-at","\\bword\\b","password word","9"],"expected":[[9,13,"word"]],"note":"9 是原文里 word 的起点。前面的空格仍参与词边界，结果偏移也相对整段原文。"},
+  {"title":"单词内部不是新的起点","args":["find-at","\\bword\\b","password","4"],"expected":[],"note":"4 落在 password 的 w 上。w 前面还是字母，所以这里没有词边界，也不会另起一段文本再搜。"}
 ]

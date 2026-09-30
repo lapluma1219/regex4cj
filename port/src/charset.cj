@@ -170,6 +170,31 @@ class CharSet {
     func isOnly(code: Int64): Bool {
         ranges.size == 1 && ranges[0].low == code && ranges[0].high == code
     }
+    func exceedsAscii(): Bool {
+        for (range in ranges) {
+            if (range.high > 127) {
+                return true
+            }
+        }
+        return false
+    }
+    // ASCII case folding used when Unicode mode is off. Only A-Z and a-z move.
+    func caseFoldAscii(): Unit {
+        let extra = CharSet()
+        for (range in ranges) {
+            let upperLow = if (range.low > 65) { range.low } else { 65 }
+            let upperHigh = if (range.high < 90) { range.high } else { 90 }
+            if (upperLow <= upperHigh) {
+                extra.addRange(upperLow + 32, upperHigh + 32)
+            }
+            let lowerLow = if (range.low > 97) { range.low } else { 97 }
+            let lowerHigh = if (range.high < 122) { range.high } else { 122 }
+            if (lowerLow <= lowerHigh) {
+                extra.addRange(lowerLow - 32, lowerHigh - 32)
+            }
+        }
+        unionWith(extra)
+    }
     // Unicode simple case folding, matching regex-syntax ClassUnicodeRange::case_fold_simple.
     // The table stores each scalar's full equivalence class, so one pass closes the set.
     // Callers must fold before negation and before class intersection or difference.

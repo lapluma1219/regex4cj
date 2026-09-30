@@ -1,5 +1,6 @@
 [
   {"label": "退款相关", "pattern": "退款"},
   {"label": "发票相关", "pattern": "发票"},
-  {"label": "包含订单号", "pattern": "[A-Z]{2}-[0-9]{3}"}
+  {"label": "包含订单号", "pattern": "[A-Z]{2}-[0-9]{3}"},
+  {"label": "错误日志", "pattern": "(?i)error"}
 ]

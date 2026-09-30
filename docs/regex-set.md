@@ -64,7 +64,7 @@ for (id in result.indices()) {
 
 匹配对象与返回数组都是独立快照。修改构造时传入的模式数组、`patterns()` 或 `indices()` 的返回值，不会改变集合或此前结果。String 为不可变值。
 
-本版没有移植 matches_at / is_match_at、matches_read_at、RegexSetBuilder、bytes::RegexSet 及完整 Rust trait 表面。RegexSet 接受单模式库已经支持的语法，因此模式中的内联 `(?i)` 会按简单大小写折叠生效。`(?x)`、`(?R)`、`(?u)` 仍然会让整个集合构造失败。原有模式限制继续生效。
+本版提供 `isMatchAt`、`matchesAt` 和 `RegexSetBuilder`。没有移植 `matches_read_at`、bytes::RegexSet 及完整 Rust trait 表面。RegexSet 接受单模式库已经支持的语法，包括 `(?i)`、`(?x)`、`(?R)` 和 `(?u)`。原有条数和字节上限继续生效。
 
 ## 实现原则
 
@@ -82,4 +82,6 @@ for (id in result.indices()) {
 
 新增六项仓颉原生测试覆盖 NUL、数据独立性、结果索引越界和单规则基准；Rust 新增一项 NUL/空集合/重叠测试。完整入口 `bash scripts/run.sh verify` 执行新旧所有测试，分类演示也作为最后的验收项。
 
-`$REGEX4CJ_LOCAL/work/set-benchmark.json` 记录 8、64、256 条规则在约 4KB 文本上的进程耗时，包含启动、编译和扫描，不能当成纯匹配吞吐基准或可靠的速度比。首次本机测量仓颉约 0.031/0.094/0.279 秒，Rust 约 0.010/0.011/0.012 秒；可见尚有性能差距，不能宣称与原库同速。全量验收会刷新测量结果。
+`$REGEX4CJ_LOCAL/work/set-benchmark.json` 里，8、64、256 条规则在约 4KB 文本上的数字是整进程耗时，包含启动、编译和扫描。最近一次本机测量仓颉约 0.030/0.093/0.286 秒，Rust 约 0.008/0.009/0.013 秒。这不是纯匹配速度比。
+
+同一份报告里的 `repeat-find` 在一次进程中先构造 `\p{L}+`，再对 200 个“字”查找 40 次。这次构造约 0.000077 秒，40 次查找合计约 0.0047 秒，进程启动不计入这两项。它只说明编译和查找可以分开看，不能当成吞吐基准。

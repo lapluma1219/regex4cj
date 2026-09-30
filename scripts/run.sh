@@ -5,7 +5,7 @@ source "$(dirname "$0")/env.sh"
 cd "$PROJECT_ROOT"
 usage() {
   cat <<'EOF'
-regex4cj 0.2.0 — 多规则文本分类版
+regex4cj 0.3.0 — 字符串语法与起点搜索版
 用法：bash scripts/run.sh 命令 [参数...]
 
   demo                     构建并演示，逐项核对预期结果（无需 Rust）
@@ -17,7 +17,7 @@ regex4cj 0.2.0 — 多规则文本分类版
                            是否至少命中一条规则
   example                  运行可修改的仓颉调用示例
   build                    构建仓颉库、CLI 和调用示例
-  check                    27 项仓颉测试 + 场景验收（无需 Rust）
+  check                    28 项仓颉测试 + 场景验收（无需 Rust）
   verify                   完整 Rust/仓颉差分验收（需 Cargo）
   find PATTERN TEXT        查找全部匹配；输出 UTF-8 起止字节和文本
   first PATTERN TEXT       只查找第一条匹配
