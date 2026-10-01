@@ -79,9 +79,6 @@ report = json.loads(REPORT.read_text())
 report.update({'capture_differential_passed': count + 1, 'capture_golden_passed': len(golden),
                'capture_name_checks_passed': name_checks, 'capture_invalid_rejected': len(invalid),
                'capture_unicode_names_passed': len(unicode_names),
-               'capture_resource_limits_checked': 0,
-               'limitations': ['CLI cannot transport NUL', 'findAll/capturesAll are eager',
-                               'This is not full regex compatibility'],
-               'matching_scope': 'Unicode-scalar NFA, classes, counted repetitions and captures; no properties/flags/bytes/DFA'})
+               'capture_resource_limits_checked': 0,})
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n')
 print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)

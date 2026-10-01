@@ -72,3 +72,7 @@
 - 环境固定在 Apple Silicon、仓颉 1.0.5。不要升级 Rust regex、Unicode 或仓颉 SDK。构建用 `cjpm build`，不要加 `--release`。本地缓存和上游检出在仓库同级的 `regex4cj-local/`，用 `scripts/env.sh` 进入。
 - 负数限额的报错里保留 “nonnegative”。语法错误和超限的 `toString()` 继续对齐上游 Display。
 - 通过有限测试不等于任意输入都已证明。新增行为要用固定 Rust 对照，不要只看仓颉自己的预期。
+
+## Reproduction evidence
+
+Acceptance fixtures are vendored in `tests/upstream/`; no external upstream checkout is required. `verification-run.json` records the commit, environment and every stage. Only a final `passed` status means the complete invocation succeeded; `verification.json` holds incremental counters.

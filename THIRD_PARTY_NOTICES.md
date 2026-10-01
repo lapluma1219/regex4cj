@@ -99,3 +99,7 @@ in the pinned upstream `src/regexset/string.rs`. It reuses this project's
 adapted Thompson compiler and assertion semantics with a new scalar-based
 multi-pattern executor. Result arrays, fixed resource limits and unsupported
 advanced interfaces differ from the Rust API; see `docs/api.md`.
+
+## Vendored upstream acceptance data
+
+`tests/upstream/testdata/` contains unmodified test fixtures from the pinned regex commit above, including its generated Fowler fixtures. Exact source paths and SHA-256 hashes are in `tests/upstream/manifest.json`. Upstream MIT and Apache-2.0 license texts are retained in `tests/upstream/`; original file comments are preserved. Only these test data are vendored, not the Rust implementation.

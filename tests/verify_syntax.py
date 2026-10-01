@@ -83,7 +83,6 @@ report = json.loads(REPORT.read_text()) if REPORT.exists() else {}
 report.update({
     'syntax_differential_passed': count,
     'syntax_invalid_rejected': len(invalid),
-    'matching_scope': 'Unicode-scalar NFA with x/R/u, Age, break properties, offset search and shortest match; no bytes or DFA',
 })
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 print('syntax differential passed:', count, flush=True)

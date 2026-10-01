@@ -66,7 +66,8 @@ bash scripts/run.sh verify
 默认报告在同级目录 `regex4cj-local/work/`：
 
 - `showcase.json`：单模式场景的预期、实际与是否通过。
-- `verification.json`：完整差分套件统计，只有整条 verify 命令成功退出才代表本次全部完成。
+- `verification-run.json`：整次验收的提交号、工作区状态、工具版本、阶段结果和最终状态。只有 `status: passed` 代表完成；`running` 也可能表示被强制中断，不能算通过。源码包无 Git 信息时提交号为空。
+- `verification.json`：本次差分套件计数，中途失败时可能不完整。完整验收开始先清除旧计数与旧反例。
 - `matching-failure.json`：出现差分失败时记录反例；旧文件可能来自历史失败，不能单独据此判断本次状态。
 
 完整验收不代替场景演示，场景演示也不代替完整差分验收。原生 NUL 测试弥补命令行无法传递 NUL 的限制。
@@ -88,3 +89,29 @@ bash scripts/run.sh verify
 ## 多规则分类
 
 运行 `bash scripts/run.sh classify '订单 AB-123 退款'` 查看命中编号与标签。接口见 [当前接口](api.md)。命令按完整规则文件构建，任一规则失败会整体报错。
+
+## 6. 从 GitHub 独立复现
+
+推荐直接克隆仓库作为交付文件夹，不必下载压缩包：
+
+```sh
+git clone https://github.com/lapluma1219/regex4cj.git
+cd regex4cj
+```
+
+完整验收的 25 份上游测试数据在 `tests/upstream/`，含固定提交、哈希和许可证，脚本首先检查数据完整性。不需要原来的 `regex4cj-local/upstream/regex`，也不需要 CangjieSkills 或 CangjieCorpus。
+
+环境要求：Apple Silicon macOS、仓颉 1.0.5（cjc/cjpm）、兼容的 macOS SDK、Python 3.9+；完整验收另需 Git 和 Rust/Cargo。当前开发验收使用 Rust 1.98.1；Rust 参照固定在 `oracle/Cargo.toml` 的 rev，并使用 `Cargo.lock` 和 `--locked`。首次构建需要访问 GitHub 和 Cargo 依赖源。本项目不承诺离线首次构建或其他操作系统。
+
+`REGEX4CJ_LOCAL` 是可重建的缓存与报告目录，可以指定新位置。使用新目录前，请先配置工具 PATH，并显式设置 `CANGJIE_HOME`；SDK 安装目录与缓存目录不是一回事。
+
+```sh
+export CANGJIE_HOME=/你的/仓颉SDK目录
+export REGEX4CJ_LOCAL=/你的/新缓存目录
+bash scripts/run.sh demo
+bash scripts/run.sh example
+bash scripts/run.sh check
+bash scripts/run.sh verify
+```
+
+检验交付时，应从待验收提交创建新的克隆目录，使用空的 REGEX4CJ_LOCAL、CARGO_HOME 和构建目录，保留 `verification-run.json` 与完整日志。工具链可以复用已安装版本，这与全新操作系统验证不同。不要复制旧 target 或旧上游检出。验收失败时，先查看报告最后一个阶段和日志。

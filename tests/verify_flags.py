@@ -57,9 +57,6 @@ for p in unsupported:
 report = json.loads(REPORT.read_text())
 report.update({'flags_differential_passed': count, 'flags_api_checks_passed': api_checks,
                'flags_golden_passed': len(golden), 'flags_invalid_rejected': len(invalid),
-               'flags_unsupported_rejected': len(unsupported),
-               'matching_scope': 'Unicode-scalar NFA with i/m/s/U/x/R/u flags',
-               'limitations': ['CLI cannot transport NUL; native tests cover selected NUL cases',
-                               'bytes and DFA engines are excluded']})
+               'flags_unsupported_rejected': len(unsupported),})
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n')
 print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)

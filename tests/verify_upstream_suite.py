@@ -13,7 +13,7 @@ from pathlib import Path
 
 from regex_test_support import CJ, ENV, REPORT, RUST, compare, invoke
 
-UPSTREAM = Path(os.environ['REGEX4CJ_LOCAL']) / 'upstream/regex/testdata'
+UPSTREAM = Path(__file__).resolve().parent / 'upstream/testdata'
 FAILURES = REPORT.with_name('upstream-suite-failures.json')
 
 

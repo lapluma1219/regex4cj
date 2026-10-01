@@ -55,7 +55,6 @@ for mode, extra in [('first', ()), ('is-match', ()), ('split', ()), ('replace-al
     compare(r'(\p{Alphabetic}+)', '中\u0345🙂abc', mode, *extra)
 report = json.loads(REPORT.read_text())
 report.update(binary_property_differential_passed=count, binary_property_golden_passed=len(golden),
-              binary_property_invalid_rejected=len(invalid), binary_property_api_checks_passed=4,
-              matching_scope='Unicode-scalar NFA with categories, scripts, binary properties, Age, break properties, i/m/s/U/x/R/u and simple case folding; no bytes or DFA')
+              binary_property_invalid_rejected=len(invalid), binary_property_api_checks_passed=4,)
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 print('Binary property differential passed:', count, flush=True)

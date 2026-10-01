@@ -10,7 +10,7 @@ from pathlib import Path
 from regex_test_support import RUST, CJ, REPORT, invoke
 
 ROOT = Path(__file__).resolve().parents[1]
-UPSTREAM = Path('/Users/jalonyan/Desktop/regex4cj-local/upstream/regex/testdata')
+UPSTREAM = Path(__file__).resolve().parent / 'upstream/testdata'
 FILES = [
     'crlf.toml', 'flags.toml', 'multiline.toml', 'empty.toml',
     'word-boundary-special.toml', 'no-unicode.toml', 'line-terminator.toml',

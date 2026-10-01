@@ -79,7 +79,11 @@ cjregex = { path = "../regex4cj/port" }
 
 构建缓存和报告默认写到同级 `regex4cj-local/`；可用 `REGEX4CJ_LOCAL` 指定其他位置。仓颉构建产物位于各包 `target/`。以上都不进入源码包。
 
-Git 工作区干净后运行 `bash scripts/package.sh`，生成 `dist/regex4cj-0.3.0.tar.gz` 和 SHA-256 文件。源码包包含文档、示例、测试、锁文件、Unicode 数据和许可证，不包含 SDK、完整上游仓库或机器专用配置。解压后依然使用同一套命令。
+以 GitHub 仓库的已提交源码为主要交付物，直接克隆即可，无需压缩包。完整验收所需的上游测试数据已在 `tests/upstream/`，不依赖本机上游检出。Rust 参照仍由 Cargo 按固定提交和锁文件下载，首次需要联网。
+
+完整验收的最终状态、提交号、环境和阶段结果在 `$REGEX4CJ_LOCAL/work/verification-run.json`。只有 `status` 为 `passed` 才代表整次通过，`verification.json` 只是逐项计数。
+
+压缩包仅是可选副本，旧包不能代表当前代码。需要时，在 Git 工作区干净后运行 `bash scripts/package.sh`，生成 `dist/regex4cj-0.3.0.tar.gz` 和 SHA-256 文件。源码包包含文档、示例、测试、锁文件、Unicode 数据和许可证，不包含 SDK、完整上游仓库或机器专用配置。解压后依然使用同一套命令。
 
 | 目录 | 用途 |
 |---|---|

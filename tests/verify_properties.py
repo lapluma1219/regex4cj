@@ -55,7 +55,6 @@ report=json.loads(REPORT.read_text())
 report.update({'general_category_differential_passed':count,'general_category_golden_passed':len(golden),
                'general_category_invalid_rejected':len(invalid),'general_category_unsupported_rejected':len(unsupported),
                'general_category_api_checks_passed':4,
-               'matching_scope':'Unicode-scalar NFA with general categories, d/s/w, b/B and m/s/U; no scripts/binary properties/case folding/bytes/DFA',
                'general_category_scope':'37 categories plus Any/ASCII/Assigned'})
 REPORT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps(report,ensure_ascii=False,indent=2),flush=True)

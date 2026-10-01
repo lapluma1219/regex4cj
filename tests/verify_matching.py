@@ -68,9 +68,6 @@ report = json.loads(REPORT.read_text())
 report.update({'matching_differential_passed': count, 'find_and_is_match_checks_passed': 16,
                'matching_golden_passed': len(golden), 'unsupported_patterns_rejected': 0,
                'invalid_patterns_rejected': len(invalid), 'resource_limits_checked': 0,
-               'cangjie_matching_engine_implemented': True,
-               'matching_scope': 'restricted Unicode-scalar Thompson NFA; no Unicode-properties/flags/bytes/DFA',
-               'limitations': ['CLI cannot transport NUL', 'findAll is eager',
-                              'This is not full regex compatibility']})
+               'cangjie_matching_engine_implemented': True,})
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)

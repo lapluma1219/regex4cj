@@ -42,7 +42,6 @@ report=json.loads(REPORT.read_text())
 report.update({'word_boundary_differential_passed':count,'word_boundary_golden_passed':len(golden),
                'word_boundary_api_checks_passed':checks,'word_boundary_invalid_rejected':2,
                'word_boundary_unsupported_rejected':len(unsupported),
-               'matching_scope':'Unicode-scalar NFA with d/s/w, b/B and m/s/U; no property syntax/case folding/bytes/DFA',
                'word_boundary_scope':'Unicode 16 b/B at scalar boundaries'})
 REPORT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps(report,ensure_ascii=False,indent=2),flush=True)

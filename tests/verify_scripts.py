@@ -69,7 +69,6 @@ for mode, extra in [('first', ()), ('is-match', ()), ('split', ()), ('replace-al
     compare(r'(\p{scx=Hira}+)', 'aかなーα', mode, *extra)
 report = json.loads(REPORT.read_text())
 report.update(script_differential_passed=count, script_golden_passed=len(golden),
-              script_invalid_rejected=len(invalid), script_api_checks_passed=4,
-              matching_scope='Unicode-scalar NFA with categories, scripts/extensions, d/s/w, b/B and m/s/U; no binary properties/case folding/bytes/DFA')
+              script_invalid_rejected=len(invalid), script_api_checks_passed=4,)
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 print('Script differential passed:', count, flush=True)

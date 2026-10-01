@@ -86,7 +86,6 @@ report = json.loads(REPORT.read_text())
 report.update({'class_repetition_differential_passed': count, 'class_repetition_golden_passed': len(golden),
                'class_repetition_api_checks_passed': 10, 'class_repetition_invalid_rejected': len(invalid),
                'class_repetition_unsupported_rejected': 0,
-               'class_repetition_resource_limits_checked': len(limits),
-               'matching_scope': 'Unicode-scalar NFA with class set algebra and counted repetitions; no properties/flags/bytes/DFA'})
+               'class_repetition_resource_limits_checked': len(limits),})
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)

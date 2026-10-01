@@ -50,7 +50,6 @@ report=json.loads(REPORT.read_text())
 report.update({'unicode_shorthand_differential_passed':count,'unicode_shorthand_golden_passed':len(golden),
                'unicode_shorthand_invalid_rejected':len(invalid),'unicode_shorthand_api_checks_passed':4,
                'unicode_version':'16.0.0', 'unicode_range_counts':{k:len(v) for k,v in snapshot['classes'].items()},
-               'matching_scope':'Unicode-scalar NFA with Unicode d/s/w shorthands and m/s/U; no property syntax/case folding/word boundaries/bytes/DFA',
                'unicode_scope':'Pinned Unicode 16.0.0 shorthand tables'})
 REPORT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps(report,ensure_ascii=False,indent=2),flush=True)
