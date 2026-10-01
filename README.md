@@ -2,7 +2,7 @@
 
 **一个可以运行、验证和学习的仓颉原生正则表达式库。** 将 [Rust regex](https://github.com/rust-lang/regex) 的字符串匹配行为移植到仓颉，提供库、命令行入口、调用示例、场景演示和 Rust 差分验证。
 
-本版在 v0.2.0 的多规则分类之上，补上会改变匹配结果的语法、从原文偏移继续搜索，以及只包装已经生效选项的 Builder。字符串接口只接受合法 UTF-8。`BytesRegex` 和 `BytesRegexSet` 可以在原始字节上查找、捕获、替换和分割，包括非法 UTF-8。还没有 DFA。支持范围见[版本说明](docs/release-0.3.0.md)。匹配过程完全在仓颉中执行，不调用 Rust 或 `std.regex`；Rust 只参与完整差分验收。
+它复刻固定上游 `regex` 包的字符串和 bytes 行为。匹配在仓颉里完成，Rust 只参与对照。现在做到哪、还差什么，见[现状](docs/status.md)。
 
 ## 从这里开始
 
@@ -36,7 +36,7 @@ bash scripts/run.sh verify
 1. [上手指南](docs/getting-started.md)：运行、改输入、理解结果。
 2. [学习指南](docs/learning-guide.md)：这个库做什么、从模式到结果如何实现、如何证明当前行为正确。
 3. [当前接口](docs/api.md)：查找、捕获、替换、分割、Builder、字节接口和 RegexSet。
-4. [版本说明](docs/release-0.3.0.md)：这一版交付了什么、仍然不做什么。更早的说明在 [release-0.2.0.md](docs/release-0.2.0.md) 和 [release-0.1.0.md](docs/release-0.1.0.md)。固定上游提交记在 [baseline.json](docs/baseline.json)。
+4. [现状](docs/status.md)：已经实现什么，距离复刻整个上游仓库还差什么。固定提交在 [baseline.json](docs/baseline.json)。
 
 ## 多规则文本分类
 
@@ -75,7 +75,7 @@ cjregex = { path = "../regex4cj/port" }
 
 ## 交付与验证
 
-本机验证环境为 Apple Silicon macOS、仓颉 1.0.5。v0.2.0 冻结验收是 10,105 条差分。v0.3.0 在此之上增加语法、起点、Builder 和字节查找检查，并有 29 项仓颉原生测试。完整数字以最近一次 `bash scripts/run.sh verify` 写入的报告为准。通过有限测试不等于完全兼容上游。数字记录的是已经跑过的检查，不是完成百分比。
+本机验证环境为 Apple Silicon macOS、仓颉 1.0.5。验收范围和条数见 [现状](docs/status.md)。完整数字以最近一次 `bash scripts/run.sh verify` 写入的报告为准。通过有限测试不等于完全兼容上游。数字记录的是已经跑过的检查，不是完成百分比。
 
 构建缓存和报告默认写到同级 `regex4cj-local/`；可用 `REGEX4CJ_LOCAL` 指定其他位置。仓颉构建产物位于各包 `target/`。以上都不进入源码包。
 
