@@ -73,6 +73,8 @@
 - 负数限额的报错里保留 “nonnegative”。语法错误和超限的 `toString()` 继续对齐上游 Display。
 - 通过有限测试不等于任意输入都已证明。新增行为要用固定 Rust 对照，不要只看仓颉自己的预期。
 
-## Reproduction evidence
+## 复现与交付
 
-Acceptance fixtures are vendored in `tests/upstream/`; no external upstream checkout is required. `verification-run.json` records the commit, environment and every stage. Only a final `passed` status means the complete invocation succeeded; `verification.json` holds incremental counters.
+上游验收数据已收录到 `tests/upstream/`，完整验收不需要外部上游检出。`verification-run.json` 记录提交号、环境及每个阶段；只有最终状态为 `passed` 才表示整次成功，`verification.json` 只是逐项计数。直接克隆 Git 仓库即可交付，压缩包是可选副本。具体操作见 [上手指南](getting-started.md)。
+
+[最新干净目录验收记录](acceptance/reproduction-2026-10-02.md) 说明了实际验收的提交，以及依赖下载缓存方面的限制。

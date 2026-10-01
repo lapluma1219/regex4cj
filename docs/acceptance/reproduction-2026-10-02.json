@@ -1,0 +1,548 @@
+{
+  "run_id": "ead4cdaa-2689-4f48-b147-0422535bc118",
+  "status": "passed",
+  "started_at": "2026-10-01T15:55:08.967440+00:00",
+  "stages": [
+    {
+      "name": "upstream-data",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/check_upstream_data.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:09.100166+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:55:09.121968+00:00"
+    },
+    {
+      "name": "data-unicode",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/generate_unicode.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:09.122439+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:55:09.152795+00:00"
+    },
+    {
+      "name": "data-categories",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/generate_categories.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:09.153263+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:55:09.194017+00:00"
+    },
+    {
+      "name": "data-scripts",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/generate_scripts.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:09.194722+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:55:09.233157+00:00"
+    },
+    {
+      "name": "data-binary",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/generate_binary.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:09.233847+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:55:09.283723+00:00"
+    },
+    {
+      "name": "data-case_fold",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/generate_case_fold.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:09.284467+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:55:09.324813+00:00"
+    },
+    {
+      "name": "data-age_break",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/generate_age_break.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:09.325281+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:55:09.367646+00:00"
+    },
+    {
+      "name": "python-tests",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_category_generator.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:09.368252+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:55:09.404242+00:00"
+    },
+    {
+      "name": "rust-build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--manifest-path",
+        "oracle/Cargo.toml"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:09.404743+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:55:33.262597+00:00"
+    },
+    {
+      "name": "rust-test",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "oracle/Cargo.toml"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:33.264614+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:55:35.242393+00:00"
+    },
+    {
+      "name": "port-build",
+      "command": [
+        "cjpm",
+        "build"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:35.243809+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:55:42.047385+00:00"
+    },
+    {
+      "name": "cli-build",
+      "command": [
+        "cjpm",
+        "build"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:42.049230+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:55:52.101796+00:00"
+    },
+    {
+      "name": "examples/consumer-build",
+      "command": [
+        "cjpm",
+        "build"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:52.103502+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:55:59.876300+00:00"
+    },
+    {
+      "name": "consumer-test",
+      "command": [
+        "cjpm",
+        "test"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:55:59.877689+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:56:13.627082+00:00"
+    },
+    {
+      "name": "consumer-run",
+      "command": [
+        "cjpm",
+        "run"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:56:13.628858+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:56:22.607682+00:00"
+    },
+    {
+      "name": "verify",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:56:22.609351+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:56:45.412393+00:00"
+    },
+    {
+      "name": "verify_matching",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_matching.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:56:45.413556+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:57:26.414905+00:00"
+    },
+    {
+      "name": "verify_classes",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_classes.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:57:26.418871+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:58:30.159561+00:00"
+    },
+    {
+      "name": "verify_captures",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_captures.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:58:30.161437+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T15:59:26.702632+00:00"
+    },
+    {
+      "name": "verify_text_ops",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_text_ops.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T15:59:26.704019+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:00:33.674907+00:00"
+    },
+    {
+      "name": "verify_flags",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_flags.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:00:33.676287+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:01:35.028158+00:00"
+    },
+    {
+      "name": "verify_case",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_case.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:01:35.029969+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:02:26.009559+00:00"
+    },
+    {
+      "name": "verify_escapes",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_escapes.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:02:26.010940+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:02:49.018936+00:00"
+    },
+    {
+      "name": "verify_ascii_classes",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_ascii_classes.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:02:49.020500+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:03:20.037238+00:00"
+    },
+    {
+      "name": "verify_unicode",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_unicode.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:03:20.046483+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:03:50.219855+00:00"
+    },
+    {
+      "name": "verify_boundaries",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_boundaries.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:03:50.221197+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:04:25.482557+00:00"
+    },
+    {
+      "name": "verify_properties",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_properties.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:04:25.483870+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:05:16.936363+00:00"
+    },
+    {
+      "name": "verify_scripts",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_scripts.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:05:16.938204+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:07:33.577684+00:00"
+    },
+    {
+      "name": "verify_binary",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_binary.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:07:33.579636+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:08:25.461887+00:00"
+    },
+    {
+      "name": "verify_syntax",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_syntax.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:08:25.471653+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:08:43.462965+00:00"
+    },
+    {
+      "name": "verify_errors",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_errors.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:08:43.469742+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:08:50.518946+00:00"
+    },
+    {
+      "name": "verify_limits",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_limits.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:08:50.525346+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:09:02.753648+00:00"
+    },
+    {
+      "name": "verify_bytes",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_bytes.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:09:02.761868+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:09:10.336733+00:00"
+    },
+    {
+      "name": "verify_upstream_sample",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_upstream_sample.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:09:10.343149+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:09:44.918686+00:00"
+    },
+    {
+      "name": "verify_upstream_suite",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_upstream_suite.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:09:44.923269+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:11:11.693953+00:00"
+    },
+    {
+      "name": "verify_sets",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_sets.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:11:11.694802+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:11:49.334769+00:00"
+    },
+    {
+      "name": "showcase",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/showcase.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:11:49.335497+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:11:49.778281+00:00"
+    },
+    {
+      "name": "classification",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/classify.py",
+        "--demo"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-01T16:11:49.779174+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-01T16:11:50.034840+00:00"
+    }
+  ],
+  "scope": "Pinned top-level string/bytes Regex and RegexSet; not the entire upstream workspace",
+  "commit": "574e31a85c8b431334043d914d1c8a4a9cd0f04e",
+  "dirty": false,
+  "environment": {
+    "platform": "macOS-26.6-arm64-arm-64bit",
+    "python": "3.9.6 (default, May 22 2026, 11:13:45) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+    "cangjie": "Cangjie Compiler: 1.0.5 (cjnative)\nTarget: aarch64-apple-darwin",
+    "rust": "rustc 1.98.1 (48a229cea 2026-09-01)",
+    "cargo": "cargo 1.98.1 (797e8a9bc 2026-08-05)"
+  },
+  "baseline": {
+    "https://github.com/rust-lang/regex": "72d650cb0a880a01ab6dc2137c0888e8f89740f7",
+    "https://github.com/cangjielanguage-sig/CangjieSkills": "dc7617ef67ecfa0da606cb7ae5734aaddecd1e44",
+    "https://github.com/cangjielanguage/CangjieCorpus": "3573e3daf45a4b1ea904fce3ef34401b8c320729"
+  },
+  "checks": {
+    "escape_differential_passed": 336,
+    "literal_roundtrip_passed": 4,
+    "rust_only_matching_fixtures_passed": 6,
+    "matching_differential_passed": 594,
+    "find_and_is_match_checks_passed": 16,
+    "matching_golden_passed": 4,
+    "unsupported_patterns_rejected": 0,
+    "invalid_patterns_rejected": 8,
+    "resource_limits_checked": 0,
+    "cangjie_matching_engine_implemented": true,
+    "class_repetition_differential_passed": 881,
+    "class_repetition_golden_passed": 5,
+    "class_repetition_api_checks_passed": 10,
+    "class_repetition_invalid_rejected": 16,
+    "class_repetition_unsupported_rejected": 0,
+    "class_repetition_resource_limits_checked": 1,
+    "capture_differential_passed": 880,
+    "capture_golden_passed": 2,
+    "capture_name_checks_passed": 35,
+    "capture_invalid_rejected": 8,
+    "capture_unicode_names_passed": 2,
+    "capture_resource_limits_checked": 0,
+    "text_operations_differential_passed": 1037,
+    "text_operations_golden_passed": 7,
+    "text_operations_negative_limits_rejected": 4,
+    "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+    "flags_differential_passed": 960,
+    "flags_api_checks_passed": 12,
+    "flags_golden_passed": 4,
+    "flags_invalid_rejected": 14,
+    "flags_unsupported_rejected": 0,
+    "case_fold_differential_passed": 721,
+    "case_fold_golden_passed": 7,
+    "case_fold_invalid_rejected": 2,
+    "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
+    "scalar_escape_differential_passed": 366,
+    "scalar_escape_invalid_rejected": 22,
+    "scalar_escape_golden_passed": 3,
+    "scalar_escape_api_checks_passed": 4,
+    "scalar_escape_scope": "x/u/U fixed and braced scalar escapes plus a/f/v",
+    "ascii_classes_differential_passed": 496,
+    "ascii_classes_golden_passed": 5,
+    "ascii_classes_invalid_rejected": 4,
+    "ascii_classes_api_checks_passed": 4,
+    "ascii_classes_scope": "14 POSIX ASCII classes, Unicode complement, nested fallback",
+    "unicode_shorthand_differential_passed": 284,
+    "unicode_shorthand_golden_passed": 4,
+    "unicode_shorthand_invalid_rejected": 4,
+    "unicode_shorthand_api_checks_passed": 4,
+    "unicode_version": "16.0.0",
+    "unicode_range_counts": {
+      "d": 71,
+      "s": 10,
+      "w": 796
+    },
+    "unicode_scope": "Pinned Unicode 16.0.0 shorthand tables",
+    "word_boundary_differential_passed": 534,
+    "word_boundary_golden_passed": 5,
+    "word_boundary_api_checks_passed": 12,
+    "word_boundary_invalid_rejected": 2,
+    "word_boundary_unsupported_rejected": 0,
+    "word_boundary_scope": "Unicode 16 b/B at scalar boundaries",
+    "general_category_differential_passed": 702,
+    "general_category_golden_passed": 4,
+    "general_category_invalid_rejected": 11,
+    "general_category_unsupported_rejected": 0,
+    "general_category_api_checks_passed": 4,
+    "general_category_scope": "37 categories plus Any/ASCII/Assigned",
+    "script_differential_passed": 2148,
+    "script_golden_passed": 6,
+    "script_invalid_rejected": 9,
+    "script_api_checks_passed": 4,
+    "binary_property_differential_passed": 417,
+    "binary_property_golden_passed": 6,
+    "binary_property_invalid_rejected": 8,
+    "binary_property_api_checks_passed": 4,
+    "syntax_differential_passed": 88,
+    "syntax_invalid_rejected": 9,
+    "bytes_differential_passed": 48,
+    "upstream_sample_passed": 198,
+    "upstream_sample_skipped": 141,
+    "upstream_suite_passed": 3213,
+    "regex_set_differential_passed": 577,
+    "regex_set_golden_passed": 4,
+    "regex_set_error_checks_passed": 3,
+    "regex_set_single_regex_baseline_cases": 120
+  },
+  "finished_at": "2026-10-01T16:11:50.035733+00:00"
+}
