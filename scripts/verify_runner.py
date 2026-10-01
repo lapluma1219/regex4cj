@@ -37,7 +37,8 @@ def main():
     try:
         # Old counters must never be mistaken for this invocation's results.
         for name in ['verification.json', 'showcase.json', 'classification.json',
-                     'matching-failure.json', 'upstream-suite-failures.json', 'upstream-sample-skips.json']:
+                     'matching-failure.json', 'upstream-suite-failures.json', 'upstream-sample-skips.json',
+                     'api-contract-failures.json']:
             (WORK / name).unlink(missing_ok=True)
         state['commit'] = output(['git', 'rev-parse', 'HEAD']) if (ROOT / '.git').exists() else None
         state['dirty'] = bool(output(['git', 'status', '--porcelain'])) if state['commit'] else None
@@ -46,7 +47,8 @@ def main():
                                 'rust': output(['rustc', '--version']), 'cargo': output(['cargo', '--version'])}
         state['baseline'] = json.loads((ROOT / 'docs/baseline.json').read_text())
         save(state)
-        stages = [('upstream-data', [sys.executable, 'scripts/check_upstream_data.py'], ROOT)]
+        stages = [('upstream-data', [sys.executable, 'scripts/check_upstream_data.py'], ROOT),
+                  ('api-inventory', [sys.executable, 'scripts/audit_api_surface.py', '--check'], ROOT)]
         for name in ['unicode', 'categories', 'scripts', 'binary', 'case_fold', 'age_break']:
             stages.append(('data-' + name, [sys.executable, f'scripts/generate_{name}.py', '--check'], ROOT))
         stages += [('python-tests', [sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-p', 'test_category_generator.py'], ROOT)]
@@ -60,7 +62,7 @@ def main():
                      'verify_flags', 'verify_case', 'verify_escapes', 'verify_ascii_classes', 'verify_unicode',
                      'verify_boundaries', 'verify_properties', 'verify_scripts', 'verify_binary', 'verify_syntax',
                      'verify_errors', 'verify_limits', 'verify_bytes', 'verify_upstream_sample',
-                     'verify_upstream_suite', 'verify_sets']:
+                     'verify_upstream_suite', 'verify_sets', 'verify_api_contracts']:
             stages.append((name, [sys.executable, f'tests/{name}.py'], ROOT))
         stages += [('showcase', [sys.executable, 'scripts/showcase.py'], ROOT),
                    ('classification', [sys.executable, 'scripts/classify.py', '--demo'], ROOT)]

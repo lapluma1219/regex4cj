@@ -181,9 +181,8 @@ class Input {
                 hi = mid
             }
         }
-        if (lo >= offsets.size || offsets[lo] != byteOffset) {
-            throw Exception("search start is not a char boundary")
-        }
+        // String matches cannot begin inside a UTF-8 scalar. Search from the
+        // next boundary while retaining the original input for assertions.
         return lo
     }
 }
@@ -682,6 +681,9 @@ public class Regex {
                                 return Some(part)
                         }
                     }
+                    if (done[0] == 0 && cursor[0] > input.chars.size) {
+                        done[0] = 1
+                    }
                     if (done[0] == 1) {
                         done[0] = 2
                         return Some(text[lastByte[0]..text.size])
@@ -703,7 +705,11 @@ public class Regex {
         let input = Input(text)
         let from = input.boundary(start)
         match (search(input, from, true, false)) {
-            case None => return None
+            case None =>
+                for (i in 0..locations.size) {
+                    locations.clear(i)
+                }
+                return None
             case Some(hit) =>
                 locations.write(0, input.offsets[hit.start], input.offsets[hit.end])
                 for (i in 1..groupNames.size) {

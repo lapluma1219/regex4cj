@@ -36,7 +36,8 @@ bash scripts/run.sh verify
 1. [上手指南](docs/getting-started.md)：运行、改输入、理解结果。
 2. [学习指南](docs/learning-guide.md)：这个库做什么、从模式到结果如何实现、如何证明当前行为正确。
 3. [当前接口](docs/api.md)：查找、捕获、替换、分割、Builder、字节接口和 RegexSet。
-4. [现状](docs/status.md)：已经实现什么，距离复刻整个上游仓库还差什么。固定提交在 [baseline.json](docs/baseline.json)。
+4. [接口审计](docs/api-audit.md)：逐项对应、已修复问题与尚未覆盖的能力。
+5. [现状](docs/status.md)：已经实现什么，距离复刻整个上游仓库还差什么。固定提交在 [baseline.json](docs/baseline.json)。
 
 ## 多规则文本分类
 
@@ -56,7 +57,7 @@ bash scripts/run.sh classify '订单 AB-123 需要退款，也需要开发票'
 - 字符类、集合运算、分支、分组、贪婪/非贪婪重复和计数重复。
 - 锚点、Unicode 词边界，以及内联 `i` / `m` / `s` / `U` / `x` / `R` / `u`。
 - Unicode 简单大小写折叠。匹配文本保持原样；`ß` 不会展开成两个字符的 `SS`。关掉 Unicode 后，大小写只折叠 A–Z。
-- 从原文字节偏移继续搜索，并提供最短匹配、`next()` 迭代、固定捕获数量和可复用捕获位置。
+- 从原文字节偏移继续搜索，并提供早停终点、`next()` 迭代、固定捕获数量和可复用捕获位置。
 - `RegexBuilder` / `RegexSetBuilder`。八进制和自定义行终止符只在 Builder 上打开。嵌套默认 250，`sizeLimit` 默认约 10 MiB，按 Thompson 构造字节数检查。语法错误和编译超限的文本与固定上游 Display 相同。`dfaSizeLimit` 只影响字符串搜索缓存，不改变匹配文本。
 - Unicode 16.0.0 的 d/s/w、通用类别、Script/Script_Extensions、二元属性，以及 Age 与三种 Break 的集合查询。
 

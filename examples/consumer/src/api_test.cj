@@ -342,8 +342,8 @@ func searchFromOffsetAndConfiguredSyntax(): Unit {
         case Some(_) => throw Exception("unexpected match")
     }
     match (locations.get(0)) {
-        case Some(span) => @Expect(span.start, 0)
-        case None => throw Exception("failed search cleared capture locations")
+        case Some(_) => throw Exception("failed search retained capture locations")
+        case None => ()
     }
     let named = requiredCaptures(Regex("(?<名>a)").captures("a"))
     @Expect(requiredMatch(named.name("名")).text, "a")
@@ -422,13 +422,11 @@ func searchFromOffsetAndConfiguredSyntax(): Unit {
     @Expect(slots[0], true)
     @Expect(set.matchesReadAt(slots, "c", 0), false)
     @Expect(slots[0], true)
-    rejected = false
-    try {
-        Regex("a").findAt("中", 1)
-    } catch (_: Exception) {
-        rejected = true
+    match (Regex("a").findAt("中", 1)) {
+        case None => ()
+        case Some(_) => throw Exception("unexpected interior-offset match")
     }
-    @Expect(rejected, true)
+    @Expect(requiredMatch(Regex("a").findAt("中a", 1)).start, 3)
     rejected = false
     try {
         Regex(#"\p{age=na}"#)

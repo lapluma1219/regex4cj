@@ -39,10 +39,14 @@
 
 这些不影响把结果收集出来之后的内容：
 
-- 失败抛 `Exception`。语法错误和编译超限是 `RegexError`。越界起点、落在字符中间的起点、负数限额抛普通 `Exception`。上游在这些情况下会 panic。
+- 失败抛 `Exception`。语法错误和编译超限是 `RegexError`。越界起点、负数限额抛普通 `Exception`。合法范围的字符内部起点会继续搜索；Rust 无符号参数不接受负数，越界起点按上游契约可 panic。
 - 没有 `regex!`，也没有 `Iterator`、`Replacer`、`FromStr`、`Debug` 这些 trait。对应的是 `next()`、数组和 `replaceWith`。
 - `expand` 返回新字符串。`SetMatches.indices()` 返回升序数组。
-- `isMatch` 会先做出一条完整匹配，再变成布尔值。
+- 字符串 `isMatch` 会先做出一条完整匹配，再变成布尔值；bytes 有早停路径。
+
+## 顶层接口仍存在的差异
+
+见 [接口审计](api-audit.md) 和 [逐项对应表](api-audit-methods.md)。bytes 惰性迭代、惰性 splitN、宏和部分语言集成仍缺失；Builder 资源语义、所有权和分配行为不完全等价。还有部分辅助接口存在代码但证据不足。不能把上游匹配题通过解释成全部顶层接口都已证明。
 
 ## 距离 100% 复刻还差什么
 

@@ -1,4 +1,5 @@
 mod suite;
+mod api_audit;
 
 use regex::Regex;
 fn hex_text(text: &str) -> String {
@@ -46,6 +47,7 @@ fn print_capture_result(re: &Regex, caps: &regex::Captures<'_>) {
 fn main() {
     let a: Vec<String> = std::env::args().skip(1).collect();
     match a.first().map(String::as_str) {
+        Some("api-audit") if a.len() == 1 => api_audit::run(),
         Some("set-matches-at" | "set-is-match-at") if a.len() >= 3 => {
             let start: usize = match a[2].parse() {
                 Ok(v) => v,

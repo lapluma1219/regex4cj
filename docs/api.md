@@ -19,8 +19,8 @@ for (m in re.findAll("AB-123 CD-456")) {
 | `isMatch(text)` | 是否存在匹配 |
 | `find(text)` | 第一条匹配，`Option<RegexMatch>` |
 | `findAll(text)` | 按顺序收集不重叠匹配 |
-| `findAt` / `isMatchAt` / `capturesAt` | 从原文字节偏移继续搜索。偏移必须落在字符边界上 |
-| `shortestMatch` / `shortestMatchAt` | 最早能结束的终点。`a+` 在 `aaaaa` 上返回 `1`，不是贪心 `find` 的终点 |
+| `findAt` / `isMatchAt` / `capturesAt` | 从原文字节偏移继续搜索。起点落在字符内部时，匹配从后续字符边界开始，断言仍保留原文上下文 |
+| `shortestMatch` / `shortestMatchAt` | 引擎确认匹配时的早停终点。本实现中 `a+` 在 `aaaaa` 上返回 `1`；上游不保证数学最短，也不保证不同引擎返回相同终点 |
 | `findIter().next()` | 与 `findAll` 同一套空匹配推进，按需取下一条 |
 | `asStr()` | 编译时的原始模式 |
 
@@ -50,7 +50,7 @@ for (m in re.findAll("AB-123 CD-456")) {
 
 命名组写成 `(?<number>[0-9]+)` 或 `(?<名>a)`。未参与的组和捕获到空文本不是一回事。
 
-`captureLocations()` 只保存整型位置，不保存文本。槽位数必须和捕获组数一致。`capturesRead` / `capturesReadAt` 成功时覆盖全部槽；失败时保留上一次写入的位置。已经返回的 `Captures` 不会被下一次搜索改写。
+`captureLocations()` 只保存整型位置，不保存文本。应使用同一个 Regex 创建的位置对象。`capturesRead` / `capturesReadAt` 成功时覆盖全部槽；失败后 `get` 返回 `None`，不保留旧命中的可读位置。已经返回的 `Captures` 不会被下一次搜索改写。这里复用的是位置容器，尚不保证像上游一样复用内部搜索内存。
 
 ## 替换与分割
 
@@ -90,17 +90,19 @@ for (m in re.findAll("AB-123 CD-456")) {
 | `sizeLimit` | 按 Thompson 构造字节数检查，正向与反向取较大值。默认约 10 MiB。`\w` 在 `45000` 失败，在 `50044` 成功。单条有限字面量可以在限额为 0 时编译 |
 | `dfaSizeLimit` | 字符串搜索的缓存预算。小于 128 时仍用原来的 NFA。匹配文本不变。没有 lazy DFA，字节搜索不读取它 |
 
-`RegexSetBuilder` 使用同一组选项。RegexSet 不会把有限字面量绕过 `sizeLimit`。
+`RegexSetBuilder` 使用同一组选项。RegexSet 不会把有限字面量绕过 `sizeLimit`。Set 搜索不提供上游 DFA 缓存；`dfaSizeLimit` 在 Set 和 bytes 上没有对应的缓存效果，不能据此声称资源行为与 Rust 相同。
 
 ## 错误
 
-语法错误和编译超限抛出 `RegexError`，它是 `Exception` 的子类，所以 `catch (Exception)` 仍能接住。`toString()` 与固定上游的 Display 相同：语法错误带模式和脱字符，超限是 `Compiled regex exceeds size limit of N bytes.`。负数限额、越界起点、落在字符中间的起点，抛普通 `Exception`。上游在这些情况下会 panic。
+语法错误和编译超限抛出 `RegexError`，它是 `Exception` 的子类，所以 `catch (Exception)` 仍能接住。`toString()` 按固定上游 Display 实现并通过现有错误样例对照：语法错误带模式和脱字符，超限是 `Compiled regex exceeds size limit of N bytes.`。负数限额、越界起点抛普通 `Exception`；Rust 的无符号参数不能表达负数，越界起点按上游契约可 panic。合法范围内的字符内部起点不应报错。
 
 `escape(text)` 把普通文本转成正则字面量。它不是 JSON 或 shell 转义。
 
 ## 字节接口
 
 `BytesRegex` 和 `BytesRegexSet` 的输入、匹配片段和替换结果都是 `Array<UInt8>`，可以包含非法 UTF-8。查找、捕获、`expand`、替换、分割和 RegexSet 的命中查询都有对应方法。`(?-u).` 匹配一个字节。同一个模式在字符串 `Regex` 上构造失败。
+
+bytes 尚无 `findIter`、`capturesIter`、`splitIter` 或惰性 splitN，对应的 `findAll`、`capturesAll`、`split`、`splitN` 会先收集全部结果。没有 `capturesRead` 快捷方法，可用 `capturesReadAt(locations, bytes, 0)`。数组可修改，不具有 Rust 借用切片的类型约束。逐项能力与证据缺口见 [接口审计](api-audit.md)。
 
 ## RegexSet
 

@@ -303,7 +303,11 @@ public class BytesRegex {
             throw Exception("capture locations were not created by this regex")
         }
         match (search(haystack, start, false, true)) {
-            case None => None
+            case None =>
+                for (i in 0..locations.size) {
+                    locations.clear(i)
+                }
+                None
             case Some(hit) =>
                 locations.write(0, hit.start, hit.end)
                 for (i in 1..groupNames.size) {

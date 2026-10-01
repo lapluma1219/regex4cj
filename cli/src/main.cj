@@ -279,6 +279,10 @@ func printCaptureResult(regex: Regex, caps: Captures): Unit {
 
 main(args: Array<String>): Int64 {
     try {
+        if (args.size == 1 && args[0] == "api-audit") {
+            apiContractAudit()
+            return 0
+        }
         // Set protocol: TEXT followed by zero or more PATTERN arguments.
         if (args.size >= 3 && (args[0] == "set-matches-at" || args[0] == "set-is-match-at")) {
             let patterns = Array<String>(args.size - 3, {i => args[i + 3]})

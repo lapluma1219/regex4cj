@@ -1,0 +1,2905 @@
+{
+  "revision": "72d650cb0a880a01ab6dc2137c0888e8f89740f7",
+  "source_sha256": {
+    "src/regex/string.rs": "93bcceb4b9fb1f6240c792fd81eeb53f82624cc5cb16401cbaec96e69753fd85",
+    "src/regex/bytes.rs": "ffbaa431baaa6ad23ac796e3f46e691b0a6567fed632c460fe052e5abe875c36",
+    "src/regexset/string.rs": "ac3fc9c8d2d58379e63bcd92ab2f8ee1c32a1210dceec63925d0c23f1d9dfedd",
+    "src/regexset/bytes.rs": "25c8d896e4b9caf627cce46e3c305d2e640aeeacea96c40526699f86960d1868",
+    "src/builders.rs": "d08f5867d8b994395546e318860d05e00cd70347223505b43d578b8d1477fe8f",
+    "src/lib.rs": "e87192b2e862d3a01777307584c7c898b189c4d78e6f7a800f52d7e84c3aab1c",
+    "src/bytes.rs": "5c28739462f73ac36110723c264f3308d36ecbb0d5897df2fd9cdde4f451db93",
+    "src/error.rs": "362c126a701852b355906acdb2c19ee31230570a408bbe52deb2803a1dc77039",
+    "src/pattern.rs": "53971d02dde4f8e69055c36e7c56c6c872f0302161bf0977a02b97dc8a152d46",
+    "Cargo.toml": "e060af2cec7da6c4ea99bb51c59caa6844b0893d9961aa562845c9f672bfbcbc"
+  },
+  "public_declarations": [
+    {
+      "scope": "string",
+      "name": "Regex",
+      "kind": "struct",
+      "file": "src/regex/string.rs",
+      "line": 150
+    },
+    {
+      "scope": "string",
+      "name": "Match",
+      "kind": "struct",
+      "file": "src/regex/string.rs",
+      "line": 1539
+    },
+    {
+      "scope": "string",
+      "name": "Captures",
+      "kind": "struct",
+      "file": "src/regex/string.rs",
+      "line": 1691
+    },
+    {
+      "scope": "string",
+      "name": "CaptureLocations",
+      "kind": "struct",
+      "file": "src/regex/string.rs",
+      "line": 2142
+    },
+    {
+      "scope": "string",
+      "name": "Matches",
+      "kind": "struct",
+      "file": "src/regex/string.rs",
+      "line": 2242
+    },
+    {
+      "scope": "string",
+      "name": "CaptureMatches",
+      "kind": "struct",
+      "file": "src/regex/string.rs",
+      "line": 2286
+    },
+    {
+      "scope": "string",
+      "name": "Split",
+      "kind": "struct",
+      "file": "src/regex/string.rs",
+      "line": 2330
+    },
+    {
+      "scope": "string",
+      "name": "SplitN",
+      "kind": "struct",
+      "file": "src/regex/string.rs",
+      "line": 2365
+    },
+    {
+      "scope": "string",
+      "name": "CaptureNames",
+      "kind": "struct",
+      "file": "src/regex/string.rs",
+      "line": 2397
+    },
+    {
+      "scope": "string",
+      "name": "SubCaptureMatches",
+      "kind": "struct",
+      "file": "src/regex/string.rs",
+      "line": 2439
+    },
+    {
+      "scope": "string",
+      "name": "Replacer",
+      "kind": "trait",
+      "file": "src/regex/string.rs",
+      "line": 2501
+    },
+    {
+      "scope": "string",
+      "name": "ReplacerRef",
+      "kind": "struct",
+      "file": "src/regex/string.rs",
+      "line": 2616
+    },
+    {
+      "scope": "string",
+      "name": "NoExpand",
+      "kind": "struct",
+      "file": "src/regex/string.rs",
+      "line": 2648
+    },
+    {
+      "scope": "bytes",
+      "name": "Regex",
+      "kind": "struct",
+      "file": "src/regex/bytes.rs",
+      "line": 152
+    },
+    {
+      "scope": "bytes",
+      "name": "Match",
+      "kind": "struct",
+      "file": "src/regex/bytes.rs",
+      "line": 1536
+    },
+    {
+      "scope": "bytes",
+      "name": "Captures",
+      "kind": "struct",
+      "file": "src/regex/bytes.rs",
+      "line": 1685
+    },
+    {
+      "scope": "bytes",
+      "name": "CaptureLocations",
+      "kind": "struct",
+      "file": "src/regex/bytes.rs",
+      "line": 2137
+    },
+    {
+      "scope": "bytes",
+      "name": "Matches",
+      "kind": "struct",
+      "file": "src/regex/bytes.rs",
+      "line": 2237
+    },
+    {
+      "scope": "bytes",
+      "name": "CaptureMatches",
+      "kind": "struct",
+      "file": "src/regex/bytes.rs",
+      "line": 2281
+    },
+    {
+      "scope": "bytes",
+      "name": "Split",
+      "kind": "struct",
+      "file": "src/regex/bytes.rs",
+      "line": 2325
+    },
+    {
+      "scope": "bytes",
+      "name": "SplitN",
+      "kind": "struct",
+      "file": "src/regex/bytes.rs",
+      "line": 2360
+    },
+    {
+      "scope": "bytes",
+      "name": "CaptureNames",
+      "kind": "struct",
+      "file": "src/regex/bytes.rs",
+      "line": 2392
+    },
+    {
+      "scope": "bytes",
+      "name": "SubCaptureMatches",
+      "kind": "struct",
+      "file": "src/regex/bytes.rs",
+      "line": 2434
+    },
+    {
+      "scope": "bytes",
+      "name": "Replacer",
+      "kind": "trait",
+      "file": "src/regex/bytes.rs",
+      "line": 2496
+    },
+    {
+      "scope": "bytes",
+      "name": "ReplacerRef",
+      "kind": "struct",
+      "file": "src/regex/bytes.rs",
+      "line": 2632
+    },
+    {
+      "scope": "bytes",
+      "name": "NoExpand",
+      "kind": "struct",
+      "file": "src/regex/bytes.rs",
+      "line": 2664
+    },
+    {
+      "scope": "string",
+      "name": "RegexSet",
+      "kind": "struct",
+      "file": "src/regexset/string.rs",
+      "line": 132
+    },
+    {
+      "scope": "string",
+      "name": "SetMatches",
+      "kind": "struct",
+      "file": "src/regexset/string.rs",
+      "line": 459
+    },
+    {
+      "scope": "string",
+      "name": "SetMatchesIntoIter",
+      "kind": "struct",
+      "file": "src/regexset/string.rs",
+      "line": 652
+    },
+    {
+      "scope": "string",
+      "name": "SetMatchesIter",
+      "kind": "struct",
+      "file": "src/regexset/string.rs",
+      "line": 698
+    },
+    {
+      "scope": "bytes",
+      "name": "RegexSet",
+      "kind": "struct",
+      "file": "src/regexset/bytes.rs",
+      "line": 136
+    },
+    {
+      "scope": "bytes",
+      "name": "SetMatches",
+      "kind": "struct",
+      "file": "src/regexset/bytes.rs",
+      "line": 463
+    },
+    {
+      "scope": "bytes",
+      "name": "SetMatchesIntoIter",
+      "kind": "struct",
+      "file": "src/regexset/bytes.rs",
+      "line": 656
+    },
+    {
+      "scope": "bytes",
+      "name": "SetMatchesIter",
+      "kind": "struct",
+      "file": "src/regexset/bytes.rs",
+      "line": 702
+    },
+    {
+      "scope": "string",
+      "name": "RegexBuilder",
+      "kind": "struct",
+      "file": "src/builders.rs",
+      "line": 212
+    },
+    {
+      "scope": "string",
+      "name": "RegexSetBuilder",
+      "kind": "struct",
+      "file": "src/builders.rs",
+      "line": 787
+    },
+    {
+      "scope": "bytes",
+      "name": "RegexBuilder",
+      "kind": "struct",
+      "file": "src/builders.rs",
+      "line": 1372
+    },
+    {
+      "scope": "bytes",
+      "name": "RegexSetBuilder",
+      "kind": "struct",
+      "file": "src/builders.rs",
+      "line": 1966
+    },
+    {
+      "scope": "string",
+      "name": "Error",
+      "kind": "enum",
+      "file": "src/error.rs",
+      "line": 8
+    },
+    {
+      "scope": "string",
+      "name": "RegexSearcher",
+      "kind": "struct",
+      "file": "src/pattern.rs",
+      "line": 6
+    }
+  ],
+  "methods": [
+    {
+      "id": "string::Regex::new",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 229,
+      "cangjie": "Regex.init",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 352
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_upstream_suite.py",
+        "tests/verify_captures.py"
+      ]
+    },
+    {
+      "id": "string::Regex::is_match",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 253,
+      "cangjie": "Regex.isMatch",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 563
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_upstream_suite.py",
+        "tests/verify_captures.py"
+      ]
+    },
+    {
+      "id": "string::Regex::find",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 281,
+      "cangjie": "Regex.find",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 551
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_upstream_suite.py",
+        "tests/verify_captures.py"
+      ]
+    },
+    {
+      "id": "string::Regex::find_iter",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 313,
+      "cangjie": "Regex.findIter",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 607
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Regex::captures",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 404,
+      "cangjie": "Regex.captures",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 779
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_upstream_suite.py",
+        "tests/verify_captures.py"
+      ]
+    },
+    {
+      "id": "string::Regex::captures_iter",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 469,
+      "cangjie": "Regex.capturesIter",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 631
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Regex::split",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 602,
+      "cangjie": "Regex.splitIter",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 655
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Regex::splitn",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 677,
+      "cangjie": "Regex.splitN",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 867
+      },
+      "status": "有明确差异",
+      "note": "仅有收集全部结果的数组接口；缺少对应按需迭代能力。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Regex::replace",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 791,
+      "cangjie": "Regex.replace",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 806
+      },
+      "status": "有样例验证",
+      "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
+      "evidence": [
+        "tests/verify_text_ops.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Regex::replace_all",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 891,
+      "cangjie": "Regex.replaceAll",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 809
+      },
+      "status": "有样例验证",
+      "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
+      "evidence": [
+        "tests/verify_text_ops.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Regex::replacen",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 956,
+      "cangjie": "Regex.replaceN",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 813
+      },
+      "status": "有样例验证",
+      "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
+      "evidence": [
+        "tests/verify_text_ops.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Regex::shortest_match",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1047,
+      "cangjie": "Regex.shortestMatch",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 588
+      },
+      "status": "有明确差异",
+      "note": "早停终点允许依赖内部引擎；不承诺逐输入与 Rust meta 的终点相等，也不承诺数学最短。",
+      "evidence": [
+        "tests/verify_syntax.py"
+      ]
+    },
+    {
+      "id": "string::Regex::shortest_match_at",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1082,
+      "cangjie": "Regex.shortestMatchAt",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 591
+      },
+      "status": "有明确差异",
+      "note": "早停终点允许依赖内部引擎；不承诺逐输入与 Rust meta 的终点相等，也不承诺数学最短。",
+      "evidence": [
+        "tests/verify_syntax.py"
+      ]
+    },
+    {
+      "id": "string::Regex::is_match_at",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1120,
+      "cangjie": "Regex.isMatchAt",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 582
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Regex::find_at",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1154,
+      "cangjie": "Regex.findAt",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 574
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Regex::captures_at",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1193,
+      "cangjie": "Regex.capturesAt",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 599
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Regex::captures_read",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1243,
+      "cangjie": "Regex.capturesRead",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 698
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Regex::captures_read_at",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1283,
+      "cangjie": "Regex.capturesReadAt",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 701
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Regex::read_captures_at",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1301,
+      "cangjie": "Regex.capturesReadAt",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 701
+      },
+      "status": "有明确差异",
+      "note": "上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Regex::as_str",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1324,
+      "cangjie": "Regex.asStr",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 417
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_captures.py"
+      ]
+    },
+    {
+      "id": "string::Regex::capture_names",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1374,
+      "cangjie": "Regex.captureNames",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 754
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_captures.py"
+      ]
+    },
+    {
+      "id": "string::Regex::captures_len",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1405,
+      "cangjie": "Regex.capturesLen",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 751
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_captures.py"
+      ]
+    },
+    {
+      "id": "string::Regex::static_captures_len",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1445,
+      "cangjie": "Regex.staticCapturesLen",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 420
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_captures.py"
+      ]
+    },
+    {
+      "id": "string::Regex::capture_locations",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1471,
+      "cangjie": "Regex.captureLocations",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 695
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_captures.py"
+      ]
+    },
+    {
+      "id": "string::Regex::locations",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1481,
+      "cangjie": "Regex.captureLocations",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 695
+      },
+      "status": "有明确差异",
+      "note": "上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Match::start",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1557,
+      "cangjie": "RegexMatch.start",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 239
+      },
+      "status": "有明确差异",
+      "note": "使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Match::end",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1573,
+      "cangjie": "RegexMatch.end",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 240
+      },
+      "status": "有明确差异",
+      "note": "使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Match::is_empty",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1584,
+      "cangjie": "RegexMatch.isEmpty",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 247
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj"
+      ]
+    },
+    {
+      "id": "string::Match::len",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1590,
+      "cangjie": "RegexMatch.len",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 250
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj"
+      ]
+    },
+    {
+      "id": "string::Match::range",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1601,
+      "cangjie": "RegexMatch.start",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 239
+      },
+      "status": "有明确差异",
+      "note": "使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Match::as_str",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1607,
+      "cangjie": "RegexMatch.asStr",
+      "implementation": {
+        "file": "port/src/nfa.cj",
+        "line": 253
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::Captures::get",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1721,
+      "cangjie": "Captures.get",
+      "implementation": {
+        "file": "port/src/captures.cj",
+        "line": 89
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_captures.py",
+        "tests/verify_text_ops.py"
+      ]
+    },
+    {
+      "id": "string::Captures::get_match",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1744,
+      "cangjie": "Captures.getMatch",
+      "implementation": {
+        "file": "port/src/captures.cj",
+        "line": 52
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_captures.py",
+        "tests/verify_text_ops.py"
+      ]
+    },
+    {
+      "id": "string::Captures::name",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1778,
+      "cangjie": "Captures.name",
+      "implementation": {
+        "file": "port/src/captures.cj",
+        "line": 95
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_captures.py",
+        "tests/verify_text_ops.py"
+      ]
+    },
+    {
+      "id": "string::Captures::extract",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1864,
+      "cangjie": "Captures.extract",
+      "implementation": {
+        "file": "port/src/captures.cj",
+        "line": 60
+      },
+      "status": "有明确差异",
+      "note": "extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。",
+      "evidence": [
+        "tests/verify_captures.py",
+        "tests/verify_text_ops.py"
+      ]
+    },
+    {
+      "id": "string::Captures::expand",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1933,
+      "cangjie": "Captures.expand",
+      "implementation": {
+        "file": "port/src/captures.cj",
+        "line": 107
+      },
+      "status": "有明确差异",
+      "note": "extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。",
+      "evidence": [
+        "tests/verify_captures.py",
+        "tests/verify_text_ops.py"
+      ]
+    },
+    {
+      "id": "string::Captures::iter",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1963,
+      "cangjie": "Captures.iter",
+      "implementation": {
+        "file": "port/src/captures.cj",
+        "line": 86
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_captures.py",
+        "tests/verify_text_ops.py"
+      ]
+    },
+    {
+      "id": "string::Captures::len",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 1985,
+      "cangjie": "Captures.size",
+      "implementation": {
+        "file": "port/src/captures.cj",
+        "line": 45
+      },
+      "status": "有明确差异",
+      "note": "extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。",
+      "evidence": [
+        "tests/verify_captures.py",
+        "tests/verify_text_ops.py"
+      ]
+    },
+    {
+      "id": "string::CaptureLocations::get",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 2170,
+      "cangjie": "CaptureLocations.get",
+      "implementation": {
+        "file": "port/src/captures.cj",
+        "line": 25
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::CaptureLocations::len",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 2207,
+      "cangjie": "CaptureLocations.size",
+      "implementation": {
+        "file": "port/src/captures.cj",
+        "line": 17
+      },
+      "status": "有明确差异",
+      "note": "len 对应 size 字段；doc(hidden) pos 别名对应 get。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::CaptureLocations::pos",
+      "upstream_file": "src/regex/string.rs",
+      "upstream_line": 2221,
+      "cangjie": "CaptureLocations.get",
+      "implementation": {
+        "file": "port/src/captures.cj",
+        "line": 25
+      },
+      "status": "有明确差异",
+      "note": "len 对应 size 字段；doc(hidden) pos 别名对应 get。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::new",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 231,
+      "cangjie": "BytesRegex.init",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 33
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_upstream_suite.py",
+        "tests/verify_bytes.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::is_match",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 255,
+      "cangjie": "BytesRegex.isMatch",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 124
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_upstream_suite.py",
+        "tests/verify_bytes.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::find",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 283,
+      "cangjie": "BytesRegex.find",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 121
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_upstream_suite.py",
+        "tests/verify_bytes.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::find_iter",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 315,
+      "cangjie": "BytesRegex.findAll",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 148
+      },
+      "status": "有明确差异",
+      "note": "仅有收集全部结果的数组接口；缺少对应按需迭代能力。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::captures",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 406,
+      "cangjie": "BytesRegex.captures",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 273
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_upstream_suite.py",
+        "tests/verify_bytes.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::captures_iter",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 473,
+      "cangjie": "BytesRegex.capturesAll",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 282
+      },
+      "status": "有明确差异",
+      "note": "仅有收集全部结果的数组接口；缺少对应按需迭代能力。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::split",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 615,
+      "cangjie": "BytesRegex.split",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 350
+      },
+      "status": "有明确差异",
+      "note": "仅有收集全部结果的数组接口；缺少对应按需迭代能力。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::splitn",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 690,
+      "cangjie": "BytesRegex.splitN",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 353
+      },
+      "status": "有明确差异",
+      "note": "仅有收集全部结果的数组接口；缺少对应按需迭代能力。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::replace",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 808,
+      "cangjie": "BytesRegex.replace",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 325
+      },
+      "status": "有样例验证",
+      "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
+      "evidence": [
+        "tests/verify_bytes.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::replace_all",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 908,
+      "cangjie": "BytesRegex.replaceAll",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 328
+      },
+      "status": "有样例验证",
+      "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
+      "evidence": [
+        "tests/verify_bytes.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::replacen",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 973,
+      "cangjie": "BytesRegex.replaceN",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 331
+      },
+      "status": "有样例验证",
+      "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
+      "evidence": [
+        "tests/verify_bytes.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::shortest_match",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1064,
+      "cangjie": "BytesRegex.shortestMatch",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 139
+      },
+      "status": "有明确差异",
+      "note": "早停终点允许依赖内部引擎；不承诺逐输入与 Rust meta 的终点相等，也不承诺数学最短。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::Regex::shortest_match_at",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1099,
+      "cangjie": "BytesRegex.shortestMatchAt",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 142
+      },
+      "status": "有明确差异",
+      "note": "早停终点允许依赖内部引擎；不承诺逐输入与 Rust meta 的终点相等，也不承诺数学最短。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::Regex::is_match_at",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1137,
+      "cangjie": "BytesRegex.isMatchAt",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 133
+      },
+      "status": "证据待补",
+      "note": "零起点由上层调用覆盖；非零原始字节起点还缺专门组合测试。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::Regex::find_at",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1169,
+      "cangjie": "BytesRegex.findAt",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 127
+      },
+      "status": "证据待补",
+      "note": "零起点由上层调用覆盖；非零原始字节起点还缺专门组合测试。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::Regex::captures_at",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1206,
+      "cangjie": "BytesRegex.capturesAt",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 276
+      },
+      "status": "证据待补",
+      "note": "零起点由上层调用覆盖；非零原始字节起点还缺专门组合测试。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::Regex::captures_read",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1251,
+      "cangjie": "BytesRegex.capturesReadAt",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 301
+      },
+      "status": "有明确差异",
+      "note": "没有无起点快捷方法；调用 capturesReadAt(..., 0) 可完成同样搜索。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::captures_read_at",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1288,
+      "cangjie": "BytesRegex.capturesReadAt",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 301
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::read_captures_at",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1306,
+      "cangjie": "BytesRegex.capturesReadAt",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 301
+      },
+      "status": "有明确差异",
+      "note": "上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::as_str",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1329,
+      "cangjie": "BytesRegex.asStr",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 96
+      },
+      "status": "证据待补",
+      "note": "存在对应代码，但缺少该 bytes 方法的专用对照用例。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::Regex::capture_names",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1379,
+      "cangjie": "BytesRegex.captureNames",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 109
+      },
+      "status": "证据待补",
+      "note": "存在对应代码，但缺少该 bytes 方法的专用对照用例。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::Regex::captures_len",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1410,
+      "cangjie": "BytesRegex.capturesLen",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 99
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_captures.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::static_captures_len",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1450,
+      "cangjie": "BytesRegex.staticCapturesLen",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 102
+      },
+      "status": "证据待补",
+      "note": "存在对应代码，但缺少该 bytes 方法的专用对照用例。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::Regex::capture_locations",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1472,
+      "cangjie": "BytesRegex.captureLocations",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 118
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_captures.py"
+      ]
+    },
+    {
+      "id": "bytes::Regex::locations",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1482,
+      "cangjie": "BytesRegex.captureLocations",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 118
+      },
+      "status": "有明确差异",
+      "note": "上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Match::start",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1553,
+      "cangjie": "BytesMatch.start",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 8
+      },
+      "status": "有明确差异",
+      "note": "使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Match::end",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1568,
+      "cangjie": "BytesMatch.end",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 9
+      },
+      "status": "有明确差异",
+      "note": "使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Match::is_empty",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1579,
+      "cangjie": "BytesMatch.isEmpty",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 16
+      },
+      "status": "证据待补",
+      "note": "已实现，缺少 bytes 结果辅助方法专用断言。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::Match::len",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1585,
+      "cangjie": "BytesMatch.len",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 19
+      },
+      "status": "证据待补",
+      "note": "已实现，缺少 bytes 结果辅助方法专用断言。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::Match::range",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1592,
+      "cangjie": "BytesMatch.start",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 8
+      },
+      "status": "有明确差异",
+      "note": "使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Match::as_bytes",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1598,
+      "cangjie": "BytesMatch.bytes",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 10
+      },
+      "status": "有明确差异",
+      "note": "使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::Captures::get",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1715,
+      "cangjie": "BytesCaptures.get",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 525
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_bytes.py",
+        "examples/consumer/src/api_test.cj"
+      ]
+    },
+    {
+      "id": "bytes::Captures::get_match",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1737,
+      "cangjie": "BytesCaptures.getMatch",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 519
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_bytes.py",
+        "examples/consumer/src/api_test.cj"
+      ]
+    },
+    {
+      "id": "bytes::Captures::name",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1771,
+      "cangjie": "BytesCaptures.name",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 560
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_bytes.py",
+        "examples/consumer/src/api_test.cj"
+      ]
+    },
+    {
+      "id": "bytes::Captures::extract",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1857,
+      "cangjie": "BytesCaptures.extract",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 534
+      },
+      "status": "证据待补",
+      "note": "代码存在；缺少 bytes 组迭代/固定组提取的独立差分证据。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::Captures::expand",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1926,
+      "cangjie": "BytesCaptures.expand",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 572
+      },
+      "status": "有明确差异",
+      "note": "extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。",
+      "evidence": [
+        "tests/verify_bytes.py",
+        "examples/consumer/src/api_test.cj"
+      ]
+    },
+    {
+      "id": "bytes::Captures::iter",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1956,
+      "cangjie": "BytesCaptures.iter",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 531
+      },
+      "status": "证据待补",
+      "note": "代码存在；缺少 bytes 组迭代/固定组提取的独立差分证据。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::Captures::len",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 1978,
+      "cangjie": "BytesCaptures.size",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 512
+      },
+      "status": "有明确差异",
+      "note": "extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。",
+      "evidence": [
+        "tests/verify_bytes.py",
+        "examples/consumer/src/api_test.cj"
+      ]
+    },
+    {
+      "id": "bytes::CaptureLocations::get",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 2165,
+      "cangjie": "CaptureLocations.get",
+      "implementation": {
+        "file": "port/src/captures.cj",
+        "line": 25
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::CaptureLocations::len",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 2202,
+      "cangjie": "CaptureLocations.size",
+      "implementation": {
+        "file": "port/src/captures.cj",
+        "line": 17
+      },
+      "status": "有明确差异",
+      "note": "len 对应 size 字段；doc(hidden) pos 别名对应 get。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::CaptureLocations::pos",
+      "upstream_file": "src/regex/bytes.rs",
+      "upstream_line": 2216,
+      "cangjie": "CaptureLocations.get",
+      "implementation": {
+        "file": "port/src/captures.cj",
+        "line": 25
+      },
+      "status": "有明确差异",
+      "note": "len 对应 size 字段；doc(hidden) pos 别名对应 get。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexSet::new",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 154,
+      "cangjie": "RegexSet.init",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 58
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexSet::empty",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 179,
+      "cangjie": "RegexSet.init",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 58
+      },
+      "status": "有明确差异",
+      "note": "empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexSet::is_match",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 210,
+      "cangjie": "RegexSet.isMatch",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 116
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexSet::is_match_at",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 244,
+      "cangjie": "RegexSet.isMatchAt",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 119
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexSet::matches",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 287,
+      "cangjie": "RegexSet.matches",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 122
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexSet::matches_at",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 325,
+      "cangjie": "RegexSet.matchesAt",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 125
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexSet::matches_read_at",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 346,
+      "cangjie": "RegexSet.matchesReadAt",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 130
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexSet::read_matches_at",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 375,
+      "cangjie": "RegexSet.matchesReadAt",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 130
+      },
+      "status": "有明确差异",
+      "note": "empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexSet::len",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 396,
+      "cangjie": "RegexSet.len",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 107
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexSet::is_empty",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 411,
+      "cangjie": "RegexSet.isEmpty",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 110
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexSet::patterns",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 444,
+      "cangjie": "RegexSet.patterns",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 113
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::SetMatches::matched_any",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 477,
+      "cangjie": "SetMatches.matchedAny",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 21
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "examples/consumer/src/set_test.cj"
+      ]
+    },
+    {
+      "id": "string::SetMatches::matched_all",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 495,
+      "cangjie": "SetMatches.matchedAll",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 29
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "examples/consumer/src/set_test.cj"
+      ]
+    },
+    {
+      "id": "string::SetMatches::matched",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 524,
+      "cangjie": "SetMatches.matched",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 15
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "examples/consumer/src/set_test.cj"
+      ]
+    },
+    {
+      "id": "string::SetMatches::len",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 554,
+      "cangjie": "SetMatches.len",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 12
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "examples/consumer/src/set_test.cj"
+      ]
+    },
+    {
+      "id": "string::SetMatches::iter",
+      "upstream_file": "src/regexset/string.rs",
+      "upstream_line": 600,
+      "cangjie": "SetMatches.indices",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 37
+      },
+      "status": "有明确差异",
+      "note": "返回升序数组；没有 SetMatchesIter/IntoIter 或 next_back。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "examples/consumer/src/set_test.cj"
+      ]
+    },
+    {
+      "id": "bytes::RegexSet::new",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 158,
+      "cangjie": "BytesRegexSet.init",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 692
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSet::empty",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 183,
+      "cangjie": "BytesRegexSet.init",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 692
+      },
+      "status": "有明确差异",
+      "note": "empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSet::is_match",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 214,
+      "cangjie": "BytesRegexSet.isMatch",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 751
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSet::is_match_at",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 248,
+      "cangjie": "BytesRegexSet.isMatchAt",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 754
+      },
+      "status": "证据待补",
+      "note": "已有实现，非零 byte 起点的多规则组合还需专用对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexSet::matches",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 291,
+      "cangjie": "BytesRegexSet.matches",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 757
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSet::matches_at",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 329,
+      "cangjie": "BytesRegexSet.matchesAt",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 760
+      },
+      "status": "证据待补",
+      "note": "已有实现，非零 byte 起点的多规则组合还需专用对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexSet::matches_read_at",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 350,
+      "cangjie": "BytesRegexSet.matchesReadAt",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 763
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSet::read_matches_at",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 379,
+      "cangjie": "BytesRegexSet.matchesReadAt",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 763
+      },
+      "status": "有明确差异",
+      "note": "empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSet::len",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 400,
+      "cangjie": "BytesRegexSet.len",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 742
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSet::is_empty",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 415,
+      "cangjie": "BytesRegexSet.isEmpty",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 745
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSet::patterns",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 448,
+      "cangjie": "BytesRegexSet.patterns",
+      "implementation": {
+        "file": "port/src/bytes.cj",
+        "line": 748
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "tests/verify_upstream_suite.py",
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::SetMatches::matched_any",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 481,
+      "cangjie": "SetMatches.matchedAny",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 21
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "examples/consumer/src/set_test.cj"
+      ]
+    },
+    {
+      "id": "bytes::SetMatches::matched_all",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 499,
+      "cangjie": "SetMatches.matchedAll",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 29
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "examples/consumer/src/set_test.cj"
+      ]
+    },
+    {
+      "id": "bytes::SetMatches::matched",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 528,
+      "cangjie": "SetMatches.matched",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 15
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "examples/consumer/src/set_test.cj"
+      ]
+    },
+    {
+      "id": "bytes::SetMatches::len",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 558,
+      "cangjie": "SetMatches.len",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 12
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "examples/consumer/src/set_test.cj"
+      ]
+    },
+    {
+      "id": "bytes::SetMatches::iter",
+      "upstream_file": "src/regexset/bytes.rs",
+      "upstream_line": 604,
+      "cangjie": "SetMatches.indices",
+      "implementation": {
+        "file": "port/src/regex_set.cj",
+        "line": 37
+      },
+      "status": "有明确差异",
+      "note": "返回升序数组；没有 SetMatchesIter/IntoIter 或 next_back。",
+      "evidence": [
+        "tests/verify_sets.py",
+        "examples/consumer/src/set_test.cj"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::new",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 223,
+      "cangjie": "RegexBuilder.init",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 12
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::build",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 232,
+      "cangjie": "RegexBuilder.build",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 15
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::unicode",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 293,
+      "cangjie": "RegexBuilder.unicode",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 42
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::case_insensitive",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 322,
+      "cangjie": "RegexBuilder.caseInsensitive",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 18
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::multi_line",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 361,
+      "cangjie": "RegexBuilder.multiLine",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 22
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::dot_matches_new_line",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 392,
+      "cangjie": "RegexBuilder.dotMatchesNewLine",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 26
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::crlf",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 450,
+      "cangjie": "RegexBuilder.crlf",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 38
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::line_terminator",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 521,
+      "cangjie": "RegexBuilder.lineTerminator",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 50
+      },
+      "status": "有明确差异",
+      "note": "参数为 Rune，再检查 0..255；上游参数为 u8。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::swap_greed",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 548,
+      "cangjie": "RegexBuilder.swapGreed",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 30
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::ignore_whitespace",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 616,
+      "cangjie": "RegexBuilder.ignoreWhitespace",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 34
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::octal",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 651,
+      "cangjie": "RegexBuilder.octal",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 46
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::size_limit",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 690,
+      "cangjie": "RegexBuilder.sizeLimit",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 64
+      },
+      "status": "有明确差异",
+      "note": "模拟上游 Thompson 构造预算并通过部分阈值对照；不保证所有启发式/限额接受边界相等。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::dfa_size_limit",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 733,
+      "cangjie": "RegexBuilder.dfaSizeLimit",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 71
+      },
+      "status": "有明确差异",
+      "note": "不是上游 DFA 缓存限额：字符串 Regex 使用步进缓存；bytes 忽略；Set 不提供同等 DFA。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexBuilder::nest_limit",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 774,
+      "cangjie": "RegexBuilder.nestLimit",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 57
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexSetBuilder::new",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 798,
+      "cangjie": "RegexSetBuilder.init",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 83
+      },
+      "status": "有明确差异",
+      "note": "上游从模式集合构造；仓颉无参构造后逐条 pattern 添加。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexSetBuilder::build",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 811,
+      "cangjie": "RegexSetBuilder.build",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 88
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexSetBuilder::unicode",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 872,
+      "cangjie": "RegexSetBuilder.unicode",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 115
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "string::RegexSetBuilder::case_insensitive",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 901,
+      "cangjie": "RegexSetBuilder.caseInsensitive",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 91
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "string::RegexSetBuilder::multi_line",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 940,
+      "cangjie": "RegexSetBuilder.multiLine",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 95
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "string::RegexSetBuilder::dot_matches_new_line",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 971,
+      "cangjie": "RegexSetBuilder.dotMatchesNewLine",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 99
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "string::RegexSetBuilder::crlf",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1027,
+      "cangjie": "RegexSetBuilder.crlf",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 111
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "string::RegexSetBuilder::line_terminator",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1108,
+      "cangjie": "RegexSetBuilder.lineTerminator",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 123
+      },
+      "status": "有明确差异",
+      "note": "参数为 Rune，再检查 0..255；上游参数为 u8。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexSetBuilder::swap_greed",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1129,
+      "cangjie": "RegexSetBuilder.swapGreed",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 103
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "string::RegexSetBuilder::ignore_whitespace",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1181,
+      "cangjie": "RegexSetBuilder.ignoreWhitespace",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 107
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "string::RegexSetBuilder::octal",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1219,
+      "cangjie": "RegexSetBuilder.octal",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 119
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "string::RegexSetBuilder::size_limit",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1263,
+      "cangjie": "RegexSetBuilder.sizeLimit",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 137
+      },
+      "status": "有明确差异",
+      "note": "模拟上游 Thompson 构造预算并通过部分阈值对照；不保证所有启发式/限额接受边界相等。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexSetBuilder::dfa_size_limit",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1306,
+      "cangjie": "RegexSetBuilder.dfaSizeLimit",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 144
+      },
+      "status": "有明确差异",
+      "note": "不是上游 DFA 缓存限额：字符串 Regex 使用步进缓存；bytes 忽略；Set 不提供同等 DFA。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "string::RegexSetBuilder::nest_limit",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1350,
+      "cangjie": "RegexSetBuilder.nestLimit",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 130
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexBuilder::new",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1383,
+      "cangjie": "BytesRegexBuilder.init",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 157
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexBuilder::build",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1392,
+      "cangjie": "BytesRegexBuilder.build",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 161
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexBuilder::unicode",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1463,
+      "cangjie": "BytesRegexBuilder.unicode",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 189
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexBuilder::case_insensitive",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1492,
+      "cangjie": "BytesRegexBuilder.caseInsensitive",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 165
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexBuilder::multi_line",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1531,
+      "cangjie": "BytesRegexBuilder.multiLine",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 169
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexBuilder::dot_matches_new_line",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1562,
+      "cangjie": "BytesRegexBuilder.dotMatchesNewLine",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 173
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexBuilder::crlf",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1620,
+      "cangjie": "BytesRegexBuilder.crlf",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 185
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexBuilder::line_terminator",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1694,
+      "cangjie": "BytesRegexBuilder.lineTerminator",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 197
+      },
+      "status": "有明确差异",
+      "note": "参数为 Rune，再检查 0..255；上游参数为 u8。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexBuilder::swap_greed",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1721,
+      "cangjie": "BytesRegexBuilder.swapGreed",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 177
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexBuilder::ignore_whitespace",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1795,
+      "cangjie": "BytesRegexBuilder.ignoreWhitespace",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 181
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexBuilder::octal",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1830,
+      "cangjie": "BytesRegexBuilder.octal",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 193
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexBuilder::size_limit",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1869,
+      "cangjie": "BytesRegexBuilder.sizeLimit",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 211
+      },
+      "status": "有明确差异",
+      "note": "模拟上游 Thompson 构造预算并通过部分阈值对照；不保证所有启发式/限额接受边界相等。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexBuilder::dfa_size_limit",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1912,
+      "cangjie": "BytesRegexBuilder.dfaSizeLimit",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 218
+      },
+      "status": "有明确差异",
+      "note": "不是上游 DFA 缓存限额：字符串 Regex 使用步进缓存；bytes 忽略；Set 不提供同等 DFA。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexBuilder::nest_limit",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1953,
+      "cangjie": "BytesRegexBuilder.nestLimit",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 204
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexSetBuilder::new",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1977,
+      "cangjie": "BytesRegexSetBuilder.init",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 230
+      },
+      "status": "有明确差异",
+      "note": "上游从模式集合构造；仓颉无参构造后逐条 pattern 添加。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSetBuilder::build",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 1990,
+      "cangjie": "BytesRegexSetBuilder.build",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 237
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSetBuilder::unicode",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 2063,
+      "cangjie": "BytesRegexSetBuilder.unicode",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 265
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexSetBuilder::case_insensitive",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 2092,
+      "cangjie": "BytesRegexSetBuilder.caseInsensitive",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 241
+      },
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSetBuilder::multi_line",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 2131,
+      "cangjie": "BytesRegexSetBuilder.multiLine",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 245
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexSetBuilder::dot_matches_new_line",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 2162,
+      "cangjie": "BytesRegexSetBuilder.dotMatchesNewLine",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 249
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexSetBuilder::crlf",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 2218,
+      "cangjie": "BytesRegexSetBuilder.crlf",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 261
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexSetBuilder::line_terminator",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 2292,
+      "cangjie": "BytesRegexSetBuilder.lineTerminator",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 273
+      },
+      "status": "有明确差异",
+      "note": "参数为 Rune，再检查 0..255；上游参数为 u8。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSetBuilder::swap_greed",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 2313,
+      "cangjie": "BytesRegexSetBuilder.swapGreed",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 253
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexSetBuilder::ignore_whitespace",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 2365,
+      "cangjie": "BytesRegexSetBuilder.ignoreWhitespace",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 257
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexSetBuilder::octal",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 2403,
+      "cangjie": "BytesRegexSetBuilder.octal",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 269
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    },
+    {
+      "id": "bytes::RegexSetBuilder::size_limit",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 2447,
+      "cangjie": "BytesRegexSetBuilder.sizeLimit",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 287
+      },
+      "status": "有明确差异",
+      "note": "模拟上游 Thompson 构造预算并通过部分阈值对照；不保证所有启发式/限额接受边界相等。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSetBuilder::dfa_size_limit",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 2490,
+      "cangjie": "BytesRegexSetBuilder.dfaSizeLimit",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 294
+      },
+      "status": "有明确差异",
+      "note": "不是上游 DFA 缓存限额：字符串 Regex 使用步进缓存；bytes 忽略；Set 不提供同等 DFA。",
+      "evidence": [
+        "examples/consumer/src/api_test.cj",
+        "tests/verify_syntax.py",
+        "tests/verify_limits.py"
+      ]
+    },
+    {
+      "id": "bytes::RegexSetBuilder::nest_limit",
+      "upstream_file": "src/builders.rs",
+      "upstream_line": 2534,
+      "cangjie": "BytesRegexSetBuilder.nestLimit",
+      "implementation": {
+        "file": "port/src/builder.cj",
+        "line": 280
+      },
+      "status": "证据待补",
+      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
+      "evidence": []
+    }
+  ],
+  "additional_surface": "Root escape, macros, traits and feature gates are classified in docs/api-audit.md; these method counts are NOT a completion percentage."
+}
