@@ -2,8 +2,10 @@ package cjregex
 
 import std.collection.*
 
-// Builders only expose options the scalar engine actually implements.
-// Byte-budget and DFA limits are rejected instead of being stored and ignored.
+// Builders expose the same options as the pinned regex string builders.
+// dfaSizeLimit is the string search cache budget. Below 128 the PikeVM runs
+// as before. At or above 128 a bounded step cache is used. Match text stays
+// the same. This is not the upstream lazy DFA. Bytes search ignores it.
 public class RegexBuilder {
     private let options = PatternOptions()
     private var pattern: String = ""
@@ -46,24 +48,32 @@ public class RegexBuilder {
         return this
     }
     public func lineTerminator(byte: Rune): RegexBuilder {
-        if (UInt32(byte) > 127) {
-            throw Exception("line terminator must be an ASCII byte in string mode")
+        if (UInt32(byte) > 255) {
+            throw Exception("line terminator must be a byte")
         }
         options.lineTerminator = byte
         return this
     }
     public func nestLimit(limit: Int64): RegexBuilder {
-        if (limit < 1) {
-            throw Exception("nest limit must be positive")
+        if (limit < 0) {
+            throw Exception("nest limit must be nonnegative")
         }
         options.nestLimit = limit
         return this
     }
     public func sizeLimit(limit: Int64): RegexBuilder {
-        throw Exception("size_limit is a byte budget; this build caps NFA states instead and does not accept ${limit}")
+        if (limit < 0) {
+            throw Exception("size limit must be nonnegative")
+        }
+        options.sizeLimit = limit
+        return this
     }
     public func dfaSizeLimit(limit: Int64): RegexBuilder {
-        throw Exception("dfa_size_limit is not supported; this build has no lazy DFA (${limit})")
+        if (limit < 0) {
+            throw Exception("dfa size limit must be nonnegative")
+        }
+        options.dfaSizeLimit = limit
+        return this
     }
 }
 
@@ -111,23 +121,181 @@ public class RegexSetBuilder {
         return this
     }
     public func lineTerminator(byte: Rune): RegexSetBuilder {
-        if (UInt32(byte) > 127) {
-            throw Exception("line terminator must be an ASCII byte in string mode")
+        if (UInt32(byte) > 255) {
+            throw Exception("line terminator must be a byte")
         }
         options.lineTerminator = byte
         return this
     }
     public func nestLimit(limit: Int64): RegexSetBuilder {
-        if (limit < 1) {
-            throw Exception("nest limit must be positive")
+        if (limit < 0) {
+            throw Exception("nest limit must be nonnegative")
         }
         options.nestLimit = limit
         return this
     }
     public func sizeLimit(limit: Int64): RegexSetBuilder {
-        throw Exception("size_limit is a byte budget; this build caps NFA states instead and does not accept ${limit}")
+        if (limit < 0) {
+            throw Exception("size limit must be nonnegative")
+        }
+        options.sizeLimit = limit
+        return this
     }
     public func dfaSizeLimit(limit: Int64): RegexSetBuilder {
-        throw Exception("dfa_size_limit is not supported; this build has no lazy DFA (${limit})")
+        if (limit < 0) {
+            throw Exception("dfa size limit must be nonnegative")
+        }
+        options.dfaSizeLimit = limit
+        return this
+    }
+}
+
+// Bytes builder. utf8 is always off, so a pattern may match raw bytes.
+public class BytesRegexBuilder {
+    private let options = PatternOptions()
+    private var pattern: String = ""
+    public init(pattern: String) {
+        this.pattern = pattern
+        options.utf8 = false
+    }
+    public func build(): BytesRegex {
+        options.utf8 = false
+        return BytesRegex(pattern, options)
+    }
+    public func caseInsensitive(yes: Bool): BytesRegexBuilder {
+        options.caseInsensitive = yes
+        return this
+    }
+    public func multiLine(yes: Bool): BytesRegexBuilder {
+        options.multiLine = yes
+        return this
+    }
+    public func dotMatchesNewLine(yes: Bool): BytesRegexBuilder {
+        options.dotAll = yes
+        return this
+    }
+    public func swapGreed(yes: Bool): BytesRegexBuilder {
+        options.swapGreed = yes
+        return this
+    }
+    public func ignoreWhitespace(yes: Bool): BytesRegexBuilder {
+        options.ignoreWhitespace = yes
+        return this
+    }
+    public func crlf(yes: Bool): BytesRegexBuilder {
+        options.crlf = yes
+        return this
+    }
+    public func unicode(yes: Bool): BytesRegexBuilder {
+        options.unicode = yes
+        return this
+    }
+    public func octal(yes: Bool): BytesRegexBuilder {
+        options.octal = yes
+        return this
+    }
+    public func lineTerminator(byte: Rune): BytesRegexBuilder {
+        if (UInt32(byte) > 255) {
+            throw Exception("line terminator must be a byte")
+        }
+        options.lineTerminator = byte
+        return this
+    }
+    public func nestLimit(limit: Int64): BytesRegexBuilder {
+        if (limit < 0) {
+            throw Exception("nest limit must be nonnegative")
+        }
+        options.nestLimit = limit
+        return this
+    }
+    public func sizeLimit(limit: Int64): BytesRegexBuilder {
+        if (limit < 0) {
+            throw Exception("size limit must be nonnegative")
+        }
+        options.sizeLimit = limit
+        return this
+    }
+    public func dfaSizeLimit(limit: Int64): BytesRegexBuilder {
+        if (limit < 0) {
+            throw Exception("dfa size limit must be nonnegative")
+        }
+        options.dfaSizeLimit = limit
+        return this
+    }
+}
+
+public class BytesRegexSetBuilder {
+    private let options = PatternOptions()
+    private let patterns = ArrayList<String>()
+    public init() {
+        options.utf8 = false
+    }
+    public func pattern(value: String): BytesRegexSetBuilder {
+        patterns.add(value)
+        return this
+    }
+    public func build(): BytesRegexSet {
+        options.utf8 = false
+        return BytesRegexSet(patterns.toArray(), options)
+    }
+    public func caseInsensitive(yes: Bool): BytesRegexSetBuilder {
+        options.caseInsensitive = yes
+        return this
+    }
+    public func multiLine(yes: Bool): BytesRegexSetBuilder {
+        options.multiLine = yes
+        return this
+    }
+    public func dotMatchesNewLine(yes: Bool): BytesRegexSetBuilder {
+        options.dotAll = yes
+        return this
+    }
+    public func swapGreed(yes: Bool): BytesRegexSetBuilder {
+        options.swapGreed = yes
+        return this
+    }
+    public func ignoreWhitespace(yes: Bool): BytesRegexSetBuilder {
+        options.ignoreWhitespace = yes
+        return this
+    }
+    public func crlf(yes: Bool): BytesRegexSetBuilder {
+        options.crlf = yes
+        return this
+    }
+    public func unicode(yes: Bool): BytesRegexSetBuilder {
+        options.unicode = yes
+        return this
+    }
+    public func octal(yes: Bool): BytesRegexSetBuilder {
+        options.octal = yes
+        return this
+    }
+    public func lineTerminator(byte: Rune): BytesRegexSetBuilder {
+        if (UInt32(byte) > 255) {
+            throw Exception("line terminator must be a byte")
+        }
+        options.lineTerminator = byte
+        return this
+    }
+    public func nestLimit(limit: Int64): BytesRegexSetBuilder {
+        if (limit < 0) {
+            throw Exception("nest limit must be nonnegative")
+        }
+        options.nestLimit = limit
+        return this
+    }
+    public func sizeLimit(limit: Int64): BytesRegexSetBuilder {
+        if (limit < 0) {
+            throw Exception("size limit must be nonnegative")
+        }
+        options.sizeLimit = limit
+        return this
+    }
+    public func dfaSizeLimit(limit: Int64): BytesRegexSetBuilder {
+        if (limit < 0) {
+            throw Exception("dfa size limit must be nonnegative")
+        }
+        options.dfaSizeLimit = limit
+        return this
     }
 }

@@ -43,6 +43,6 @@ for mode,extra in [('first',()),('is-match',()),('split',()),('replace-all',('<$
 report=json.loads(REPORT.read_text())
 report.update({'ascii_classes_differential_passed':count,'ascii_classes_golden_passed':len(golden),
                'ascii_classes_invalid_rejected':len(invalid),'ascii_classes_api_checks_passed':4,
-               'ascii_classes_scope':'14 POSIX ASCII classes, Unicode complement, nested fallback; see docs/milestone-8.md'})
+               'ascii_classes_scope':'14 POSIX ASCII classes, Unicode complement, nested fallback'})
 REPORT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps(report,ensure_ascii=False,indent=2),flush=True)

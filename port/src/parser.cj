@@ -20,6 +20,9 @@ class Expr {
     var dotAll = false
     var flagOnly = false
     var captureIndex: Int64 = -1
+    var nestNode = false
+    var classNest: Int64 = 0
+    var byteAtom = false
     var modeKind: Int64 = 0
     var modeTerm: Rune = r'\n'
     var modeUnicode: Bool = true
@@ -32,8 +35,8 @@ class Expr {
     }
 }
 
-// Shared by Regex and RegexSet. Defaults match Regex(pattern): Unicode on,
-// octal off, LF line terminator, and the historical nest limit of 64.
+// Shared by Regex and RegexSet. Defaults match Regex::new: Unicode on,
+// octal off, LF line terminator, nest limit 250, NFA budget 10 MiB.
 class PatternOptions {
     var caseInsensitive = false
     var multiLine = false
@@ -44,12 +47,18 @@ class PatternOptions {
     var unicode = true
     var octal = false
     var lineTerminator: Rune = r'\n'
-    var nestLimit: Int64 = 64
+    var nestLimit: Int64 = 250
+    var sizeLimit: Int64 = 10485760
+    var dfaSizeLimit: Int64 = 2097152
+    var utf8 = true
 }
 
 class Parser {
+    let source: String
     let chars = ArrayList<Rune>()
     let captureNames = ArrayList<String>()
+    let captureStarts = ArrayList<Int64>()
+    let captureEnds = ArrayList<Int64>()
     let whitespace = binaryWhite_Space()
     var pos: Int64 = 0
     var depth: Int64 = 0
@@ -62,7 +71,16 @@ class Parser {
     var unicode = true
     var octal = false
     var lineTerminator: Rune = r'\n'
-    var nestLimit: Int64 = 64
+    var nestLimit: Int64 = 250
+    var utf8 = true
+    var literalByte = false
+    var lastClassNest: Int64 = 0
+    var openClassLevel: Int64 = 0
+    var openClassPeak: Int64 = 0
+    var openClassItems: Int64 = 0
+    var classDepth: Int64 = 0
+    var escapeStart: Int64 = 0
+    var repeatOrigin: Int64 = 0
     var nameReady = false
     var alphabetic = CharSet()
     var nameNumbers = CharSet()
@@ -70,15 +88,21 @@ class Parser {
         this(pattern, PatternOptions())
     }
     init(pattern: String, options: PatternOptions) {
+        source = pattern
         captureNames.add("") // group 0 denotes the entire match
-        if (pattern.size > 4096) {
-            throw Exception("pattern exceeds 4096 UTF-8 bytes")
+        captureStarts.add(0)
+        captureEnds.add(0)
+        if (UInt32(options.lineTerminator) > 255) {
+            throw Exception("line terminator must be a byte")
         }
-        if (UInt32(options.lineTerminator) > 127) {
-            throw Exception("line terminator must be an ASCII byte in string mode")
+        if (options.nestLimit < 0) {
+            throw Exception("nest limit must be nonnegative")
         }
-        if (options.nestLimit < 1) {
-            throw Exception("nest limit must be positive")
+        if (options.sizeLimit < 0) {
+            throw Exception("size limit must be nonnegative")
+        }
+        if (options.dfaSizeLimit < 0) {
+            throw Exception("dfa size limit must be nonnegative")
         }
         multiline = options.multiLine
         dotAll = options.dotAll
@@ -90,12 +114,44 @@ class Parser {
         octal = options.octal
         lineTerminator = options.lineTerminator
         nestLimit = options.nestLimit
+        utf8 = options.utf8
         for (c in pattern.runes()) {
             chars.add(c)
         }
     }
     func fail(message: String): Nothing {
-        throw Exception("pattern scalar ${pos}: ${message}")
+        let start = if (pos < chars.size) {
+            pos
+        } else if (pos > 0) {
+            pos - 1
+        } else {
+            0
+        }
+        let end = if (start < chars.size) {
+            start + 1
+        } else {
+            start
+        }
+        failAt(start, end, message)
+    }
+    func failAt(start: Int64, end: Int64, message: String): Nothing {
+        throw RegexError(RegexErrorKind.Syntax, formatSyntaxError(source, start, end, message), -1)
+    }
+    func failAux(start: Int64, end: Int64, auxStart: Int64, auxEnd: Int64, message: String): Nothing {
+        throw RegexError(RegexErrorKind.Syntax, formatSyntaxErrorSpans(source, start, end, auxStart, auxEnd, message),
+            -1)
+    }
+    func lookaroundPrefix(): Bool {
+        if (pos + 1 < chars.size && chars[pos] == r'?' && (chars[pos + 1] == r'=' || chars[pos + 1] == r'!')) {
+            pos += 2
+            return true
+        }
+        if (pos + 2 < chars.size && chars[pos] == r'?' && chars[pos + 1] == r'<' && (chars[pos + 2] == r'=' ||
+            chars[pos + 2] == r'!')) {
+            pos += 3
+            return true
+        }
+        false
     }
     func at(c: Rune): Bool {
         pos < chars.size && chars[pos] == c
@@ -140,9 +196,32 @@ class Parser {
         let result = alternate()
         skipSpace()
         if (pos != chars.size) {
-            fail("unexpected closing parenthesis")
+            failAt(pos - 1, pos, "unopened group")
         }
+        checkNest(result, 0)
         return result
+    }
+    func checkNest(expr: Expr, depth: Int64): Unit {
+        var next = depth
+        match (expr.kind) {
+            case ExprKind.Concat | ExprKind.Alternate =>
+                if (expr.children.size >= 2 || expr.nestNode) {
+                    next = depth + 1
+                }
+            case ExprKind.Repeat | ExprKind.Capture => next = depth + 1
+            case ExprKind.CharacterClass =>
+                if (depth + expr.classNest > nestLimit) {
+                    failAt(0, chars.size, "exceed the maximum number of nested parentheses/brackets (${nestLimit})")
+                }
+                return
+            case _ => ()
+        }
+        if (next > nestLimit) {
+            failAt(0, chars.size, "exceed the maximum number of nested parentheses/brackets (${nestLimit})")
+        }
+        for (child in expr.children) {
+            checkNest(child, next)
+        }
     }
     func alternate(): Expr {
         let parts = ArrayList<Expr>()
@@ -170,11 +249,16 @@ class Parser {
     }
     func repetition(): Expr {
         var expr = atom()
-        skipSpace()
-        if (at(r'*') || at(r'+') || at(r'?') || at(r'{')) {
-            if (expr.flagOnly) {
-                fail("repetition without an expression")
+        while (true) {
+            skipSpace()
+            if (!(at(r'*') || at(r'+') || at(r'?') || at(r'{'))) {
+                break
             }
+            if (expr.flagOnly) {
+                failAt(pos, pos + 1, "repetition operator missing expression")
+            }
+            let quantifierAt = pos
+            repeatOrigin = pos
             let quantifier = chars[pos]
             pos++
             var minimum: Int64 = 0
@@ -194,11 +278,11 @@ class Parser {
                         }
                     }
                     if (!at(r'}')) {
-                        fail("unclosed or malformed counted repetition")
+                        failAt(quantifierAt, pos, "unclosed counted repetition")
                     }
                     pos++
                     if (maximum >= 0 && minimum > maximum) {
-                        fail("repetition minimum exceeds maximum")
+                        failAt(quantifierAt, pos, "invalid repetition count range, the start must be <= the end")
                     }
                 case _ => ()
             }
@@ -211,27 +295,41 @@ class Parser {
             expr = Expr(ExprKind.Repeat, quantifier, [expr], greedy)
             expr.minimum = minimum
             expr.maximum = maximum
-            skipSpace()
-            if (at(r'*') || at(r'+') || at(r'?') || at(r'{')) {
-                fail("stacked repetitions are not supported; use explicit groups")
-            }
         }
         return expr
     }
-    func decimal(): Int64 {
-        skipSpace()
-        if (pos == chars.size || chars[pos] < r'0' || chars[pos] > r'9') {
-            fail("expected an ASCII repetition count")
+    // Count braces trim Unicode whitespace even when x is off. Comments and
+    // whitespace between digits are skipped only while x is on.
+    func skipCountSpace(): Unit {
+        while (pos < chars.size && whitespace.contains(chars[pos])) {
+            pos++
         }
+    }
+    func decimal(): Int64 {
+        skipCountSpace()
+        if (pos == chars.size) {
+            failAt(repeatOrigin, pos, "unclosed counted repetition")
+        }
+        if (chars[pos] < r'0' || chars[pos] > r'9') {
+            failAt(pos, pos + 1, "repetition quantifier expects a valid decimal")
+        }
+        let digits = pos
         var value: Int64 = 0
         while (pos < chars.size && chars[pos] >= r'0' && chars[pos] <= r'9') {
-            value = value * 10 + Int64(UInt32(chars[pos]) - UInt32(r'0'))
-            if (value > 10000) {
-                fail("repetition count exceeds 10000")
+            let digit = Int64(UInt32(chars[pos]) - UInt32(r'0'))
+            if (value > 429496729 || (value == 429496729 && digit > 5)) {
+                while (pos < chars.size && chars[pos] >= r'0' && chars[pos] <= r'9') {
+                    pos++
+                }
+                failAt(digits, pos, "decimal literal invalid")
             }
+            value = value * 10 + digit
             pos++
-            skipSpace()
+            if (ignoreWhitespace) {
+                skipSpace()
+            }
         }
+        skipCountSpace()
         return value
     }
     func atom(): Expr {
@@ -239,6 +337,7 @@ class Parser {
         pos++
         match (c) {
             case r'(' =>
+                let open = pos - 1
                 let oldMultiline = multiline
                 let oldDotAll = dotAll
                 let oldSwapGreed = swapGreed
@@ -247,12 +346,15 @@ class Parser {
                 let oldCrlf = crlf
                 let oldUnicode = unicode
                 depth++
-                if (depth > nestLimit) {
-                    fail("group nesting exceeds ${nestLimit}")
-                }
                 var capturing = true
                 var name = ""
+                var nameStart: Int64 = 0
+                var nameEnd: Int64 = 0
                 if (at(r'?')) {
+                    if (lookaroundPrefix()) {
+                        failAt(open, pos, "look-around, including look-ahead and look-behind, is not supported")
+                    }
+                    let question = pos
                     pos++
                     if (at(r':')) {
                         capturing = false
@@ -262,11 +364,19 @@ class Parser {
                             pos++
                         }
                         if (!at(r'<')) {
-                            fail("unsupported group prefix or flags")
+                            failAt(pos, pos + 1, "unrecognized flag")
                         }
                         pos++
+                        nameStart = pos
                         name = captureName()
+                        nameEnd = pos - 1
                     } else {
+                        if (at(r')')) {
+                            failAt(question, question + 1, "repetition operator missing expression")
+                        }
+                        if (pos == chars.size) {
+                            failAt(open, open + 1, "unclosed group")
+                        }
                         parseFlags()
                         capturing = false
                         if (at(r')')) {
@@ -281,22 +391,24 @@ class Parser {
                 }
                 var index: Int64 = -1
                 if (capturing) {
-                    if (captureNames.size >= 129) {
-                        fail("capture group count exceeds 128")
-                    }
                     if (name != "") {
+                        var existingIndex: Int64 = 0
                         for (existing in captureNames) {
                             if (existing == name) {
-                                fail("duplicate capture group name")
+                                failAux(nameStart, nameEnd, captureStarts[existingIndex], captureEnds[existingIndex],
+                                    "duplicate capture group name")
                             }
+                            existingIndex++
                         }
                     }
                     index = captureNames.size
                     captureNames.add(name)
+                    captureStarts.add(nameStart)
+                    captureEnds.add(nameEnd)
                 }
                 let expr = alternate()
                 if (!at(r')')) {
-                    fail("unclosed group")
+                    failAt(open, open + 1, "unclosed group")
                 }
                 pos++
                 depth--
@@ -308,7 +420,9 @@ class Parser {
                 crlf = oldCrlf
                 unicode = oldUnicode
                 if (!capturing) {
-                    return expr
+                    let wrap = Expr(ExprKind.Concat, r' ', [expr], true)
+                    wrap.nestNode = true
+                    return wrap
                 }
                 let group = Expr(ExprKind.Capture, r' ', [expr], true)
                 group.captureIndex = index
@@ -318,21 +432,30 @@ class Parser {
             case r'\\' =>
                 let expr = escaped()
                 match (expr.kind) {
-                    case ExprKind.Literal => return finishLiteral(expr.ch)
+                    case ExprKind.Literal =>
+                        if (expr.byteAtom) {
+                            return expr
+                        }
+                        return finishLiteral(expr.ch)
                     case _ => return expr
                 }
             case r'[' =>
                 let expr = leaf(ExprKind.CharacterClass, c)
                 expr.charset = characterClass()
+                expr.classNest = lastClassNest
+                expr.byteAtom = !unicode && !utf8
                 return expr
-            case r'{' => fail("repetition without an expression")
-            case r'*' | r'+' | r'?' => fail("repetition without an expression")
+            case r'{' => failAt(pos - 1, pos, "repetition operator missing expression")
+            case r'*' | r'+' | r'?' => failAt(pos - 1, pos, "repetition operator missing expression")
             case _ => return finishLiteral(c)
         }
     }
     func dot(): Expr {
-        if (!unicode) {
-            fail("pattern can match invalid UTF-8")
+        if (utf8 && (!unicode || UInt32(lineTerminator) > 127)) {
+            failAt(pos - 1, pos, "pattern can match invalid UTF-8")
+        }
+        if (!utf8 && unicode && !dotAll && !crlf && UInt32(lineTerminator) > 127) {
+            failAt(pos - 1, pos, "invalid line terminator, must be ASCII")
         }
         var kind: Int64 = 0
         if (dotAll) {
@@ -340,7 +463,9 @@ class Parser {
         } else if (crlf) {
             kind = 2
         }
-        return stamp(leaf(ExprKind.Any, r'.'), kind)
+        let expr = stamp(leaf(ExprKind.Any, r'.'), kind)
+        expr.byteAtom = !unicode
+        return expr
     }
     func anchor(begin: Bool): Expr {
         var kind: Int64 = if (begin) {
@@ -380,33 +505,36 @@ class Parser {
     func parseFlags(): Unit {
         var enabled = true
         var negation = false
-        var dangling = false
+        var negationAt: Int64 = -1
         let seen = ArrayList<Rune>()
-        if (at(r')')) {
-            fail("empty flag directive")
-        }
+        let seenAt = ArrayList<Int64>()
         while (!at(r':') && !at(r')')) {
             if (pos == chars.size) {
-                fail("unclosed flags")
+                failAt(pos, pos, "expected flag but got end of regex")
             }
+            let here = pos
             let c = chars[pos]
             pos++
             if (c == r'-') {
                 if (negation) {
-                    fail("repeated flag negation")
+                    failAux(here, here + 1, negationAt, negationAt + 1, "flag negation operator repeated")
                 }
                 negation = true
                 enabled = false
-                dangling = true
+                negationAt = here
                 continue
             }
-            for (previous in seen) {
-                if (previous == c) {
-                    fail("duplicate flag")
+            var previous: Int64 = 0
+            while (previous < seen.size) {
+                if (seen[previous] == c) {
+                    failAux(here, here + 1, seenAt[previous], seenAt[previous] + 1, "duplicate flag")
                 }
+                previous++
             }
             seen.add(c)
-            dangling = false
+            seenAt.add(here)
+            negation = false
+            negationAt = -1
             match (c) {
                 case r'i' => caseInsensitive = enabled
                 case r'm' => multiline = enabled
@@ -415,11 +543,11 @@ class Parser {
                 case r'x' => ignoreWhitespace = enabled
                 case r'R' => crlf = enabled
                 case r'u' => unicode = enabled
-                case _ => fail("unsupported flag (only i, m, s, U, x, R and u are implemented)")
+                case _ => failAt(here, here + 1, "unrecognized flag")
             }
         }
-        if (dangling) {
-            fail("dangling flag negation")
+        if (negationAt >= 0) {
+            failAt(negationAt, negationAt + 1, "dangling flag negation operator")
         }
     }
     func ensureNameClasses(): Unit {
@@ -445,17 +573,17 @@ class Parser {
         while (pos < chars.size && !at(r'>')) {
             let c = chars[pos]
             if (!captureChar(c, first)) {
-                fail("invalid capture group name")
+                failAt(pos, pos + 1, "invalid capture group character")
             }
             name.append(c)
             pos++
             first = false
         }
         if (first) {
-            fail("empty capture group name")
+            failAt(pos, pos, "empty capture group name")
         }
         if (!at(r'>')) {
-            fail("unclosed capture group name")
+            failAt(pos, pos, "unclosed capture group name")
         }
         pos++
         return name.toString()
@@ -468,11 +596,36 @@ class Parser {
     }
     // Opening '[' has already been consumed. Class operators are left associative;
     // union (juxtaposition) binds more tightly, as in regex-syntax's class stack.
-    func characterClass(): CharSet {
-        depth++
-        if (depth > nestLimit) {
-            fail("group/class nesting exceeds ${nestLimit}")
+    func noteClassItem(): Unit {
+        openClassItems++
+        if (openClassItems == 2) {
+            openClassLevel++
+            if (openClassLevel > openClassPeak) {
+                openClassPeak = openClassLevel
+            }
         }
+    }
+    func noteClassOp(): Unit {
+        openClassLevel++
+        openClassItems = 0
+        if (openClassLevel > openClassPeak) {
+            openClassPeak = openClassLevel
+        }
+    }
+    func characterClass(): CharSet {
+        let start = if (pos > 0) {
+            pos - 1
+        } else {
+            0
+        }
+        classDepth++
+        let tooDeep = classDepth > nestLimit
+        let savedLevel = openClassLevel
+        let savedPeak = openClassPeak
+        let savedItems = openClassItems
+        openClassLevel = 1
+        openClassPeak = 1
+        openClassItems = 0
         skipSpace()
         var negate = false
         if (at(r'^')) {
@@ -484,12 +637,14 @@ class Parser {
         var hasLeadingHyphen = false
         while (at(r'-')) {
             first.addRange(45, 45)
+            noteClassItem()
             hasLeadingHyphen = true
             pos++
             skipSpace()
         }
         if (!hasLeadingHyphen && at(r']')) {
-            first.addRange(93, 93);
+            first.addRange(93, 93)
+            noteClassItem()
             pos++
             skipSpace()
         }
@@ -497,6 +652,7 @@ class Parser {
         while (classOperator()) {
             let op = chars[pos]
             pos += 2
+            noteClassOp()
             let rhs = classUnion()
             // Fold each operand before intersection or difference. Folding only
             // the final set would drop equivalents that the other side removed.
@@ -509,10 +665,22 @@ class Parser {
             }
         }
         if (!at(r']')) {
-            fail("unclosed character class")
+            classDepth--
+            if (pos == start + 2 && chars[start + 1] == r']') {
+                failAt(start, pos, "unclosed character class")
+            }
+            failAt(start, start + 1, "unclosed character class")
         }
         pos++
-        depth--
+        classDepth--
+        if (tooDeep) {
+            failAt(start, pos, "exceed the maximum number of nested parentheses/brackets (${nestLimit})")
+        }
+        let mine = openClassPeak
+        openClassLevel = savedLevel
+        openClassPeak = savedPeak
+        openClassItems = savedItems
+        lastClassNest = mine
         foldClass(first)
         let folded = if (negate) {
             first.negated()
@@ -533,13 +701,18 @@ class Parser {
     }
     func finishAsciiClass(set: CharSet): CharSet {
         if (!unicode && set.exceedsAscii()) {
-            fail("pattern can match invalid UTF-8")
+            if (utf8) {
+                failAt(pos - 1, pos, "pattern can match invalid UTF-8")
+            }
+            let bytes = CharSet()
+            bytes.addRange(0, 255)
+            return set.intersect(bytes)
         }
         return set
     }
     func rejectClassScalar(c: Rune): Unit {
         if (!unicode && UInt32(c) > 127) {
-            fail("Unicode not allowed here")
+            failAt(pos - 1, pos, "Unicode not allowed here")
         }
     }
     func finishLiteral(c: Rune): Expr {
@@ -571,33 +744,52 @@ class Parser {
             if (at(r'[')) {
                 pos++
                 match (namedClass()) {
-                    case Some(named) => result.unionWith(named)
-                    case None => result.unionWith(characterClass())
+                    case Some(named) =>
+                        noteClassItem()
+                        result.unionWith(named)
+                    case None =>
+                        let nested = characterClass()
+                        let combined = openClassLevel + lastClassNest
+                        if (combined > openClassPeak) {
+                            openClassPeak = combined
+                        }
+                        noteClassItem()
+                        result.unionWith(nested)
                 }
                 continue
             }
             if (at(r'\\') && pos + 1 < chars.size && classEscape(chars[pos + 1])) {
                 pos++
+                noteClassItem()
                 result.unionWith(escaped().charset)
                 skipSpace()
                 if (at(r'-') && pos + 1 < chars.size && chars[pos + 1] != r']' && chars[pos + 1] != r'-') {
-                    fail("range endpoints must be literal characters")
+                    failAt(pos - 1, pos, "invalid range boundary, must be a literal")
                 }
                 continue
             }
+            let rangeStart = pos
             let low = classLiteral()
+            var lowByte = literalByte
             var high = low
+            var highByte = lowByte
             skipSpace()
             if (at(r'-') && pos + 1 < chars.size && chars[pos + 1] != r']' && chars[pos + 1] != r'-') {
                 pos++
                 skipSpace()
                 high = classLiteral()
+                highByte = literalByte
                 if (low > high) {
-                    fail("character class range is reversed")
+                    failAt(rangeStart, pos, "invalid character class range, the start must be <= the end")
                 }
             }
-            rejectClassScalar(low)
-            rejectClassScalar(high)
+            if (!lowByte) {
+                rejectClassScalar(low)
+            }
+            if (!highByte) {
+                rejectClassScalar(high)
+            }
+            noteClassItem()
             result.addRange(Int64(UInt32(low)), Int64(UInt32(high)))
         }
         return result
@@ -637,27 +829,74 @@ class Parser {
     }
     func classLiteral(): Rune {
         if (pos == chars.size) {
-            fail("unclosed character class")
+            failAt(pos, pos, "unclosed character class")
         }
+        literalByte = false
         let c = chars[pos]
         pos++
         if (c == r'[' || c == r']') {
-            fail("range endpoints must be literal characters")
+            failAt(pos - 1, pos, "invalid range boundary, must be a literal")
         }
         if (c != r'\\') {
             return c
         }
+        let slash = pos - 1
         let expr = escaped()
         match (expr.kind) {
-            case ExprKind.Literal => return expr.ch
-            case _ => fail("range endpoints must be literal characters")
+            case ExprKind.Literal =>
+                literalByte = expr.byteAtom
+                return expr.ch
+            case _ => failAt(slash, pos, "invalid escape sequence found in character class")
         }
     }
     // Fixed-width and braced Unicode scalar escapes share the class/literal path.
+    func hexDigitValue(c: Rune): Int64 {
+        if (c >= r'0' && c <= r'9') {
+            return Int64(UInt32(c) - UInt32(r'0'))
+        }
+        if (c >= r'a' && c <= r'f') {
+            return Int64(UInt32(c) - UInt32(r'a')) + 10
+        }
+        if (c >= r'A' && c <= r'F') {
+            return Int64(UInt32(c) - UInt32(r'A')) + 10
+        }
+        -1
+    }
     func hexScalar(kind: Rune): Rune {
-        let braced = at(r'{')
-        if (braced) {
+        if (pos == chars.size) {
+            failAt(pos, pos, "incomplete escape sequence, reached end of pattern prematurely")
+        }
+        if (at(r'{')) {
+            let brace = pos
             pos++
+            let digits = pos
+            var count: Int64 = 0
+            var value: Int64 = 0
+            var invalid = false
+            while (!at(r'}')) {
+                if (pos == chars.size) {
+                    failAt(brace, pos, "incomplete escape sequence, reached end of pattern prematurely")
+                }
+                let digit = hexDigitValue(chars[pos])
+                if (digit < 0) {
+                    failAt(pos, pos + 1, "invalid hexadecimal digit")
+                }
+                if (value > 0x10FFFF / 16) {
+                    invalid = true
+                }
+                value = value * 16 + digit
+                pos++
+                count++
+            }
+            let digitEnd = pos
+            pos++
+            if (count == 0) {
+                failAt(brace, pos, "hexadecimal literal empty")
+            }
+            if (invalid || value > 0x10FFFF || (value >= 0xD800 && value <= 0xDFFF)) {
+                failAt(digits, digitEnd, "hexadecimal literal is not a Unicode scalar value")
+            }
+            return Rune(UInt32(value))
         }
         let width: Int64 = if (kind == r'x') {
             2
@@ -666,44 +905,23 @@ class Parser {
         } else {
             8
         }
+        let digits = pos
         var count: Int64 = 0
         var value: Int64 = 0
-        while (if (braced) {
-                !at(r'}')
-            } else {
-                count < width
-            }) {
+        while (count < width) {
             if (pos == chars.size) {
-                fail("incomplete hexadecimal escape")
+                failAt(pos, pos, "incomplete escape sequence, reached end of pattern prematurely")
             }
-            let c = chars[pos]
-            var digit: Int64 = -1
-            if (c >= r'0' && c <= r'9') {
-                digit = Int64(UInt32(c) - UInt32(r'0'))
-            } else if (c >= r'a' && c <= r'f') {
-                digit = Int64(UInt32(c) - UInt32(r'a')) + 10
-            } else if (c >= r'A' && c <= r'F') {
-                digit = Int64(UInt32(c) - UInt32(r'A')) + 10
-            }
+            let digit = hexDigitValue(chars[pos])
             if (digit < 0) {
-                fail("invalid hexadecimal digit")
+                failAt(pos, pos + 1, "invalid hexadecimal digit")
             }
             value = value * 16 + digit
-            // Check on each digit before a subsequent multiplication can overflow.
-            if (value > 0x10FFFF) {
-                fail("hexadecimal escape exceeds Unicode range")
-            }
-            pos++;
+            pos++
             count++
         }
-        if (count == 0) {
-            fail("empty hexadecimal escape")
-        }
-        if (braced) {
-            pos++
-        }
-        if (value >= 0xD800 && value <= 0xDFFF) {
-            fail("surrogate is not a Unicode scalar")
+        if (value > 0x10FFFF || (value >= 0xD800 && value <= 0xDFFF)) {
+            failAt(digits, pos, "hexadecimal literal is not a Unicode scalar value")
         }
         return Rune(UInt32(value))
     }
@@ -716,33 +934,52 @@ class Parser {
                 pos++
             }
             if (!at(r'}')) {
-                fail("unclosed Unicode property")
+                failAt(pos, pos, "incomplete escape sequence, reached end of pattern prematurely")
             }
             pos++
         } else {
             if (pos == chars.size) {
-                fail("missing Unicode property")
+                failAt(pos, pos, "incomplete escape sequence, reached end of pattern prematurely")
             }
             name.append(chars[pos]);
             pos++
         }
         if (!unicode) {
-            fail("Unicode not allowed here")
+            failAt(escapeStart, pos, "Unicode not allowed here")
         }
         let expr = leaf(ExprKind.CharacterClass, r' ')
-        expr.charset = unicodeProperty(name.toString(), negated, caseInsensitive)
+        try {
+            expr.charset = unicodeProperty(name.toString(), negated, caseInsensitive)
+        } catch (e: Exception) {
+            let text = e.toString()
+            if (text.contains("value not found")) {
+                failAt(escapeStart, pos, "Unicode property value not found")
+            }
+            failAt(escapeStart, pos, "Unicode property not found")
+        }
         return expr
     }
     func escaped(): Expr {
         if (pos == chars.size) {
-            fail("trailing escape")
+            failAt(pos, pos, "incomplete escape sequence, reached end of pattern prematurely")
         }
+        escapeStart = pos - 1
         let c = chars[pos]
         pos++
         match (c) {
             case r'd' | r'D' | r's' | r'S' | r'w' | r'W' => return perlClass(c)
             case r'0' | r'1' | r'2' | r'3' | r'4' | r'5' | r'6' | r'7' | r'8' | r'9' => return numberEscape(c)
-            case r'x' | r'u' | r'U' => return leaf(ExprKind.Literal, hexScalar(c))
+            case r'x' | r'u' | r'U' =>
+                let fixedByte = c == r'x' && !at(r'{')
+                let scalar = hexScalar(c)
+                let expr = leaf(ExprKind.Literal, scalar)
+                if (fixedByte && !unicode && UInt32(scalar) > 127) {
+                    if (utf8) {
+                        failAt(escapeStart, pos, "pattern can match invalid UTF-8")
+                    }
+                    expr.byteAtom = true
+                }
+                return expr
             case r'a' => return leaf(ExprKind.Literal, Rune(UInt32(7)))
             case r'f' => return leaf(ExprKind.Literal, Rune(UInt32(12)))
             case r'v' => return leaf(ExprKind.Literal, Rune(UInt32(11)))
@@ -763,7 +1000,7 @@ class Parser {
                 if (n >= 32 && n <= 126 && !alpha && !digit) {
                     return leaf(ExprKind.Literal, c)
                 }
-                fail("unsupported escape")
+                failAt(escapeStart, pos, "unrecognized escape sequence")
         }
     }
     func perlClass(c: Rune): Expr {
@@ -797,11 +1034,12 @@ class Parser {
         } else {
             set.negated()
         })
+        expr.byteAtom = !unicode && !utf8
         return expr
     }
     func numberEscape(c: Rune): Expr {
         if (!octal || c > r'7') {
-            fail("unsupported backreference")
+            failAt(pos - 2, pos, "backreferences are not supported")
         }
         var value = Int64(UInt32(c) - UInt32(r'0'))
         var digits: Int64 = 1
@@ -825,21 +1063,27 @@ class Parser {
         if (!positive || !at(r'{')) {
             return expr
         }
-        let saved = pos
+        let brace = pos
         pos++
         skipSpace()
-        if (pos >= chars.size || !wordNameChar(chars[pos])) {
-            pos = saved
+        if (pos >= chars.size) {
+            failAt(escapeStart, pos,
+                "found either the beginning of a special word boundary or a bounded repetition on a \\b with an opening brace, but no closing brace")
+        }
+        if (!wordNameChar(chars[pos])) {
+            pos = brace
             return expr
         }
+        let nameStart = pos
         let name = StringBuilder()
         while (pos < chars.size && wordNameChar(chars[pos])) {
             name.append(chars[pos])
             pos++
             skipSpace()
         }
+        let nameEnd = pos
         if (!at(r'}')) {
-            fail("unclosed word boundary")
+            failAt(nameStart, pos, "special word boundary assertion is either unclosed or contains an invalid character")
         }
         pos++
         match (name.toString()) {
@@ -847,7 +1091,8 @@ class Parser {
             case "end" => expr.modeKind = 8
             case "start-half" => expr.modeKind = 9
             case "end-half" => expr.modeKind = 10
-            case _ => fail("unrecognized word boundary")
+            case _ => failAt(nameStart, nameEnd,
+                "unrecognized special word boundary assertion, valid choices are: start, end, start-half or end-half")
         }
         return expr
     }

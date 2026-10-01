@@ -29,7 +29,11 @@ cargo test --locked --manifest-path oracle/Cargo.toml
 "${PYTHON:-python3}" tests/verify_scripts.py
 "${PYTHON:-python3}" tests/verify_binary.py
 "${PYTHON:-python3}" tests/verify_syntax.py
+"${PYTHON:-python3}" tests/verify_errors.py
+"${PYTHON:-python3}" tests/verify_limits.py
+"${PYTHON:-python3}" tests/verify_bytes.py
 "${PYTHON:-python3}" tests/verify_upstream_sample.py
+"${PYTHON:-python3}" tests/verify_upstream_suite.py
 "${PYTHON:-python3}" tests/verify_sets.py
 "${PYTHON:-python3}" scripts/showcase.py
 "${PYTHON:-python3}" scripts/classify.py --demo

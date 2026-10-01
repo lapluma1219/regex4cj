@@ -51,20 +51,13 @@ for p, text, expected in golden:
     result = invoke(CJ, 'find', p, text)
     assert result.returncode == 0 and result.stdout == expected.encode(), (p, result)
 
-# Unsupported valid Rust patterns must be rejected, never silently reinterpreted.
-unsupported = ['a**']
-for p in unsupported:
-    assert invoke(RUST, 'find', p, 'aaa').returncode == 0, p
-    result = invoke(CJ, 'find', p, 'aaa')
-    assert result.returncode == 2 and result.stderr and not result.stdout, (p, result)
 invalid = ['(', ')', '[', '*a', 'a\\', '(?:', '(?=a)', r'(a)\1']
 for p in invalid:
     assert invoke(RUST, 'find', p, 'a').returncode != 0, p
     result = invoke(CJ, 'find', p, 'a')
     assert result.returncode == 2 and result.stderr and not result.stdout, (p, result)
-for p in ['a' * 4097, '(' * 65 + 'a' + ')' * 65]:
-    result = invoke(CJ, 'find', p, 'a')
-    assert result.returncode == 2 and result.stderr, p[:30]
+for p in ['a' * 4097, '(' * 65 + 'a' + ')' * 65, 'a**', 'a{ 2 }']:
+    compare(p, 'a' * 8)
 
 # Inputs that expose exponential backtracking and search-at-every-start implementations.
 for p, text in [('(a|aa)*b', 'a' * 8000), ('(a?)*b', 'a' * 8000),
@@ -73,11 +66,11 @@ for p, text in [('(a|aa)*b', 'a' * 8000), ('(a?)*b', 'a' * 8000),
     count += 1
 report = json.loads(REPORT.read_text())
 report.update({'matching_differential_passed': count, 'find_and_is_match_checks_passed': 16,
-               'matching_golden_passed': len(golden), 'unsupported_patterns_rejected': len(unsupported),
-               'invalid_patterns_rejected': len(invalid), 'resource_limits_checked': 2,
+               'matching_golden_passed': len(golden), 'unsupported_patterns_rejected': 0,
+               'invalid_patterns_rejected': len(invalid), 'resource_limits_checked': 0,
                'cangjie_matching_engine_implemented': True,
                'matching_scope': 'restricted Unicode-scalar Thompson NFA; no Unicode-properties/flags/bytes/DFA',
                'limitations': ['CLI cannot transport NUL', 'findAll is eager',
-                              'This is not full regex compatibility; see docs/milestone-3.md']})
+                              'This is not full regex compatibility']})
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)

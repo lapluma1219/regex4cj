@@ -1,6 +1,34 @@
+mod suite;
+
 use regex::Regex;
 fn hex_text(text: &str) -> String {
     text.as_bytes().iter().map(|b| format!("{b:02x}")).collect()
+}
+fn hex_bytes(bytes: &[u8]) -> String {
+    bytes.iter().map(|b| format!("{b:02x}")).collect()
+}
+fn parse_hex(text: &str) -> Result<Vec<u8>, String> {
+    if text.len() % 2 != 0 {
+        return Err("hex text must have an even length".into());
+    }
+    let mut out = Vec::with_capacity(text.len() / 2);
+    let bytes = text.as_bytes();
+    let mut i = 0;
+    while i < bytes.len() {
+        let hi = hex_value(bytes[i])?;
+        let lo = hex_value(bytes[i + 1])?;
+        out.push((hi << 4) | lo);
+        i += 2;
+    }
+    Ok(out)
+}
+fn hex_value(byte: u8) -> Result<u8, String> {
+    match byte {
+        b'0'..=b'9' => Ok(byte - b'0'),
+        b'a'..=b'f' => Ok(byte - b'a' + 10),
+        b'A'..=b'F' => Ok(byte - b'A' + 10),
+        _ => Err("invalid hex digit".into()),
+    }
 }
 fn print_capture_value(prefix: &str, value: Option<regex::Match<'_>>) {
     match value {
@@ -37,6 +65,22 @@ fn main() {
                 Err(e) => { eprintln!("{e}"); std::process::exit(2); }
             }
         },
+        Some("set-limit") if a.len() >= 3 => {
+            let limit: usize = match a[1].parse() {
+                Ok(v) => v,
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            };
+            match regex::RegexSetBuilder::new(&a[3..]).size_limit(limit).build() {
+                Ok(set) => {
+                    let result = set.matches(&a[2]);
+                    println!("patterns\t{}", result.len());
+                    println!("any\t{}", result.matched_any());
+                    println!("all\t{}", result.matched_all());
+                    for id in result.iter() { println!("hit\t{id}"); }
+                }
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            }
+        },
         Some("set-matches" | "set-is-match") if a.len() >= 2 => {
             match regex::RegexSet::new(&a[2..]) {
                 Ok(set) => {
@@ -61,7 +105,94 @@ fn main() {
                 Err(e) => { eprintln!("{e}"); std::process::exit(2); }
             }
         },
-        Some("find-at" | "is-match-at" | "shortest" | "shortest-at" | "static-len" | "captures-at" | "octal-find" | "term-find") => {
+        Some("bytes-find") if a.len() == 3 => {
+            let hay = match parse_hex(&a[2]) {
+                Ok(v) => v,
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            };
+            match regex::bytes::Regex::new(&a[1]) {
+                Ok(re) => {
+                    for m in re.find_iter(&hay) {
+                        println!("{}\t{}\t{}", m.start(), m.end(), hex_bytes(m.as_bytes()));
+                    }
+                }
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            }
+        },
+        Some("bytes-captures") if a.len() == 3 => {
+            let hay = match parse_hex(&a[2]) {
+                Ok(v) => v,
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            };
+            match regex::bytes::Regex::new(&a[1]) {
+                Ok(re) => {
+                    println!("groups\t{}", re.captures_len());
+                    for (i, name) in re.capture_names().enumerate() {
+                        if let Some(name) = name {
+                            println!("name\t{i}\t{}", hex_text(name));
+                        }
+                    }
+                    if let Some(caps) = re.captures(&hay) {
+                        println!("match");
+                        for i in 0..caps.len() {
+                            match caps.get(i) {
+                                Some(m) => println!("group\t{i}\t{}\t{}\t{}", m.start(), m.end(), hex_bytes(m.as_bytes())),
+                                None => println!("group\t{i}\t-"),
+                            }
+                        }
+                    }
+                }
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            }
+        },
+        Some("bytes-replace" | "bytes-replace-all") if a.len() == 4 => {
+            let hay = match parse_hex(&a[2]) {
+                Ok(v) => v,
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            };
+            match regex::bytes::Regex::new(&a[1]) {
+                Ok(re) => {
+                    let output = if a[0] == "bytes-replace" {
+                        re.replace(&hay, a[3].as_bytes())
+                    } else {
+                        re.replace_all(&hay, a[3].as_bytes())
+                    };
+                    println!("{}", hex_bytes(&output));
+                }
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            }
+        },
+        Some("bytes-split") if a.len() == 3 => {
+            let hay = match parse_hex(&a[2]) {
+                Ok(v) => v,
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            };
+            match regex::bytes::Regex::new(&a[1]) {
+                Ok(re) => {
+                    for part in re.split(&hay) {
+                        println!("{}", hex_bytes(part));
+                    }
+                }
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            }
+        },
+        Some("bytes-set-matches") if a.len() >= 2 => {
+            let hay = match parse_hex(&a[1]) {
+                Ok(v) => v,
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            };
+            match regex::bytes::RegexSet::new(&a[2..]) {
+                Ok(set) => {
+                    let result = set.matches(&hay);
+                    println!("patterns\t{}", result.len());
+                    println!("any\t{}", result.matched_any());
+                    println!("all\t{}", result.matched_all());
+                    for id in result.iter() { println!("hit\t{id}"); }
+                }
+                Err(e) => { eprintln!("{e}"); std::process::exit(2); }
+            }
+        },
+        Some("find-at" | "is-match-at" | "shortest" | "shortest-at" | "static-len" | "captures-at" | "octal-find" | "term-find" | "nest-find" | "limit-find" | "dfa-find") => {
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
                 let mode = a[0].as_str();
                 if mode == "static-len" {
@@ -77,6 +208,27 @@ fn main() {
                     if a.len() != 3 { return Err("invalid argument count".into()); }
                     let re = regex::RegexBuilder::new(&a[1]).octal(true).build()?;
                     for m in re.find_iter(&a[2]) { println!("{}\t{}\t{}", m.start(), m.end(), m.as_str()); }
+                    return Ok(());
+                }
+                if mode == "nest-find" {
+                    if a.len() != 4 { return Err("invalid argument count".into()); }
+                    let limit: u32 = a[1].parse()?;
+                    let re = regex::RegexBuilder::new(&a[2]).nest_limit(limit).build()?;
+                    for m in re.find_iter(&a[3]) { println!("{}\t{}\t{}", m.start(), m.end(), m.as_str()); }
+                    return Ok(());
+                }
+                if mode == "limit-find" {
+                    if a.len() != 4 { return Err("invalid argument count".into()); }
+                    let limit: usize = a[1].parse()?;
+                    let re = regex::RegexBuilder::new(&a[2]).size_limit(limit).build()?;
+                    for m in re.find_iter(&a[3]) { println!("{}\t{}\t{}", m.start(), m.end(), m.as_str()); }
+                    return Ok(());
+                }
+                if mode == "dfa-find" {
+                    if a.len() != 4 { return Err("invalid argument count".into()); }
+                    let limit: usize = a[1].parse()?;
+                    let re = regex::RegexBuilder::new(&a[2]).dfa_size_limit(limit).build()?;
+                    for m in re.find_iter(&a[3]) { println!("{}\t{}\t{}", m.start(), m.end(), m.as_str()); }
                     return Ok(());
                 }
                 if mode == "term-find" {
@@ -175,6 +327,12 @@ fn main() {
                 Ok(())
             })();
             if let Err(e) = result { eprintln!("{e}"); std::process::exit(2); }
+        },
+        Some("suite-emit") if a.len() == 2 => {
+            if let Err(e) = suite::emit(&a[1]) {
+                eprintln!("{e}");
+                std::process::exit(2);
+            }
         },
         Some("demo") => {
             let text = "order=AB-123; order=CD-456";

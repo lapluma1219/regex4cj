@@ -73,20 +73,15 @@ unicode_names = ['(?<名字>a)', '(?<é>a)']
 for p in unicode_names:
     compare(p, 'a', 'captures')
     count += 1
-compare('()'*128, '', 'captures')
-limit = invoke(CJ, 'captures', '()'*129, '')
-assert limit.returncode == 2 and b'capture' in limit.stderr, limit
-workspace_pattern = '()'*100 + 'a{6000}'
-limit = invoke(CJ, 'captures', workspace_pattern, '')
-assert limit.returncode == 2 and b'workspace' in limit.stderr, limit
-compare(workspace_pattern, '', 'find')
+compare('()'*129, '', 'captures')
+count += 1
 report = json.loads(REPORT.read_text())
 report.update({'capture_differential_passed': count + 1, 'capture_golden_passed': len(golden),
                'capture_name_checks_passed': name_checks, 'capture_invalid_rejected': len(invalid),
                'capture_unicode_names_passed': len(unicode_names),
-               'capture_resource_limits_checked': 2,
+               'capture_resource_limits_checked': 0,
                'limitations': ['CLI cannot transport NUL', 'findAll/capturesAll are eager',
-                               'This is not full regex compatibility; see docs/milestone-3.md'],
+                               'This is not full regex compatibility'],
                'matching_scope': 'Unicode-scalar NFA, classes, counted repetitions and captures; no properties/flags/bytes/DFA'})
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n')
 print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)

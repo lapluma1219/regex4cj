@@ -31,7 +31,6 @@ Hexadecimal and control-character escapes follow `parse_hex`, `parse_hex_digits`
 `parse_hex_brace` and `parse_escape` in the same upstream AST parser.
 POSIX classes in `ascii_classes.cj` adapt `ascii_class` in the upstream HIR
 translator; parser fallback follows `maybe_parse_ascii_class` in its AST parser.
-See `docs/milestone-1.md` through `docs/milestone-8.md` for symbol-level provenance.
 
 Copyright (c) 2014 The Rust Project Developers.
 
@@ -54,11 +53,11 @@ Copyright © 1991-2018 Unicode, Inc. All rights reserved.
 These data retain their Unicode license; the project's MIT OR Apache-2.0
 license does not replace it. Shorthand semantics follow `perl_digit`,
 `perl_space` and `perl_word` in `regex-syntax/src/unicode.rs`.
-See `docs/milestone-9.md` for the import and generation workflow.
+`scripts/generate_unicode.py` reproduces the import.
 
 Unicode word boundary assertions follow `is_word_unicode` and
 `is_word_unicode_negate` in the pinned `regex-automata/src/util/look.rs`.
-See `docs/milestone-10.md` for scalar-based representation differences.
+The Cangjie engine walks Unicode scalars and maps them back to UTF-8 offsets.
 
 Unicode general-category data in `data/unicode/general_categories.json` and
 `port/src/unicode_categories.cj` derives from `general_category.rs` and the
@@ -66,7 +65,7 @@ General_Category aliases in `property_values.rs` under the same pinned
 upstream Unicode table directory. The source hashes are recorded in the JSON;
 these data retain `data/unicode/LICENSE-UNICODE`. Property parsing and name
 normalization follow `regex-syntax/src/ast/parse.rs` and `unicode.rs`.
-See `docs/milestone-11.md` for the limited property scope and generation steps.
+`scripts/generate_categories.py` reproduces the import.
 
 ## Unicode Script / Script_Extensions tables
 
@@ -99,4 +98,4 @@ the pinned upstream `regex-syntax/src/unicode_tables/case_folding_simple.rs`
 in the pinned upstream `src/regexset/string.rs`. It reuses this project's
 adapted Thompson compiler and assertion semantics with a new scalar-based
 multi-pattern executor. Result arrays, fixed resource limits and unsupported
-advanced interfaces differ from the Rust API; see `docs/regex-set.md`.
+advanced interfaces differ from the Rust API; see `docs/api.md`.

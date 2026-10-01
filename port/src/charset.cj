@@ -83,6 +83,15 @@ class CharSet {
     func isEmpty(): Bool {
         ranges.isEmpty()
     }
+    func rangeCount(): Int64 {
+        ranges.size
+    }
+    func rangeLow(index: Int64): Int64 {
+        ranges[index].low
+    }
+    func rangeHigh(index: Int64): Int64 {
+        ranges[index].high
+    }
     func contains(c: Rune): Bool {
         let code = Int64(UInt32(c))
         var lo: Int64 = 0
@@ -182,13 +191,29 @@ class CharSet {
     func caseFoldAscii(): Unit {
         let extra = CharSet()
         for (range in ranges) {
-            let upperLow = if (range.low > 65) { range.low } else { 65 }
-            let upperHigh = if (range.high < 90) { range.high } else { 90 }
+            let upperLow = if (range.low > 65) {
+                range.low
+            } else {
+                65
+            }
+            let upperHigh = if (range.high < 90) {
+                range.high
+            } else {
+                90
+            }
             if (upperLow <= upperHigh) {
                 extra.addRange(upperLow + 32, upperHigh + 32)
             }
-            let lowerLow = if (range.low > 97) { range.low } else { 97 }
-            let lowerHigh = if (range.high < 122) { range.high } else { 122 }
+            let lowerLow = if (range.low > 97) {
+                range.low
+            } else {
+                97
+            }
+            let lowerHigh = if (range.high < 122) {
+                range.high
+            } else {
+                122
+            }
             if (lowerLow <= lowerHigh) {
                 extra.addRange(lowerLow - 32, lowerHigh - 32)
             }

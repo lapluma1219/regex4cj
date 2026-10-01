@@ -3,7 +3,7 @@ package cjregex
 import std.collection.*
 
 // Adapted from regex-automata's Thompson compiler and ordered PikeVM.
-// See docs/milestone-1.md for exact upstream symbols and representation changes.
+// Symbol-level attribution is in THIRD_PARTY_NOTICES.md.
 enum Op {
     Literal(Rune) | CharacterClass(CharSet) | Any(AtomMode) | Look(AtomMode) | Split | Save(Int64) | Accept
 }
@@ -12,6 +12,7 @@ class State {
     let op: Op
     var first: Int64
     var second: Int64
+    var byteAtom = false
     init(op: Op, first: Int64, second: Int64) {
         this.op = op
         this.first = first
@@ -21,11 +22,11 @@ class State {
 
 class Compiler {
     let states = ArrayList<State>()
-    private var work: Int64 = 0
+    let sizeLimit: Int64
+    init(sizeLimit: Int64) {
+        this.sizeLimit = sizeLimit
+    }
     func add(op: Op, first: Int64, second: Int64): Int64 {
-        if (states.size >= 16384) {
-            throw Exception("NFA exceeds 16384 states")
-        }
         states.add(State(op, first, second))
         return states.size - 1
     }
@@ -40,10 +41,6 @@ class Compiler {
         AtomMode(expr.modeKind, expr.modeTerm, expr.modeUnicode, expr.modePositive)
     }
     func compile(expr: Expr, next: Int64): Int64 {
-        work++
-        if (work > 65536) {
-            throw Exception("regex compilation exceeds 65536 work units")
-        }
         match (expr.kind) {
             case ExprKind.Capture =>
                 let end = add(Op.Save(expr.captureIndex * 2 + 1), next, -1)
@@ -51,9 +48,18 @@ class Compiler {
                 return add(Op.Save(expr.captureIndex * 2), body, -1)
             case ExprKind.WordBoundary | ExprKind.Begin | ExprKind.End => return add(Op.Look(mode(expr)), next, -1)
             case ExprKind.Empty => return next
-            case ExprKind.Literal => return add(Op.Literal(expr.ch), next, -1)
-            case ExprKind.CharacterClass => return add(Op.CharacterClass(expr.charset), next, -1)
-            case ExprKind.Any => return add(Op.Any(mode(expr)), next, -1)
+            case ExprKind.Literal =>
+                let id = add(Op.Literal(expr.ch), next, -1)
+                states[id].byteAtom = expr.byteAtom
+                return id
+            case ExprKind.CharacterClass =>
+                let id = add(Op.CharacterClass(expr.charset), next, -1)
+                states[id].byteAtom = expr.byteAtom
+                return id
+            case ExprKind.Any =>
+                let id = add(Op.Any(mode(expr)), next, -1)
+                states[id].byteAtom = expr.byteAtom
+                return id
             case ExprKind.Concat =>
                 var start = next
                 var i = expr.children.size
@@ -250,6 +256,91 @@ public class RegexMatch {
     }
 }
 
+class MemoStep {
+    var key: String = ""
+    var states = ArrayList<Int64>()
+    var offsets = ArrayList<Int64>()
+    var filled = false
+}
+
+class SearchMemo {
+    let slots: Array<MemoStep>
+    init(capacity: Int64) {
+        let count = if (capacity < 1) {
+            1
+        } else {
+            capacity
+        }
+        slots = Array<MemoStep>(count, {_ => MemoStep()})
+    }
+    func index(key: String): Int64 {
+        var hash: Int64 = 0
+        for (c in key.runes()) {
+            hash = hash ^ Int64(UInt32(c))
+            hash = (hash + 0x9E3779B9) & 0x7FFFFFFF
+        }
+        hash % slots.size
+    }
+    func find(key: String): Int64 {
+        let slot = index(key)
+        if (slots[slot].filled && slots[slot].key == key) {
+            slot
+        } else {
+            -1
+        }
+    }
+    func store(key: String, threads: ArrayList<Thread>, base: Int64): Unit {
+        let step = slots[index(key)]
+        step.key = key
+        step.filled = true
+        step.states = ArrayList<Int64>()
+        step.offsets = ArrayList<Int64>()
+        for (thread in threads) {
+            step.states.add(thread.state)
+            step.offsets.add(thread.start - base)
+        }
+    }
+    func restore(slot: Int64, out: ArrayList<Thread>, seen: Array<Bool>, base: Int64, slots: Array<Int64>): Unit {
+        let step = this.slots[slot]
+        var i: Int64 = 0
+        while (i < step.states.size) {
+            let state = step.states[i]
+            if (!seen[state]) {
+                seen[state] = true
+                out.add(Thread(state, base + step.offsets[i], slots))
+            }
+            i++
+        }
+    }
+}
+
+func stepKey(threads: ArrayList<Thread>, pos: Int64, found: Bool, input: Input): String {
+    let out = StringBuilder()
+    out.append(if (found) {
+        "1"
+    } else {
+        "0"
+    })
+    out.append("|")
+    appendContext(out, input, pos - 1)
+    appendContext(out, input, pos)
+    appendContext(out, input, pos + 1)
+    appendContext(out, input, pos + 2)
+    out.append("|")
+    for (thread in threads) {
+        out.append("${thread.state}@${thread.start - pos};")
+    }
+    out.toString()
+}
+
+func appendContext(out: StringBuilder, input: Input, index: Int64): Unit {
+    if (index < 0 || index >= input.chars.size) {
+        out.append("$,")
+    } else {
+        out.append("${UInt32(input.chars[index])},")
+    }
+}
+
 public class Regex {
     private let source: String
     private let states: Array<State>
@@ -258,6 +349,7 @@ public class Regex {
     private let asciiWords: CharSet
     private let groupNames: Array<String>
     private let staticLen: Int64
+    private let dfaLimit: Int64
     public init(pattern: String) {
         this(pattern, PatternOptions())
     }
@@ -266,11 +358,13 @@ public class Regex {
         let parser = Parser(pattern, options)
         let tree = parser.parse()
         normalizeWidth(tree)
+        ensureWithinSizeLimit([tree], options.sizeLimit, true)
+        dfaLimit = options.dfaSizeLimit
         staticLen = match (staticExplicit(tree)) {
             case Some(count) => count + 1
             case None => -1
         }
-        let compiler = Compiler()
+        let compiler = Compiler(options.sizeLimit)
         let accept = compiler.add(Op.Accept, -1, -1)
         startState = compiler.compile(tree, accept)
         states = compiler.states.toArray()
@@ -375,17 +469,40 @@ public class Regex {
         } else {
             0
         }, repeat: -1)
+        let cacheSteps = !capture && !earliest && dfaLimit >= 128
+        let memo = SearchMemo(if (cacheSteps) {
+            if (dfaLimit / 64 > 4096) {
+                4096
+            } else {
+                dfaLimit / 64
+            }
+        } else {
+            1
+        })
         while (pos <= input.chars.size) {
             if (!found) {
                 closure(current, seen, startState, pos, slots, pos, input)
             }
             let next = ArrayList<Thread>()
             let nextSeen = Array<Bool>(states.size, repeat: false)
-            for (thread in current) {
-                let s = states[thread.state]
-                var consume = false
-                match (s.op) {
-                    case Op.Accept =>
+            let key = if (cacheSteps && current.size > 0) {
+                stepKey(current, pos, found, input)
+            } else {
+                ""
+            }
+            let cached = if (key != "") {
+                memo.find(key)
+            } else {
+                -1
+            }
+            if (cached >= 0) {
+                for (thread in current) {
+                    var accept = false
+                    match (states[thread.state].op) {
+                        case Op.Accept => accept = true
+                        case _ => ()
+                    }
+                    if (accept) {
                         let hit = SearchMatch(thread.start, pos, thread.slots)
                         if (earliest) {
                             return Some(hit)
@@ -393,13 +510,34 @@ public class Regex {
                         best = Some(hit)
                         found = true
                         break
-                    case Op.Literal(c) => consume = pos < input.chars.size && input.chars[pos] == c
-                    case Op.CharacterClass(set) => consume = pos < input.chars.size && set.contains(input.chars[pos])
-                    case Op.Any(mode) => consume = pos < input.chars.size && passesDot(mode, input.chars[pos])
-                    case _ => ()
+                    }
                 }
-                if (consume) {
-                    closure(next, nextSeen, s.first, thread.start, thread.slots, pos + 1, input)
+                memo.restore(cached, next, nextSeen, pos + 1, slots)
+            } else {
+                for (thread in current) {
+                    let s = states[thread.state]
+                    var consume = false
+                    match (s.op) {
+                        case Op.Accept =>
+                            let hit = SearchMatch(thread.start, pos, thread.slots)
+                            if (earliest) {
+                                return Some(hit)
+                            }
+                            best = Some(hit)
+                            found = true
+                            break
+                        case Op.Literal(c) => consume = pos < input.chars.size && input.chars[pos] == c
+                        case Op.CharacterClass(set) => consume = pos < input.chars.size && set.contains(
+                            input.chars[pos])
+                        case Op.Any(mode) => consume = pos < input.chars.size && passesDot(mode, input.chars[pos])
+                        case _ => ()
+                    }
+                    if (consume) {
+                        closure(next, nextSeen, s.first, thread.start, thread.slots, pos + 1, input)
+                    }
+                }
+                if (key != "") {
+                    memo.store(key, next, pos + 1)
                 }
             }
             if (found && next.isEmpty()) {
@@ -462,7 +600,6 @@ public class Regex {
     public func capturesAt(text: String, start: Int64): Option<Captures> {
         let input = Input(text)
         let from = input.boundary(start)
-        checkCaptureWorkspace()
         match (search(input, from, true, false)) {
             case Some(hit) => Some(captureResult(text, input, hit))
             case None => None
@@ -493,7 +630,6 @@ public class Regex {
         )
     }
     public func capturesIter(text: String): CaptureIter {
-        checkCaptureWorkspace()
         let input = Input(text)
         let cursor = [0]
         let previousEnd = [-1]
@@ -566,7 +702,6 @@ public class Regex {
         }
         let input = Input(text)
         let from = input.boundary(start)
-        checkCaptureWorkspace()
         match (search(input, from, true, false)) {
             case None => return None
             case Some(hit) =>
@@ -619,11 +754,6 @@ public class Regex {
             }
         })
     }
-    private func checkCaptureWorkspace(): Unit {
-        if (states.size * groupNames.size * 2 > 1048576) {
-            throw Exception("capture workspace exceeds 1048576 state-slot units")
-        }
-    }
     private func captureResult(text: String, input: Input, hit: SearchMatch): Captures {
         let groups = Array<Option<RegexMatch>>(groupNames.size, repeat: None)
         let start = input.offsets[hit.start]
@@ -641,7 +771,6 @@ public class Regex {
         return Captures(groups, groupNames, staticLen)
     }
     public func captures(text: String): Option<Captures> {
-        checkCaptureWorkspace()
         let input = Input(text)
         match (search(input, 0, true, false)) {
             case Some(hit) => return Some(captureResult(text, input, hit))
@@ -649,7 +778,6 @@ public class Regex {
         }
     }
     public func capturesAll(text: String): Array<Captures> {
-        checkCaptureWorkspace()
         let input = Input(text)
         let result = ArrayList<Captures>()
         var cursor: Int64 = 0
@@ -700,7 +828,6 @@ public class Regex {
             throw Exception("replacement limit must be nonnegative")
         }
         if (capture) {
-            checkCaptureWorkspace()
         }
         let input = Input(text)
         let out = StringBuilder()

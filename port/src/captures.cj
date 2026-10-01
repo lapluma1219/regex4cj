@@ -77,11 +77,14 @@ public class Captures {
         }
         return Array<String>(count + 1, {
             i => if (i == 0) {
-            whole.text
-        } else {
-            matched[i - 1]
-        }
+                whole.text
+            } else {
+                matched[i - 1]
+            }
         })
+    }
+    public func iter(): GroupIter {
+        GroupIter(groups)
     }
     public func get(index: Int64): Option<RegexMatch> {
         if (index < 0 || index >= size) {
@@ -185,4 +188,31 @@ public class Captures {
 
 func referenceLetter(c: Rune): Bool {
     (c >= r'a' && c <= r'z') || (c >= r'A' && c <= r'Z') || (c >= r'0' && c <= r'9') || c == r'_'
+}
+
+// One step of Captures::iter. done means the iterator is finished.
+// value is None when that group did not participate.
+public class GroupItem {
+    public let done: Bool
+    public let value: Option<RegexMatch>
+    init(done: Bool, value: Option<RegexMatch>) {
+        this.done = done
+        this.value = value
+    }
+}
+
+public class GroupIter {
+    private let groups: Array<Option<RegexMatch>>
+    private var index: Int64 = 0
+    init(groups: Array<Option<RegexMatch>>) {
+        this.groups = groups
+    }
+    public func next(): GroupItem {
+        if (index >= groups.size) {
+            return GroupItem(true, None)
+        }
+        let value = groups[index]
+        index++
+        return GroupItem(false, value)
+    }
 }

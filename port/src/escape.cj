@@ -2,7 +2,7 @@ package cjregex
 
 // Ported from regex-syntax/src/lib.rs at 72d650cb0a880a01ab6dc2137c0888e8f89740f7.
 // Upstream copyright and license: see repository-root LICENSE-MIT and LICENSE-APACHE.
-public func isMetaCharacter(c: Rune): Bool {
+func isMetaCharacter(c: Rune): Bool {
     match (c) {
         case r'\\' | r'.' | r'+' | r'*' | r'?' | r'(' | r')' | r'|' | r'[' | r']' | r'{' | r'}' | r'^' | r'$' | r'#'
             | r'&' | r'-' | r'~' => true

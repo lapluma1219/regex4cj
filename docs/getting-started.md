@@ -59,7 +59,7 @@ bash scripts/run.sh check
 bash scripts/run.sh verify
 ```
 
-`check` 用于日常试用：28 项原生测试加 20 个场景，完全不启动 Rust。报告中的原生测试应为零失败，场景分别为 13/13 和 7/7。
+`check` 用于日常试用：29 项原生测试加 20 个场景，完全不启动 Rust。报告中的原生测试应为零失败，场景分别为 13/13 和 7/7。
 
 `verify` 用于严格验收，按锁文件构建固定 Rust 参照，运行数据检查、原生测试和差分用例。首次 Cargo 依赖下载需要网络；后续会利用缓存，整个套件可能持续数分钟。任何一步失败都会返回非零退出码。v0.2.0 当时记录过 10,105 条差分；当前套件更长，以本次 `verification.json` 里的数字为准。
 
@@ -87,4 +87,4 @@ bash scripts/run.sh verify
 
 ## 多规则分类
 
-运行 `bash scripts/run.sh classify '订单 AB-123 退款'` 查看命中编号与标签。配置和 API 说明见 [RegexSet](regex-set.md)。命令按完整规则文件构建，任一规则失败会整体报错。
+运行 `bash scripts/run.sh classify '订单 AB-123 退款'` 查看命中编号与标签。接口见 [当前接口](api.md)。命令按完整规则文件构建，任一规则失败会整体报错。

@@ -10,6 +10,9 @@ cases = [
     ('(?x)a #c\nb', 'ab'),
     ('(?x)[a b]', 'a b'),
     ('(?x)a{1, 2}', 'aa'),
+    ('a{ 2 }', 'aa'),
+    ('a**', 'aaa'),
+    ('a{2}*', 'aaa'),
     ('(?R).', 'a\r\nb'),
     ('(?mR)^b', 'a\r\nb'),
     ('(?mR)$', 'a\r\n'),
@@ -55,12 +58,20 @@ for pattern in ['a', '(a)|(b)', '(a)(b)|(c)(d)', '(a)|b', 'a|(b)', '(b)*', '(b)+
 for args in [
     ['octal-find', r'\101', 'A'],
     ['term-find', '13', '(?m)^b', 'a\rb'],
+    ['term-find', '228', '(?m)a$', 'a中'],
+    ['nest-find', '0', 'a', 'a'],
+    ['nest-find', '1', 'ab', 'ab'],
     ['set-is-match-at', 'ba', '1', r'\ba'],
     ['set-matches-at', 'ba', '1', 'a', r'\ba'],
 ]:
     rust = subprocess.run([str(RUST), *args], env=ENV, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=15)
     cj = subprocess.run([str(CJ), *args], env=ENV, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=15)
     assert rust.returncode == 0 and cj.returncode == 0 and rust.stdout == cj.stdout, (args, rust.stdout, cj.stdout, rust.stderr, cj.stderr)
+    count += 1
+for args in [['nest-find', '0', 'ab', 'ab'], ['term-find', '228', '.', 'a']]:
+    rust = subprocess.run([str(RUST), *args], env=ENV, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=15)
+    cj = subprocess.run([str(CJ), *args], env=ENV, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=15)
+    assert rust.returncode != 0 and cj.returncode == 2 and not cj.stdout, (args, rust.returncode, cj.returncode, cj.stderr)
     count += 1
 invalid = ['(?-u).', '(?-u)\\W', '(?-u)[^a]', '(?-u)[é]', r'(?-u)\p{L}', r'\p{age=na}',
            r'\B{start}', r'\b{Start}', '(?=a)']

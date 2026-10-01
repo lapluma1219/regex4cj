@@ -57,8 +57,7 @@ func nulMatchingAndEscape(): Unit {
     @Expect(m.text, nul)
     @Expect(escape(nul), nul)
     @Expect(Regex(".").findAll(text).size, 3)
-    @Expect(isMetaCharacter(r'$'), true)
-    @Expect(isMetaCharacter(Rune(UInt32(0))), false)
+    @Expect(escape("a$b"), #"a\$b"#)
 }
 
 @Test
@@ -357,13 +356,72 @@ func searchFromOffsetAndConfiguredSyntax(): Unit {
     @Expect(RegexBuilder(#"\w"#).unicode(false).build().isMatch("Ω"), false)
     @Expect(requiredMatch(RegexBuilder("(?m)^b").lineTerminator(r'\r').build().find("a\rb")).start, 2)
     @Expect(RegexSetBuilder().unicode(false).pattern(#"\w"#).build().isMatch("Ω"), false)
+    @Expect(RegexBuilder("a").dfaSizeLimit(1).build().isMatch("a"), true)
+    @Expect(requiredMatch(RegexBuilder("a").dfaSizeLimit(0).build().find("xa")).start, 1)
+    @Expect(requiredMatch(RegexBuilder("a").dfaSizeLimit(64).build().find("xa")).start, 1)
+    var tooBig = false
+    try {
+        RegexBuilder(#"\w"#).sizeLimit(45000).build()
+    } catch (e: RegexError) {
+        tooBig = e.toString().contains("Compiled regex exceeds size limit of 45000 bytes.")
+    }
+    @Expect(tooBig, true)
+    @Expect(RegexBuilder(#"\w"#).sizeLimit(50044).build().isMatch("a"), true)
+    var syntax = false
+    try {
+        Regex("[z-a]")
+    } catch (e: RegexError) {
+        syntax = e.toString().contains("invalid character class range, the start must be <= the end")
+    }
+    @Expect(syntax, true)
+    @Expect(RegexBuilder("a").nestLimit(0).build().isMatch("a"), true)
     var rejected = false
     try {
-        RegexBuilder("a").dfaSizeLimit(1)
+        RegexBuilder("ab").nestLimit(0).build()
     } catch (_: Exception) {
         rejected = true
     }
     @Expect(rejected, true)
+    @Expect(requiredMatch(Regex("a**").find("a")).asStr(), "a")
+    @Expect(requiredMatch(Regex("a{ 2 }").find("aa")).asStr(), "aa")
+    @Expect(requiredMatch(RegexBuilder("(?m)a$").lineTerminator(Rune(UInt32(0xE4))).build().find("a中")).asStr(), "a")
+    rejected = false
+    try {
+        RegexBuilder(".").lineTerminator(Rune(UInt32(0xE4))).build()
+    } catch (_: Exception) {
+        rejected = true
+    }
+    @Expect(rejected, true)
+    let groups = Regex("(a)(b)?").captures("a")
+    match (groups) {
+        case Some(caps) =>
+            let iter = caps.iter()
+            let whole = iter.next()
+            @Expect(whole.done, false)
+            match (whole.value) {
+                case Some(item) => @Expect(item.text, "a")
+                case None => throw Exception("missing whole match")
+            }
+            let first = iter.next()
+            match (first.value) {
+                case Some(item) => @Expect(item.text, "a")
+                case None => throw Exception("missing first group")
+            }
+            let second = iter.next()
+            @Expect(second.done, false)
+            match (second.value) {
+                case None => ()
+                case Some(_) => throw Exception("unmatched group should be absent")
+            }
+            @Expect(iter.next().done, true)
+        case None => throw Exception("expected captures")
+    }
+    let slots = Array<Bool>(2, repeat: false)
+    let set = RegexSet(["a", "b"])
+    @Expect(set.matchesReadAt(slots, "a", 0), true)
+    @Expect(slots[0], true)
+    @Expect(set.matchesReadAt(slots, "c", 0), false)
+    @Expect(slots[0], true)
     rejected = false
     try {
         Regex("a").findAt("中", 1)
@@ -378,4 +436,62 @@ func searchFromOffsetAndConfiguredSyntax(): Unit {
         rejected = true
     }
     @Expect(rejected, true)
+}
+
+@Test
+func bytesRegexMatchesRawBytes(): Unit {
+    var rejected = false
+    try {
+        Regex("(?-u).")
+    } catch (_: Exception) {
+        rejected = true
+    }
+    @Expect(rejected, true)
+    rejected = false
+    try {
+        Regex(#"(?-u)\x80"#)
+    } catch (_: Exception) {
+        rejected = true
+    }
+    @Expect(rejected, true)
+    let dot = BytesRegex("(?-u).")
+    let raw = requiredBytes(dot.find([UInt8(255)]))
+    @Expect(raw.start, 0)
+    @Expect(raw.end, 1)
+    @Expect(raw.bytes[0], UInt8(255))
+    let han = BytesRegex(".").findAll([UInt8(0xE4), UInt8(0xB8), UInt8(0xAD)])
+    @Expect(han.size, 1)
+    @Expect(han[0].end, 3)
+    let split = BytesRegex("(?-u).").findAll([UInt8(0xE4), UInt8(0xB8), UInt8(0xAD)])
+    @Expect(split.size, 3)
+    @Expect(split[0].end, 1)
+    let built = BytesRegexBuilder("(?-u)[^a]").unicode(false).build()
+    @Expect(requiredBytes(built.find([UInt8(128)])).end, 1)
+    match (BytesRegex("(a)(b)?").captures([UInt8(97)])) {
+        case Some(caps) =>
+            @Expect(requiredBytes(caps.get(1)).bytes[0], UInt8(97))
+            match (caps.get(2)) {
+                case None => ()
+                case Some(_) => throw Exception("optional group should be absent")
+            }
+        case None => throw Exception("expected bytes captures")
+    }
+    let replaced = BytesRegex("(?-u).").replaceAll([UInt8(255), UInt8(97)], "X".toArray())
+    @Expect(replaced.size, 2)
+    @Expect(replaced[0], UInt8(88))
+    let parts = BytesRegex("a").split([UInt8(97), UInt8(98), UInt8(97)])
+    @Expect(parts.size, 3)
+    @Expect(parts[1].size, 1)
+    @Expect(parts[1][0], UInt8(98))
+    let set = BytesRegexSet(["(?-u).", "a"])
+    let hits = set.matches([UInt8(255)])
+    @Expect(hits.matched(0), true)
+    @Expect(hits.matched(1), false)
+}
+
+func requiredBytes(value: Option<BytesMatch>): BytesMatch {
+    match (value) {
+        case Some(item) => return item
+        case None => throw Exception("expected bytes match")
+    }
 }

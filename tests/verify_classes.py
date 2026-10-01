@@ -69,16 +69,14 @@ for p in invalid:
     assert rust.returncode != 0, ('fixture unexpectedly valid in Rust', p)
     result = invoke(CJ, 'find', p, '')
     assert result.returncode == 2 and result.stderr and not result.stdout, (p, result)
-unsupported = ['a{ 2 }', 'a{2}*']
-for p in unsupported:
-    assert invoke(RUST, 'find', p, 'aaa').returncode == 0, p
-    r = invoke(CJ, 'find', p, 'aaa')
-    assert r.returncode == 2 and r.stderr and not r.stdout, (p, r)
-limits = [('a{10001}', 'repetition count'), ('a{10000}a{10000}', 'NFA exceeds'),
-          ('(?:' * 40 + 'a' + ')' * 40 + '{1000}', 'work units'), ('[' * 65 + 'a' + ']' * 65, 'nesting')]
+for p in ['a{ 2 }', 'a{2}*']:
+    compare(p, 'aaa')
+    count += 1
+limits = [('[' * 251 + 'a' + ']' * 251, 'nested')]
 for p, message in limits:
     r = invoke(CJ, 'find', p, '')
     assert r.returncode == 2 and message in r.stderr.decode() and not r.stdout, (p, r)
+    assert invoke(RUST, 'find', p, '').returncode != 0, p
 
 for p, text in [('[a-c]{1000}', 'a' * 1000), ('[a-c]*z', 'a' * 8000),
                 ('(a?){0,20}b', 'a' * 500), ('a{0}b', 'ab')]:
@@ -87,7 +85,7 @@ for p, text in [('[a-c]{1000}', 'a' * 1000), ('[a-c]*z', 'a' * 8000),
 report = json.loads(REPORT.read_text())
 report.update({'class_repetition_differential_passed': count, 'class_repetition_golden_passed': len(golden),
                'class_repetition_api_checks_passed': 10, 'class_repetition_invalid_rejected': len(invalid),
-               'class_repetition_unsupported_rejected': len(unsupported),
+               'class_repetition_unsupported_rejected': 0,
                'class_repetition_resource_limits_checked': len(limits),
                'matching_scope': 'Unicode-scalar NFA with class set algebra and counted repetitions; no properties/flags/bytes/DFA'})
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')

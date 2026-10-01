@@ -81,6 +81,26 @@ func unicodeProperty(text: String, negated: Bool, caseInsensitive: Bool): CharSe
         }
     }
     let normalized = normalizePropertyName(name)
+    if (key != "") {
+        try {
+            return unicodePropertyValue(key, normalized, invert, caseInsensitive)
+        } catch (_: Exception) {
+            throw Exception("Unicode property value not found")
+        }
+    }
+    match (binaryProperty(normalized)) {
+        case Some(set) => return finishProperty(set, invert, caseInsensitive)
+        case None => ()
+    }
+    let set = if (isScriptName(normalized)) {
+        unicodeScript(normalized)
+    } else {
+        generalCategory(normalized)
+    }
+    return finishProperty(set, invert, caseInsensitive)
+}
+
+func unicodePropertyValue(key: String, normalized: String, invert: Bool, caseInsensitive: Bool): CharSet {
     if (key == "age") {
         return finishProperty(unicodeAge(normalized), invert, caseInsensitive)
     }
@@ -93,15 +113,9 @@ func unicodeProperty(text: String, negated: Bool, caseInsensitive: Bool): CharSe
     if (key == "sb" || key == "sentencebreak") {
         return finishProperty(sentenceBreak(normalized), invert, caseInsensitive)
     }
-    if (key == "") {
-        match (binaryProperty(normalized)) {
-            case Some(set) => return finishProperty(set, invert, caseInsensitive)
-            case None => ()
-        }
-    }
     let set = if (key == "scx" || key == "scriptextensions") {
         unicodeScript_Extensions(normalized)
-    } else if (key == "sc" || key == "script" || (key == "" && isScriptName(normalized))) {
+    } else if (key == "sc" || key == "script") {
         unicodeScript(normalized)
     } else {
         generalCategory(normalized)

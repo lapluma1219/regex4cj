@@ -75,7 +75,7 @@ report.update({'text_operations_differential_passed': count,
                'text_operations_golden_passed': len(golden),
                'text_operations_negative_limits_rejected': len(negative),
                'limitations': ['CLI cannot transport NUL', 'findAll/capturesAll/split are eager',
-                               'This is not full regex compatibility; see docs/milestone-5.md'],
+                               'This is not full regex compatibility'],
                'text_operations_scope': 'template/literal/callback replacement, expand, eager split and splitN'})
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n')
 print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)

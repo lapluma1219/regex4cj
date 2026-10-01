@@ -59,28 +59,19 @@ public class RegexSet {
         this(patterns, PatternOptions())
     }
     init(patterns: Array<String>, options: PatternOptions) {
-        if (patterns.size > 256) {
-            throw Exception("RegexSet exceeds 256 patterns")
-        }
-        var bytes: Int64 = 0
-        for (pattern in patterns) {
-            bytes += pattern.size
-        }
-        if (bytes > 65536) {
-            throw Exception("RegexSet exceeds 65536 pattern bytes")
-        }
         sourcePatterns = patterns.clone()
-        let compiler = Compiler()
-        let roots = ArrayList<Int64>()
+        let trees = ArrayList<Expr>()
         for (i in 0..patterns.size) {
-            try {
-                let tree = Parser(patterns[i], options).parse()
-                normalizeWidth(tree)
-                let accept = compiler.add(Op.Accept, i, -1)
-                roots.add(compiler.compile(tree, accept))
-            } catch (e: Exception) {
-                throw Exception("pattern ${i}: " + e.toString())
-            }
+            let tree = Parser(patterns[i], options).parse()
+            normalizeWidth(tree)
+            trees.add(tree)
+        }
+        ensureWithinSizeLimit(trees.toArray(), options.sizeLimit, false)
+        let compiler = Compiler(options.sizeLimit)
+        let roots = ArrayList<Int64>()
+        for (i in 0..trees.size) {
+            let accept = compiler.add(Op.Accept, i, -1)
+            roots.add(compiler.compile(trees[i], accept))
         }
         states = compiler.states.toArray()
         starts = roots.toArray()
@@ -133,6 +124,22 @@ public class RegexSet {
     }
     public func matchesAt(text: String, start: Int64): SetMatches {
         scan(text, start, false)
+    }
+    // Same as matchesAt, but sets matched slots to true and leaves the others
+    // untouched. Returns whether this search matched anything.
+    public func matchesReadAt(slots: Array<Bool>, text: String, start: Int64): Bool {
+        let found = scan(text, start, false)
+        var any = false
+        for (i in 0..starts.size) {
+            if (found.matched(i)) {
+                if (i >= slots.size) {
+                    throw Exception("match index out of bounds")
+                }
+                slots[i] = true
+                any = true
+            }
+        }
+        return any
     }
 
     private func closure(out: ArrayList<Int64>, seen: Array<Bool>, root: Int64, pos: Int64, input: Input): Unit {

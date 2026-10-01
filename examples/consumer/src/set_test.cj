@@ -98,11 +98,7 @@ func setInvalidIndexAndConstruction(): Unit {
         }
         @Expect(rejected, true)
     }
-    var rejected = false
-    try {
-        RegexSet(Array<String>(257, {_ => "a"}))
-    } catch (_: Exception) {
-        rejected = true
-    }
-    @Expect(rejected, true)
+    let many = RegexSet(Array<String>(257, {_ => "a"}))
+    @Expect(many.len(), 257)
+    @Expect(many.isMatch("a"), true)
 }

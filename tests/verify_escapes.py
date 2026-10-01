@@ -44,6 +44,6 @@ for mode,extra in [('first',()),('is-match',()),('split',()),('replace-all',('<$
 report = json.loads(REPORT.read_text())
 report.update({'scalar_escape_differential_passed': count, 'scalar_escape_invalid_rejected': len(invalid),
                'scalar_escape_golden_passed': len(golden), 'scalar_escape_api_checks_passed': 4,
-               'scalar_escape_scope': 'x/u/U fixed and braced scalar escapes plus a/f/v; see docs/milestone-7.md'})
+               'scalar_escape_scope': 'x/u/U fixed and braced scalar escapes plus a/f/v'})
 REPORT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps(report,ensure_ascii=False,indent=2),flush=True)

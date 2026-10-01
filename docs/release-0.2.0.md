@@ -4,7 +4,7 @@
 
 在 v0.1.0 可用字符串库上增加 RegexSet 的常用流程：多模式构建、是否命中、全部命中编号、结果查询、规则数量与原始模式查询。采用统一多模式 NFA 扫描，包含可配置分类演示、API 映射与源码包。不代表原版 RegexSet 的全部接口或整个上游仓库已移植。
 
-查看 [RegexSet 使用与契约](regex-set.md)，运行：
+RegexSet 的当前调用方式见 [当前接口](api.md)。当时的验收命令是：
 
 ```sh
 bash scripts/run.sh classify '订单 AB-123 需要退款，也需要开发票'

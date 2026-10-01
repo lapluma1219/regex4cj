@@ -65,12 +65,11 @@ for patterns, text, ids in golden:
     assert output.returncode == 0 and output.stdout == expected, (patterns, output)
 for patterns in [['ok', '('], ['ok', '(?=a)'], ['ok', r'\p{age=na}']]:
     r = invoke(CJ, 'set-matches', patterns, 'ok')
-    assert r.returncode == 2 and b'pattern 1:' in r.stderr and not r.stdout, r
-limits = [(['a'] * 257, b'256 patterns'), (['a' * 4000] * 17, b'65536 pattern bytes'),
-          (['a{10000}'] * 2, b'16384 states')]
-for patterns, message in limits:
-    r = invoke(CJ, 'set-matches', patterns, '')
-    assert r.returncode == 2 and message in r.stderr and not r.stdout, r
+    rust = invoke(RUST, 'set-matches', patterns, 'ok')
+    assert r.returncode == 2 and rust.returncode != 0 and r.stderr == rust.stderr and not r.stdout, (r.stderr, rust.stderr)
+compare(['a'] * 257, '')
+compare(['a{10000}', 'a{10000}'], 'a')
+count += 4
 
 # Process-level measurements include startup and compilation, not just search.
 measurements = []
@@ -121,6 +120,6 @@ benchmark = {
 REPORT.with_name('set-benchmark.json').write_text(json.dumps(benchmark, indent=2) + '\n')
 report = json.loads(REPORT.read_text())
 report.update(regex_set_differential_passed=count, regex_set_golden_passed=len(golden),
-              regex_set_error_checks_passed=6, regex_set_single_regex_baseline_cases=120)
+              regex_set_error_checks_passed=3, regex_set_single_regex_baseline_cases=120)
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 print('RegexSet differential passed:', count, flush=True)

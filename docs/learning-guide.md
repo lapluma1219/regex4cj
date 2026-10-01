@@ -73,8 +73,8 @@ flowchart LR
 
 ## 暂时不用学什么
 
-现在不用先补完 DFA、bytes 或全部 Rust trait，也不必读 13 个历史里程碑。先完成“能运行 → 能改输入 → 能调用库 → 能说清解析与匹配 → 能解释验证证据”。这就是本版的学习闭环；后续功能在实际需要时再加。
+现在不用先补完 DFA 或全部 Rust trait。先完成“能运行 → 能改输入 → 能调用库 → 能说清解析与匹配 → 能解释验证证据”。这就是本版的学习闭环。
 
 ## 新增的多规则能力
 
-现在可使用 RegexSet 给同一段文字按多条规则分类。先运行 `bash scripts/run.sh classify '订单 AB-123 退款'`，再阅读 [RegexSet 示例和契约](regex-set.md)。这与单个 Regex 返回匹配位置是不同的接口，不要将规则编号当作文本位置。
+现在可使用 RegexSet 给同一段文字按多条规则分类。先运行 `bash scripts/run.sh classify '订单 AB-123 退款'`，再阅读 [当前接口](api.md) 里的 RegexSet。规则编号不是文本位置。
