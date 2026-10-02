@@ -81,4 +81,4 @@
 
 上游验收数据已收录到 `tests/upstream/`，完整验收不需要外部上游检出。`verification-run.json` 记录提交号、环境及每个阶段；只有最终状态为 `passed` 才表示整次成功，`verification.json` 只是逐项计数。直接克隆 Git 仓库即可交付，压缩包是可选副本。具体操作见 [上手指南](getting-started.md)。
 
-[最新干净目录验收记录](acceptance/reproduction-2026-10-02.md) 说明了实际验收的提交，以及依赖下载缓存方面的限制。
+[干净目录复现记录](acceptance/reproduction-2026-10-02.md) 对应复现流程提交 `574e31a`，说明了依赖下载缓存方面的限制。之后的接口审计与三个行为修复对应提交 `904a6ac`，其完整验收40阶段全部通过，见 [接口审计结论](api-audit.md) 及 [运行记录](acceptance/api-audit-2026-10-02.json)。两份记录各自绑定提交，不能相互替代。
