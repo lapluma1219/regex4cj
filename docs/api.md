@@ -64,6 +64,7 @@ for (m in re.findAll("AB-123 CD-456")) {
 | `split(text)` | 按匹配分割，包含首尾空段 |
 | `splitN(text, limit)` | 最多 `limit` 段，最后一段保留剩余文本 |
 | `splitIter().next()` | 按需取下一段 |
+| `splitNIter(text, limit).next()` | 按需最多取 limit 段，最后一段保留剩余输入；0 无结果，1 返回原输入，负数抛异常 |
 
 次数或段数小于 0 时抛 `Exception`。`replaceN(..., 0, ...)` 是不限次数；`splitN(..., 0)` 返回空数组；`splitN(..., 1)` 只返回完整输入。
 
@@ -102,7 +103,13 @@ for (m in re.findAll("AB-123 CD-456")) {
 
 `BytesRegex` 和 `BytesRegexSet` 的输入、匹配片段和替换结果都是 `Array<UInt8>`，可以包含非法 UTF-8。查找、捕获、`expand`、替换、分割和 RegexSet 的命中查询都有对应方法。`(?-u).` 匹配一个字节。同一个模式在字符串 `Regex` 上构造失败。
 
-bytes 尚无 `findIter`、`capturesIter`、`splitIter` 或惰性 splitN，对应的 `findAll`、`capturesAll`、`split`、`splitN` 会先收集全部结果。没有 `capturesRead` 快捷方法，可用 `capturesReadAt(locations, bytes, 0)`。数组可修改，不具有 Rust 借用切片的类型约束。逐项能力与证据缺口见 [接口审计](api-audit.md)。
+bytes 已提供 `findIter`、`capturesIter`、`splitIter`、`splitNIter`，分别返回 `BytesMatchIter`、`BytesCaptureIter`、`BytesSplitIter`，以 `next()` 按需读取。原有 `findAll`、`capturesAll`、`split`、`splitN` 仍返回数组。新增 `capturesRead(locations, bytes)` 等同起点为0的 `capturesReadAt`。
+
+bytes 迭代器创建时复制输入数组作为快照，之后每次 `next()` 才执行下一次搜索，没有预先收集全部匹配。外部修改输入、修改已返回的匹配字节或交错使用两个迭代器，不会改变另一个游标的结果。结束后持续返回 None。输入快照仍需 O(输入字节数) 的空间，这不是流式文件读取，也不是 Rust 的零复制借用。
+
+字符串 `splitNIter` 创建时准备扫描信息，但不预先计算全部匹配。两类输入的 limit=0 不搜索，limit=1 直接返回原输入，达到段数限制后不再搜索剩余输入。专项证据见 [接口审计](api-audit.md)。
+
+例如 `Regex(",").splitNIter("a,b,c", 2)` 连续三次 `next()` 分别得到 `Some("a")`、`Some("b,c")`、`None`。`BytesRegex("(?-u).").findIter([UInt8(255), UInt8(97)])` 则按需返回 `[0,1)` 的字节255和 `[1,2)` 的字节97；只调用一次就不会搜索第二条。
 
 ## RegexSet
 

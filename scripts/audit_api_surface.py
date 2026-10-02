@@ -36,15 +36,11 @@ def mapping(scope, owner, method):
     status, note = '有样例验证', '证据仅覆盖所列测试的输入，不代表任意输入的等价证明。'
     evidence = ['tests/verify_api_contracts.py']
     if owner == 'Regex':
-        member = {'new':'init', 'find_iter':'findAll' if byte else 'findIter',
-                  'captures_iter':'capturesAll' if byte else 'capturesIter',
-                  'split':'split' if byte else 'splitIter', 'splitn':'splitN',
+        member = {'new':'init', 'find_iter':'findIter',
+                  'captures_iter':'capturesIter',
+                  'split':'splitIter', 'splitn':'splitNIter',
                   'replacen':'replaceN', 'read_captures_at':'capturesReadAt',
                   'locations':'captureLocations'}.get(method, member)
-        if method in ['find_iter','captures_iter','split'] and byte or method == 'splitn':
-            status, note = '有明确差异', '仅有收集全部结果的数组接口；缺少对应按需迭代能力。'
-        if byte and method == 'captures_read':
-            member, status, note = 'capturesReadAt', '有明确差异', '没有无起点快捷方法；调用 capturesReadAt(..., 0) 可完成同样搜索。'
         if method in ['read_captures_at','locations']:
             status, note = '有明确差异', '上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。'
         if method in ['replace','replace_all','replacen']:
@@ -58,23 +54,23 @@ def mapping(scope, owner, method):
         if method in ['capture_names','captures_len','static_captures_len','as_str','capture_locations']:
             evidence = ['examples/consumer/src/api_test.cj', 'tests/verify_captures.py']
             if byte and method in ['static_captures_len','capture_names','as_str']:
-                status, note, evidence = '证据待补', '存在对应代码，但缺少该 bytes 方法的专用对照用例。', []
+                status, note, evidence = '有样例验证', 'bytes metadata 已有专项样例对照。', ['tests/verify_api_contracts.py']
         if byte and method in ['find_at','is_match_at','captures_at']:
-            status, note, evidence = '证据待补', '零起点由上层调用覆盖；非零原始字节起点还缺专门组合测试。', []
+            status, note, evidence = '有样例验证', '覆盖原始字节、NUL、非法 UTF-8 和逐字节非零起点。', ['tests/verify_api_contracts.py']
     elif owner == 'Match':
         member = {'as_bytes':'bytes','range':'start'}.get(method, member)
         if method in ['range','as_bytes','start','end']:
             status, note = '有明确差异', '使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。'
         if method in ['is_empty','len']:
             evidence = ['examples/consumer/src/api_test.cj']
-            if byte: status, note, evidence = '证据待补', '已实现，缺少 bytes 结果辅助方法专用断言。', []
+            if byte: status, note, evidence = '有样例验证', 'bytes 空匹配和长度有专项测试。', ['tests/verify_api_contracts.py','examples/consumer/src/api_test.cj']
     elif owner == 'Captures':
         member = {'len':'size'}.get(method, member)
         evidence = ['tests/verify_captures.py','tests/verify_text_ops.py'] if not byte else ['tests/verify_bytes.py','examples/consumer/src/api_test.cj']
         if method in ['extract','expand','len']:
             status, note = '有明确差异', 'extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。'
         if byte and method in ['extract','iter']:
-            status, note, evidence = '证据待补', '代码存在；缺少 bytes 组迭代/固定组提取的独立差分证据。', []
+            status, note, evidence = '有样例验证', '有 bytes 固定组提取和组迭代差分，及缺席组/结束/变长拒绝的原生测试。', ['tests/verify_api_contracts.py','examples/consumer/src/api_test.cj']
     elif owner == 'CaptureLocations':
         member = {'len':'size','pos':'get'}.get(method, member)
         if method != 'get': status, note = '有明确差异', 'len 对应 size 字段；doc(hidden) pos 别名对应 get。'
@@ -84,7 +80,7 @@ def mapping(scope, owner, method):
         if method in ['empty','read_matches_at']:
             status, note = '有明确差异', 'empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。'
         if byte and method in ['matches_at','is_match_at']:
-            status, note, evidence = '证据待补', '已有实现，非零 byte 起点的多规则组合还需专用对照。', []
+            status, note, evidence = '有样例验证', 'bytes Set 非零起点和原始字节组合已专项对照。', ['tests/verify_api_contracts.py']
     elif owner == 'SetMatches':
         member = 'indices' if method == 'iter' else member
         evidence = ['tests/verify_sets.py','examples/consumer/src/set_test.cj']
@@ -102,7 +98,7 @@ def mapping(scope, owner, method):
         elif method == 'size_limit':
             status, note = '有明确差异', '模拟上游 Thompson 构造预算并通过部分阈值对照；不保证所有启发式/限额接受边界相等。'
         elif byte and method not in ['new','build','case_insensitive','unicode'] or owner == 'RegexSetBuilder' and method not in ['new','build','case_insensitive']:
-            status, note, evidence = '证据待补', '复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。', []
+            status, note, evidence = '有样例验证', '四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。', ['tests/verify_api_contracts.py']
         elif method in ['new','build','case_insensitive']:
             evidence = ['tests/verify_api_contracts.py']
     return cjtype, member, status, note, evidence

@@ -692,6 +692,35 @@ public class Regex {
             }
         )
     }
+    public func splitNIter(text: String, limit: Int64): SplitIter {
+        if (limit < 0) {
+            throw Exception("split limit must be nonnegative")
+        }
+        let matches = findIter(text)
+        let count = [0]
+        let last = [0]
+        let done = [limit == 0]
+        SplitIter(
+            {
+                =>
+                    if (done[0]) {
+                        return None
+                    }
+                    if (count[0] < limit - 1) {
+                        match (matches.next()) {
+                            case Some(hit) =>
+                                let part = text[last[0]..hit.start]
+                                last[0] = hit.end
+                                count[0]++
+                                return Some(part)
+                            case None => ()
+                        }
+                    }
+                    done[0] = true
+                    return Some(text[last[0]..text.size])
+            }
+        )
+    }
     public func captureLocations(): CaptureLocations {
         CaptureLocations(groupNames.size)
     }

@@ -8,8 +8,9 @@
 
 - [逐项对应表](api-audit-methods.md)：170 个公开固有方法，包括 doc(hidden) 历史别名，逐行映射仓颉代码和相关测试。
 - [机器可读清单](api-audit-inventory.json)：原始文件哈希、上游提交、公开类型声明、方法位置、状态及证据文件。
-- [接口契约差分](../tests/verify_api_contracts.py)：95 个具名辅助接口结果与 513 次起点差分检查。Rust 和仓颉分别调用真实接口，输出协议包含 NUL/原始字节的十六进制表示。
+- [接口契约差分](../tests/verify_api_contracts.py)：2148 个具名辅助接口结果与 513 次字符串起点差分检查。其中包括1400项迭代结果、384项Builder配置模式组合、260项bytes起点结果。Rust 和仓颉分别调用真实接口，输出协议包含 NUL/原始字节的十六进制表示。
 - [Rust 探针](../oracle/src/api_audit.rs)与[仓颉探针](../cli/src/api_audit.cj)：每个结果的生成操作都可直接阅读；`raw api-audit` 是开发验收入口，不是库的新功能。
+- 迭代器和 Builder 组合的扩展操作分别在 [Rust 扩展探针](../oracle/src/lazy_audit.rs) 与 [仓颉扩展探针](../cli/src/lazy_audit.cj)。输入配置相同，期望结果由固定 Rust 独立计算，不使用仓颉结果生成预期。
 - [原有完整上游套件](../tests/verify_upstream_suite.py)、其他差分脚本和原生测试继续保留。
 
 状态“有样例验证”只表示存在对应实现及相关输入的证据，不表示所有边界都验证。“证据待补”表示代码存在但尚缺专门对照；“有明确差异”表示需要替代调用或功能/资源约定有区别。完全缺少的能力列在下文，不能把它们算成已实现。170 是固有方法清单大小，不是完成百分比；宏、trait、默认 trait 方法和特性开关不能靠数 `pub fn` 覆盖。
@@ -26,7 +27,7 @@
 
 A3 同时检查 find/isMatch/captures/shortest/capturesRead 和 Set；对二、三、四字节字符的每一个字节位置、ASCII/Unicode 词边界、绝对锚点与空模式进行对照。不能用截取子串代替起点搜索，例如 `\ba` 在 `中a` 上仍需看到前面的中文是 Unicode 单词字符。
 
-原有原生测试曾把“失败后保留位置”和“字符内部起点报错”当作预期。本轮依据固定 Rust 实测修正了这两处测试；测试数量仍为29，另新增独立契约差分阶段。修复前后的行为及上游依据明确记录于此，不用修改预期掩盖未经验证的差异。
+原有原生测试曾把“失败后保留位置”和“字符内部起点报错”当作预期。初次审计依据固定 Rust 实测修正了这两处测试，当时原生测试为29项；本次补齐迭代器又新增2项，当前为31项。修复前后的行为及上游依据明确记录于此，不用修改预期掩盖未经验证的差异。
 
 此外，修正 `shortestMatch` 的文档：上游只承诺引擎确认匹配时的终点，明确允许不同内部引擎/启发式产生不同终点，不保证全局最短。这类允许的差异不能据此判定为兼容缺陷。
 
@@ -36,10 +37,10 @@ A3 同时检查 find/isMatch/captures/shortest/capturesRead 和 Set；对二、�
 |---|---|---|
 | 根级 `escape` | `escape`；返回转义文本 | `tests/verify.py`，原生 NUL 用例 |
 | `regex!`、`bytes::regex!` | 尚无宏或同等“每个调用点编译一次”的便捷封装；可由应用自行持有已编译实例 | 不能把普通构造器当作宏缓存已移植 |
-| `Matches` / `CaptureMatches` | 字符串 `MatchIter` / `CaptureIter.next()`；bytes 只有 eager 数组 | 字符串已测空匹配、结束后多次 next；bytes 惰性类型尚缺 |
-| `Split` / `SplitN` | 字符串 splitIter 存在；字符串 splitN、全部 bytes 分割返回数组 | 对应按需限制分割尚缺；splitN 的结果由原有测试验证 |
+| `Matches` / `CaptureMatches` | 字符串 `MatchIter` / `CaptureIter.next()`；bytes 对应 `BytesMatchIter` / `BytesCaptureIter.next()` | 两类均有空匹配、结束后多次 next 对照；bytes 另有快照和独立游标原生验证 |
+| `Split` / `SplitN` | 两类输入均有 splitIter/splitNIter；原有数组接口保留 | 0/1/2/5限制、尾空段、连续结束有对照；负数限制有原生测试 |
 | `CaptureNames` | `captureNames()` 返回数组 | 名称/编号结果有测试，无上游命名迭代器类型 |
-| `SubCaptureMatches` | `GroupIter` / `BytesGroupIter`，用 done/value 区分结束和未参与 | 字符串有原生与差分；bytes 独立契约仍待补 |
+| `SubCaptureMatches` | `GroupIter` / `BytesGroupIter`，用 done/value 区分结束和未参与 | 两类均有专项证据；bytes 包括缺席组、固定组提取和变长提取拒绝 |
 | `SetMatchesIter` / `SetMatchesIntoIter` | `indices()` 升序数组 | 结果内容有测试；没有独立迭代器、反向 next_back |
 | `Iterator` / `FusedIterator` | 仅部分显式 next；无对应 Rust trait | 字符串连续 None 行为有回归；终止后内部不再搜索的效率未承诺 |
 | `ExactSizeIterator` / `DoubleEndedIterator` | 没有对应迭代器契约 | 数组可自行按大小/逆序访问，但不是同等按需接口 |
@@ -58,9 +59,9 @@ A3 同时检查 find/isMatch/captures/shortest/capturesRead 和 Set；对二、�
 
 ## 已确认的差异及优先级
 
-1. **bytes 惰性接口、惰性 splitN 缺失。** 现在可用数组取得结果，但不能在大量匹配中只取前几条而避免计算余下部分。这是实际能力差别，不只是命名区别。建议下一轮优先补，不在本轮突然扩大实现。
+1. **已补齐：bytes 惰性接口、两类输入的惰性 splitN。** 匹配由 next 按需执行，不包装预先收集的数组；bytes 创建时复制输入。输入快照和字符串扫描信息仍有初始化成本，不承诺零复制。
 2. **Builder 和资源预算不是完整引擎等价。** 四种 Builder 大体有对应选项；`dfaSizeLimit` 不是原版 DFA 缓存预算。`sizeLimit` 模拟构造预算，已有阈值样例，不保证所有启发式接受边界。更换引擎是后续工作，不以增加空壳配置接口宣称完成。
-3. **bytes 辅助方法与部分 Builder 组合证据不足。** 非零原始字节起点、bytes 捕获 metadata/extract/组迭代，尤其 bytes Set Builder 的多选项组合，需要专门差分。对应表将其标为待补，不用字符串共享实现作为完整证明。
+3. **已补证据：bytes 辅助方法与四种 Builder 组合。** bytes 非零起点、捕获 metadata/extract/组迭代均加入专项验证。四种Builder每种显式设置全部选项，16组配置乘6种模式共384项，比较编译接受/拒绝及两段输入的命中结果。不把统一输出error当作错误文本完全等价的证明。
 4. **内存及所有权契约不同。** 返回数组/新文本，不复刻 Rust 借用生命周期、Cow、Iterator trait；CaptureLocations 复用位置容器，搜索仍可能分配新数组。不能声称分配行为相同。
 5. **便利接口与语言集成缺失。** 宏、clone、Debug、索引等不影响常见手动调用，但仍应按上述表述介绍。
 
@@ -82,7 +83,7 @@ python3 scripts/audit_api_surface.py --upstream /路径/regex
 
 清单检查只验证声明/链接是否存在，不验证行为；契约差分与完整套件负责执行验证。本轮结束条件是：约定公开范围可逐项归类，真实缺陷有最小反例及修复回归，未覆盖处有明确清单，完整验收成功并绑定提交。不是要求本轮实现全部剩余能力。
 
-## 本轮实际验收结果
+## 初次审计验收结果（历史提交）
 
 实现与审计提交：`904a6acab6d88b3440924079b802b439d97e5baa`。在工作区干净时执行完整 `verify`，40 个阶段全部成功，最终状态为 `passed`。详见 [完整验收记录](acceptance/api-audit-2026-10-02.json)。本节与记录在后续文档提交保存，没有修改被验收的实现。
 
@@ -93,3 +94,15 @@ python3 scripts/audit_api_surface.py --upstream /路径/regex
 - 13 个单模式演示与 7 个分类场景通过。
 
 本次沿用已安装工具链及 Cargo 依赖缓存，并设置 `CARGO_NET_OFFLINE=true`；不是新的异机或首次下载验收。报告时间跨度包含本次运行的实际墙钟时间，不可拿来作为正则引擎性能数据。上述有限验证不消除本文列出的缺口，也不证明任意输入完全等价。
+
+## 惰性接口与专项验证补齐结果
+
+后续本地工作已完成三项约定：bytes 的 findIter/capturesIter/splitIter，两类输入的 splitNIter，以及原先列出的 bytes 辅助接口和 Builder 组合专项验证。另提供 bytes capturesRead 快捷入口，保留原有数组接口。
+
+完整 verify 的40个阶段全部通过：31项仓颉原生测试、3项Rust测试、4项Python测试、3213条上游用例、2148项接口契约结果和513次字符串起点差分；13个单模式演示与7个分类演示通过。2148项契约结果包括1400项迭代结果、384项Builder配置模式组合和260项bytes起点结果，其余为既有及新增辅助接口结果。
+
+新增原生测试检查输入快照、返回值修改、独立游标、连续结束、负数限制和可变捕获组提取拒绝。源码复核确认迭代器没有调用 eager 数组方法，每次 next 才搜索，splitN 达到限制不再搜索。bytes 输入快照仍需要线性空间；字符串仍需准备字符偏移，不宣称零复制或输入读取本身完全惰性。
+
+完整证据见 [验收记录与源码哈希](acceptance/lazy-interfaces-2026-10-02.json)。本次先验证工作区修改，最后才提交，因此原始报告的 dirty 为 true、commit 为修改前基线；额外保留实际验收的源码SHA-256，提交前逐项核对一致。没有将旧提交伪装成此次实现。沿用已安装环境与Cargo缓存，不是异机验收。
+
+宏、语言trait、DFA资源语义、零复制和并发保证等仍按前述差异说明；本次补齐三项不等于这些额外能力也已实现。

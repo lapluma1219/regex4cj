@@ -1,5 +1,6 @@
 mod suite;
 mod api_audit;
+mod lazy_audit;
 
 use regex::Regex;
 fn hex_text(text: &str) -> String {

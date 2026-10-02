@@ -365,7 +365,7 @@
       "cangjie": "Regex.captures",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 779
+        "line": 808
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -408,13 +408,13 @@
       "id": "string::Regex::splitn",
       "upstream_file": "src/regex/string.rs",
       "upstream_line": 677,
-      "cangjie": "Regex.splitN",
+      "cangjie": "Regex.splitNIter",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 867
+        "line": 695
       },
-      "status": "有明确差异",
-      "note": "仅有收集全部结果的数组接口；缺少对应按需迭代能力。",
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
       "evidence": [
         "tests/verify_api_contracts.py"
       ]
@@ -426,7 +426,7 @@
       "cangjie": "Regex.replace",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 806
+        "line": 835
       },
       "status": "有样例验证",
       "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
@@ -442,7 +442,7 @@
       "cangjie": "Regex.replaceAll",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 809
+        "line": 838
       },
       "status": "有样例验证",
       "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
@@ -458,7 +458,7 @@
       "cangjie": "Regex.replaceN",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 813
+        "line": 842
       },
       "status": "有样例验证",
       "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
@@ -549,7 +549,7 @@
       "cangjie": "Regex.capturesRead",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 698
+        "line": 727
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -564,7 +564,7 @@
       "cangjie": "Regex.capturesReadAt",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 701
+        "line": 730
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -579,7 +579,7 @@
       "cangjie": "Regex.capturesReadAt",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 701
+        "line": 730
       },
       "status": "有明确差异",
       "note": "上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。",
@@ -610,7 +610,7 @@
       "cangjie": "Regex.captureNames",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 754
+        "line": 783
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -626,7 +626,7 @@
       "cangjie": "Regex.capturesLen",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 751
+        "line": 780
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -658,7 +658,7 @@
       "cangjie": "Regex.captureLocations",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 695
+        "line": 724
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -674,7 +674,7 @@
       "cangjie": "Regex.captureLocations",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 695
+        "line": 724
       },
       "status": "有明确差异",
       "note": "上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。",
@@ -981,13 +981,13 @@
       "id": "bytes::Regex::find_iter",
       "upstream_file": "src/regex/bytes.rs",
       "upstream_line": 315,
-      "cangjie": "BytesRegex.findAll",
+      "cangjie": "BytesRegex.findIter",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 148
+        "line": 172
       },
-      "status": "有明确差异",
-      "note": "仅有收集全部结果的数组接口；缺少对应按需迭代能力。",
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
       "evidence": [
         "tests/verify_api_contracts.py"
       ]
@@ -999,7 +999,7 @@
       "cangjie": "BytesRegex.captures",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 273
+        "line": 356
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1012,13 +1012,13 @@
       "id": "bytes::Regex::captures_iter",
       "upstream_file": "src/regex/bytes.rs",
       "upstream_line": 473,
-      "cangjie": "BytesRegex.capturesAll",
+      "cangjie": "BytesRegex.capturesIter",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 282
+        "line": 182
       },
-      "status": "有明确差异",
-      "note": "仅有收集全部结果的数组接口；缺少对应按需迭代能力。",
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
       "evidence": [
         "tests/verify_api_contracts.py"
       ]
@@ -1027,13 +1027,13 @@
       "id": "bytes::Regex::split",
       "upstream_file": "src/regex/bytes.rs",
       "upstream_line": 615,
-      "cangjie": "BytesRegex.split",
+      "cangjie": "BytesRegex.splitIter",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 350
+        "line": 192
       },
-      "status": "有明确差异",
-      "note": "仅有收集全部结果的数组接口；缺少对应按需迭代能力。",
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
       "evidence": [
         "tests/verify_api_contracts.py"
       ]
@@ -1042,13 +1042,13 @@
       "id": "bytes::Regex::splitn",
       "upstream_file": "src/regex/bytes.rs",
       "upstream_line": 690,
-      "cangjie": "BytesRegex.splitN",
+      "cangjie": "BytesRegex.splitNIter",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 353
+        "line": 195
       },
-      "status": "有明确差异",
-      "note": "仅有收集全部结果的数组接口；缺少对应按需迭代能力。",
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
       "evidence": [
         "tests/verify_api_contracts.py"
       ]
@@ -1060,7 +1060,7 @@
       "cangjie": "BytesRegex.replace",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 325
+        "line": 408
       },
       "status": "有样例验证",
       "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
@@ -1076,7 +1076,7 @@
       "cangjie": "BytesRegex.replaceAll",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 328
+        "line": 411
       },
       "status": "有样例验证",
       "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
@@ -1092,7 +1092,7 @@
       "cangjie": "BytesRegex.replaceN",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 331
+        "line": 414
       },
       "status": "有样例验证",
       "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
@@ -1136,9 +1136,11 @@
         "file": "port/src/bytes.cj",
         "line": 133
       },
-      "status": "证据待补",
-      "note": "零起点由上层调用覆盖；非零原始字节起点还缺专门组合测试。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "覆盖原始字节、NUL、非法 UTF-8 和逐字节非零起点。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::Regex::find_at",
@@ -1149,9 +1151,11 @@
         "file": "port/src/bytes.cj",
         "line": 127
       },
-      "status": "证据待补",
-      "note": "零起点由上层调用覆盖；非零原始字节起点还缺专门组合测试。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "覆盖原始字节、NUL、非法 UTF-8 和逐字节非零起点。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::Regex::captures_at",
@@ -1160,23 +1164,25 @@
       "cangjie": "BytesRegex.capturesAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 276
+        "line": 359
       },
-      "status": "证据待补",
-      "note": "零起点由上层调用覆盖；非零原始字节起点还缺专门组合测试。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "覆盖原始字节、NUL、非法 UTF-8 和逐字节非零起点。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::Regex::captures_read",
       "upstream_file": "src/regex/bytes.rs",
       "upstream_line": 1251,
-      "cangjie": "BytesRegex.capturesReadAt",
+      "cangjie": "BytesRegex.capturesRead",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 301
+        "line": 228
       },
-      "status": "有明确差异",
-      "note": "没有无起点快捷方法；调用 capturesReadAt(..., 0) 可完成同样搜索。",
+      "status": "有样例验证",
+      "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
       "evidence": [
         "tests/verify_api_contracts.py"
       ]
@@ -1188,7 +1194,7 @@
       "cangjie": "BytesRegex.capturesReadAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 301
+        "line": 384
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1203,7 +1209,7 @@
       "cangjie": "BytesRegex.capturesReadAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 301
+        "line": 384
       },
       "status": "有明确差异",
       "note": "上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。",
@@ -1220,9 +1226,11 @@
         "file": "port/src/bytes.cj",
         "line": 96
       },
-      "status": "证据待补",
-      "note": "存在对应代码，但缺少该 bytes 方法的专用对照用例。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "bytes metadata 已有专项样例对照。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::Regex::capture_names",
@@ -1233,9 +1241,11 @@
         "file": "port/src/bytes.cj",
         "line": 109
       },
-      "status": "证据待补",
-      "note": "存在对应代码，但缺少该 bytes 方法的专用对照用例。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "bytes metadata 已有专项样例对照。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::Regex::captures_len",
@@ -1262,9 +1272,11 @@
         "file": "port/src/bytes.cj",
         "line": 102
       },
-      "status": "证据待补",
-      "note": "存在对应代码，但缺少该 bytes 方法的专用对照用例。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "bytes metadata 已有专项样例对照。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::Regex::capture_locations",
@@ -1336,9 +1348,12 @@
         "file": "port/src/bytes.cj",
         "line": 16
       },
-      "status": "证据待补",
-      "note": "已实现，缺少 bytes 结果辅助方法专用断言。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "bytes 空匹配和长度有专项测试。",
+      "evidence": [
+        "tests/verify_api_contracts.py",
+        "examples/consumer/src/api_test.cj"
+      ]
     },
     {
       "id": "bytes::Match::len",
@@ -1349,9 +1364,12 @@
         "file": "port/src/bytes.cj",
         "line": 19
       },
-      "status": "证据待补",
-      "note": "已实现，缺少 bytes 结果辅助方法专用断言。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "bytes 空匹配和长度有专项测试。",
+      "evidence": [
+        "tests/verify_api_contracts.py",
+        "examples/consumer/src/api_test.cj"
+      ]
     },
     {
       "id": "bytes::Match::range",
@@ -1390,7 +1408,7 @@
       "cangjie": "BytesCaptures.get",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 525
+        "line": 608
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1406,7 +1424,7 @@
       "cangjie": "BytesCaptures.getMatch",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 519
+        "line": 602
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1422,7 +1440,7 @@
       "cangjie": "BytesCaptures.name",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 560
+        "line": 643
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1438,11 +1456,14 @@
       "cangjie": "BytesCaptures.extract",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 534
+        "line": 617
       },
-      "status": "证据待补",
-      "note": "代码存在；缺少 bytes 组迭代/固定组提取的独立差分证据。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "有 bytes 固定组提取和组迭代差分，及缺席组/结束/变长拒绝的原生测试。",
+      "evidence": [
+        "tests/verify_api_contracts.py",
+        "examples/consumer/src/api_test.cj"
+      ]
     },
     {
       "id": "bytes::Captures::expand",
@@ -1451,7 +1472,7 @@
       "cangjie": "BytesCaptures.expand",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 572
+        "line": 655
       },
       "status": "有明确差异",
       "note": "extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。",
@@ -1467,11 +1488,14 @@
       "cangjie": "BytesCaptures.iter",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 531
+        "line": 614
       },
-      "status": "证据待补",
-      "note": "代码存在；缺少 bytes 组迭代/固定组提取的独立差分证据。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "有 bytes 固定组提取和组迭代差分，及缺席组/结束/变长拒绝的原生测试。",
+      "evidence": [
+        "tests/verify_api_contracts.py",
+        "examples/consumer/src/api_test.cj"
+      ]
     },
     {
       "id": "bytes::Captures::len",
@@ -1480,7 +1504,7 @@
       "cangjie": "BytesCaptures.size",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 512
+        "line": 595
       },
       "status": "有明确差异",
       "note": "extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。",
@@ -1808,7 +1832,7 @@
       "cangjie": "BytesRegexSet.init",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 692
+        "line": 775
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1825,7 +1849,7 @@
       "cangjie": "BytesRegexSet.init",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 692
+        "line": 775
       },
       "status": "有明确差异",
       "note": "empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。",
@@ -1842,7 +1866,7 @@
       "cangjie": "BytesRegexSet.isMatch",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 751
+        "line": 834
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1859,11 +1883,13 @@
       "cangjie": "BytesRegexSet.isMatchAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 754
+        "line": 837
       },
-      "status": "证据待补",
-      "note": "已有实现，非零 byte 起点的多规则组合还需专用对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "bytes Set 非零起点和原始字节组合已专项对照。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexSet::matches",
@@ -1872,7 +1898,7 @@
       "cangjie": "BytesRegexSet.matches",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 757
+        "line": 840
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1889,11 +1915,13 @@
       "cangjie": "BytesRegexSet.matchesAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 760
+        "line": 843
       },
-      "status": "证据待补",
-      "note": "已有实现，非零 byte 起点的多规则组合还需专用对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "bytes Set 非零起点和原始字节组合已专项对照。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexSet::matches_read_at",
@@ -1902,7 +1930,7 @@
       "cangjie": "BytesRegexSet.matchesReadAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 763
+        "line": 846
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1919,7 +1947,7 @@
       "cangjie": "BytesRegexSet.matchesReadAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 763
+        "line": 846
       },
       "status": "有明确差异",
       "note": "empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。",
@@ -1936,7 +1964,7 @@
       "cangjie": "BytesRegexSet.len",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 742
+        "line": 825
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1953,7 +1981,7 @@
       "cangjie": "BytesRegexSet.isEmpty",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 745
+        "line": 828
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1970,7 +1998,7 @@
       "cangjie": "BytesRegexSet.patterns",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 748
+        "line": 831
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -2333,9 +2361,11 @@
         "file": "port/src/builder.cj",
         "line": 115
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "string::RegexSetBuilder::case_insensitive",
@@ -2361,9 +2391,11 @@
         "file": "port/src/builder.cj",
         "line": 95
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "string::RegexSetBuilder::dot_matches_new_line",
@@ -2374,9 +2406,11 @@
         "file": "port/src/builder.cj",
         "line": 99
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "string::RegexSetBuilder::crlf",
@@ -2387,9 +2421,11 @@
         "file": "port/src/builder.cj",
         "line": 111
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "string::RegexSetBuilder::line_terminator",
@@ -2417,9 +2453,11 @@
         "file": "port/src/builder.cj",
         "line": 103
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "string::RegexSetBuilder::ignore_whitespace",
@@ -2430,9 +2468,11 @@
         "file": "port/src/builder.cj",
         "line": 107
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "string::RegexSetBuilder::octal",
@@ -2443,9 +2483,11 @@
         "file": "port/src/builder.cj",
         "line": 119
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "string::RegexSetBuilder::size_limit",
@@ -2490,9 +2532,11 @@
         "file": "port/src/builder.cj",
         "line": 130
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexBuilder::new",
@@ -2565,9 +2609,11 @@
         "file": "port/src/builder.cj",
         "line": 169
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexBuilder::dot_matches_new_line",
@@ -2578,9 +2624,11 @@
         "file": "port/src/builder.cj",
         "line": 173
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexBuilder::crlf",
@@ -2591,9 +2639,11 @@
         "file": "port/src/builder.cj",
         "line": 185
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexBuilder::line_terminator",
@@ -2621,9 +2671,11 @@
         "file": "port/src/builder.cj",
         "line": 177
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexBuilder::ignore_whitespace",
@@ -2634,9 +2686,11 @@
         "file": "port/src/builder.cj",
         "line": 181
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexBuilder::octal",
@@ -2647,9 +2701,11 @@
         "file": "port/src/builder.cj",
         "line": 193
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexBuilder::size_limit",
@@ -2694,9 +2750,11 @@
         "file": "port/src/builder.cj",
         "line": 204
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexSetBuilder::new",
@@ -2739,9 +2797,11 @@
         "file": "port/src/builder.cj",
         "line": 265
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexSetBuilder::case_insensitive",
@@ -2767,9 +2827,11 @@
         "file": "port/src/builder.cj",
         "line": 245
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexSetBuilder::dot_matches_new_line",
@@ -2780,9 +2842,11 @@
         "file": "port/src/builder.cj",
         "line": 249
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexSetBuilder::crlf",
@@ -2793,9 +2857,11 @@
         "file": "port/src/builder.cj",
         "line": 261
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexSetBuilder::line_terminator",
@@ -2823,9 +2889,11 @@
         "file": "port/src/builder.cj",
         "line": 253
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexSetBuilder::ignore_whitespace",
@@ -2836,9 +2904,11 @@
         "file": "port/src/builder.cj",
         "line": 257
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexSetBuilder::octal",
@@ -2849,9 +2919,11 @@
         "file": "port/src/builder.cj",
         "line": 269
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     },
     {
       "id": "bytes::RegexSetBuilder::size_limit",
@@ -2896,9 +2968,11 @@
         "file": "port/src/builder.cj",
         "line": 280
       },
-      "status": "证据待补",
-      "note": "复用选项实现；需要对该 Builder 方法补显式调用及选项组合对照。",
-      "evidence": []
+      "status": "有样例验证",
+      "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
+      "evidence": [
+        "tests/verify_api_contracts.py"
+      ]
     }
   ],
   "additional_surface": "Root escape, macros, traits and feature gates are classified in docs/api-audit.md; these method counts are NOT a completion percentage."

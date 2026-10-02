@@ -7,6 +7,7 @@ fn loc(m: Option<(usize,usize)>) -> String {
     m.map(|(a,b)|format!("{a}:{b}")).unwrap_or("none".into())
 }
 pub fn run() {
+    crate::lazy_audit::run();
     for (id, pattern, text) in [("empty", "", "中"), ("greedy", "a*", "a中"), ("miss", "z", "中")] {
         let re=Regex::new(pattern).unwrap(); let mut it=re.find_iter(text);
         for i in 0..5 { println!("iter-{id}-{i}\t{}",span(it.next())); }

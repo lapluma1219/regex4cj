@@ -22,7 +22,7 @@ bash scripts/run.sh example
 bash scripts/run.sh find '\p{Han}+' 'A中文α'
 bash scripts/run.sh replace-all '(?<prefix>[A-Z]{2})-[0-9]{3}' 'AB-123 CD-456' '${prefix}-***'
 
-# 快速验收：29 项仓颉原生测试 + 20 个演示场景，不需要 Rust
+# 快速验收：31 项仓颉原生测试 + 20 个演示场景，不需要 Rust
 bash scripts/run.sh check
 
 # 完整验收：另需 Git、Rust/Cargo；首次获取依赖需要网络
