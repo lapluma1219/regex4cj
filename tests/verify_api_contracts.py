@@ -19,7 +19,7 @@ def batch(binary):
 
 
 rust, cj = batch(RUST), batch(CJ)
-assert len(rust) == 2148, 'contract inventory changed; review expected coverage'
+assert len(rust) == 2414, 'contract inventory changed; review expected coverage'
 assert rust.keys() == cj.keys(), (rust.keys() - cj.keys(), cj.keys() - rust.keys())
 failures = [{'case': key, 'rust': value, 'cangjie': cj[key]}
             for key, value in rust.items() if value != cj[key]]
@@ -42,7 +42,10 @@ for text in ['éa', '中a', '🙂a', '中']:
                 pattern, text, start, rust_set.stdout, cj_set.stdout, cj_set.stderr)
             count += 3
 report = json.loads(REPORT.read_text()) if REPORT.exists() else {}
-report.update(api_contract_cases_passed=len(rust), api_offset_differential_passed=count,
+report.update(group_cursor_cases_passed=sum(k.startswith('group-cursor-') for k in rust), api_contract_cases_passed=len(rust), api_offset_differential_passed=count,
+              append_expansion_cases_passed=sum(k.startswith('append-') for k in rust),
+              builder_array_cases_passed=sum(k.startswith('builder-array-') for k in rust),
+              set_iterator_contract_cases_passed=sum(k.startswith('set-iter-') for k in rust),
               builder_combination_cases_passed=sum(k.startswith(('builder-s-', 'builder-ss-', 'builder-b-', 'builder-bs-')) for k in rust),
               lazy_iterator_cases_passed=sum(k.startswith(('byte-iter-', 'byte-capiter-', 'byte-splititer-', 'byte-splitn-', 'string-splitn-')) for k in rust),
               bytes_offset_contract_cases_passed=sum(k.startswith(('byte-at-', 'byte-isat-', 'byte-capat-', 'byte-setat-')) for k in rust))

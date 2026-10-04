@@ -654,6 +654,10 @@ public class BytesCaptures {
     }
     public func expand(template: Array<UInt8>): Array<UInt8> {
         let out = ArrayList<UInt8>()
+        expandInto(template, out)
+        return out.toArray()
+    }
+    public func expandInto(template: Array<UInt8>, out: ArrayList<UInt8>): Unit {
         var i: Int64 = 0
         while (i < template.size) {
             if (template[i] != UInt8(36)) {
@@ -723,7 +727,6 @@ public class BytesCaptures {
                 end
             }
         }
-        return out.toArray()
     }
     private func named(key: Array<UInt8>): Option<BytesMatch> {
         for (i in 1..names.size) {
@@ -749,6 +752,16 @@ public class BytesGroupIter {
     private var index: Int64 = 0
     init(groups: Array<Option<BytesMatch>>) {
         this.groups = groups
+    }
+    // Remaining slots include groups that did not participate in the match.
+    public func len(): Int64 { groups.size - index }
+    public func sizeHint(): (Int64, Option<Int64>) {
+        (len(), Some(len()))
+    }
+    public func clone(): BytesGroupIter {
+        let copy = BytesGroupIter(groups)
+        copy.index = index
+        return copy
     }
     public func next(): BytesGroupItem {
         if (index >= groups.size) {

@@ -441,6 +441,7 @@ class Parser {
                 }
             case r'[' =>
                 let expr = leaf(ExprKind.CharacterClass, c)
+                expr.modeUnicode = unicode // Preserve class kind for the public HIR adapter.
                 expr.charset = characterClass()
                 expr.classNest = lastClassNest
                 expr.byteAtom = !unicode && !utf8
@@ -731,6 +732,7 @@ class Parser {
             return leaf(ExprKind.Literal, c)
         }
         let expr = leaf(ExprKind.CharacterClass, c)
+        expr.modeUnicode = unicode // Preserve class kind for the public HIR adapter.
         expr.charset = set
         return expr
     }
@@ -948,6 +950,7 @@ class Parser {
             failAt(escapeStart, pos, "Unicode not allowed here")
         }
         let expr = leaf(ExprKind.CharacterClass, r' ')
+        expr.modeUnicode = unicode // Preserve class kind for the public HIR adapter.
         try {
             expr.charset = unicodeProperty(name.toString(), negated, caseInsensitive)
         } catch (e: Exception) {
@@ -1029,6 +1032,7 @@ class Parser {
             }
         }
         let expr = leaf(ExprKind.CharacterClass, c)
+        expr.modeUnicode = unicode // Preserve class kind for the public HIR adapter.
         expr.charset = finishAsciiClass(if (lower == c) {
             set
         } else {

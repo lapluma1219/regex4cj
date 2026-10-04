@@ -99,6 +99,7 @@ name = "regex-oracle"
 version = "0.1.0"
 dependencies = [
  "regex",
+ "regex-syntax",
  "regex-test",
 ]
 

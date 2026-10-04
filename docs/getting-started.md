@@ -2,9 +2,9 @@
 
 ## 1. 环境与目录
 
-仓颉库和例子需要仓颉 1.0.5 SDK（`cjc`、`cjpm`）。带预期结果的演示和验收脚本还需要 Python 3.9+。只有完整 Rust 对照验收需要 Git 和 Rust/Cargo；无需先下载完整 Rust regex 仓库或参考语料。
+仓颉库和例子需要仓颉 1.1.3 SDK（`cjc`、`cjpm`）。带预期结果的演示和验收脚本还需要 Python 3.9+。只有完整 Rust 对照验收需要 Git 和 Rust/Cargo；无需先下载完整 Rust regex 仓库或参考语料。
 
-本版在 Apple Silicon macOS 上验证，其他平台尚未承诺可直接运行。先按 SDK 的安装说明配置环境，把 `CANGJIE_HOME` 指向 SDK 目录。若本机已经有项目同级的 `regex4cj-local/tools/cangjie`，脚本会自动使用，无需重新下载。
+本版在 Apple Silicon macOS 上验证，其他平台尚未承诺可直接运行。先按 SDK 的安装说明配置环境，把 `CANGJIE_HOME` 指向 SDK 目录。未指定 `CANGJIE_HOME` 时，脚本优先使用项目同级的 `regex4cj-local/tools/cangjie-1.1.3`，其次使用 `tools/cangjie`。请用 `cjc --version` 确认实际版本；旧1.0.5目录保留不等于本次使用旧编译器。切换SDK后先清理或移走三个模块的target目录，避免复用旧编译产物。
 
 从仓库或源码包进入项目根目录：
 
@@ -59,7 +59,7 @@ bash scripts/run.sh check
 bash scripts/run.sh verify
 ```
 
-`check` 用于日常试用：31 项原生测试加 20 个场景，完全不启动 Rust。报告中的原生测试应为零失败，场景分别为 13/13 和 7/7。
+`check` 用于日常试用：40 项原生测试加 20 个场景，完全不启动 Rust。报告中的原生测试应为零失败，场景分别为 13/13 和 7/7。
 
 `verify` 用于严格验收，按锁文件构建固定 Rust 参照，运行数据检查、原生测试和差分用例。首次 Cargo 依赖下载需要网络；后续会利用缓存，整个套件可能持续数分钟。任何一步失败都会返回非零退出码。验收范围见 [现状](status.md)。本次跑过的条数以 `verification.json` 为准。
 
@@ -101,7 +101,7 @@ cd regex4cj
 
 完整验收的 25 份上游测试数据在 `tests/upstream/`，含固定提交、哈希和许可证，脚本首先检查数据完整性。不需要原来的 `regex4cj-local/upstream/regex`，也不需要 CangjieSkills 或 CangjieCorpus。
 
-环境要求：Apple Silicon macOS、仓颉 1.0.5（cjc/cjpm）、兼容的 macOS SDK、Python 3.9+；完整验收另需 Git 和 Rust/Cargo。当前开发验收使用 Rust 1.98.1；Rust 参照固定在 `oracle/Cargo.toml` 的 rev，并使用 `Cargo.lock` 和 `--locked`。首次构建需要访问 GitHub 和 Cargo 依赖源。本项目不承诺离线首次构建或其他操作系统。
+环境要求：Apple Silicon macOS、仓颉 1.1.3（cjc/cjpm）、兼容的 macOS SDK、Python 3.9+；完整验收另需 Git 和 Rust/Cargo。当前开发验收使用 Rust 1.98.1；Rust 参照固定在 `oracle/Cargo.toml` 的 rev，并使用 `Cargo.lock` 和 `--locked`。首次构建需要访问 GitHub 和 Cargo 依赖源。本项目不承诺离线首次构建或其他操作系统。
 
 `REGEX4CJ_LOCAL` 是可重建的缓存与报告目录，可以指定新位置。使用新目录前，请先配置工具 PATH，并显式设置 `CANGJIE_HOME`；SDK 安装目录与缓存目录不是一回事。
 

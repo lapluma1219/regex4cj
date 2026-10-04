@@ -103,10 +103,14 @@ public class Captures {
         }
         return None
     }
-    // Returns expanded text; unlike Rust expand, no mutable destination is needed.
+    // Convenience form; the append form preserves a caller-owned prefix.
     public func expand(template: String): String {
-        let chars = Input(template).chars
         let out = StringBuilder()
+        expandInto(template, out)
+        return out.toString()
+    }
+    public func expandInto(template: String, out: StringBuilder): Unit {
+        let chars = Input(template).chars
         var i: Int64 = 0
         while (i < chars.size) {
             if (chars[i] != r'$') {
@@ -182,7 +186,6 @@ public class Captures {
                 end
             }
         }
-        return out.toString()
     }
 }
 
@@ -206,6 +209,16 @@ public class GroupIter {
     private var index: Int64 = 0
     init(groups: Array<Option<RegexMatch>>) {
         this.groups = groups
+    }
+    // Remaining slots include groups that did not participate in the match.
+    public func len(): Int64 { groups.size - index }
+    public func sizeHint(): (Int64, Option<Int64>) {
+        (len(), Some(len()))
+    }
+    public func clone(): GroupIter {
+        let copy = GroupIter(groups)
+        copy.index = index
+        return copy
     }
     public func next(): GroupItem {
         if (index >= groups.size) {

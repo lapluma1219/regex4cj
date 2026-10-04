@@ -102,3 +102,36 @@ func setInvalidIndexAndConstruction(): Unit {
     @Expect(many.len(), 257)
     @Expect(many.isMatch("a"), true)
 }
+
+@Test
+func setIteratorDirectionsCloneAndLifetime(): Unit {
+    let result = RegexSet(["a", "z", "a", "b"]).matches("ab")
+    let it = result.iter()
+    @Expect(it.next(), Some(0))
+    let copy = it.clone()
+    @Expect(it.nextBack(), Some(3))
+    @Expect(copy.next(), Some(2))
+    @Expect(it.next(), Some(2))
+    @Expect(copy.nextBack(), Some(3))
+    for (_ in 0..3) {
+        @Expect(it.next(), None)
+        @Expect(it.nextBack(), None)
+        @Expect(copy.next(), None)
+        @Expect(copy.nextBack(), None)
+    }
+    let exhausted = it.clone()
+    @Expect(exhausted.nextBack(), None)
+    let ids = result.indices()
+    ids[0] = 99
+    @Expect(result.iter().next(), Some(0))
+    let temporary = RegexSet(["a"]).matches("a").iter()
+    @Expect(temporary.nextBack(), Some(0))
+    @Expect(temporary.next(), None)
+    let empty = RegexSet(Array<String>()).matches("").iter()
+    @Expect(empty.next(), None)
+    @Expect(empty.nextBack(), None)
+    let raw = BytesRegexSet(["(?-u)\\xFF", "a", "(?-u)\\xFF"]).matches([UInt8(255)]).iter()
+    @Expect(raw.next(), Some(0))
+    @Expect(raw.nextBack(), Some(2))
+    @Expect(raw.next(), None)
+}

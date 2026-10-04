@@ -2,11 +2,11 @@
 
 **一个可以运行、验证和学习的仓颉原生正则表达式库。** 将 [Rust regex](https://github.com/rust-lang/regex) 的字符串匹配行为移植到仓颉，提供库、命令行入口、调用示例、场景演示和 Rust 差分验证。
 
-它复刻固定上游 `regex` 包的字符串和 bytes 行为。匹配在仓颉里完成，Rust 只参与对照。现在做到哪、还差什么，见[现状](docs/status.md)。
+它复刻固定原仓库 `regex` 包的字符串和bytes行为，并开始提供regex-syntax的公开HIR结构。匹配在仓颉里完成，Rust 只参与对照。现在做到哪、还差什么，见[现状](docs/status.md)。
 
 ## 从这里开始
 
-准备仓颉 1.0.5 SDK 和 Python 3.9+，配置 SDK 环境。然后在仓库根目录执行：
+准备仓颉 1.1.3 SDK 和 Python 3.9+，配置 SDK 环境。然后在仓库根目录执行：
 
 ```sh
 bash scripts/run.sh demo
@@ -22,7 +22,7 @@ bash scripts/run.sh example
 bash scripts/run.sh find '\p{Han}+' 'A中文α'
 bash scripts/run.sh replace-all '(?<prefix>[A-Z]{2})-[0-9]{3}' 'AB-123 CD-456' '${prefix}-***'
 
-# 快速验收：31 项仓颉原生测试 + 20 个演示场景，不需要 Rust
+# 快速验收：40 项仓颉原生测试 + 20 个演示场景，不需要 Rust
 bash scripts/run.sh check
 
 # 完整验收：另需 Git、Rust/Cargo；首次获取依赖需要网络
@@ -76,7 +76,7 @@ cjregex = { path = "../regex4cj/port" }
 
 ## 交付与验证
 
-本机验证环境为 Apple Silicon macOS、仓颉 1.0.5。验收范围和条数见 [现状](docs/status.md)。完整数字以最近一次 `bash scripts/run.sh verify` 写入的报告为准。通过有限测试不等于完全兼容上游。数字记录的是已经跑过的检查，不是完成百分比。
+当前已通过 Apple Silicon macOS、仓颉1.1.3的完整41阶段验收，包含新增HIR对照，详见[验收记录](docs/acceptance/hir-slice-2026-10-04.md)。历史1.0.5报告保留为独立版本记录。验收范围和条数见 [现状](docs/status.md)。完整数字以最近一次 `bash scripts/run.sh verify` 写入的报告为准。通过有限测试不等于完全兼容上游。数字记录的是已经跑过的检查，不是完成百分比。
 
 构建缓存和报告默认写到同级 `regex4cj-local/`；可用 `REGEX4CJ_LOCAL` 指定其他位置。仓颉构建产物位于各包 `target/`。以上都不进入源码包。
 
@@ -96,3 +96,5 @@ cjregex = { path = "../regex4cj/port" }
 | `docs` / `data` | 学习文档、版本记录、可复现 Unicode 数据 |
 
 代码采用 MIT OR Apache-2.0；Unicode 数据保留独立许可证。详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。后续扩展已暂缓，先使用和理解本版，再按实际需要增加功能。
+
+公开语法结构的第一批能力现已提供：可用`Hir.parse("[0-9]{6}")`读取重复节点、字符范围和匹配字节长度，见[HIR说明与可运行示例](docs/hir.md)。该接口当前是明确范围的切片，尚非完整regex-syntax。

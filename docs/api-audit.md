@@ -8,7 +8,7 @@
 
 - [逐项对应表](api-audit-methods.md)：170 个公开固有方法，包括 doc(hidden) 历史别名，逐行映射仓颉代码和相关测试。
 - [机器可读清单](api-audit-inventory.json)：原始文件哈希、上游提交、公开类型声明、方法位置、状态及证据文件。
-- [接口契约差分](../tests/verify_api_contracts.py)：2148 个具名辅助接口结果与 513 次字符串起点差分检查。其中包括1400项迭代结果、384项Builder配置模式组合、260项bytes起点结果。Rust 和仓颉分别调用真实接口，输出协议包含 NUL/原始字节的十六进制表示。
+- [接口契约差分](../tests/verify_api_contracts.py)：2414 个具名辅助接口结果与 513 次字符串起点差分检查。其中包括1400项迭代结果、384项Builder配置模式组合、260项bytes起点结果。Rust 和仓颉分别调用真实接口，输出协议包含 NUL/原始字节的十六进制表示。
 - [Rust 探针](../oracle/src/api_audit.rs)与[仓颉探针](../cli/src/api_audit.cj)：每个结果的生成操作都可直接阅读；`raw api-audit` 是开发验收入口，不是库的新功能。
 - 迭代器和 Builder 组合的扩展操作分别在 [Rust 扩展探针](../oracle/src/lazy_audit.rs) 与 [仓颉扩展探针](../cli/src/lazy_audit.cj)。输入配置相同，期望结果由固定 Rust 独立计算，不使用仓颉结果生成预期。
 - [原有完整上游套件](../tests/verify_upstream_suite.py)、其他差分脚本和原生测试继续保留。
@@ -40,15 +40,15 @@ A3 同时检查 find/isMatch/captures/shortest/capturesRead 和 Set；对二、�
 | `Matches` / `CaptureMatches` | 字符串 `MatchIter` / `CaptureIter.next()`；bytes 对应 `BytesMatchIter` / `BytesCaptureIter.next()` | 两类均有空匹配、结束后多次 next 对照；bytes 另有快照和独立游标原生验证 |
 | `Split` / `SplitN` | 两类输入均有 splitIter/splitNIter；原有数组接口保留 | 0/1/2/5限制、尾空段、连续结束有对照；负数限制有原生测试 |
 | `CaptureNames` | `captureNames()` 返回数组 | 名称/编号结果有测试，无上游命名迭代器类型 |
-| `SubCaptureMatches` | `GroupIter` / `BytesGroupIter`，用 done/value 区分结束和未参与 | 两类均有专项证据；bytes 包括缺席组、固定组提取和变长提取拒绝 |
-| `SetMatchesIter` / `SetMatchesIntoIter` | `indices()` 升序数组 | 结果内容有测试；没有独立迭代器、反向 next_back |
+| `SubCaptureMatches` | `GroupIter` / `BytesGroupIter`，用 done/value 区分结束和未参与，支持len/sizeHint/clone | 独立游标复制、缺席组和耗尽后复制有字符串/bytes对照；不承诺bytes载荷深复制 |
+| `SetMatchesIter` / `SetMatchesIntoIter` | `iter()` 返回SetMatchesIter，支持next/nextBack/clone；保留indices数组 | 128项双向/交错/复制差分，含字符串和bytes；没有独立IntoIter类型与Rust IntoIterator trait |
 | `Iterator` / `FusedIterator` | 仅部分显式 next；无对应 Rust trait | 字符串连续 None 行为有回归；终止后内部不再搜索的效率未承诺 |
-| `ExactSizeIterator` / `DoubleEndedIterator` | 没有对应迭代器契约 | 数组可自行按大小/逆序访问，但不是同等按需接口 |
+| `ExactSizeIterator` / `DoubleEndedIterator` | 捕获组迭代器提供len/sizeHint；集合迭代器提供nextBack | 显式方法适配；集合sizeHint按原仓库返回未扫描槽位数，不是命中数 |
 | `Replacer`、`ReplacerRef`、`NoExpand` | 模板、replaceWith、replaceLiteral 覆盖常见使用结果 | 无通用 trait 扩展点、by_ref 或 no_expansion 提示；回调重入/异常已有原生测试，bytes 回调与字面量本轮补对照 |
 | `FromStr` / `TryFrom` / `Default` | 显式构造；空 Set 用空数组 | 调用形式适配，不提供 Rust trait 本身 |
 | `Index<usize>` / `Index<&str>` | `get` / `name` 返回 Option；没有索引语法 | 上游索引对缺组可 panic，仓颉查询返回 None，不能混淆这两种契约 |
 | Match 的 `From` / `range` | 字段 start/end/text/bytes 手动组合 | 没有 Rust Range 转换 trait，字节数组可修改 |
-| `Clone` / `Copy` / `Eq` / `PartialEq` | 未提供与 Rust 对应的值复制/值比较契约 | 仓颉 class 引用赋值不是 Clone；尤其 iterator 不能据此当成独立游标副本 |
+| `Clone` / `Copy` / `Eq` / `PartialEq` | SetMatchesIter、GroupIter和BytesGroupIter已提供显式clone及独立游标，其他类型未完整提供对应契约 | 仓颉class引用赋值不是Clone；不能把一种迭代器的复制保证推广到所有类型 |
 | `Display` / `Debug` | 模式有 asStr；RegexError 有 toString | 未复刻全部 Debug/Display 格式；错误文本仅已测输入对齐 |
 | `Error::Syntax/CompiledTooBig` | `RegexErrorKind`、`RegexError.text/limit`；抛异常代替 Result | 语法/限额文本测试已存在，类型/载荷的逐项专用对照还可加强 |
 | Rust `Send` / `Sync` 等自动 trait | 无跨语言同名保证 | 并发共享、回调并发和迭代器线程使用尚未专项验证 |
@@ -106,3 +106,29 @@ python3 scripts/audit_api_surface.py --upstream /路径/regex
 完整证据见 [验收记录与源码哈希](acceptance/lazy-interfaces-2026-10-02.json)。本次先验证工作区修改，最后才提交，因此原始报告的 dirty 为 true、commit 为修改前基线；额外保留实际验收的源码SHA-256，提交前逐项核对一致。没有将旧提交伪装成此次实现。沿用已安装环境与Cargo缓存，不是异机验收。
 
 宏、语言trait、DFA资源语义、零复制和并发保证等仍按前述差异说明；本次补齐三项不等于这些额外能力也已实现。
+
+## 集合结果双向迭代（2026-10-03）
+
+SetMatches新增iter，返回SetMatchesIter。next从低编号向高编号扫描，nextBack从高编号向低编号扫描；交错调用共享剩余范围，耗尽后持续返回None。clone复制游标的当前位置，不预先收集编号数组；字符串和bytes共用同一结果类型。indices继续提供数组形式。
+
+新增128项与原仓库的差分：16种命中组合×字符串/bytes×正向/反向/交错/复制4种操作序列。接口契约结果现为2276项，另有513次字符串起点差分，专项测试全部通过。原生测试现为32项，包括重复规则、空集合、临时结果、快照隔离、结束后复制和非法UTF-8。
+
+原仓库方法表仍为170条，目前128条有样例验证、42条有明确差异；这些标签仍不是完全等价证明。该次尚未提供IntoIterator、size_hint、Debug等剩余约定（sizeHint已在后续批次补齐），不能声称整个集合迭代器体系已完整移植。更大范围按[完整行为对齐计划](full-compatibility-plan.md)继续推进。
+
+本次完整验收40个阶段全部通过，包含3213条原仓库匹配用例、2276项接口契约结果、513次字符串起点差分和32项仓颉原生测试。证据见[本轮验收与源码校验值](acceptance/set-iterator-2026-10-03.json)。报告如实保留工作区dirty状态；使用本机工具链及Cargo缓存，不是异机或全新环境验收。
+
+## 追加展开与集合构造补齐（2026-10-04）
+
+字符串和字节捕获结果均新增 `expandInto`：直接向调用者的 StringBuilder / ArrayList<UInt8> 追加模板展开内容，保留已有前缀。原有 `expand` 返回新结果的便利用法保留，并共用同一展开逻辑。两种 SetBuilder 新增规则数组构造器：构造时保存规则快照，build 时才解析，继续允许空集合和重复规则。
+
+新增80项追加展开对照结果，覆盖缺席组、命名组、转义美元符号、非法/超大组号、未闭合模板、NUL/中文前缀、非法UTF-8与重复追加；另有4项集合构造对照，覆盖数组修改后的快照和大小写配置。原生测试另检查空模板、空集合、延迟编译错误和后续追加规则。
+
+当前契约结果2360项（新增84项包括在内），另有513次起点差分。主要库的170条固有方法映射中，132条有样例验证、38条有明确差异；这不是原仓库完成率。新增接口和测试见 [API清单](api-catalog.md)、[仓颉探针](../cli/src/append_builder_audit.cj) 和 [原生测试](../examples/consumer/src/append_builder_test.cj)。仓颉1.1.3完整40阶段验收通过，见[本批验收记录](acceptance/append-builder-2026-10-04.md)。
+
+## 捕获组游标与大小提示（2026-10-04）
+
+新增GroupIter/BytesGroupIter的len、sizeHint和clone，以及SetMatchesIter的sizeHint。捕获组数量包括未参与匹配的槽位；复制在当前进度分叉，两份游标独立推进；结束后持续为空。集合sizeHint复刻固定原仓库未扫描槽位计数，不能解释为剩余命中数下界。
+
+54项新增对照记录包含不同复制位置、原游标与副本不同推进速度、缺席组、空匹配、中文与非法UTF-8；原有128条集合迭代记录中的96条正向/反向/交错记录新增每步大小提示对照。总计2414项接口结果及513次起点差分通过，36项仓颉原生测试通过。本批采用构建、原生测试、接口契约和清单检查的专项验证；没有把前一批的40阶段完整验收冒充为本批新跑的结果。见[本批验证记录](acceptance/group-cursor-2026-10-04.md)。
+
+主要库170条固有方法表的状态数量仍为132/38；本批增加的是trait对应的显式方法，记录在本节和仓颉接口清单中，不往170条固有方法分母中强加条目。

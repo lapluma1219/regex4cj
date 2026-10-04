@@ -840,16 +840,16 @@
       "id": "string::Captures::expand",
       "upstream_file": "src/regex/string.rs",
       "upstream_line": 1933,
-      "cangjie": "Captures.expand",
+      "cangjie": "Captures.expandInto",
       "implementation": {
         "file": "port/src/captures.cj",
-        "line": 107
+        "line": 112
       },
-      "status": "有明确差异",
-      "note": "extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。",
+      "status": "有样例验证",
+      "note": "向已有StringBuilder或ArrayList追加展开结果，保留前缀；原expand便捷接口仍返回新结果。",
       "evidence": [
-        "tests/verify_captures.py",
-        "tests/verify_text_ops.py"
+        "tests/verify_api_contracts.py",
+        "examples/consumer/src/append_builder_test.cj"
       ]
     },
     {
@@ -1469,16 +1469,16 @@
       "id": "bytes::Captures::expand",
       "upstream_file": "src/regex/bytes.rs",
       "upstream_line": 1926,
-      "cangjie": "BytesCaptures.expand",
+      "cangjie": "BytesCaptures.expandInto",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 655
+        "line": 660
       },
-      "status": "有明确差异",
-      "note": "extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。",
+      "status": "有样例验证",
+      "note": "向已有StringBuilder或ArrayList追加展开结果，保留前缀；原expand便捷接口仍返回新结果。",
       "evidence": [
-        "tests/verify_bytes.py",
-        "examples/consumer/src/api_test.cj"
+        "tests/verify_api_contracts.py",
+        "examples/consumer/src/append_builder_test.cj"
       ]
     },
     {
@@ -1565,7 +1565,7 @@
       "cangjie": "RegexSet.init",
       "implementation": {
         "file": "port/src/regex_set.cj",
-        "line": 58
+        "line": 104
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1582,7 +1582,7 @@
       "cangjie": "RegexSet.init",
       "implementation": {
         "file": "port/src/regex_set.cj",
-        "line": 58
+        "line": 104
       },
       "status": "有明确差异",
       "note": "empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。",
@@ -1599,7 +1599,7 @@
       "cangjie": "RegexSet.isMatch",
       "implementation": {
         "file": "port/src/regex_set.cj",
-        "line": 116
+        "line": 162
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1616,7 +1616,7 @@
       "cangjie": "RegexSet.isMatchAt",
       "implementation": {
         "file": "port/src/regex_set.cj",
-        "line": 119
+        "line": 165
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1633,7 +1633,7 @@
       "cangjie": "RegexSet.matches",
       "implementation": {
         "file": "port/src/regex_set.cj",
-        "line": 122
+        "line": 168
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1650,7 +1650,7 @@
       "cangjie": "RegexSet.matchesAt",
       "implementation": {
         "file": "port/src/regex_set.cj",
-        "line": 125
+        "line": 171
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1667,7 +1667,7 @@
       "cangjie": "RegexSet.matchesReadAt",
       "implementation": {
         "file": "port/src/regex_set.cj",
-        "line": 130
+        "line": 176
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1684,7 +1684,7 @@
       "cangjie": "RegexSet.matchesReadAt",
       "implementation": {
         "file": "port/src/regex_set.cj",
-        "line": 130
+        "line": 176
       },
       "status": "有明确差异",
       "note": "empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。",
@@ -1701,7 +1701,7 @@
       "cangjie": "RegexSet.len",
       "implementation": {
         "file": "port/src/regex_set.cj",
-        "line": 107
+        "line": 153
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1718,7 +1718,7 @@
       "cangjie": "RegexSet.isEmpty",
       "implementation": {
         "file": "port/src/regex_set.cj",
-        "line": 110
+        "line": 156
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1735,7 +1735,7 @@
       "cangjie": "RegexSet.patterns",
       "implementation": {
         "file": "port/src/regex_set.cj",
-        "line": 113
+        "line": 159
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1813,15 +1813,15 @@
       "id": "string::SetMatches::iter",
       "upstream_file": "src/regexset/string.rs",
       "upstream_line": 600,
-      "cangjie": "SetMatches.indices",
+      "cangjie": "SetMatches.iter",
       "implementation": {
         "file": "port/src/regex_set.cj",
-        "line": 37
+        "line": 47
       },
-      "status": "有明确差异",
-      "note": "返回升序数组；没有 SetMatchesIter/IntoIter 或 next_back。",
+      "status": "有样例验证",
+      "note": "SetMatchesIter 支持 next/nextBack 交错、耗尽后持续 None、clone 后独立游标；不复刻 Rust 借用或 IntoIterator trait。",
       "evidence": [
-        "tests/verify_sets.py",
+        "tests/verify_api_contracts.py",
         "examples/consumer/src/set_test.cj"
       ]
     },
@@ -1832,7 +1832,7 @@
       "cangjie": "BytesRegexSet.init",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 775
+        "line": 788
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1849,7 +1849,7 @@
       "cangjie": "BytesRegexSet.init",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 775
+        "line": 788
       },
       "status": "有明确差异",
       "note": "empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。",
@@ -1866,7 +1866,7 @@
       "cangjie": "BytesRegexSet.isMatch",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 834
+        "line": 847
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1883,7 +1883,7 @@
       "cangjie": "BytesRegexSet.isMatchAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 837
+        "line": 850
       },
       "status": "有样例验证",
       "note": "bytes Set 非零起点和原始字节组合已专项对照。",
@@ -1898,7 +1898,7 @@
       "cangjie": "BytesRegexSet.matches",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 840
+        "line": 853
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1915,7 +1915,7 @@
       "cangjie": "BytesRegexSet.matchesAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 843
+        "line": 856
       },
       "status": "有样例验证",
       "note": "bytes Set 非零起点和原始字节组合已专项对照。",
@@ -1930,7 +1930,7 @@
       "cangjie": "BytesRegexSet.matchesReadAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 846
+        "line": 859
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1947,7 +1947,7 @@
       "cangjie": "BytesRegexSet.matchesReadAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 846
+        "line": 859
       },
       "status": "有明确差异",
       "note": "empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。",
@@ -1964,7 +1964,7 @@
       "cangjie": "BytesRegexSet.len",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 825
+        "line": 838
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1981,7 +1981,7 @@
       "cangjie": "BytesRegexSet.isEmpty",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 828
+        "line": 841
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1998,7 +1998,7 @@
       "cangjie": "BytesRegexSet.patterns",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 831
+        "line": 844
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -2076,15 +2076,15 @@
       "id": "bytes::SetMatches::iter",
       "upstream_file": "src/regexset/bytes.rs",
       "upstream_line": 604,
-      "cangjie": "SetMatches.indices",
+      "cangjie": "SetMatches.iter",
       "implementation": {
         "file": "port/src/regex_set.cj",
-        "line": 37
+        "line": 47
       },
-      "status": "有明确差异",
-      "note": "返回升序数组；没有 SetMatchesIter/IntoIter 或 next_back。",
+      "status": "有样例验证",
+      "note": "SetMatchesIter 支持 next/nextBack 交错、耗尽后持续 None、clone 后独立游标；不复刻 Rust 借用或 IntoIterator trait。",
       "evidence": [
-        "tests/verify_sets.py",
+        "tests/verify_api_contracts.py",
         "examples/consumer/src/set_test.cj"
       ]
     },
@@ -2327,14 +2327,13 @@
       "cangjie": "RegexSetBuilder.init",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 83
+        "line": 84
       },
-      "status": "有明确差异",
-      "note": "上游从模式集合构造；仓颉无参构造后逐条 pattern 添加。",
+      "status": "有样例验证",
+      "note": "支持直接从规则数组构造并保留快照，也保留无参构造和pattern追加；build时编译。",
       "evidence": [
-        "examples/consumer/src/api_test.cj",
-        "tests/verify_syntax.py",
-        "tests/verify_limits.py"
+        "tests/verify_api_contracts.py",
+        "examples/consumer/src/append_builder_test.cj"
       ]
     },
     {
@@ -2344,7 +2343,7 @@
       "cangjie": "RegexSetBuilder.build",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 88
+        "line": 91
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -2359,7 +2358,7 @@
       "cangjie": "RegexSetBuilder.unicode",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 115
+        "line": 118
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2374,7 +2373,7 @@
       "cangjie": "RegexSetBuilder.caseInsensitive",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 91
+        "line": 94
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -2389,7 +2388,7 @@
       "cangjie": "RegexSetBuilder.multiLine",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 95
+        "line": 98
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2404,7 +2403,7 @@
       "cangjie": "RegexSetBuilder.dotMatchesNewLine",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 99
+        "line": 102
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2419,7 +2418,7 @@
       "cangjie": "RegexSetBuilder.crlf",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 111
+        "line": 114
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2434,7 +2433,7 @@
       "cangjie": "RegexSetBuilder.lineTerminator",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 123
+        "line": 126
       },
       "status": "有明确差异",
       "note": "参数为 Rune，再检查 0..255；上游参数为 u8。",
@@ -2451,7 +2450,7 @@
       "cangjie": "RegexSetBuilder.swapGreed",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 103
+        "line": 106
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2466,7 +2465,7 @@
       "cangjie": "RegexSetBuilder.ignoreWhitespace",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 107
+        "line": 110
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2481,7 +2480,7 @@
       "cangjie": "RegexSetBuilder.octal",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 119
+        "line": 122
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2496,7 +2495,7 @@
       "cangjie": "RegexSetBuilder.sizeLimit",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 137
+        "line": 140
       },
       "status": "有明确差异",
       "note": "模拟上游 Thompson 构造预算并通过部分阈值对照；不保证所有启发式/限额接受边界相等。",
@@ -2513,7 +2512,7 @@
       "cangjie": "RegexSetBuilder.dfaSizeLimit",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 144
+        "line": 147
       },
       "status": "有明确差异",
       "note": "不是上游 DFA 缓存限额：字符串 Regex 使用步进缓存；bytes 忽略；Set 不提供同等 DFA。",
@@ -2530,7 +2529,7 @@
       "cangjie": "RegexSetBuilder.nestLimit",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 130
+        "line": 133
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2545,7 +2544,7 @@
       "cangjie": "BytesRegexBuilder.init",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 157
+        "line": 160
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -2560,7 +2559,7 @@
       "cangjie": "BytesRegexBuilder.build",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 161
+        "line": 164
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -2575,7 +2574,7 @@
       "cangjie": "BytesRegexBuilder.unicode",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 189
+        "line": 192
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -2592,7 +2591,7 @@
       "cangjie": "BytesRegexBuilder.caseInsensitive",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 165
+        "line": 168
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -2607,7 +2606,7 @@
       "cangjie": "BytesRegexBuilder.multiLine",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 169
+        "line": 172
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2622,7 +2621,7 @@
       "cangjie": "BytesRegexBuilder.dotMatchesNewLine",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 173
+        "line": 176
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2637,7 +2636,7 @@
       "cangjie": "BytesRegexBuilder.crlf",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 185
+        "line": 188
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2652,7 +2651,7 @@
       "cangjie": "BytesRegexBuilder.lineTerminator",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 197
+        "line": 200
       },
       "status": "有明确差异",
       "note": "参数为 Rune，再检查 0..255；上游参数为 u8。",
@@ -2669,7 +2668,7 @@
       "cangjie": "BytesRegexBuilder.swapGreed",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 177
+        "line": 180
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2684,7 +2683,7 @@
       "cangjie": "BytesRegexBuilder.ignoreWhitespace",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 181
+        "line": 184
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2699,7 +2698,7 @@
       "cangjie": "BytesRegexBuilder.octal",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 193
+        "line": 196
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2714,7 +2713,7 @@
       "cangjie": "BytesRegexBuilder.sizeLimit",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 211
+        "line": 214
       },
       "status": "有明确差异",
       "note": "模拟上游 Thompson 构造预算并通过部分阈值对照；不保证所有启发式/限额接受边界相等。",
@@ -2731,7 +2730,7 @@
       "cangjie": "BytesRegexBuilder.dfaSizeLimit",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 218
+        "line": 221
       },
       "status": "有明确差异",
       "note": "不是上游 DFA 缓存限额：字符串 Regex 使用步进缓存；bytes 忽略；Set 不提供同等 DFA。",
@@ -2748,7 +2747,7 @@
       "cangjie": "BytesRegexBuilder.nestLimit",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 204
+        "line": 207
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2763,14 +2762,13 @@
       "cangjie": "BytesRegexSetBuilder.init",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 230
+        "line": 236
       },
-      "status": "有明确差异",
-      "note": "上游从模式集合构造；仓颉无参构造后逐条 pattern 添加。",
+      "status": "有样例验证",
+      "note": "支持直接从规则数组构造并保留快照，也保留无参构造和pattern追加；build时编译。",
       "evidence": [
-        "examples/consumer/src/api_test.cj",
-        "tests/verify_syntax.py",
-        "tests/verify_limits.py"
+        "tests/verify_api_contracts.py",
+        "examples/consumer/src/append_builder_test.cj"
       ]
     },
     {
@@ -2780,7 +2778,7 @@
       "cangjie": "BytesRegexSetBuilder.build",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 237
+        "line": 244
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -2795,7 +2793,7 @@
       "cangjie": "BytesRegexSetBuilder.unicode",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 265
+        "line": 272
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2810,7 +2808,7 @@
       "cangjie": "BytesRegexSetBuilder.caseInsensitive",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 241
+        "line": 248
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -2825,7 +2823,7 @@
       "cangjie": "BytesRegexSetBuilder.multiLine",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 245
+        "line": 252
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2840,7 +2838,7 @@
       "cangjie": "BytesRegexSetBuilder.dotMatchesNewLine",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 249
+        "line": 256
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2855,7 +2853,7 @@
       "cangjie": "BytesRegexSetBuilder.crlf",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 261
+        "line": 268
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2870,7 +2868,7 @@
       "cangjie": "BytesRegexSetBuilder.lineTerminator",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 273
+        "line": 280
       },
       "status": "有明确差异",
       "note": "参数为 Rune，再检查 0..255；上游参数为 u8。",
@@ -2887,7 +2885,7 @@
       "cangjie": "BytesRegexSetBuilder.swapGreed",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 253
+        "line": 260
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2902,7 +2900,7 @@
       "cangjie": "BytesRegexSetBuilder.ignoreWhitespace",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 257
+        "line": 264
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2917,7 +2915,7 @@
       "cangjie": "BytesRegexSetBuilder.octal",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 269
+        "line": 276
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",
@@ -2932,7 +2930,7 @@
       "cangjie": "BytesRegexSetBuilder.sizeLimit",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 287
+        "line": 294
       },
       "status": "有明确差异",
       "note": "模拟上游 Thompson 构造预算并通过部分阈值对照；不保证所有启发式/限额接受边界相等。",
@@ -2949,7 +2947,7 @@
       "cangjie": "BytesRegexSetBuilder.dfaSizeLimit",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 294
+        "line": 301
       },
       "status": "有明确差异",
       "note": "不是上游 DFA 缓存限额：字符串 Regex 使用步进缓存；bytes 忽略；Set 不提供同等 DFA。",
@@ -2966,7 +2964,7 @@
       "cangjie": "BytesRegexSetBuilder.nestLimit",
       "implementation": {
         "file": "port/src/builder.cj",
-        "line": 280
+        "line": 287
       },
       "status": "有样例验证",
       "note": "四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。",

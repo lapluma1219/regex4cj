@@ -71,6 +71,10 @@ def mapping(scope, owner, method):
             status, note = '有明确差异', 'extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。'
         if byte and method in ['extract','iter']:
             status, note, evidence = '有样例验证', '有 bytes 固定组提取和组迭代差分，及缺席组/结束/变长拒绝的原生测试。', ['tests/verify_api_contracts.py','examples/consumer/src/api_test.cj']
+        if method == 'expand':
+            member, status = 'expandInto', '有样例验证'
+            note = '向已有StringBuilder或ArrayList追加展开结果，保留前缀；原expand便捷接口仍返回新结果。'
+            evidence = ['tests/verify_api_contracts.py','examples/consumer/src/append_builder_test.cj']
     elif owner == 'CaptureLocations':
         member = {'len':'size','pos':'get'}.get(method, member)
         if method != 'get': status, note = '有明确差异', 'len 对应 size 字段；doc(hidden) pos 别名对应 get。'
@@ -82,15 +86,16 @@ def mapping(scope, owner, method):
         if byte and method in ['matches_at','is_match_at']:
             status, note, evidence = '有样例验证', 'bytes Set 非零起点和原始字节组合已专项对照。', ['tests/verify_api_contracts.py']
     elif owner == 'SetMatches':
-        member = 'indices' if method == 'iter' else member
         evidence = ['tests/verify_sets.py','examples/consumer/src/set_test.cj']
         if method == 'iter':
-            status, note = '有明确差异', '返回升序数组；没有 SetMatchesIter/IntoIter 或 next_back。'
+            status, note = '有样例验证', 'SetMatchesIter 支持 next/nextBack 交错、耗尽后持续 None、clone 后独立游标；不复刻 Rust 借用或 IntoIterator trait。'
+            evidence = ['tests/verify_api_contracts.py','examples/consumer/src/set_test.cj']
     else:
         member = 'init' if method == 'new' else member
         evidence = ['examples/consumer/src/api_test.cj','tests/verify_syntax.py','tests/verify_limits.py']
         if method == 'new' and owner == 'RegexSetBuilder':
-            status, note = '有明确差异', '上游从模式集合构造；仓颉无参构造后逐条 pattern 添加。'
+            status, note = '有样例验证', '支持直接从规则数组构造并保留快照，也保留无参构造和pattern追加；build时编译。'
+            evidence = ['tests/verify_api_contracts.py','examples/consumer/src/append_builder_test.cj']
         elif method == 'dfa_size_limit':
             status, note = '有明确差异', '不是上游 DFA 缓存限额：字符串 Regex 使用步进缓存；bytes 忽略；Set 不提供同等 DFA。'
         elif method == 'line_terminator':
@@ -114,6 +119,8 @@ def cj_symbols():
             m = re.match(r'\s*public (?:(?:override )?func|let|var) (\w+)', line)
             if not m and re.match(r'\s*public init\(', line):
                 symbols.setdefault(f'{owner}.init', {'file':str(file.relative_to(ROOT)), 'line':n})
+                if re.match(r'\s*public init\(patterns: Array<String>\)', line):
+                    symbols[f'{owner}.init'] = {'file':str(file.relative_to(ROOT)), 'line':n}
             if m: symbols[f'{owner}.{m[1]}'] = {'file':str(file.relative_to(ROOT)), 'line':n}
     return symbols
 

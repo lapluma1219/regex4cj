@@ -81,6 +81,9 @@ public class RegexSetBuilder {
     private let options = PatternOptions()
     private let patterns = ArrayList<String>()
     public init() {}
+    public init(patterns: Array<String>) {
+        for (pattern in patterns) { this.patterns.add(pattern) }
+    }
     public func pattern(value: String): RegexSetBuilder {
         patterns.add(value)
         return this
@@ -229,6 +232,10 @@ public class BytesRegexSetBuilder {
     private let patterns = ArrayList<String>()
     public init() {
         options.utf8 = false
+    }
+    public init(patterns: Array<String>) {
+        options.utf8 = false
+        for (pattern in patterns) { this.patterns.add(pattern) }
     }
     public func pattern(value: String): BytesRegexSetBuilder {
         patterns.add(value)

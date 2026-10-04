@@ -10,8 +10,12 @@ if [ -d "$REGEX4CJ_LOCAL/tools/rustup" ]; then
 fi
 export CARGO_TARGET_DIR="$REGEX4CJ_LOCAL/work/rust-target"
 export TMPDIR="$REGEX4CJ_LOCAL/work"
-if [ -z "${CANGJIE_HOME:-}" ] && [ -d "$REGEX4CJ_LOCAL/tools/cangjie" ]; then
-  export CANGJIE_HOME="$REGEX4CJ_LOCAL/tools/cangjie"
+if [ -z "${CANGJIE_HOME:-}" ]; then
+  if [ -d "$REGEX4CJ_LOCAL/tools/cangjie-1.1.3" ]; then
+    export CANGJIE_HOME="$REGEX4CJ_LOCAL/tools/cangjie-1.1.3"
+  elif [ -d "$REGEX4CJ_LOCAL/tools/cangjie" ]; then
+    export CANGJIE_HOME="$REGEX4CJ_LOCAL/tools/cangjie"
+  fi
 fi
 if [ -n "${CANGJIE_HOME:-}" ]; then
   export PATH="$CANGJIE_HOME/bin:$CANGJIE_HOME/tools/bin:$PATH"
@@ -22,7 +26,7 @@ if [ -n "${CANGJIE_HOME:-}" ]; then
     unset cj_arch
   fi
 fi
-# Cangjie 1.0.5's linker cannot read the macOS 26.5 SDK stubs.
+# Keep the validated macOS SDK selection (originally needed for Cangjie 1.0.5).
 # Respect an explicitly selected SDK; prefer an installed compatible SDK on this Mac.
 if [ "$(uname -s)" = Darwin ] && [ -z "${SDKROOT:-}" ]; then
   if [ -d /Library/Developer/CommandLineTools/SDKs/MacOSX15.4.sdk ]; then

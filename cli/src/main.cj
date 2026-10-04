@@ -279,6 +279,14 @@ func printCaptureResult(regex: Regex, caps: Captures): Unit {
 
 main(args: Array<String>): Int64 {
     try {
+        if (args.size == 1 && args[0] == "hir-constructors") {
+            hirConstructorAudit()
+            return 0
+        }
+        if (args.size == 3 && args[0] == "hir") {
+            println(hirShape(Hir.parse(args[1], args[2] == "true")))
+            return 0
+        }
         if (args.size == 1 && args[0] == "api-audit") {
             apiContractAudit()
             return 0

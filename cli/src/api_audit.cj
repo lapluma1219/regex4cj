@@ -39,6 +39,9 @@ func auditEmit(id: String, operation: () -> String): Unit {
 }
 
 func apiContractAudit(): Unit {
+    appendBuilderAudit()
+    setIteratorAudit()
+    groupCursorAudit()
     extendedAudit()
     let ids = ["empty", "greedy", "miss"]
     let patterns = ["", "a*", "z"]

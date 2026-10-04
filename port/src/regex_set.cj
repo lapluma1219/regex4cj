@@ -43,6 +43,52 @@ public class SetMatches {
         }
         return out.toArray()
     }
+
+    public func iter(): SetMatchesIter {
+        SetMatchesIter(hits, 0, hits.size)
+    }
+}
+
+// The result owns its hit snapshot and never mutates it. Each cursor keeps
+// independent bounds; no array of matching indices is collected in advance.
+public class SetMatchesIter {
+    private let hits: Array<Bool>
+    private var front: Int64
+    private var back: Int64
+
+    init(hits: Array<Bool>, front: Int64, back: Int64) {
+        this.hits = hits
+        this.front = front
+        this.back = back
+    }
+
+    public func next(): Option<Int64> {
+        while (front < back) {
+            let index = front
+            front++
+            if (hits[index]) { return Some(index) }
+        }
+        return None
+    }
+
+    public func nextBack(): Option<Int64> {
+        while (front < back) {
+            back--
+            if (hits[back]) { return Some(back) }
+        }
+        return None
+    }
+
+    // Mirrors the pinned Rust iterator: bounds describe unscanned pattern
+    // slots, NOT the number of remaining hits (including its lower bound).
+    public func sizeHint(): (Int64, Option<Int64>) {
+        let remaining = back - front
+        return (remaining, Some(remaining))
+    }
+
+    public func clone(): SetMatchesIter {
+        SetMatchesIter(hits, front, back)
+    }
 }
 
 // A single scalar scan over a shared state arena. Each pattern gets its own

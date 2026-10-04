@@ -37,7 +37,7 @@ def main():
     try:
         # Old counters must never be mistaken for this invocation's results.
         for name in ['verification.json', 'showcase.json', 'classification.json',
-                     'matching-failure.json', 'upstream-suite-failures.json', 'upstream-sample-skips.json',
+                     'matching-failure.json', 'hir-failure.json', 'upstream-suite-failures.json', 'upstream-sample-skips.json',
                      'api-contract-failures.json']:
             (WORK / name).unlink(missing_ok=True)
         state['commit'] = output(['git', 'rev-parse', 'HEAD']) if (ROOT / '.git').exists() else None
@@ -62,7 +62,7 @@ def main():
                      'verify_flags', 'verify_case', 'verify_escapes', 'verify_ascii_classes', 'verify_unicode',
                      'verify_boundaries', 'verify_properties', 'verify_scripts', 'verify_binary', 'verify_syntax',
                      'verify_errors', 'verify_limits', 'verify_bytes', 'verify_upstream_sample',
-                     'verify_upstream_suite', 'verify_sets', 'verify_api_contracts']:
+                     'verify_upstream_suite', 'verify_sets', 'verify_api_contracts', 'verify_hir']:
             stages.append((name, [sys.executable, f'tests/{name}.py'], ROOT))
         stages += [('showcase', [sys.executable, 'scripts/showcase.py'], ROOT),
                    ('classification', [sys.executable, 'scripts/classify.py', '--demo'], ROOT)]
