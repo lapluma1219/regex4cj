@@ -1,0 +1,965 @@
+
+Acceptance stage: upstream-data
+Pinned upstream data verified: 25 test files
+
+Acceptance stage: api-inventory
+API inventory checked: 170 inherent methods; traits/macros reviewed separately
+
+Acceptance stage: cangjie-api-inventory
+Cangjie declarations: 280 callables, 84 fields
+
+Acceptance stage: data-unicode
+Unicode 16.0.0 tables verified: d=71 ranges, s=10 ranges, w=796 ranges
+
+Acceptance stage: data-categories
+Unicode 16.0.0 general categories verified: 37 tables, 80 aliases
+
+Acceptance stage: data-scripts
+Unicode 16.0.0 Script/Script_Extensions verified: 170 tables each
+
+Acceptance stage: data-binary
+Unicode 16.0.0 binary properties verified: 64 tables, 121 aliases
+
+Acceptance stage: data-case_fold
+Unicode 16.0.0 simple case folding verified: 2938 scalars
+
+Acceptance stage: data-age_break
+
+Acceptance stage: python-tests
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK
+
+Acceptance stage: rust-build
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.26
+   Compiling serde_core v1.0.229
+   Compiling serde v1.0.229
+   Compiling memchr v2.8.3
+   Compiling hashbrown v0.17.1
+   Compiling equivalent v1.0.2
+   Compiling winnow v0.7.15
+   Compiling anyhow v1.0.104
+   Compiling regex-syntax v0.8.11 (https://github.com/rust-lang/regex.git?rev=72d650cb0a880a01ab6dc2137c0888e8f89740f7#72d650cb)
+   Compiling aho-corasick v1.1.5
+   Compiling indexmap v2.14.2
+   Compiling regex-automata v0.4.18 (https://github.com/rust-lang/regex.git?rev=72d650cb0a880a01ab6dc2137c0888e8f89740f7#72d650cb)
+   Compiling regex v1.13.1 (https://github.com/rust-lang/regex.git?rev=72d650cb0a880a01ab6dc2137c0888e8f89740f7#72d650cb)
+   Compiling syn v3.0.6
+   Compiling bstr v1.13.1
+   Compiling serde_derive v1.0.229
+   Compiling serde_spanned v0.6.9
+   Compiling toml_datetime v0.6.11
+   Compiling toml_edit v0.22.27
+   Compiling toml v0.8.23
+   Compiling regex-test v0.1.1 (https://github.com/rust-lang/regex.git?rev=72d650cb0a880a01ab6dc2137c0888e8f89740f7#72d650cb)
+   Compiling regex-oracle v0.1.0 (/private/var/folders/xc/7s79qz2966j773sgl_d77kxh0000gn/T/regex4cj-review-kr_2u13b/repo/oracle)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.97s
+
+Acceptance stage: rust-test
+   Compiling regex-oracle v0.1.0 (/private/var/folders/xc/7s79qz2966j773sgl_d77kxh0000gn/T/regex4cj-review-kr_2u13b/repo/oracle)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.44s
+     Running unittests src/main.rs (.build/work/rust-target/debug/deps/regex_oracle-7b2019ec63b4e57d)
+
+running 3 tests
+test native_tests::nul_replacement_split_and_expand ... ok
+test native_tests::nul_matching_and_escape ... ok
+test native_tests::set_nul_empty_and_overlap ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+Acceptance stage: port-build
+cjpm build success
+
+Acceptance stage: cli-build
+cjpm build success
+
+Acceptance stage: examples/consumer-build
+cjpm build success
+
+Acceptance stage: consumer-test
+
+
+
+
+
+
+📦 group regex_consumer                0% [--------------------]      (00:00:00)
+🧪 test TestCase_simpleCaseFoldingKeepsOriginalText.simpleCas...      (00:00:00)
+
+passed: 0, failed: 0                  0% [--------------------]  0/46 (00:00:00) 
+
+
+📦 group regex_consumer              100% [||||||||||||||||||||] ✓    (00:00:00)
+
+passed: 46, failed: 0               100% [||||||||||||||||||||] 46/46 (00:00:01) --------------------------------------------------------------------------------------------------
+TP: regex_consumer, time elapsed: 359277000 ns, RESULT:
+    TCS: TestCase_simpleCaseFoldingKeepsOriginalText, time elapsed: 14101000 ns, RESULT:
+    [ PASSED ] CASE: simpleCaseFoldingKeepsOriginalText (13378000 ns)
+    TCS: TestCase_nulMatchingAndEscape, time elapsed: 2626000 ns, RESULT:
+    [ PASSED ] CASE: nulMatchingAndEscape (2386000 ns)
+    TCS: TestCase_nulReplacementAndSplit, time elapsed: 3053000 ns, RESULT:
+    [ PASSED ] CASE: nulReplacementAndSplit (2881000 ns)
+    TCS: TestCase_captureAbsenceAndBounds, time elapsed: 688000 ns, RESULT:
+    [ PASSED ] CASE: captureAbsenceAndBounds (554000 ns)
+    TCS: TestCase_captureResultsAndMetadataAreIndependent, time elapsed: 709000 ns, RESULT:
+    [ PASSED ] CASE: captureResultsAndMetadataAreIndependent (560000 ns)
+    TCS: TestCase_retainedCaptureAndTemplateExpansion, time elapsed: 173000 ns, RESULT:
+    [ PASSED ] CASE: retainedCaptureAndTemplateExpansion (36000 ns)
+    TCS: TestCase_callbackLimitAndNoMatch, time elapsed: 152000 ns, RESULT:
+    [ PASSED ] CASE: callbackLimitAndNoMatch (29000 ns)
+    TCS: TestCase_callbackExceptionAndReuse, time elapsed: 1383000 ns, RESULT:
+    [ PASSED ] CASE: callbackExceptionAndReuse (1259000 ns)
+    TCS: TestCase_callbackCanReuseSameRegex, time elapsed: 943000 ns, RESULT:
+    [ PASSED ] CASE: callbackCanReuseSameRegex (825000 ns)
+    TCS: TestCase_zeroWidthUnicodeAndLimits, time elapsed: 5326000 ns, RESULT:
+    [ PASSED ] CASE: zeroWidthUnicodeAndLimits (5100000 ns)
+    TCS: TestCase_invalidPatternAndNegativeLimit, time elapsed: 266000 ns, RESULT:
+    [ PASSED ] CASE: invalidPatternAndNegativeLimit (130000 ns)
+    TCS: TestCase_multilineAndDotAllFlags, time elapsed: 4951000 ns, RESULT:
+    [ PASSED ] CASE: multilineAndDotAllFlags (4729000 ns)
+    TCS: TestCase_scopedGreedAndAbsoluteAnchors, time elapsed: 4012000 ns, RESULT:
+    [ PASSED ] CASE: scopedGreedAndAbsoluteAnchors (3858000 ns)
+    TCS: TestCase_escapedNulAndUnicodeScalars, time elapsed: 2842000 ns, RESULT:
+    [ PASSED ] CASE: escapedNulAndUnicodeScalars (2677000 ns)
+    TCS: TestCase_posixClassesWithNul, time elapsed: 3151000 ns, RESULT:
+    [ PASSED ] CASE: posixClassesWithNul (2988000 ns)
+    TCS: TestCase_posixClassesAreAsciiAndNamesCanFallBack, time elapsed: 2920000 ns, RESULT:
+    [ PASSED ] CASE: posixClassesAreAsciiAndNamesCanFallBack (2788000 ns)
+    TCS: TestCase_unicodeShorthandsAndNul, time elapsed: 58566000 ns, RESULT:
+    [ PASSED ] CASE: unicodeShorthandsAndNul (58275000 ns)
+    TCS: TestCase_unicodeWordBoundaries, time elapsed: 16489000 ns, RESULT:
+    [ PASSED ] CASE: unicodeWordBoundaries (16193000 ns)
+    TCS: TestCase_unicodeGeneralCategories, time elapsed: 50236000 ns, RESULT:
+    [ PASSED ] CASE: unicodeGeneralCategories (50042000 ns)
+    TCS: TestCase_unicodeScripts, time elapsed: 7567000 ns, RESULT:
+    [ PASSED ] CASE: unicodeScripts (7403000 ns)
+    TCS: TestCase_unicodeBinaryProperties, time elapsed: 29473000 ns, RESULT:
+    [ PASSED ] CASE: unicodeBinaryProperties (29296000 ns)
+    TCS: TestCase_searchFromOffsetAndConfiguredSyntax, time elapsed: 16973000 ns, RESULT:
+    [ PASSED ] CASE: searchFromOffsetAndConfiguredSyntax (16781000 ns)
+    TCS: TestCase_bytesRegexMatchesRawBytes, time elapsed: 965000 ns, RESULT:
+    [ PASSED ] CASE: bytesRegexMatchesRawBytes (732000 ns)
+    TCS: TestCase_byteIteratorsSnapshotAndKeepIndependentCursors, time elapsed: 181000 ns, RESULT:
+    [ PASSED ] CASE: byteIteratorsSnapshotAndKeepIndependentCursors (37000 ns)
+    TCS: TestCase_lazySplitLimitsAndByteCaptureMetadata, time elapsed: 198000 ns, RESULT:
+    [ PASSED ] CASE: lazySplitLimitsAndByteCaptureMetadata (57000 ns)
+    TCS: TestCase_appendExpansionPreservesBuffers, time elapsed: 621000 ns, RESULT:
+    [ PASSED ] CASE: appendExpansionPreservesBuffers (523000 ns)
+    TCS: TestCase_setBuilderArrayConstructionAndErrors, time elapsed: 217000 ns, RESULT:
+    [ PASSED ] CASE: setBuilderArrayConstructionAndErrors (85000 ns)
+    TCS: TestCase_astKeepsTheGroupThatHirCollapses, time elapsed: 1601000 ns, RESULT:
+    [ PASSED ] CASE: astKeepsTheGroupThatHirCollapses (1477000 ns)
+    TCS: TestCase_groupCursorCopiesHaveIndependentPositions, time elapsed: 186000 ns, RESULT:
+    [ PASSED ] CASE: groupCursorCopiesHaveIndependentPositions (64000 ns)
+    TCS: TestCase_setSizeHintTracksSlotsNotHits, time elapsed: 139000 ns, RESULT:
+    [ PASSED ] CASE: setSizeHintTracksSlotsNotHits (37000 ns)
+    TCS: TestCase_hirExposesSixDigitStructure, time elapsed: 158000 ns, RESULT:
+    [ PASSED ] CASE: hirExposesSixDigitStructure (53000 ns)
+    TCS: TestCase_hirSmartConstructorsPreserveSnapshots, time elapsed: 123000 ns, RESULT:
+    [ PASSED ] CASE: hirSmartConstructorsPreserveSnapshots (16000 ns)
+    TCS: TestCase_hirLengthOverflowAndEmptyAreDistinctFromFailure, time elapsed: 156000 ns, RESULT:
+    [ PASSED ] CASE: hirLengthOverflowAndEmptyAreDistinctFromFailure (19000 ns)
+    TCS: TestCase_hirRejectsUnimplementedStructuresExplicitly, time elapsed: 166000 ns, RESULT:
+    [ PASSED ] CASE: hirRejectsUnimplementedStructuresExplicitly (55000 ns)
+    TCS: TestCase_pikeReportsPatternSpanAndCaptures, time elapsed: 1573000 ns, RESULT:
+    [ PASSED ] CASE: pikeReportsPatternSpanAndCaptures (1448000 ns)
+    TCS: TestCase_pikeAnchoredSearchSeesTextOutsideTheRange, time elapsed: 210000 ns, RESULT:
+    [ PASSED ] CASE: pikeAnchoredSearchSeesTextOutsideTheRange (76000 ns)
+    TCS: TestCase_anchoredSearchIsNotTheSameAsACaret, time elapsed: 210000 ns, RESULT:
+    [ PASSED ] CASE: anchoredSearchIsNotTheSameAsACaret (31000 ns)
+    TCS: TestCase_reviewedAstUnicodeAndBoundaryRoundTrips, time elapsed: 222000 ns, RESULT:
+    [ PASSED ] CASE: reviewedAstUnicodeAndBoundaryRoundTrips (86000 ns)
+    TCS: TestCase_reviewedPikeByteRangesAndEmptyPatternSet, time elapsed: 668000 ns, RESULT:
+    [ PASSED ] CASE: reviewedPikeByteRangesAndEmptyPatternSet (544000 ns)
+    TCS: TestCase_emptySetAndEmptyMatches, time elapsed: 175000 ns, RESULT:
+    [ PASSED ] CASE: emptySetAndEmptyMatches (36000 ns)
+    TCS: TestCase_setOverlapDuplicatesAndOrdering, time elapsed: 192000 ns, RESULT:
+    [ PASSED ] CASE: setOverlapDuplicatesAndOrdering (78000 ns)
+    TCS: TestCase_setResultsAndPatternsAreIndependent, time elapsed: 164000 ns, RESULT:
+    [ PASSED ] CASE: setResultsAndPatternsAreIndependent (27000 ns)
+    TCS: TestCase_setNulAndUnicode, time elapsed: 1635000 ns, RESULT:
+    [ PASSED ] CASE: setNulAndUnicode (1529000 ns)
+    TCS: TestCase_setAgreesWithIndependentRegexes, time elapsed: 118683000 ns, RESULT:
+    [ PASSED ] CASE: setAgreesWithIndependentRegexes (118481000 ns)
+    TCS: TestCase_setInvalidIndexAndConstruction, time elapsed: 1156000 ns, RESULT:
+    [ PASSED ] CASE: setInvalidIndexAndConstruction (1036000 ns)
+    TCS: TestCase_setIteratorDirectionsCloneAndLifetime, time elapsed: 198000 ns, RESULT:
+    [ PASSED ] CASE: setIteratorDirectionsCloneAndLifetime (76000 ns)
+Summary: TOTAL: 46
+    PASSED: 46, SKIPPED: 0, ERROR: 0
+    FAILED: 0
+--------------------------------------------------------------------------------------------------
+Project tests finished, time elapsed: 360534000 ns, RESULT:
+TP: regex_consumer.*, time elapsed: 360459000 ns, RESULT:
+    PASSED:
+    TP: regex_consumer, time elapsed: 359277000 ns
+Summary: TOTAL: 46
+    PASSED: 46, SKIPPED: 0, ERROR: 0
+    FAILED: 0
+--------------------------------------------------------------------------------------------------
+cjpm test success
+
+Acceptance stage: consumer-run
+1. 查找订单号：
+  AB-123 [6, 12)
+  CD-456 [20, 26)
+2. 按名称提取编号：
+  number = 123
+  number = 456
+3. 保留前缀，对数字脱敏：
+  order=AB-***; order=CD-***
+4. 分割字段：
+  a
+  b
+  c
+5. 汉字与 UTF-8 字节偏移：
+  中文 [1, 7)
+6. 把普通文本安全地当作模式：
+  转义后：a\+b\.txt
+  是否匹配原文：true
+7. 多规则文本分类：
+  规则 0：退款相关
+  规则 2：包含订单号
+
+cjpm run finished
+
+Acceptance stage: verify
+{
+  "escape_differential_passed": 336,
+  "literal_roundtrip_passed": 4,
+  "rust_only_matching_fixtures_passed": 6
+}
+
+Acceptance stage: verify_matching
+matching fixed cases passed: 100
+matching fixed cases passed: 200
+matching fixed cases passed: 300
+matching fixed cases passed: 400
+{
+  "escape_differential_passed": 336,
+  "literal_roundtrip_passed": 4,
+  "rust_only_matching_fixtures_passed": 6,
+  "matching_differential_passed": 594,
+  "find_and_is_match_checks_passed": 16,
+  "matching_golden_passed": 4,
+  "unsupported_patterns_rejected": 0,
+  "invalid_patterns_rejected": 8,
+  "resource_limits_checked": 0,
+  "cangjie_matching_engine_implemented": true
+}
+
+Acceptance stage: verify_classes
+class/repetition fixed cases passed: 100
+class/repetition fixed cases passed: 200
+class/repetition fixed cases passed: 300
+class/repetition fixed cases passed: 400
+class/repetition fixed cases passed: 500
+class/repetition fixed cases passed: 600
+{
+  "escape_differential_passed": 336,
+  "literal_roundtrip_passed": 4,
+  "rust_only_matching_fixtures_passed": 6,
+  "matching_differential_passed": 594,
+  "find_and_is_match_checks_passed": 16,
+  "matching_golden_passed": 4,
+  "unsupported_patterns_rejected": 0,
+  "invalid_patterns_rejected": 8,
+  "resource_limits_checked": 0,
+  "cangjie_matching_engine_implemented": true,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1
+}
+
+Acceptance stage: verify_captures
+capture fixed cases passed: 110
+capture fixed cases passed: 220
+capture fixed cases passed: 330
+capture fixed cases passed: 440
+capture fixed cases passed: 550
+{
+  "escape_differential_passed": 336,
+  "literal_roundtrip_passed": 4,
+  "rust_only_matching_fixtures_passed": 6,
+  "matching_differential_passed": 594,
+  "find_and_is_match_checks_passed": 16,
+  "matching_golden_passed": 4,
+  "unsupported_patterns_rejected": 0,
+  "invalid_patterns_rejected": 8,
+  "resource_limits_checked": 0,
+  "cangjie_matching_engine_implemented": true,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
+  "capture_differential_passed": 880,
+  "capture_golden_passed": 2,
+  "capture_name_checks_passed": 35,
+  "capture_invalid_rejected": 8,
+  "capture_unicode_names_passed": 2,
+  "capture_resource_limits_checked": 0
+}
+
+Acceptance stage: verify_text_ops
+text operation cases passed: 50
+text operation cases passed: 100
+text operation cases passed: 150
+text operation cases passed: 200
+text operation cases passed: 250
+text operation cases passed: 300
+text operation cases passed: 350
+text operation cases passed: 400
+text operation cases passed: 450
+text operation cases passed: 500
+text operation cases passed: 550
+text operation cases passed: 600
+text operation cases passed: 650
+{
+  "escape_differential_passed": 336,
+  "literal_roundtrip_passed": 4,
+  "rust_only_matching_fixtures_passed": 6,
+  "matching_differential_passed": 594,
+  "find_and_is_match_checks_passed": 16,
+  "matching_golden_passed": 4,
+  "unsupported_patterns_rejected": 0,
+  "invalid_patterns_rejected": 8,
+  "resource_limits_checked": 0,
+  "cangjie_matching_engine_implemented": true,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
+  "capture_differential_passed": 880,
+  "capture_golden_passed": 2,
+  "capture_name_checks_passed": 35,
+  "capture_invalid_rejected": 8,
+  "capture_unicode_names_passed": 2,
+  "capture_resource_limits_checked": 0,
+  "text_operations_differential_passed": 1037,
+  "text_operations_golden_passed": 7,
+  "text_operations_negative_limits_rejected": 4,
+  "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN"
+}
+
+Acceptance stage: verify_flags
+flag fixed cases passed: 100
+flag fixed cases passed: 200
+flag fixed cases passed: 300
+flag fixed cases passed: 400
+flag fixed cases passed: 500
+flag fixed cases passed: 600
+flag fixed cases passed: 700
+flag fixed cases passed: 800
+{
+  "escape_differential_passed": 336,
+  "literal_roundtrip_passed": 4,
+  "rust_only_matching_fixtures_passed": 6,
+  "matching_differential_passed": 594,
+  "find_and_is_match_checks_passed": 16,
+  "matching_golden_passed": 4,
+  "unsupported_patterns_rejected": 0,
+  "invalid_patterns_rejected": 8,
+  "resource_limits_checked": 0,
+  "cangjie_matching_engine_implemented": true,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
+  "capture_differential_passed": 880,
+  "capture_golden_passed": 2,
+  "capture_name_checks_passed": 35,
+  "capture_invalid_rejected": 8,
+  "capture_unicode_names_passed": 2,
+  "capture_resource_limits_checked": 0,
+  "text_operations_differential_passed": 1037,
+  "text_operations_golden_passed": 7,
+  "text_operations_negative_limits_rejected": 4,
+  "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+  "flags_differential_passed": 960,
+  "flags_api_checks_passed": 12,
+  "flags_golden_passed": 4,
+  "flags_invalid_rejected": 14,
+  "flags_unsupported_rejected": 0
+}
+
+Acceptance stage: verify_case
+{"case_fold_differential_passed": 721, "case_fold_golden_passed": 7, "case_fold_invalid_rejected": 2, "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off"}
+
+Acceptance stage: verify_escapes
+{
+  "escape_differential_passed": 336,
+  "literal_roundtrip_passed": 4,
+  "rust_only_matching_fixtures_passed": 6,
+  "matching_differential_passed": 594,
+  "find_and_is_match_checks_passed": 16,
+  "matching_golden_passed": 4,
+  "unsupported_patterns_rejected": 0,
+  "invalid_patterns_rejected": 8,
+  "resource_limits_checked": 0,
+  "cangjie_matching_engine_implemented": true,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
+  "capture_differential_passed": 880,
+  "capture_golden_passed": 2,
+  "capture_name_checks_passed": 35,
+  "capture_invalid_rejected": 8,
+  "capture_unicode_names_passed": 2,
+  "capture_resource_limits_checked": 0,
+  "text_operations_differential_passed": 1037,
+  "text_operations_golden_passed": 7,
+  "text_operations_negative_limits_rejected": 4,
+  "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+  "flags_differential_passed": 960,
+  "flags_api_checks_passed": 12,
+  "flags_golden_passed": 4,
+  "flags_invalid_rejected": 14,
+  "flags_unsupported_rejected": 0,
+  "case_fold_differential_passed": 721,
+  "case_fold_golden_passed": 7,
+  "case_fold_invalid_rejected": 2,
+  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
+  "scalar_escape_differential_passed": 366,
+  "scalar_escape_invalid_rejected": 22,
+  "scalar_escape_golden_passed": 3,
+  "scalar_escape_api_checks_passed": 4,
+  "scalar_escape_scope": "x/u/U fixed and braced scalar escapes plus a/f/v"
+}
+
+Acceptance stage: verify_ascii_classes
+POSIX class cases passed: 24
+POSIX class cases passed: 48
+POSIX class cases passed: 72
+POSIX class cases passed: 96
+POSIX class cases passed: 120
+POSIX class cases passed: 144
+POSIX class cases passed: 168
+POSIX class cases passed: 192
+POSIX class cases passed: 216
+POSIX class cases passed: 240
+POSIX class cases passed: 264
+POSIX class cases passed: 288
+POSIX class cases passed: 312
+POSIX class cases passed: 336
+{
+  "escape_differential_passed": 336,
+  "literal_roundtrip_passed": 4,
+  "rust_only_matching_fixtures_passed": 6,
+  "matching_differential_passed": 594,
+  "find_and_is_match_checks_passed": 16,
+  "matching_golden_passed": 4,
+  "unsupported_patterns_rejected": 0,
+  "invalid_patterns_rejected": 8,
+  "resource_limits_checked": 0,
+  "cangjie_matching_engine_implemented": true,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
+  "capture_differential_passed": 880,
+  "capture_golden_passed": 2,
+  "capture_name_checks_passed": 35,
+  "capture_invalid_rejected": 8,
+  "capture_unicode_names_passed": 2,
+  "capture_resource_limits_checked": 0,
+  "text_operations_differential_passed": 1037,
+  "text_operations_golden_passed": 7,
+  "text_operations_negative_limits_rejected": 4,
+  "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+  "flags_differential_passed": 960,
+  "flags_api_checks_passed": 12,
+  "flags_golden_passed": 4,
+  "flags_invalid_rejected": 14,
+  "flags_unsupported_rejected": 0,
+  "case_fold_differential_passed": 721,
+  "case_fold_golden_passed": 7,
+  "case_fold_invalid_rejected": 2,
+  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
+  "scalar_escape_differential_passed": 366,
+  "scalar_escape_invalid_rejected": 22,
+  "scalar_escape_golden_passed": 3,
+  "scalar_escape_api_checks_passed": 4,
+  "scalar_escape_scope": "x/u/U fixed and braced scalar escapes plus a/f/v",
+  "ascii_classes_differential_passed": 496,
+  "ascii_classes_golden_passed": 5,
+  "ascii_classes_invalid_rejected": 4,
+  "ascii_classes_api_checks_passed": 4,
+  "ascii_classes_scope": "14 POSIX ASCII classes, Unicode complement, nested fallback"
+}
+
+Acceptance stage: verify_unicode
+Unicode boundary class passed: d
+Unicode boundary class passed: s
+Unicode boundary class passed: w
+{
+  "escape_differential_passed": 336,
+  "literal_roundtrip_passed": 4,
+  "rust_only_matching_fixtures_passed": 6,
+  "matching_differential_passed": 594,
+  "find_and_is_match_checks_passed": 16,
+  "matching_golden_passed": 4,
+  "unsupported_patterns_rejected": 0,
+  "invalid_patterns_rejected": 8,
+  "resource_limits_checked": 0,
+  "cangjie_matching_engine_implemented": true,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
+  "capture_differential_passed": 880,
+  "capture_golden_passed": 2,
+  "capture_name_checks_passed": 35,
+  "capture_invalid_rejected": 8,
+  "capture_unicode_names_passed": 2,
+  "capture_resource_limits_checked": 0,
+  "text_operations_differential_passed": 1037,
+  "text_operations_golden_passed": 7,
+  "text_operations_negative_limits_rejected": 4,
+  "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+  "flags_differential_passed": 960,
+  "flags_api_checks_passed": 12,
+  "flags_golden_passed": 4,
+  "flags_invalid_rejected": 14,
+  "flags_unsupported_rejected": 0,
+  "case_fold_differential_passed": 721,
+  "case_fold_golden_passed": 7,
+  "case_fold_invalid_rejected": 2,
+  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
+  "scalar_escape_differential_passed": 366,
+  "scalar_escape_invalid_rejected": 22,
+  "scalar_escape_golden_passed": 3,
+  "scalar_escape_api_checks_passed": 4,
+  "scalar_escape_scope": "x/u/U fixed and braced scalar escapes plus a/f/v",
+  "ascii_classes_differential_passed": 496,
+  "ascii_classes_golden_passed": 5,
+  "ascii_classes_invalid_rejected": 4,
+  "ascii_classes_api_checks_passed": 4,
+  "ascii_classes_scope": "14 POSIX ASCII classes, Unicode complement, nested fallback",
+  "unicode_shorthand_differential_passed": 284,
+  "unicode_shorthand_golden_passed": 4,
+  "unicode_shorthand_invalid_rejected": 4,
+  "unicode_shorthand_api_checks_passed": 4,
+  "unicode_version": "16.0.0",
+  "unicode_range_counts": {
+    "d": 71,
+    "s": 10,
+    "w": 796
+  },
+  "unicode_scope": "Pinned Unicode 16.0.0 shorthand tables"
+}
+
+Acceptance stage: verify_boundaries
+{
+  "escape_differential_passed": 336,
+  "literal_roundtrip_passed": 4,
+  "rust_only_matching_fixtures_passed": 6,
+  "matching_differential_passed": 594,
+  "find_and_is_match_checks_passed": 16,
+  "matching_golden_passed": 4,
+  "unsupported_patterns_rejected": 0,
+  "invalid_patterns_rejected": 8,
+  "resource_limits_checked": 0,
+  "cangjie_matching_engine_implemented": true,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
+  "capture_differential_passed": 880,
+  "capture_golden_passed": 2,
+  "capture_name_checks_passed": 35,
+  "capture_invalid_rejected": 8,
+  "capture_unicode_names_passed": 2,
+  "capture_resource_limits_checked": 0,
+  "text_operations_differential_passed": 1037,
+  "text_operations_golden_passed": 7,
+  "text_operations_negative_limits_rejected": 4,
+  "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+  "flags_differential_passed": 960,
+  "flags_api_checks_passed": 12,
+  "flags_golden_passed": 4,
+  "flags_invalid_rejected": 14,
+  "flags_unsupported_rejected": 0,
+  "case_fold_differential_passed": 721,
+  "case_fold_golden_passed": 7,
+  "case_fold_invalid_rejected": 2,
+  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
+  "scalar_escape_differential_passed": 366,
+  "scalar_escape_invalid_rejected": 22,
+  "scalar_escape_golden_passed": 3,
+  "scalar_escape_api_checks_passed": 4,
+  "scalar_escape_scope": "x/u/U fixed and braced scalar escapes plus a/f/v",
+  "ascii_classes_differential_passed": 496,
+  "ascii_classes_golden_passed": 5,
+  "ascii_classes_invalid_rejected": 4,
+  "ascii_classes_api_checks_passed": 4,
+  "ascii_classes_scope": "14 POSIX ASCII classes, Unicode complement, nested fallback",
+  "unicode_shorthand_differential_passed": 284,
+  "unicode_shorthand_golden_passed": 4,
+  "unicode_shorthand_invalid_rejected": 4,
+  "unicode_shorthand_api_checks_passed": 4,
+  "unicode_version": "16.0.0",
+  "unicode_range_counts": {
+    "d": 71,
+    "s": 10,
+    "w": 796
+  },
+  "unicode_scope": "Pinned Unicode 16.0.0 shorthand tables",
+  "word_boundary_differential_passed": 534,
+  "word_boundary_golden_passed": 5,
+  "word_boundary_api_checks_passed": 12,
+  "word_boundary_invalid_rejected": 2,
+  "word_boundary_unsupported_rejected": 0,
+  "word_boundary_scope": "Unicode 16 b/B at scalar boundaries"
+}
+
+Acceptance stage: verify_properties
+general category passed: Cased_Letter
+general category passed: Close_Punctuation
+general category passed: Connector_Punctuation
+general category passed: Control
+general category passed: Currency_Symbol
+general category passed: Dash_Punctuation
+general category passed: Decimal_Number
+general category passed: Enclosing_Mark
+general category passed: Final_Punctuation
+general category passed: Format
+general category passed: Initial_Punctuation
+general category passed: Letter
+general category passed: Letter_Number
+general category passed: Line_Separator
+general category passed: Lowercase_Letter
+general category passed: Mark
+general category passed: Math_Symbol
+general category passed: Modifier_Letter
+general category passed: Modifier_Symbol
+general category passed: Nonspacing_Mark
+general category passed: Number
+general category passed: Open_Punctuation
+general category passed: Other
+general category passed: Other_Letter
+general category passed: Other_Number
+general category passed: Other_Punctuation
+general category passed: Other_Symbol
+general category passed: Paragraph_Separator
+general category passed: Private_Use
+general category passed: Punctuation
+general category passed: Separator
+general category passed: Space_Separator
+general category passed: Spacing_Mark
+general category passed: Symbol
+general category passed: Titlecase_Letter
+general category passed: Unassigned
+general category passed: Uppercase_Letter
+{
+  "escape_differential_passed": 336,
+  "literal_roundtrip_passed": 4,
+  "rust_only_matching_fixtures_passed": 6,
+  "matching_differential_passed": 594,
+  "find_and_is_match_checks_passed": 16,
+  "matching_golden_passed": 4,
+  "unsupported_patterns_rejected": 0,
+  "invalid_patterns_rejected": 8,
+  "resource_limits_checked": 0,
+  "cangjie_matching_engine_implemented": true,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
+  "capture_differential_passed": 880,
+  "capture_golden_passed": 2,
+  "capture_name_checks_passed": 35,
+  "capture_invalid_rejected": 8,
+  "capture_unicode_names_passed": 2,
+  "capture_resource_limits_checked": 0,
+  "text_operations_differential_passed": 1037,
+  "text_operations_golden_passed": 7,
+  "text_operations_negative_limits_rejected": 4,
+  "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+  "flags_differential_passed": 960,
+  "flags_api_checks_passed": 12,
+  "flags_golden_passed": 4,
+  "flags_invalid_rejected": 14,
+  "flags_unsupported_rejected": 0,
+  "case_fold_differential_passed": 721,
+  "case_fold_golden_passed": 7,
+  "case_fold_invalid_rejected": 2,
+  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
+  "scalar_escape_differential_passed": 366,
+  "scalar_escape_invalid_rejected": 22,
+  "scalar_escape_golden_passed": 3,
+  "scalar_escape_api_checks_passed": 4,
+  "scalar_escape_scope": "x/u/U fixed and braced scalar escapes plus a/f/v",
+  "ascii_classes_differential_passed": 496,
+  "ascii_classes_golden_passed": 5,
+  "ascii_classes_invalid_rejected": 4,
+  "ascii_classes_api_checks_passed": 4,
+  "ascii_classes_scope": "14 POSIX ASCII classes, Unicode complement, nested fallback",
+  "unicode_shorthand_differential_passed": 284,
+  "unicode_shorthand_golden_passed": 4,
+  "unicode_shorthand_invalid_rejected": 4,
+  "unicode_shorthand_api_checks_passed": 4,
+  "unicode_version": "16.0.0",
+  "unicode_range_counts": {
+    "d": 71,
+    "s": 10,
+    "w": 796
+  },
+  "unicode_scope": "Pinned Unicode 16.0.0 shorthand tables",
+  "word_boundary_differential_passed": 534,
+  "word_boundary_golden_passed": 5,
+  "word_boundary_api_checks_passed": 12,
+  "word_boundary_invalid_rejected": 2,
+  "word_boundary_unsupported_rejected": 0,
+  "word_boundary_scope": "Unicode 16 b/B at scalar boundaries",
+  "general_category_differential_passed": 702,
+  "general_category_golden_passed": 4,
+  "general_category_invalid_rejected": 11,
+  "general_category_unsupported_rejected": 0,
+  "general_category_api_checks_passed": 4,
+  "general_category_scope": "37 categories plus Any/ASCII/Assigned"
+}
+
+Acceptance stage: verify_scripts
+Script intervals and aliases passed
+Script_Extensions intervals and aliases passed
+Script differential passed: 2148
+
+Acceptance stage: verify_binary
+Binary property differential passed: 417
+
+Acceptance stage: verify_syntax
+syntax differential passed: 88
+
+Acceptance stage: verify_errors
+error display checks passed: 49
+
+Acceptance stage: verify_limits
+limit checks passed: 60
+
+Acceptance stage: verify_bytes
+bytes differential passed: 48
+
+Acceptance stage: verify_upstream_sample
+upstream sample passed: 198 skipped: 141
+
+Acceptance stage: verify_upstream_suite
+handwritten upstream checks passed
+upstream suite cases: 3213
+suite 100/3213 failures 0
+suite 200/3213 failures 0
+suite 300/3213 failures 0
+suite 400/3213 failures 0
+suite 500/3213 failures 0
+suite 600/3213 failures 0
+suite 700/3213 failures 0
+suite 800/3213 failures 0
+suite 900/3213 failures 0
+suite 1000/3213 failures 0
+suite 1100/3213 failures 0
+suite 1200/3213 failures 0
+suite 1300/3213 failures 0
+suite 1400/3213 failures 0
+suite 1500/3213 failures 0
+suite 1600/3213 failures 0
+suite 1700/3213 failures 0
+suite 1800/3213 failures 0
+suite 1900/3213 failures 0
+suite 2000/3213 failures 0
+suite 2100/3213 failures 0
+suite 2200/3213 failures 0
+suite 2300/3213 failures 0
+suite 2400/3213 failures 0
+suite 2500/3213 failures 0
+suite 2600/3213 failures 0
+suite 2700/3213 failures 0
+suite 2800/3213 failures 0
+suite 2900/3213 failures 0
+suite 3000/3213 failures 0
+suite 3100/3213 failures 0
+suite 3200/3213 failures 0
+suite 3213/3213 failures 0
+upstream suite passed: 3213
+
+Acceptance stage: verify_sets
+RegexSet differential passed: 577
+
+Acceptance stage: verify_api_contracts
+API contract cases passed: 2414; offset differential checks passed: 513
+
+Acceptance stage: verify_hir
+HIR: 367 parse cases, 235 constructors, 41 print cases, 4 invalid rejected
+
+Acceptance stage: verify_ast
+AST: 83 shapes matched, 50 lowered to the same HIR
+
+Acceptance stage: verify_pike
+PikeVM: 479 searches matched, 1 invalid range rejected
+
+Acceptance stage: verify_props
+HIR properties: 32 matched; HIR PikeVM: 6
+
+Acceptance stage: verify_error_spans
+syntax error spans matched: 37
+
+Acceptance stage: showcase
+
+1. 从文本中找出订单号
+   模式：[A-Z]{2}-[0-9]{3}
+   输入："order=AB-123; order=CD-456"
+   预期：[[6, 12, "AB-123"], [20, 26, "CD-456"]]
+   实际：[[6, 12, "AB-123"], [20, 26, "CD-456"]]
+   PASS — 每条结果是 [起始字节, 结束字节, 文本]，结束位置不包含在匹配内。
+
+2. 按名称提取订单编号
+   模式：(?<prefix>[A-Z]{2})-(?<number>[0-9]{3})
+   输入："order=AB-123"
+   参数：["number"]
+   预期：[9, 12, "123"]
+   实际：[9, 12, "123"]
+   PASS — 捕获组把匹配拆成有名字的字段。
+
+3. 保留前缀，对编号脱敏
+   模式：(?<prefix>[A-Z]{2})-[0-9]{3}
+   输入："order=AB-123; order=CD-456"
+   参数：["${prefix}-***"]
+   预期："order=AB-***; order=CD-***"
+   实际："order=AB-***; order=CD-***"
+   PASS — 替换模板引用捕获字段；模板不是仓颉或 shell 的变量。
+
+4. 按不同分隔符拆分文本
+   模式：[,;]\s*
+   输入："a, b;c"
+   预期：["a", "b", "c"]
+   实际：["a", "b", "c"]
+   PASS — 分隔符可以是逗号或分号，并吸收后面的空白。
+
+5. 查找汉字并解释 UTF-8 偏移
+   模式：\p{Han}+
+   输入："A中文α"
+   预期：[[1, 7, "中文"]]
+   实际：[[1, 7, "中文"]]
+   PASS — 中文是两个字符、六个 UTF-8 字节，范围是 [1,7)。
+
+6. 只匹配完整单词
+   模式：\bcat\b
+   输入："cat cats cat"
+   预期：[[0, 3, "cat"], [9, 12, "cat"]]
+   实际：[[0, 3, "cat"], [9, 12, "cat"]]
+   PASS — 词边界让 cats 中的 cat 不参与匹配。
+
+7. 区分书写系统与扩展集合
+   模式：\p{scx=Hira}
+   输入："ー"
+   预期：[[0, 3, "ー"]]
+   实际：[[0, 3, "ー"]]
+   PASS — 长音符可用于平假名；把 scx 改为 sc 后应该没有结果。
+
+8. 没有匹配也是正常结果
+   模式：[0-9]+
+   输入："abc"
+   预期：[]
+   实际：[]
+   PASS — 空结果不是运行错误。
+
+9. 大小写不敏感但仍返回原文
+   模式：(?i)abc
+   输入："ABC"
+   预期：[[0, 3, "ABC"]]
+   实际：[[0, 3, "ABC"]]
+   PASS — 简单大小写折叠让 ABC 命中；结果文本仍是输入里的 ABC。
+
+10. 明确显示当前版本边界
+   模式：(?=a)
+   输入："a"
+   预期："明确拒绝此模式"
+   实际："明确拒绝此模式"
+   PASS — 前瞻仍未实现；构造失败，不会把它当成普通分组继续匹配。
+
+11. 按 CRLF 读取错误日志
+   模式：(?mR)^ERROR.*
+   输入："INFO ok\r\nERROR disk full\r\n"
+   预期：[[9, 24, "ERROR disk full"]]
+   实际：[[9, 24, "ERROR disk full"]]
+   PASS — R 让 ^ 把回车加换行看成一行的结尾。点号不吃掉回车或换行，所以匹配停在行尾。
+
+12. 从指定字节继续查找
+   模式：\bword\b
+   输入："password word"
+   参数：["9"]
+   预期：[[9, 13, "word"]]
+   实际：[[9, 13, "word"]]
+   PASS — 9 是原文里 word 的起点。前面的空格仍参与词边界，结果偏移也相对整段原文。
+
+13. 单词内部不是新的起点
+   模式：\bword\b
+   输入："password"
+   参数：["4"]
+   预期：[]
+   实际：[]
+   PASS — 4 落在 password 的 w 上。w 前面还是字母，所以这里没有词边界，也不会另起一段文本再搜。
+
+场景验收：13/13 通过；报告：/private/var/folders/xc/7s79qz2966j773sgl_d77kxh0000gn/T/regex4cj-review-kr_2u13b/repo/.build/work/showcase.json
+
+Acceptance stage: classification
+文本："订单 AB-123 需要退款"
+命中编号：[0, 2]
+分类标签：["退款相关", "包含订单号"]
+预期编号：[0, 2]；PASS
+
+文本："请给我开发票"
+命中编号：[1]
+分类标签：["发票相关"]
+预期编号：[1]；PASS
+
+文本："订单 AB-123 需要退款，也需要开发票"
+命中编号：[0, 1, 2]
+分类标签：["退款相关", "发票相关", "包含订单号"]
+预期编号：[0, 1, 2]；PASS
+
+文本："订单 AB-123 和 CD-456 都需要退款"
+命中编号：[0, 2]
+分类标签：["退款相关", "包含订单号"]
+预期编号：[0, 2]；PASS
+
+文本："你好，请问有人吗"
+命中编号：[]
+分类标签：[]
+预期编号：[]；PASS
+
+文本：""
+命中编号：[]
+分类标签：[]
+预期编号：[]；PASS
+
+文本："ERROR disk full"
+命中编号：[3]
+分类标签：["错误日志"]
+预期编号：[3]；PASS
+
+多规则分类验收：7/7 通过
+Complete acceptance passed. Report: /private/var/folders/xc/7s79qz2966j773sgl_d77kxh0000gn/T/regex4cj-review-kr_2u13b/repo/.build/work/verification-run.json

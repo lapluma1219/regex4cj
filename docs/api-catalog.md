@@ -1,482 +1,661 @@
-# 仓颉公开接口数量与逐项行为
-
-统计基线：`b40034516279644cc53cbc4dba4ff77e07b8c8c3` 加2026-10-04公开HIR切片工作区修改。扫描范围为 `port/src/*.cj`；不包含CLI命令、测试探针、内部方法或依赖库继承而未显式声明的方法。此文档是该工作区状态的静态快照，公开代码变化后需重新核对。
-
-## 统计口径
-
-**208个公开可调用入口 = 187个公开方法 + 20个公开构造器 + 1个顶层函数。另有28个公开字段，不计入208。** 同名方法在不同类型上分别计数；每个显式公开构造器计一次，不计包内构造器。`Regex.find`和`BytesRegex.find`因此算两个入口，但并不代表两种独立业务功能。
-
-公开类型共36个（34个class和2个enum）。`RegexErrorKind`与`HirKind`的枚举分支单独说明，不算函数。接口数量是代码规模口径，不是移植完成率。
-
-原仓库审计有170条固有方法记录：132条“有样例验证”，38条“有明确差异”，映射到151个不同仓颉符号（包括字段）。多条原仓库记录可以共用仓颉入口，原仓库方法也可由字段替代；仓颉另有数组便捷方法、回调构造器等，新增HIR切片对应regex-syntax，另有[范围与示例](hir.md)。因此170与208不能相除作为完成率。宏、trait与构建特性不在这个分母里。
-
-本表的“行为”来自当前实现与[API说明](api.md)。原仓库状态沿用[接口审计](api-audit.md)，存在样例不等于完整语义等价。有些入口在原仓库映射表中没有单独条目，并不表示没有测试。
-
-## 按类型汇总
-
-| 类型 | 方法/函数 | 公开构造器 | 可调用合计 | 公开字段 |
-|---|---:|---:|---:|---:|
-| Regex | 28 | 1 | 29 | 0 |
-| BytesRegex | 28 | 1 | 29 | 0 |
-| RegexSet | 8 | 1 | 9 | 0 |
-| BytesRegexSet | 8 | 1 | 9 | 0 |
-| RegexBuilder | 13 | 1 | 14 | 0 |
-| BytesRegexBuilder | 13 | 1 | 14 | 0 |
-| RegexSetBuilder | 14 | 2 | 16 | 0 |
-| BytesRegexSetBuilder | 14 | 2 | 16 | 0 |
-| RegexMatch | 3 | 0 | 3 | 3 |
-| BytesMatch | 2 | 1 | 3 | 3 |
-| Captures | 7 | 0 | 7 | 1 |
-| BytesCaptures | 7 | 0 | 7 | 1 |
-| CaptureSpan | 0 | 0 | 0 | 2 |
-| CaptureLocations | 1 | 0 | 1 | 1 |
-| SetMatches | 6 | 0 | 6 | 0 |
-| SetMatchesIter | 4 | 0 | 4 | 0 |
-| MatchIter | 1 | 1 | 2 | 0 |
-| CaptureIter | 1 | 1 | 2 | 0 |
-| SplitIter | 1 | 1 | 2 | 0 |
-| BytesMatchIter | 1 | 1 | 2 | 0 |
-| BytesCaptureIter | 1 | 1 | 2 | 0 |
-| BytesSplitIter | 1 | 1 | 2 | 0 |
-| GroupIter | 4 | 0 | 4 | 0 |
-| BytesGroupIter | 4 | 0 | 4 | 0 |
-| GroupItem | 0 | 0 | 0 | 2 |
-| BytesGroupItem | 0 | 0 | 0 | 2 |
-| RegexError | 1 | 1 | 2 | 3 |
-| Hir | 13 | 0 | 13 | 0 |
-| HirProperties | 2 | 0 | 2 | 0 |
-| HirRange | 0 | 1 | 1 | 2 |
-| HirClass | 1 | 0 | 1 | 1 |
-| HirCapture | 0 | 0 | 0 | 3 |
-| HirRepetition | 0 | 0 | 0 | 4 |
-| HirUnsupportedError | 0 | 1 | 1 | 0 |
-| 顶层函数 | 1 | 0 | 1 | 0 |
-| **合计** | **188** | **20** | **208** | **28** |
-
-## 共同约定
-
-- 字符串输入是String，bytes输入与输出片段为Array<UInt8>，可包含非法UTF-8；bytes的模式本身仍是String。具体参数顺序与返回类型见每行签名。
-- 位置均为原输入字节偏移的半开区间[start,end)。合法的字符串内部字节起点会从后续字符边界搜索，断言仍可看到之前的上下文；负数或越界起点抛异常。
-- 无匹配通常返回None、false或空数组。无匹配不等于非法模式；后者在编译时抛RegexError。
-- 内置bytes迭代器复制输入后逐次搜索，字符串迭代器会准备扫描信息；不是零复制，也不是流式读取文件。
-- 模板支持捕获展开，替换0次限制表示不限；分割0段限制表示无结果。
-- 所有Builder选项方法返回当前Builder，支持链式调用。资源限额与Rust的引擎实现存在差异，见各行说明。
-
-## 逐项清单
-
-### Regex
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/nfa.cj#L352)（构造器） | `public init(pattern: String)` | 使用默认选项解析并编译模式；语法错误或编译超限抛RegexError。 | 有样例验证 |
-| [asStr](../port/src/nfa.cj#L417)（方法） | `public func asStr(): String` | 返回编译时的原始正则模式。 | 有样例验证 |
-| [staticCapturesLen](../port/src/nfa.cj#L420)（方法） | `public func staticCapturesLen(): Option<Int64>` | 若每次匹配实际参与的捕获数量固定，返回Some(数量，含组0)，否则None；不是总槽位数。 | 有样例验证 |
-| [find](../port/src/nfa.cj#L551)（方法） | `public func find(text: String): Option<RegexMatch>` | 返回第一条匹配的位置与原文片段；无匹配返回None。 | 有样例验证 |
-| [isMatch](../port/src/nfa.cj#L563)（方法） | `public func isMatch(text: String): Bool` | 判断输入中是否存在匹配，返回Bool。 | 有样例验证 |
-| [findAt](../port/src/nfa.cj#L574)（方法） | `public func findAt(text: String, start: Int64): Option<RegexMatch>` | 从指定字节起点查找第一条匹配，返回Option；保留原输入上下文。 | 有样例验证 |
-| [isMatchAt](../port/src/nfa.cj#L582)（方法） | `public func isMatchAt(text: String, start: Int64): Bool` | 从指定字节起点判断有无匹配，保留原输入上下文。 | 有样例验证 |
-| [shortestMatch](../port/src/nfa.cj#L588)（方法） | `public func shortestMatch(text: String): Option<Int64>` | 返回引擎确认命中时的早停终点，未命中返回None；不是数学最短，不保证与Rust其他引擎逐输入相同。 | 有明确差异：早停终点允许依赖内部引擎；不承诺逐输入与 Rust meta 的终点相等，也不承诺数学最短。 |
-| [shortestMatchAt](../port/src/nfa.cj#L591)（方法） | `public func shortestMatchAt(text: String, start: Int64): Option<Int64>` | 从指定字节起点搜索并返回早停终点；边界与shortestMatch相同。 | 有明确差异：早停终点允许依赖内部引擎；不承诺逐输入与 Rust meta 的终点相等，也不承诺数学最短。 |
-| [capturesAt](../port/src/nfa.cj#L599)（方法） | `public func capturesAt(text: String, start: Int64): Option<Captures>` | 从指定字节起点搜索，返回第一次匹配的捕获组。 | 有样例验证 |
-| [findIter](../port/src/nfa.cj#L607)（方法） | `public func findIter(text: String): MatchIter` | 返回按next逐次搜索的匹配迭代器，结果不重叠；不会先收集全部匹配。 | 有样例验证 |
-| [capturesIter](../port/src/nfa.cj#L631)（方法） | `public func capturesIter(text: String): CaptureIter` | 返回按next逐次搜索的捕获迭代器。 | 有样例验证 |
-| [splitIter](../port/src/nfa.cj#L655)（方法） | `public func splitIter(text: String): SplitIter` | 返回按next逐次取分割片段的迭代器，保留首尾空段。 | 有样例验证 |
-| [splitNIter](../port/src/nfa.cj#L695)（方法） | `public func splitNIter(text: String, limit: Int64): SplitIter` | 按next最多取limit段；0无结果，1返回原输入，最后一段保留余文，负数抛异常。 | 有样例验证 |
-| [captureLocations](../port/src/nfa.cj#L724)（方法） | `public func captureLocations(): CaptureLocations` | 创建与此模式对应、可重复写入的捕获位置容器。 | 有明确差异；有样例验证：上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。 |
-| [capturesRead](../port/src/nfa.cj#L727)（方法） | `public func capturesRead(locations: CaptureLocations, text: String): Option<RegexMatch>` | 从起点0搜索并写入位置容器，返回完整匹配；失败时清空可读位置。 | 有样例验证 |
-| [capturesReadAt](../port/src/nfa.cj#L730)（方法） | `public func capturesReadAt(locations: CaptureLocations, text: String, start: Int64): Option<RegexMatch>` | 从指定字节起点搜索并覆盖位置容器；失败或未参与的组不可读，不保留上次结果。 | 有明确差异；有样例验证：上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。 |
-| [findAll](../port/src/nfa.cj#L756)（方法） | `public func findAll(text: String): Array<RegexMatch>` | 立即搜索并返回全部不重叠匹配数组。 | 不单列于170条对应表 |
-| [capturesLen](../port/src/nfa.cj#L780)（方法） | `public func capturesLen(): Int64` | 返回模式捕获组槽位总数，包括完整匹配组0。 | 有样例验证 |
-| [captureNames](../port/src/nfa.cj#L783)（方法） | `public func captureNames(): Array<Option<String>>` | 返回按组号排列的名称数组；组0及未命名组为None。 | 有样例验证 |
-| [captures](../port/src/nfa.cj#L808)（方法） | `public func captures(text: String): Option<Captures>` | 返回第一次匹配的捕获组，组0是整个匹配；无匹配返回None。 | 有样例验证 |
-| [capturesAll](../port/src/nfa.cj#L815)（方法） | `public func capturesAll(text: String): Array<Captures>` | 立即收集所有不重叠匹配的捕获组，返回数组。 | 不单列于170条对应表 |
-| [replace](../port/src/nfa.cj#L835)（方法） | `public func replace(text: String, replacement: String): String` | 用模板替换第一次匹配，返回新输入；模板可引用捕获组。 | 有样例验证 |
-| [replaceAll](../port/src/nfa.cj#L838)（方法） | `public func replaceAll(text: String, replacement: String): String` | 用模板替换全部不重叠匹配。 | 有样例验证 |
-| [replaceN](../port/src/nfa.cj#L842)（方法） | `public func replaceN(text: String, limit: Int64, replacement: String): String` | 最多替换limit次；0表示不限，负数抛异常。 | 有样例验证 |
-| [replaceLiteral](../port/src/nfa.cj#L855)（方法） | `public func replaceLiteral(text: String, limit: Int64, replacement: String): String` | 最多替换limit次，将替换内容作为字面量，不展开$；0不限，负数抛异常。 | 不单列于170条对应表 |
-| [replaceWith](../port/src/nfa.cj#L858)（方法） | `public func replaceWith(text: String, limit: Int64, replacer: (Captures) -> String): String` | 每次匹配调用回调产生替换内容；0不限，负数抛异常。 | 不单列于170条对应表 |
-| [split](../port/src/nfa.cj#L892)（方法） | `public func split(text: String): Array<String>` | 按匹配分割，立即返回片段数组，保留首尾空段。 | 不单列于170条对应表 |
-| [splitN](../port/src/nfa.cj#L896)（方法） | `public func splitN(text: String, limit: Int64): Array<String>` | 最多分成limit段，最后一段保留剩余输入；0返回空数组，1返回原输入，负数抛异常。 | 不单列于170条对应表 |
-
-### BytesRegex
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/bytes.cj#L33)（构造器） | `public init(pattern: String)` | 使用默认选项解析并编译模式；语法错误或编译超限抛RegexError。 | 有样例验证 |
-| [asStr](../port/src/bytes.cj#L96)（方法） | `public func asStr(): String` | 返回编译时的原始正则模式。 | 有样例验证 |
-| [capturesLen](../port/src/bytes.cj#L99)（方法） | `public func capturesLen(): Int64` | 返回模式捕获组槽位总数，包括完整匹配组0。 | 有样例验证 |
-| [staticCapturesLen](../port/src/bytes.cj#L102)（方法） | `public func staticCapturesLen(): Option<Int64>` | 若每次匹配实际参与的捕获数量固定，返回Some(数量，含组0)，否则None；不是总槽位数。 | 有样例验证 |
-| [captureNames](../port/src/bytes.cj#L109)（方法） | `public func captureNames(): Array<Option<String>>` | 返回按组号排列的名称数组；组0及未命名组为None。 | 有样例验证 |
-| [captureLocations](../port/src/bytes.cj#L118)（方法） | `public func captureLocations(): CaptureLocations` | 创建与此模式对应、可重复写入的捕获位置容器。 | 有明确差异；有样例验证：上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。 |
-| [find](../port/src/bytes.cj#L121)（方法） | `public func find(haystack: Array<UInt8>): Option<BytesMatch>` | 返回第一条匹配的位置与原文片段；无匹配返回None。 | 有样例验证 |
-| [isMatch](../port/src/bytes.cj#L124)（方法） | `public func isMatch(haystack: Array<UInt8>): Bool` | 判断输入中是否存在匹配，返回Bool。 | 有样例验证 |
-| [findAt](../port/src/bytes.cj#L127)（方法） | `public func findAt(haystack: Array<UInt8>, start: Int64): Option<BytesMatch>` | 从指定字节起点查找第一条匹配，返回Option；保留原输入上下文。 | 有样例验证 |
-| [isMatchAt](../port/src/bytes.cj#L133)（方法） | `public func isMatchAt(haystack: Array<UInt8>, start: Int64): Bool` | 从指定字节起点判断有无匹配，保留原输入上下文。 | 有样例验证 |
-| [shortestMatch](../port/src/bytes.cj#L139)（方法） | `public func shortestMatch(haystack: Array<UInt8>): Option<Int64>` | 返回引擎确认命中时的早停终点，未命中返回None；不是数学最短，不保证与Rust其他引擎逐输入相同。 | 有明确差异：早停终点允许依赖内部引擎；不承诺逐输入与 Rust meta 的终点相等，也不承诺数学最短。 |
-| [shortestMatchAt](../port/src/bytes.cj#L142)（方法） | `public func shortestMatchAt(haystack: Array<UInt8>, start: Int64): Option<Int64>` | 从指定字节起点搜索并返回早停终点；边界与shortestMatch相同。 | 有明确差异：早停终点允许依赖内部引擎；不承诺逐输入与 Rust meta 的终点相等，也不承诺数学最短。 |
-| [findIter](../port/src/bytes.cj#L172)（方法） | `public func findIter(haystack: Array<UInt8>): BytesMatchIter` | 返回按next逐次搜索的匹配迭代器，结果不重叠；不会先收集全部匹配。 | 有样例验证 |
-| [capturesIter](../port/src/bytes.cj#L182)（方法） | `public func capturesIter(haystack: Array<UInt8>): BytesCaptureIter` | 返回按next逐次搜索的捕获迭代器。 | 有样例验证 |
-| [splitIter](../port/src/bytes.cj#L192)（方法） | `public func splitIter(haystack: Array<UInt8>): BytesSplitIter` | 返回按next逐次取分割片段的迭代器，保留首尾空段。 | 有样例验证 |
-| [splitNIter](../port/src/bytes.cj#L195)（方法） | `public func splitNIter(haystack: Array<UInt8>, limit: Int64): BytesSplitIter` | 按next最多取limit段；0无结果，1返回原输入，最后一段保留余文，负数抛异常。 | 有样例验证 |
-| [capturesRead](../port/src/bytes.cj#L228)（方法） | `public func capturesRead(locations: CaptureLocations, haystack: Array<UInt8>): Option<BytesMatch>` | 从起点0搜索并写入位置容器，返回完整匹配；失败时清空可读位置。 | 有样例验证 |
-| [findAll](../port/src/bytes.cj#L231)（方法） | `public func findAll(haystack: Array<UInt8>): Array<BytesMatch>` | 立即搜索并返回全部不重叠匹配数组。 | 不单列于170条对应表 |
-| [captures](../port/src/bytes.cj#L356)（方法） | `public func captures(haystack: Array<UInt8>): Option<BytesCaptures>` | 返回第一次匹配的捕获组，组0是整个匹配；无匹配返回None。 | 有样例验证 |
-| [capturesAt](../port/src/bytes.cj#L359)（方法） | `public func capturesAt(haystack: Array<UInt8>, start: Int64): Option<BytesCaptures>` | 从指定字节起点搜索，返回第一次匹配的捕获组。 | 有样例验证 |
-| [capturesAll](../port/src/bytes.cj#L365)（方法） | `public func capturesAll(haystack: Array<UInt8>): Array<BytesCaptures>` | 立即收集所有不重叠匹配的捕获组，返回数组。 | 不单列于170条对应表 |
-| [capturesReadAt](../port/src/bytes.cj#L384)（方法） | `public func capturesReadAt(locations: CaptureLocations, haystack: Array<UInt8>, start: Int64): Option<BytesMatch>` | 从指定字节起点搜索并覆盖位置容器；失败或未参与的组不可读，不保留上次结果。 | 有明确差异；有样例验证：上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。 |
-| [replace](../port/src/bytes.cj#L408)（方法） | `public func replace(haystack: Array<UInt8>, replacement: Array<UInt8>): Array<UInt8>` | 用模板替换第一次匹配，返回新输入；模板可引用捕获组。 | 有样例验证 |
-| [replaceAll](../port/src/bytes.cj#L411)（方法） | `public func replaceAll(haystack: Array<UInt8>, replacement: Array<UInt8>): Array<UInt8>` | 用模板替换全部不重叠匹配。 | 有样例验证 |
-| [replaceN](../port/src/bytes.cj#L414)（方法） | `public func replaceN(haystack: Array<UInt8>, limit: Int64, replacement: Array<UInt8>): Array<UInt8>` | 最多替换limit次；0表示不限，负数抛异常。 | 有样例验证 |
-| [replaceLiteral](../port/src/bytes.cj#L427)（方法） | `public func replaceLiteral(haystack: Array<UInt8>, limit: Int64, replacement: Array<UInt8>): Array<UInt8>` | 最多替换limit次，将替换内容作为字面量，不展开$；0不限，负数抛异常。 | 不单列于170条对应表 |
-| [replaceWith](../port/src/bytes.cj#L430)（方法） | `public func replaceWith(haystack: Array<UInt8>, limit: Int64, replacer: (BytesCaptures) -> Array<UInt8>): Array<UInt8>` | 每次匹配调用回调产生替换内容；0不限，负数抛异常。 | 不单列于170条对应表 |
-| [split](../port/src/bytes.cj#L433)（方法） | `public func split(haystack: Array<UInt8>): Array<Array<UInt8>>` | 按匹配分割，立即返回片段数组，保留首尾空段。 | 不单列于170条对应表 |
-| [splitN](../port/src/bytes.cj#L436)（方法） | `public func splitN(haystack: Array<UInt8>, limit: Int64): Array<Array<UInt8>>` | 最多分成limit段，最后一段保留剩余输入；0返回空数组，1返回原输入，负数抛异常。 | 不单列于170条对应表 |
-
-### RegexSet
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/regex_set.cj#L104)（构造器） | `public init(patterns: Array<String>)` | 按顺序编译模式数组，任一模式失败则整体失败；空数组允许。 | 有明确差异；有样例验证：empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。 |
-| [len](../port/src/regex_set.cj#L153)（方法） | `public func len(): Int64` | 返回规则总数，不是命中数量。 | 有样例验证 |
-| [isEmpty](../port/src/regex_set.cj#L156)（方法） | `public func isEmpty(): Bool` | 判断规则数量是否为0。 | 有样例验证 |
-| [patterns](../port/src/regex_set.cj#L159)（方法） | `public func patterns(): Array<String>` | 返回按原顺序排列的模式数组副本。 | 有样例验证 |
-| [isMatch](../port/src/regex_set.cj#L162)（方法） | `public func isMatch(text: String): Bool` | 判断是否至少一条规则命中，返回Bool。 | 有样例验证 |
-| [isMatchAt](../port/src/regex_set.cj#L165)（方法） | `public func isMatchAt(text: String, start: Int64): Bool` | 判断是否至少一条规则命中，返回Bool。从指定字节起点搜索，保留原输入上下文。 | 有样例验证 |
-| [matches](../port/src/regex_set.cj#L168)（方法） | `public func matches(text: String): SetMatches` | 返回所有命中规则的SetMatches；不同规则可重叠命中，不返回文本和位置。 | 有样例验证 |
-| [matchesAt](../port/src/regex_set.cj#L171)（方法） | `public func matchesAt(text: String, start: Int64): SetMatches` | 从指定字节起点查询所有命中规则。 | 有样例验证 |
-| [matchesReadAt](../port/src/regex_set.cj#L176)（方法） | `public func matchesReadAt(slots: Array<Bool>, text: String, start: Int64): Bool` | 从指定字节起点查询；仅将命中规则的槽写为true，其余槽保持原值，返回本次有无命中；命中编号超出槽长度时抛异常。 | 有明确差异；有样例验证：empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。 |
-
-### BytesRegexSet
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/bytes.cj#L788)（构造器） | `public init(patterns: Array<String>)` | 按顺序编译模式数组，任一模式失败则整体失败；空数组允许。 | 有明确差异；有样例验证：empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。 |
-| [len](../port/src/bytes.cj#L838)（方法） | `public func len(): Int64` | 返回规则总数，不是命中数量。 | 有样例验证 |
-| [isEmpty](../port/src/bytes.cj#L841)（方法） | `public func isEmpty(): Bool` | 判断规则数量是否为0。 | 有样例验证 |
-| [patterns](../port/src/bytes.cj#L844)（方法） | `public func patterns(): Array<String>` | 返回按原顺序排列的模式数组副本。 | 有样例验证 |
-| [isMatch](../port/src/bytes.cj#L847)（方法） | `public func isMatch(haystack: Array<UInt8>): Bool` | 判断是否至少一条规则命中，返回Bool。 | 有样例验证 |
-| [isMatchAt](../port/src/bytes.cj#L850)（方法） | `public func isMatchAt(haystack: Array<UInt8>, start: Int64): Bool` | 判断是否至少一条规则命中，返回Bool。从指定字节起点搜索，保留原输入上下文。 | 有样例验证 |
-| [matches](../port/src/bytes.cj#L853)（方法） | `public func matches(haystack: Array<UInt8>): SetMatches` | 返回所有命中规则的SetMatches；不同规则可重叠命中，不返回文本和位置。 | 有样例验证 |
-| [matchesAt](../port/src/bytes.cj#L856)（方法） | `public func matchesAt(haystack: Array<UInt8>, start: Int64): SetMatches` | 从指定字节起点查询所有命中规则。 | 有样例验证 |
-| [matchesReadAt](../port/src/bytes.cj#L859)（方法） | `public func matchesReadAt(slots: Array<Bool>, haystack: Array<UInt8>, start: Int64): Bool` | 从指定字节起点查询；仅将命中规则的槽写为true，其余槽保持原值，返回本次有无命中；命中编号超出槽长度时抛异常。 | 有明确差异；有样例验证：empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。 |
-
-### RegexBuilder
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/builder.cj#L12)（构造器） | `public init(pattern: String)` | 保存模式并创建默认配置Builder；调用build时编译。 | 有样例验证 |
-| [build](../port/src/builder.cj#L15)（方法） | `public func build(): Regex` | 按当前选项编译并返回目标Regex或Set；非法模式/超限抛RegexError，后续修改Builder不改变已构造对象。 | 有样例验证 |
-| [caseInsensitive](../port/src/builder.cj#L18)（方法） | `public func caseInsensitive(yes: Bool): RegexBuilder` | 设置大小写不敏感（i）；Unicode开启时采用简单大小写折叠。 | 有样例验证 |
-| [multiLine](../port/src/builder.cj#L22)（方法） | `public func multiLine(yes: Bool): RegexBuilder` | 设置多行锚点（m），使^和$可识别行首行尾。 | 有样例验证 |
-| [dotMatchesNewLine](../port/src/builder.cj#L26)（方法） | `public func dotMatchesNewLine(yes: Bool): RegexBuilder` | 设置点号是否匹配换行（s）。 | 有样例验证 |
-| [swapGreed](../port/src/builder.cj#L30)（方法） | `public func swapGreed(yes: Bool): RegexBuilder` | 交换重复量词的默认贪婪/非贪婪选择（U）。 | 有样例验证 |
-| [ignoreWhitespace](../port/src/builder.cj#L34)（方法） | `public func ignoreWhitespace(yes: Bool): RegexBuilder` | 设置忽略模式中的空白与#注释（x），包括字符类内部。 | 有样例验证 |
-| [crlf](../port/src/builder.cj#L38)（方法） | `public func crlf(yes: Bool): RegexBuilder` | 设置CRLF行边界模式（R），识别回车/换行及其组合。 | 有样例验证 |
-| [unicode](../port/src/builder.cj#L42)（方法） | `public func unicode(yes: Bool): RegexBuilder` | 设置Unicode模式（u）；关闭后预定义类及词边界使用ASCII语义。字符串模式仍不能产生非法UTF-8匹配。 | 有样例验证 |
-| [octal](../port/src/builder.cj#L46)（方法） | `public func octal(yes: Bool): RegexBuilder` | 允许或禁止八进制转义；默认禁止，不代表支持反向引用。 | 有样例验证 |
-| [lineTerminator](../port/src/builder.cj#L50)（方法） | `public func lineTerminator(byte: Rune): RegexBuilder` | 设置单字节行终止符，允许0–255；非法值抛异常，字符串模式还受UTF-8安全限制。 | 有明确差异：参数为 Rune，再检查 0..255；上游参数为 u8。 |
-| [nestLimit](../port/src/builder.cj#L57)（方法） | `public func nestLimit(limit: Int64): RegexBuilder` | 设置模式嵌套限制；负数抛异常。 | 有样例验证 |
-| [sizeLimit](../port/src/builder.cj#L64)（方法） | `public func sizeLimit(limit: Int64): RegexBuilder` | 设置编译构造预算；负数抛异常。已有阈值样例，但不保证Rust所有启发式接受边界相同。 | 有明确差异：模拟上游 Thompson 构造预算并通过部分阈值对照；不保证所有启发式/限额接受边界相等。 |
-| [dfaSizeLimit](../port/src/builder.cj#L71)（方法） | `public func dfaSizeLimit(limit: Int64): RegexBuilder` | 设置预算值；字符串搜索用于本地缓存预算，bytes与Set没有等价DFA缓存效果。不能解释为移植了Rust DFA引擎。 | 有明确差异：不是上游 DFA 缓存限额：字符串 Regex 使用步进缓存；bytes 忽略；Set 不提供同等 DFA。 |
-
-### BytesRegexBuilder
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/builder.cj#L160)（构造器） | `public init(pattern: String)` | 保存模式并创建默认配置Builder；调用build时编译。 | 有样例验证 |
-| [build](../port/src/builder.cj#L164)（方法） | `public func build(): BytesRegex` | 按当前选项编译并返回目标Regex或Set；非法模式/超限抛RegexError，后续修改Builder不改变已构造对象。 | 有样例验证 |
-| [caseInsensitive](../port/src/builder.cj#L168)（方法） | `public func caseInsensitive(yes: Bool): BytesRegexBuilder` | 设置大小写不敏感（i）；Unicode开启时采用简单大小写折叠。 | 有样例验证 |
-| [multiLine](../port/src/builder.cj#L172)（方法） | `public func multiLine(yes: Bool): BytesRegexBuilder` | 设置多行锚点（m），使^和$可识别行首行尾。 | 有样例验证 |
-| [dotMatchesNewLine](../port/src/builder.cj#L176)（方法） | `public func dotMatchesNewLine(yes: Bool): BytesRegexBuilder` | 设置点号是否匹配换行（s）。 | 有样例验证 |
-| [swapGreed](../port/src/builder.cj#L180)（方法） | `public func swapGreed(yes: Bool): BytesRegexBuilder` | 交换重复量词的默认贪婪/非贪婪选择（U）。 | 有样例验证 |
-| [ignoreWhitespace](../port/src/builder.cj#L184)（方法） | `public func ignoreWhitespace(yes: Bool): BytesRegexBuilder` | 设置忽略模式中的空白与#注释（x），包括字符类内部。 | 有样例验证 |
-| [crlf](../port/src/builder.cj#L188)（方法） | `public func crlf(yes: Bool): BytesRegexBuilder` | 设置CRLF行边界模式（R），识别回车/换行及其组合。 | 有样例验证 |
-| [unicode](../port/src/builder.cj#L192)（方法） | `public func unicode(yes: Bool): BytesRegexBuilder` | 设置Unicode模式（u）；关闭后预定义类及词边界使用ASCII语义。字符串模式仍不能产生非法UTF-8匹配。 | 有样例验证 |
-| [octal](../port/src/builder.cj#L196)（方法） | `public func octal(yes: Bool): BytesRegexBuilder` | 允许或禁止八进制转义；默认禁止，不代表支持反向引用。 | 有样例验证 |
-| [lineTerminator](../port/src/builder.cj#L200)（方法） | `public func lineTerminator(byte: Rune): BytesRegexBuilder` | 设置单字节行终止符，允许0–255；非法值抛异常，字符串模式还受UTF-8安全限制。 | 有明确差异：参数为 Rune，再检查 0..255；上游参数为 u8。 |
-| [nestLimit](../port/src/builder.cj#L207)（方法） | `public func nestLimit(limit: Int64): BytesRegexBuilder` | 设置模式嵌套限制；负数抛异常。 | 有样例验证 |
-| [sizeLimit](../port/src/builder.cj#L214)（方法） | `public func sizeLimit(limit: Int64): BytesRegexBuilder` | 设置编译构造预算；负数抛异常。已有阈值样例，但不保证Rust所有启发式接受边界相同。 | 有明确差异：模拟上游 Thompson 构造预算并通过部分阈值对照；不保证所有启发式/限额接受边界相等。 |
-| [dfaSizeLimit](../port/src/builder.cj#L221)（方法） | `public func dfaSizeLimit(limit: Int64): BytesRegexBuilder` | 设置预算值；字符串搜索用于本地缓存预算，bytes与Set没有等价DFA缓存效果。不能解释为移植了Rust DFA引擎。 | 有明确差异：不是上游 DFA 缓存限额：字符串 Regex 使用步进缓存；bytes 忽略；Set 不提供同等 DFA。 |
-
-### RegexSetBuilder
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/builder.cj#L83)（构造器） | `public init()` | 创建空规则集合Builder，再通过pattern追加模式。 | 有样例验证 |
-| [init](../port/src/builder.cj#L84)（构造器） | `public init(patterns: Array<String>)` | 复制规则数组创建Builder，调用build时才编译；后续修改原数组不影响已保存的规则。 | 有样例验证 |
-| [pattern](../port/src/builder.cj#L87)（方法） | `public func pattern(value: String): RegexSetBuilder` | 向Set Builder追加一条模式，保持编号顺序，返回当前Builder供链式调用。 | 不单列于170条对应表 |
-| [build](../port/src/builder.cj#L91)（方法） | `public func build(): RegexSet` | 按当前选项编译并返回目标Regex或Set；非法模式/超限抛RegexError，后续修改Builder不改变已构造对象。 | 有样例验证 |
-| [caseInsensitive](../port/src/builder.cj#L94)（方法） | `public func caseInsensitive(yes: Bool): RegexSetBuilder` | 设置大小写不敏感（i）；Unicode开启时采用简单大小写折叠。 | 有样例验证 |
-| [multiLine](../port/src/builder.cj#L98)（方法） | `public func multiLine(yes: Bool): RegexSetBuilder` | 设置多行锚点（m），使^和$可识别行首行尾。 | 有样例验证 |
-| [dotMatchesNewLine](../port/src/builder.cj#L102)（方法） | `public func dotMatchesNewLine(yes: Bool): RegexSetBuilder` | 设置点号是否匹配换行（s）。 | 有样例验证 |
-| [swapGreed](../port/src/builder.cj#L106)（方法） | `public func swapGreed(yes: Bool): RegexSetBuilder` | 交换重复量词的默认贪婪/非贪婪选择（U）。 | 有样例验证 |
-| [ignoreWhitespace](../port/src/builder.cj#L110)（方法） | `public func ignoreWhitespace(yes: Bool): RegexSetBuilder` | 设置忽略模式中的空白与#注释（x），包括字符类内部。 | 有样例验证 |
-| [crlf](../port/src/builder.cj#L114)（方法） | `public func crlf(yes: Bool): RegexSetBuilder` | 设置CRLF行边界模式（R），识别回车/换行及其组合。 | 有样例验证 |
-| [unicode](../port/src/builder.cj#L118)（方法） | `public func unicode(yes: Bool): RegexSetBuilder` | 设置Unicode模式（u）；关闭后预定义类及词边界使用ASCII语义。字符串模式仍不能产生非法UTF-8匹配。 | 有样例验证 |
-| [octal](../port/src/builder.cj#L122)（方法） | `public func octal(yes: Bool): RegexSetBuilder` | 允许或禁止八进制转义；默认禁止，不代表支持反向引用。 | 有样例验证 |
-| [lineTerminator](../port/src/builder.cj#L126)（方法） | `public func lineTerminator(byte: Rune): RegexSetBuilder` | 设置单字节行终止符，允许0–255；非法值抛异常，字符串模式还受UTF-8安全限制。 | 有明确差异：参数为 Rune，再检查 0..255；上游参数为 u8。 |
-| [nestLimit](../port/src/builder.cj#L133)（方法） | `public func nestLimit(limit: Int64): RegexSetBuilder` | 设置模式嵌套限制；负数抛异常。 | 有样例验证 |
-| [sizeLimit](../port/src/builder.cj#L140)（方法） | `public func sizeLimit(limit: Int64): RegexSetBuilder` | 设置编译构造预算；负数抛异常。已有阈值样例，但不保证Rust所有启发式接受边界相同。 | 有明确差异：模拟上游 Thompson 构造预算并通过部分阈值对照；不保证所有启发式/限额接受边界相等。 |
-| [dfaSizeLimit](../port/src/builder.cj#L147)（方法） | `public func dfaSizeLimit(limit: Int64): RegexSetBuilder` | 设置预算值；字符串搜索用于本地缓存预算，bytes与Set没有等价DFA缓存效果。不能解释为移植了Rust DFA引擎。 | 有明确差异：不是上游 DFA 缓存限额：字符串 Regex 使用步进缓存；bytes 忽略；Set 不提供同等 DFA。 |
-
-### BytesRegexSetBuilder
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/builder.cj#L233)（构造器） | `public init()` | 创建空规则集合Builder，再通过pattern追加模式。 | 有样例验证 |
-| [init](../port/src/builder.cj#L236)（构造器） | `public init(patterns: Array<String>)` | 复制规则数组创建Builder，调用build时才编译；后续修改原数组不影响已保存的规则。 | 有样例验证 |
-| [pattern](../port/src/builder.cj#L240)（方法） | `public func pattern(value: String): BytesRegexSetBuilder` | 向Set Builder追加一条模式，保持编号顺序，返回当前Builder供链式调用。 | 不单列于170条对应表 |
-| [build](../port/src/builder.cj#L244)（方法） | `public func build(): BytesRegexSet` | 按当前选项编译并返回目标Regex或Set；非法模式/超限抛RegexError，后续修改Builder不改变已构造对象。 | 有样例验证 |
-| [caseInsensitive](../port/src/builder.cj#L248)（方法） | `public func caseInsensitive(yes: Bool): BytesRegexSetBuilder` | 设置大小写不敏感（i）；Unicode开启时采用简单大小写折叠。 | 有样例验证 |
-| [multiLine](../port/src/builder.cj#L252)（方法） | `public func multiLine(yes: Bool): BytesRegexSetBuilder` | 设置多行锚点（m），使^和$可识别行首行尾。 | 有样例验证 |
-| [dotMatchesNewLine](../port/src/builder.cj#L256)（方法） | `public func dotMatchesNewLine(yes: Bool): BytesRegexSetBuilder` | 设置点号是否匹配换行（s）。 | 有样例验证 |
-| [swapGreed](../port/src/builder.cj#L260)（方法） | `public func swapGreed(yes: Bool): BytesRegexSetBuilder` | 交换重复量词的默认贪婪/非贪婪选择（U）。 | 有样例验证 |
-| [ignoreWhitespace](../port/src/builder.cj#L264)（方法） | `public func ignoreWhitespace(yes: Bool): BytesRegexSetBuilder` | 设置忽略模式中的空白与#注释（x），包括字符类内部。 | 有样例验证 |
-| [crlf](../port/src/builder.cj#L268)（方法） | `public func crlf(yes: Bool): BytesRegexSetBuilder` | 设置CRLF行边界模式（R），识别回车/换行及其组合。 | 有样例验证 |
-| [unicode](../port/src/builder.cj#L272)（方法） | `public func unicode(yes: Bool): BytesRegexSetBuilder` | 设置Unicode模式（u）；关闭后预定义类及词边界使用ASCII语义。字符串模式仍不能产生非法UTF-8匹配。 | 有样例验证 |
-| [octal](../port/src/builder.cj#L276)（方法） | `public func octal(yes: Bool): BytesRegexSetBuilder` | 允许或禁止八进制转义；默认禁止，不代表支持反向引用。 | 有样例验证 |
-| [lineTerminator](../port/src/builder.cj#L280)（方法） | `public func lineTerminator(byte: Rune): BytesRegexSetBuilder` | 设置单字节行终止符，允许0–255；非法值抛异常，字符串模式还受UTF-8安全限制。 | 有明确差异：参数为 Rune，再检查 0..255；上游参数为 u8。 |
-| [nestLimit](../port/src/builder.cj#L287)（方法） | `public func nestLimit(limit: Int64): BytesRegexSetBuilder` | 设置模式嵌套限制；负数抛异常。 | 有样例验证 |
-| [sizeLimit](../port/src/builder.cj#L294)（方法） | `public func sizeLimit(limit: Int64): BytesRegexSetBuilder` | 设置编译构造预算；负数抛异常。已有阈值样例，但不保证Rust所有启发式接受边界相同。 | 有明确差异：模拟上游 Thompson 构造预算并通过部分阈值对照；不保证所有启发式/限额接受边界相等。 |
-| [dfaSizeLimit](../port/src/builder.cj#L301)（方法） | `public func dfaSizeLimit(limit: Int64): BytesRegexSetBuilder` | 设置预算值；字符串搜索用于本地缓存预算，bytes与Set没有等价DFA缓存效果。不能解释为移植了Rust DFA引擎。 | 有明确差异：不是上游 DFA 缓存限额：字符串 Regex 使用步进缓存；bytes 忽略；Set 不提供同等 DFA。 |
-
-### RegexMatch
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [start](../port/src/nfa.cj#L239)（字段） | `public let start: Int64` | 原输入中的起始字节偏移（包含）。 | 有明确差异：使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。 |
-| [end](../port/src/nfa.cj#L240)（字段） | `public let end: Int64` | 原输入中的结束字节偏移（不包含）。 | 有明确差异：使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。 |
-| [text](../port/src/nfa.cj#L241)（字段） | `public let text: String` | 匹配到的原文字符串。 | 不单列于170条对应表 |
-| [isEmpty](../port/src/nfa.cj#L247)（方法） | `public func isEmpty(): Bool` | 判断匹配长度是否为0。 | 有样例验证 |
-| [len](../port/src/nfa.cj#L250)（方法） | `public func len(): Int64` | 返回匹配字节长度end-start。 | 有样例验证 |
-| [asStr](../port/src/nfa.cj#L253)（方法） | `public func asStr(): String` | 返回匹配到的原文字符串。 | 有样例验证 |
-
-### BytesMatch
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [start](../port/src/bytes.cj#L8)（字段） | `public let start: Int64` | 原输入中的起始字节偏移（包含）。 | 有明确差异：使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。 |
-| [end](../port/src/bytes.cj#L9)（字段） | `public let end: Int64` | 原输入中的结束字节偏移（不包含）。 | 有明确差异：使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。 |
-| [bytes](../port/src/bytes.cj#L10)（字段） | `public let bytes: Array<UInt8>` | 匹配到的原始字节数组。 | 有明确差异：使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。 |
-| [init](../port/src/bytes.cj#L11)（构造器） | `public init(start: Int64, end: Int64, bytes: Array<UInt8>)` | 用提供的起点、终点和字节数组构造匹配结果对象；不是执行搜索。 | 不单列于170条对应表 |
-| [isEmpty](../port/src/bytes.cj#L16)（方法） | `public func isEmpty(): Bool` | 判断匹配长度是否为0。 | 有样例验证 |
-| [len](../port/src/bytes.cj#L19)（方法） | `public func len(): Int64` | 返回匹配字节长度end-start。 | 有样例验证 |
-
-### Captures
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [size](../port/src/captures.cj#L45)（字段） | `public let size: Int64` | 捕获槽位数，包括组0。 | 有明确差异：extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。 |
-| [getMatch](../port/src/captures.cj#L52)（方法） | `public func getMatch(): RegexMatch` | 返回完整匹配（组0）。 | 有样例验证 |
-| [extract](../port/src/captures.cj#L60)（方法） | `public func extract(count: Int64): Array<String>` | 提取完整匹配及本次参与的分组内容；count必须等于固定参与组数减1，不固定或数量不符时抛异常。 | 有明确差异：extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。 |
-| [iter](../port/src/captures.cj#L86)（方法） | `public func iter(): GroupIter` | 返回逐组迭代器；通过done区分结束，通过value=None表示组未参与。 | 有样例验证 |
-| [get](../port/src/captures.cj#L89)（方法） | `public func get(index: Int64): Option<RegexMatch>` | 按组号读取匹配；越界、负数或未参与返回None。 | 有样例验证 |
-| [name](../port/src/captures.cj#L95)（方法） | `public func name(value: String): Option<RegexMatch>` | 按精确名称读取捕获组；不存在或未参与返回None。 | 有样例验证 |
-| [expand](../port/src/captures.cj#L107)（方法） | `public func expand(template: String): String` | 展开捕获模板并返回新内容；支持$0、$1、${name}和$$，缺失组展开为空。 | 不单列于170条对应表 |
-| [expandInto](../port/src/captures.cj#L112)（方法） | `public func expandInto(template: String, out: StringBuilder): Unit` | 将捕获模板展开内容追加到调用者的现有缓冲区，保留原内容；字符串写入StringBuilder，bytes写入ArrayList<UInt8>。 | 有样例验证 |
-
-### BytesCaptures
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [size](../port/src/bytes.cj#L595)（字段） | `public let size: Int64` | 捕获槽位数，包括组0。 | 有明确差异：extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。 |
-| [getMatch](../port/src/bytes.cj#L602)（方法） | `public func getMatch(): BytesMatch` | 返回完整匹配（组0）。 | 有样例验证 |
-| [get](../port/src/bytes.cj#L608)（方法） | `public func get(index: Int64): Option<BytesMatch>` | 按组号读取匹配；越界、负数或未参与返回None。 | 有样例验证 |
-| [iter](../port/src/bytes.cj#L614)（方法） | `public func iter(): BytesGroupIter` | 返回逐组迭代器；通过done区分结束，通过value=None表示组未参与。 | 有样例验证 |
-| [extract](../port/src/bytes.cj#L617)（方法） | `public func extract(count: Int64): Array<Array<UInt8>>` | 提取完整匹配及本次参与的分组内容；count必须等于固定参与组数减1，不固定或数量不符时抛异常。 | 有样例验证 |
-| [name](../port/src/bytes.cj#L643)（方法） | `public func name(value: String): Option<BytesMatch>` | 按精确名称读取捕获组；不存在或未参与返回None。 | 有样例验证 |
-| [expand](../port/src/bytes.cj#L655)（方法） | `public func expand(template: Array<UInt8>): Array<UInt8>` | 展开捕获模板并返回新内容；支持$0、$1、${name}和$$，缺失组展开为空。 | 不单列于170条对应表 |
-| [expandInto](../port/src/bytes.cj#L660)（方法） | `public func expandInto(template: Array<UInt8>, out: ArrayList<UInt8>): Unit` | 将捕获模板展开内容追加到调用者的现有缓冲区，保留原内容；字符串写入StringBuilder，bytes写入ArrayList<UInt8>。 | 有样例验证 |
-
-### CaptureSpan
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [start](../port/src/captures.cj#L8)（字段） | `public let start: Int64` | 原输入中的起始字节偏移（包含）。 | 不单列于170条对应表 |
-| [end](../port/src/captures.cj#L9)（字段） | `public let end: Int64` | 原输入中的结束字节偏移（不包含）。 | 不单列于170条对应表 |
-
-### CaptureLocations
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [size](../port/src/captures.cj#L17)（字段） | `public let size: Int64` | 捕获槽位数，包括组0。 | 有明确差异：len 对应 size 字段；doc(hidden) pos 别名对应 get。 |
-| [get](../port/src/captures.cj#L25)（方法） | `public func get(index: Int64): Option<CaptureSpan>` | 按组号读取位置区间；越界、负数、未参与或上次搜索失败均返回None。 | 有明确差异；有样例验证：len 对应 size 字段；doc(hidden) pos 别名对应 get。 |
-
-### SetMatches
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [len](../port/src/regex_set.cj#L12)（方法） | `public func len(): Int64` | 返回规则总数，不是命中数量。 | 有样例验证 |
-| [matched](../port/src/regex_set.cj#L15)（方法） | `public func matched(index: Int64): Bool` | 查询指定规则编号是否命中；负数或越界抛异常。 | 有样例验证 |
-| [matchedAny](../port/src/regex_set.cj#L21)（方法） | `public func matchedAny(): Bool` | 查询是否至少一条规则命中；空集合为false。 | 有样例验证 |
-| [matchedAll](../port/src/regex_set.cj#L29)（方法） | `public func matchedAll(): Bool` | 查询是否全部规则命中；空集合为true。 | 有样例验证 |
-| [indices](../port/src/regex_set.cj#L37)（方法） | `public func indices(): Array<Int64>` | 返回升序命中编号数组，每个编号只出现一次。 | 不单列于170条对应表 |
-| [iter](../port/src/regex_set.cj#L47)（方法） | `public func iter(): SetMatchesIter` | 返回双向编号游标，按需扫描命中快照，不预先收集编号数组。 | 有样例验证 |
-
-### SetMatchesIter
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [next](../port/src/regex_set.cj#L65)（方法） | `public func next(): Option<Int64>` | 从前往后返回下一个命中编号，耗尽返回None。 | 不单列于170条对应表 |
-| [nextBack](../port/src/regex_set.cj#L74)（方法） | `public func nextBack(): Option<Int64>` | 从后往前返回下一个命中编号，可与next交错，不重复取编号。 | 不单列于170条对应表 |
-| [sizeHint](../port/src/regex_set.cj#L84)（方法） | `public func sizeHint(): (Int64, Option<Int64>)` | 返回尚未扫描的规则槽位数作为两端提示；与固定Rust相同，不是剩余命中数，不作为命中数下界使用。 | 不单列于170条对应表 |
-| [clone](../port/src/regex_set.cj#L89)（方法） | `public func clone(): SetMatchesIter` | 复制当前前后游标；两份游标独立推进，共享私有不可变命中快照。 | 不单列于170条对应表 |
-
-### MatchIter
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/nfa.cj#L936)（构造器） | `public init(pull: () -> Option<RegexMatch>)` | 用调用者提供的pull回调构造迭代器；通常直接使用Regex返回的迭代器。自定义回调不自动获得内置迭代器的结束契约。 | 不单列于170条对应表 |
-| [next](../port/src/nfa.cj#L939)（方法） | `public func next(): Option<RegexMatch>` | 调用pull返回下一项Option；内置迭代器耗尽后持续返回None。 | 不单列于170条对应表 |
-
-### CaptureIter
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/nfa.cj#L946)（构造器） | `public init(pull: () -> Option<Captures>)` | 用调用者提供的pull回调构造迭代器；通常直接使用Regex返回的迭代器。自定义回调不自动获得内置迭代器的结束契约。 | 不单列于170条对应表 |
-| [next](../port/src/nfa.cj#L949)（方法） | `public func next(): Option<Captures>` | 调用pull返回下一项Option；内置迭代器耗尽后持续返回None。 | 不单列于170条对应表 |
-
-### SplitIter
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/nfa.cj#L956)（构造器） | `public init(pull: () -> Option<String>)` | 用调用者提供的pull回调构造迭代器；通常直接使用Regex返回的迭代器。自定义回调不自动获得内置迭代器的结束契约。 | 不单列于170条对应表 |
-| [next](../port/src/nfa.cj#L959)（方法） | `public func next(): Option<String>` | 调用pull返回下一项Option；内置迭代器耗尽后持续返回None。 | 不单列于170条对应表 |
-
-### BytesMatchIter
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/bytes.cj#L947)（构造器） | `public init(pull: () -> Option<BytesMatch>)` | 用调用者提供的pull回调构造迭代器；通常直接使用Regex返回的迭代器。自定义回调不自动获得内置迭代器的结束契约。 | 不单列于170条对应表 |
-| [next](../port/src/bytes.cj#L950)（方法） | `public func next(): Option<BytesMatch>` | 调用pull返回下一项Option；内置迭代器耗尽后持续返回None。 | 不单列于170条对应表 |
-
-### BytesCaptureIter
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/bytes.cj#L957)（构造器） | `public init(pull: () -> Option<BytesCaptures>)` | 用调用者提供的pull回调构造迭代器；通常直接使用Regex返回的迭代器。自定义回调不自动获得内置迭代器的结束契约。 | 不单列于170条对应表 |
-| [next](../port/src/bytes.cj#L960)（方法） | `public func next(): Option<BytesCaptures>` | 调用pull返回下一项Option；内置迭代器耗尽后持续返回None。 | 不单列于170条对应表 |
-
-### BytesSplitIter
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/bytes.cj#L967)（构造器） | `public init(pull: () -> Option<Array<UInt8>>)` | 用调用者提供的pull回调构造迭代器；通常直接使用Regex返回的迭代器。自定义回调不自动获得内置迭代器的结束契约。 | 不单列于170条对应表 |
-| [next](../port/src/bytes.cj#L970)（方法） | `public func next(): Option<Array<UInt8>>` | 调用pull返回下一项Option；内置迭代器耗尽后持续返回None。 | 不单列于170条对应表 |
-
-### GroupIter
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [len](../port/src/captures.cj#L214)（方法） | `public func len(): Int64` | 剩余捕获槽位数量，包括未参与匹配的组；耗尽后为0。 | 不单列于170条对应表 |
-| [sizeHint](../port/src/captures.cj#L215)（方法） | `public func sizeHint(): (Int64, Option<Int64>)` | 返回剩余槽位数作为精确上下界，不移动游标。 | 不单列于170条对应表 |
-| [clone](../port/src/captures.cj#L218)（方法） | `public func clone(): GroupIter` | 复制当前游标位置，之后两份游标独立推进；共享捕获结果，不承诺字节数组深复制。 | 不单列于170条对应表 |
-| [next](../port/src/captures.cj#L223)（方法） | `public func next(): GroupItem` | 返回下一个组的Item；done=true表示结束，done=false且value=None表示该组未参与。 | 不单列于170条对应表 |
-
-### BytesGroupIter
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [len](../port/src/bytes.cj#L757)（方法） | `public func len(): Int64` | 剩余捕获槽位数量，包括未参与匹配的组；耗尽后为0。 | 不单列于170条对应表 |
-| [sizeHint](../port/src/bytes.cj#L758)（方法） | `public func sizeHint(): (Int64, Option<Int64>)` | 返回剩余槽位数作为精确上下界，不移动游标。 | 不单列于170条对应表 |
-| [clone](../port/src/bytes.cj#L761)（方法） | `public func clone(): BytesGroupIter` | 复制当前游标位置，之后两份游标独立推进；共享捕获结果，不承诺字节数组深复制。 | 不单列于170条对应表 |
-| [next](../port/src/bytes.cj#L766)（方法） | `public func next(): BytesGroupItem` | 返回下一个组的Item；done=true表示结束，done=false且value=None表示该组未参与。 | 不单列于170条对应表 |
-
-### GroupItem
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [done](../port/src/captures.cj#L199)（字段） | `public let done: Bool` | 是否已结束组迭代；false时仍需检查value是否为None。 | 不单列于170条对应表 |
-| [value](../port/src/captures.cj#L200)（字段） | `public let value: Option<RegexMatch>` | 当前捕获组；None表示该组未参与，不能单凭None判断迭代结束。 | 不单列于170条对应表 |
-
-### BytesGroupItem
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [done](../port/src/bytes.cj#L742)（字段） | `public let done: Bool` | 是否已结束组迭代；false时仍需检查value是否为None。 | 不单列于170条对应表 |
-| [value](../port/src/bytes.cj#L743)（字段） | `public let value: Option<BytesMatch>` | 当前捕获组；None表示该组未参与，不能单凭None判断迭代结束。 | 不单列于170条对应表 |
-
-### RegexError
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [errorKind](../port/src/error.cj#L13)（字段） | `public let errorKind: RegexErrorKind` | 错误分类：Syntax或CompiledTooBig。 | 不单列于170条对应表 |
-| [limit](../port/src/error.cj#L14)（字段） | `public let limit: Int64` | 错误携带的编译限额；主要用于CompiledTooBig。 | 不单列于170条对应表 |
-| [text](../port/src/error.cj#L15)（字段） | `public let text: String` | 错误显示文本。 | 不单列于170条对应表 |
-| [init](../port/src/error.cj#L16)（构造器） | `public init(errorKind: RegexErrorKind, message: String, limit: Int64)` | 用类别、消息和限额构造异常对象。 | 不单列于170条对应表 |
-| [toString](../port/src/error.cj#L22)（方法） | `public override func toString(): String` | 返回异常显示文本；已测语法错误/超限样例对齐固定Rust，非所有错误格式的证明。 | 不单列于170条对应表 |
-
-### Hir
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [kind](../port/src/syntax_hir.cj#L78)（方法） | `public func kind(): HirKind` | 读取结构节点种类及载荷；可修改数组返回副本。 | 不单列于170条对应表 |
-| [properties](../port/src/syntax_hir.cj#L85)（方法） | `public func properties(): HirProperties` | 读取当前支持的最短/最长字节长度属性。 | 不单列于170条对应表 |
-| [subs](../port/src/syntax_hir.cj#L86)（方法） | `public func subs(): Array<Hir>` | 读取直接子节点数组副本。 | 不单列于170条对应表 |
-| [empty](../port/src/syntax_hir.cj#L94)（方法） | `public static func empty(): Hir` | 构造可以匹配空文本的空表达式。 | 不单列于170条对应表 |
-| [fail](../port/src/syntax_hir.cj#L97)（方法） | `public static func fail(): Hir` | 构造不能匹配任何文本的空字节类节点。 | 不单列于170条对应表 |
-| [literal](../port/src/syntax_hir.cj#L100)（方法） | `public static func literal(bytes: Array<UInt8>): Hir` | 复制字节数组构造字面量，空数组归一化为空表达式。 | 不单列于170条对应表 |
-| [unicodeClass](../port/src/syntax_hir.cj#L105)（方法） | `public static func unicodeClass(ranges: Array<HirRange>): Hir` | 校验并合并Unicode范围；单个字符转为字面量，空类转为失败节点。 | 不单列于170条对应表 |
-| [byteClass](../port/src/syntax_hir.cj#L108)（方法） | `public static func byteClass(ranges: Array<HirRange>): Hir` | 校验并合并0..255字节范围；单个字节转为字面量，空类转为失败节点。 | 不单列于170条对应表 |
-| [capture](../port/src/syntax_hir.cj#L143)（方法） | `public static func capture(index: UInt32, name: Option<String>, sub: Hir): Hir` | 构造捕获节点，保存编号、可选名字和子节点。 | 不单列于170条对应表 |
-| [repetition](../port/src/syntax_hir.cj#L146)（方法） | `public static func repetition(min: UInt32, max: Option<UInt32>, greedy: Bool, sub: Hir): Hir` | 构造重复并按原仓库简化零次、一次和零宽子节点；计算长度属性。 | 不单列于170条对应表 |
-| [concat](../port/src/syntax_hir.cj#L165)（方法） | `public static func concat(children: Array<Hir>): Hir` | 展平连接、去空节点、合并相邻字面量；零/单子节点会简化。 | 不单列于170条对应表 |
-| [parse](../port/src/syntax_hir.cj#L198)（方法） | `public static func parse(pattern: String): Hir` | 解析当前HIR切片，默认UTF-8安全；双参数形式可放开UTF-8限制。选择、点号和断言暂抛HirUnsupportedError；不是完整regex-syntax解析API。 | 不单列于170条对应表 |
-| [parse](../port/src/syntax_hir.cj#L199)（方法） | `public static func parse(pattern: String, utf8: Bool): Hir` | 解析当前HIR切片，默认UTF-8安全；双参数形式可放开UTF-8限制。选择、点号和断言暂抛HirUnsupportedError；不是完整regex-syntax解析API。 | 不单列于170条对应表 |
-
-### HirProperties
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [minimumLen](../port/src/syntax_hir.cj#L66)（方法） | `public func minimumLen(): Option<UInt64>` | 返回原仓库报告的最短匹配字节数；None不能单独证明无匹配，溢出饱和为UInt64最大值。 | 不单列于170条对应表 |
-| [maximumLen](../port/src/syntax_hir.cj#L67)（方法） | `public func maximumLen(): Option<UInt64>` | 返回最长匹配字节数；无匹配、无界或溢出均返回None。 | 不单列于170条对应表 |
-
-### HirRange
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [start](../port/src/syntax_hir.cj#L13)（字段） | `public let start: Int64` | 范围起点，包含；HirRange构造时按大小排列端点。 | 不单列于170条对应表 |
-| [end](../port/src/syntax_hir.cj#L14)（字段） | `public let end: Int64` | 范围终点，包含；范围是否合法在构造字符类时验证。 | 不单列于170条对应表 |
-| [init](../port/src/syntax_hir.cj#L15)（构造器） | `public init(start: Int64, end: Int64)` | 保存闭区间两端，反向端点会交换；Unicode/字节合法性由字符类构造器检查。 | 不单列于170条对应表 |
-
-### HirClass
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [isBytes](../port/src/syntax_hir.cj#L22)（字段） | `public let isBytes: Bool` | true表示字节字符类，false表示Unicode标量字符类。 | 不单列于170条对应表 |
-| [ranges](../port/src/syntax_hir.cj#L28)（方法） | `public func ranges(): Array<HirRange>` | 返回规范化字符范围的数组副本，不允许借此修改节点。 | 不单列于170条对应表 |
-
-### HirCapture
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [index](../port/src/syntax_hir.cj#L45)（字段） | `public let index: UInt32` | 捕获组编号。 | 不单列于170条对应表 |
-| [name](../port/src/syntax_hir.cj#L46)（字段） | `public let name: Option<String>` | 可选捕获组名称。 | 不单列于170条对应表 |
-| [sub](../port/src/syntax_hir.cj#L47)（字段） | `public let sub: Hir` | 不可变子节点引用。 | 不单列于170条对应表 |
-
-### HirRepetition
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [min](../port/src/syntax_hir.cj#L32)（字段） | `public let min: UInt32` | 最少重复次数。 | 不单列于170条对应表 |
-| [max](../port/src/syntax_hir.cj#L33)（字段） | `public let max: Option<UInt32>` | 最多重复次数，None表示不设上限。 | 不单列于170条对应表 |
-| [greedy](../port/src/syntax_hir.cj#L34)（字段） | `public let greedy: Bool` | 是否优先尝试更多次重复。 | 不单列于170条对应表 |
-| [sub](../port/src/syntax_hir.cj#L35)（字段） | `public let sub: Hir` | 不可变子节点引用。 | 不单列于170条对应表 |
-
-### HirUnsupportedError
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [init](../port/src/syntax_hir.cj#L9)（构造器） | `public init(message: String)` | 构造公开HIR切片未支持的结构错误。 | 不单列于170条对应表 |
-
-### 顶层函数
-
-| 名称与代码 | 声明（含输入输出类型） | 当前行为 | 原仓库审计状态 |
-|---|---|---|---|
-| [escape](../port/src/escape.cj#L13)（函数） | `public func escape(text: String): String` | 把普通字符串转义成正则字面量；不做JSON或shell转义。 | 不单列于170条对应表 |
-
-## 如何用于答辩
-
-建议表述：“当前仓颉库显式提供208个公开可调用入口，包含187个方法、20个构造器和1个转义函数，另有28个公开字段。我们对固定原仓库170条固有方法建立了映射与差异记录。”
-
-不要表述为“已完全移植208个Rust接口”或“完成率208/170”。尤其dfaSizeLimit、早停终点、数组替代迭代器、历史别名与语言trait应结合审计差异说明。
+# 当前仓颉公开接口清单
+
+由`scripts/generate_api_catalog.py`从仓库源码生成；可用`--check`检查是否过期。
+
+当前显式公开调用入口 **280** 个，公开字段（含var） **84** 个；类型数量见下表。重复名称在不同类型/重载上分别计数，不计继承方法，不把枚举分支当作函数。
+
+这是声明扫描，不是完整语言解析器，也不是原仓库覆盖率。主要库的170条固有方法映射仍见[接口审计](api-audit.md)，语法/自动机的差异见[复核结论](review-2026-10-04.md)。调用行为见[API](api.md)与[语法说明](hir.md)。
+
+| 类别 | 数量 |
+|---|---:|
+| class | 42 |
+| constructor | 30 |
+| enum | 4 |
+| field | 84 |
+| function | 2 |
+| method | 248 |
+
+## Ast
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class Ast` | class | [port/src/syntax_ast.cj:71](../port/src/syntax_ast.cj#L71) |
+| `public let label: String` | field | [port/src/syntax_ast.cj:72](../port/src/syntax_ast.cj#L72) |
+| `public let span: AstSpan` | field | [port/src/syntax_ast.cj:73](../port/src/syntax_ast.cj#L73) |
+| `public var code: Int64` | field | [port/src/syntax_ast.cj:74](../port/src/syntax_ast.cj#L74) |
+| `public var greedy: Bool` | field | [port/src/syntax_ast.cj:75](../port/src/syntax_ast.cj#L75) |
+| `public var negated: Bool` | field | [port/src/syntax_ast.cj:76](../port/src/syntax_ast.cj#L76) |
+| `public var captureIndex: Int64` | field | [port/src/syntax_ast.cj:77](../port/src/syntax_ast.cj#L77) |
+| `public var captureName: String` | field | [port/src/syntax_ast.cj:78](../port/src/syntax_ast.cj#L78) |
+| `public var startsWithP: Bool` | field | [port/src/syntax_ast.cj:79](../port/src/syntax_ast.cj#L79) |
+| `public var quantifier: String` | field | [port/src/syntax_ast.cj:80](../port/src/syntax_ast.cj#L80) |
+| `public var minimum: Int64` | field | [port/src/syntax_ast.cj:81](../port/src/syntax_ast.cj#L81) |
+| `public var maximum: Int64` | field | [port/src/syntax_ast.cj:82](../port/src/syntax_ast.cj#L82) |
+| `public var classItem: AstClassItem` | field | [port/src/syntax_ast.cj:83](../port/src/syntax_ast.cj#L83) |
+| `public var flagMask: Int64` | field | [port/src/syntax_ast.cj:86](../port/src/syntax_ast.cj#L86) |
+| `public var flagValue: Int64` | field | [port/src/syntax_ast.cj:87](../port/src/syntax_ast.cj#L87) |
+| `public var baseCaseInsensitive: Bool` | field | [port/src/syntax_ast.cj:88](../port/src/syntax_ast.cj#L88) |
+| `public var baseMultiLine: Bool` | field | [port/src/syntax_ast.cj:89](../port/src/syntax_ast.cj#L89) |
+| `public var baseDotAll: Bool` | field | [port/src/syntax_ast.cj:90](../port/src/syntax_ast.cj#L90) |
+| `public var baseSwapGreed: Bool` | field | [port/src/syntax_ast.cj:91](../port/src/syntax_ast.cj#L91) |
+| `public var baseIgnoreWhitespace: Bool` | field | [port/src/syntax_ast.cj:92](../port/src/syntax_ast.cj#L92) |
+| `public var baseCrlf: Bool` | field | [port/src/syntax_ast.cj:93](../port/src/syntax_ast.cj#L93) |
+| `public var baseUnicode: Bool` | field | [port/src/syntax_ast.cj:94](../port/src/syntax_ast.cj#L94) |
+| `public func subs(): Array<Ast>` | method | [port/src/syntax_ast.cj:120](../port/src/syntax_ast.cj#L120) |
+| `public func visit(enter: (Ast) -> Unit): Unit` | method | [port/src/syntax_ast.cj:123](../port/src/syntax_ast.cj#L123) |
+| `public func walk(enter: (Ast) -> Unit, leave: (Ast) -> Unit): Unit` | method | [port/src/syntax_ast.cj:129](../port/src/syntax_ast.cj#L129) |
+| `public func walkUntil(enter: (Ast) -> Bool, leave: (Ast) -> Bool): Bool` | method | [port/src/syntax_ast.cj:137](../port/src/syntax_ast.cj#L137) |
+| `public func shape(): String` | method | [port/src/syntax_ast.cj:149](../port/src/syntax_ast.cj#L149) |
+| `public func toPattern(): String` | method | [port/src/syntax_ast.cj:166](../port/src/syntax_ast.cj#L166) |
+| `public func toHir(): Hir` | method | [port/src/syntax_ast.cj:171](../port/src/syntax_ast.cj#L171) |
+| `public static func parse(pattern: String): Ast` | method | [port/src/syntax_ast.cj:174](../port/src/syntax_ast.cj#L174) |
+
+## AstClassItem
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class AstClassItem` | class | [port/src/syntax_ast.cj:29](../port/src/syntax_ast.cj#L29) |
+| `public let label: String` | field | [port/src/syntax_ast.cj:30](../port/src/syntax_ast.cj#L30) |
+| `public let start: Int64` | field | [port/src/syntax_ast.cj:31](../port/src/syntax_ast.cj#L31) |
+| `public let end: Int64` | field | [port/src/syntax_ast.cj:32](../port/src/syntax_ast.cj#L32) |
+| `public let negated: Bool` | field | [port/src/syntax_ast.cj:33](../port/src/syntax_ast.cj#L33) |
+| `public let children: Array<AstClassItem>` | field | [port/src/syntax_ast.cj:34](../port/src/syntax_ast.cj#L34) |
+| `public let name: String` | field | [port/src/syntax_ast.cj:35](../port/src/syntax_ast.cj#L35) |
+| `public init(label: String, start: Int64, end: Int64, negated: Bool, children: Array<AstClassItem>, name: String)` | constructor | [port/src/syntax_ast.cj:36](../port/src/syntax_ast.cj#L36) |
+| `public func text(): String` | method | [port/src/syntax_ast.cj:44](../port/src/syntax_ast.cj#L44) |
+
+## AstSpan
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class AstSpan` | class | [port/src/syntax_ast.cj:8](../port/src/syntax_ast.cj#L8) |
+| `public let startOffset: Int64` | field | [port/src/syntax_ast.cj:9](../port/src/syntax_ast.cj#L9) |
+| `public let startLine: Int64` | field | [port/src/syntax_ast.cj:10](../port/src/syntax_ast.cj#L10) |
+| `public let startColumn: Int64` | field | [port/src/syntax_ast.cj:11](../port/src/syntax_ast.cj#L11) |
+| `public let endOffset: Int64` | field | [port/src/syntax_ast.cj:12](../port/src/syntax_ast.cj#L12) |
+| `public let endLine: Int64` | field | [port/src/syntax_ast.cj:13](../port/src/syntax_ast.cj#L13) |
+| `public let endColumn: Int64` | field | [port/src/syntax_ast.cj:14](../port/src/syntax_ast.cj#L14) |
+| `public init(startOffset: Int64, startLine: Int64, startColumn: Int64, endOffset: Int64, endLine: Int64, endColumn: Int64)` | constructor | [port/src/syntax_ast.cj:15](../port/src/syntax_ast.cj#L15) |
+| `public func text(): String` | method | [port/src/syntax_ast.cj:24](../port/src/syntax_ast.cj#L24) |
+
+## BytesCaptureIter
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class BytesCaptureIter` | class | [port/src/bytes.cj:955](../port/src/bytes.cj#L955) |
+| `public init(pull: () -> Option<BytesCaptures>)` | constructor | [port/src/bytes.cj:957](../port/src/bytes.cj#L957) |
+| `public func next(): Option<BytesCaptures>` | method | [port/src/bytes.cj:960](../port/src/bytes.cj#L960) |
+
+## BytesCaptures
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class BytesCaptures` | class | [port/src/bytes.cj:591](../port/src/bytes.cj#L591) |
+| `public let size: Int64` | field | [port/src/bytes.cj:595](../port/src/bytes.cj#L595) |
+| `public func getMatch(): BytesMatch` | method | [port/src/bytes.cj:602](../port/src/bytes.cj#L602) |
+| `public func get(index: Int64): Option<BytesMatch>` | method | [port/src/bytes.cj:608](../port/src/bytes.cj#L608) |
+| `public func iter(): BytesGroupIter` | method | [port/src/bytes.cj:614](../port/src/bytes.cj#L614) |
+| `public func extract(count: Int64): Array<Array<UInt8>>` | method | [port/src/bytes.cj:617](../port/src/bytes.cj#L617) |
+| `public func name(value: String): Option<BytesMatch>` | method | [port/src/bytes.cj:643](../port/src/bytes.cj#L643) |
+| `public func expand(template: Array<UInt8>): Array<UInt8>` | method | [port/src/bytes.cj:655](../port/src/bytes.cj#L655) |
+| `public func expandInto(template: Array<UInt8>, out: ArrayList<UInt8>): Unit` | method | [port/src/bytes.cj:660](../port/src/bytes.cj#L660) |
+
+## BytesGroupItem
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class BytesGroupItem` | class | [port/src/bytes.cj:741](../port/src/bytes.cj#L741) |
+| `public let done: Bool` | field | [port/src/bytes.cj:742](../port/src/bytes.cj#L742) |
+| `public let value: Option<BytesMatch>` | field | [port/src/bytes.cj:743](../port/src/bytes.cj#L743) |
+
+## BytesGroupIter
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class BytesGroupIter` | class | [port/src/bytes.cj:750](../port/src/bytes.cj#L750) |
+| `public func len(): Int64` | method | [port/src/bytes.cj:757](../port/src/bytes.cj#L757) |
+| `public func sizeHint(): (Int64, Option<Int64>)` | method | [port/src/bytes.cj:758](../port/src/bytes.cj#L758) |
+| `public func clone(): BytesGroupIter` | method | [port/src/bytes.cj:761](../port/src/bytes.cj#L761) |
+| `public func next(): BytesGroupItem` | method | [port/src/bytes.cj:766](../port/src/bytes.cj#L766) |
+
+## BytesMatch
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class BytesMatch` | class | [port/src/bytes.cj:7](../port/src/bytes.cj#L7) |
+| `public let start: Int64` | field | [port/src/bytes.cj:8](../port/src/bytes.cj#L8) |
+| `public let end: Int64` | field | [port/src/bytes.cj:9](../port/src/bytes.cj#L9) |
+| `public let bytes: Array<UInt8>` | field | [port/src/bytes.cj:10](../port/src/bytes.cj#L10) |
+| `public init(start: Int64, end: Int64, bytes: Array<UInt8>)` | constructor | [port/src/bytes.cj:11](../port/src/bytes.cj#L11) |
+| `public func isEmpty(): Bool` | method | [port/src/bytes.cj:16](../port/src/bytes.cj#L16) |
+| `public func len(): Int64` | method | [port/src/bytes.cj:19](../port/src/bytes.cj#L19) |
+
+## BytesMatchIter
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class BytesMatchIter` | class | [port/src/bytes.cj:945](../port/src/bytes.cj#L945) |
+| `public init(pull: () -> Option<BytesMatch>)` | constructor | [port/src/bytes.cj:947](../port/src/bytes.cj#L947) |
+| `public func next(): Option<BytesMatch>` | method | [port/src/bytes.cj:950](../port/src/bytes.cj#L950) |
+
+## BytesRegex
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class BytesRegex` | class | [port/src/bytes.cj:24](../port/src/bytes.cj#L24) |
+| `public init(pattern: String)` | constructor | [port/src/bytes.cj:33](../port/src/bytes.cj#L33) |
+| `public func asStr(): String` | method | [port/src/bytes.cj:96](../port/src/bytes.cj#L96) |
+| `public func capturesLen(): Int64` | method | [port/src/bytes.cj:99](../port/src/bytes.cj#L99) |
+| `public func staticCapturesLen(): Option<Int64>` | method | [port/src/bytes.cj:102](../port/src/bytes.cj#L102) |
+| `public func captureNames(): Array<Option<String>>` | method | [port/src/bytes.cj:109](../port/src/bytes.cj#L109) |
+| `public func captureLocations(): CaptureLocations` | method | [port/src/bytes.cj:118](../port/src/bytes.cj#L118) |
+| `public func find(haystack: Array<UInt8>): Option<BytesMatch>` | method | [port/src/bytes.cj:121](../port/src/bytes.cj#L121) |
+| `public func isMatch(haystack: Array<UInt8>): Bool` | method | [port/src/bytes.cj:124](../port/src/bytes.cj#L124) |
+| `public func findAt(haystack: Array<UInt8>, start: Int64): Option<BytesMatch>` | method | [port/src/bytes.cj:127](../port/src/bytes.cj#L127) |
+| `public func isMatchAt(haystack: Array<UInt8>, start: Int64): Bool` | method | [port/src/bytes.cj:133](../port/src/bytes.cj#L133) |
+| `public func shortestMatch(haystack: Array<UInt8>): Option<Int64>` | method | [port/src/bytes.cj:139](../port/src/bytes.cj#L139) |
+| `public func shortestMatchAt(haystack: Array<UInt8>, start: Int64): Option<Int64>` | method | [port/src/bytes.cj:142](../port/src/bytes.cj#L142) |
+| `public func findIter(haystack: Array<UInt8>): BytesMatchIter` | method | [port/src/bytes.cj:172](../port/src/bytes.cj#L172) |
+| `public func capturesIter(haystack: Array<UInt8>): BytesCaptureIter` | method | [port/src/bytes.cj:182](../port/src/bytes.cj#L182) |
+| `public func splitIter(haystack: Array<UInt8>): BytesSplitIter` | method | [port/src/bytes.cj:192](../port/src/bytes.cj#L192) |
+| `public func splitNIter(haystack: Array<UInt8>, limit: Int64): BytesSplitIter` | method | [port/src/bytes.cj:195](../port/src/bytes.cj#L195) |
+| `public func capturesRead(locations: CaptureLocations, haystack: Array<UInt8>): Option<BytesMatch>` | method | [port/src/bytes.cj:228](../port/src/bytes.cj#L228) |
+| `public func findAll(haystack: Array<UInt8>): Array<BytesMatch>` | method | [port/src/bytes.cj:231](../port/src/bytes.cj#L231) |
+| `public func captures(haystack: Array<UInt8>): Option<BytesCaptures>` | method | [port/src/bytes.cj:356](../port/src/bytes.cj#L356) |
+| `public func capturesAt(haystack: Array<UInt8>, start: Int64): Option<BytesCaptures>` | method | [port/src/bytes.cj:359](../port/src/bytes.cj#L359) |
+| `public func capturesAll(haystack: Array<UInt8>): Array<BytesCaptures>` | method | [port/src/bytes.cj:365](../port/src/bytes.cj#L365) |
+| `public func capturesReadAt(locations: CaptureLocations, haystack: Array<UInt8>, start: Int64): Option<BytesMatch>` | method | [port/src/bytes.cj:384](../port/src/bytes.cj#L384) |
+| `public func replace(haystack: Array<UInt8>, replacement: Array<UInt8>): Array<UInt8>` | method | [port/src/bytes.cj:408](../port/src/bytes.cj#L408) |
+| `public func replaceAll(haystack: Array<UInt8>, replacement: Array<UInt8>): Array<UInt8>` | method | [port/src/bytes.cj:411](../port/src/bytes.cj#L411) |
+| `public func replaceN(haystack: Array<UInt8>, limit: Int64, replacement: Array<UInt8>): Array<UInt8>` | method | [port/src/bytes.cj:414](../port/src/bytes.cj#L414) |
+| `public func replaceLiteral(haystack: Array<UInt8>, limit: Int64, replacement: Array<UInt8>): Array<UInt8>` | method | [port/src/bytes.cj:427](../port/src/bytes.cj#L427) |
+| `public func replaceWith(haystack: Array<UInt8>, limit: Int64, replacer: (BytesCaptures) -> Array<UInt8>): Array<UInt8>` | method | [port/src/bytes.cj:430](../port/src/bytes.cj#L430) |
+| `public func split(haystack: Array<UInt8>): Array<Array<UInt8>>` | method | [port/src/bytes.cj:433](../port/src/bytes.cj#L433) |
+| `public func splitN(haystack: Array<UInt8>, limit: Int64): Array<Array<UInt8>>` | method | [port/src/bytes.cj:436](../port/src/bytes.cj#L436) |
+
+## BytesRegexBuilder
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class BytesRegexBuilder` | class | [port/src/builder.cj:157](../port/src/builder.cj#L157) |
+| `public init(pattern: String)` | constructor | [port/src/builder.cj:160](../port/src/builder.cj#L160) |
+| `public func build(): BytesRegex` | method | [port/src/builder.cj:164](../port/src/builder.cj#L164) |
+| `public func caseInsensitive(yes: Bool): BytesRegexBuilder` | method | [port/src/builder.cj:168](../port/src/builder.cj#L168) |
+| `public func multiLine(yes: Bool): BytesRegexBuilder` | method | [port/src/builder.cj:172](../port/src/builder.cj#L172) |
+| `public func dotMatchesNewLine(yes: Bool): BytesRegexBuilder` | method | [port/src/builder.cj:176](../port/src/builder.cj#L176) |
+| `public func swapGreed(yes: Bool): BytesRegexBuilder` | method | [port/src/builder.cj:180](../port/src/builder.cj#L180) |
+| `public func ignoreWhitespace(yes: Bool): BytesRegexBuilder` | method | [port/src/builder.cj:184](../port/src/builder.cj#L184) |
+| `public func crlf(yes: Bool): BytesRegexBuilder` | method | [port/src/builder.cj:188](../port/src/builder.cj#L188) |
+| `public func unicode(yes: Bool): BytesRegexBuilder` | method | [port/src/builder.cj:192](../port/src/builder.cj#L192) |
+| `public func octal(yes: Bool): BytesRegexBuilder` | method | [port/src/builder.cj:196](../port/src/builder.cj#L196) |
+| `public func lineTerminator(byte: Rune): BytesRegexBuilder` | method | [port/src/builder.cj:200](../port/src/builder.cj#L200) |
+| `public func nestLimit(limit: Int64): BytesRegexBuilder` | method | [port/src/builder.cj:207](../port/src/builder.cj#L207) |
+| `public func sizeLimit(limit: Int64): BytesRegexBuilder` | method | [port/src/builder.cj:214](../port/src/builder.cj#L214) |
+| `public func dfaSizeLimit(limit: Int64): BytesRegexBuilder` | method | [port/src/builder.cj:221](../port/src/builder.cj#L221) |
+
+## BytesRegexSet
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class BytesRegexSet` | class | [port/src/bytes.cj:781](../port/src/bytes.cj#L781) |
+| `public init(patterns: Array<String>)` | constructor | [port/src/bytes.cj:788](../port/src/bytes.cj#L788) |
+| `public func len(): Int64` | method | [port/src/bytes.cj:838](../port/src/bytes.cj#L838) |
+| `public func isEmpty(): Bool` | method | [port/src/bytes.cj:841](../port/src/bytes.cj#L841) |
+| `public func patterns(): Array<String>` | method | [port/src/bytes.cj:844](../port/src/bytes.cj#L844) |
+| `public func isMatch(haystack: Array<UInt8>): Bool` | method | [port/src/bytes.cj:847](../port/src/bytes.cj#L847) |
+| `public func isMatchAt(haystack: Array<UInt8>, start: Int64): Bool` | method | [port/src/bytes.cj:850](../port/src/bytes.cj#L850) |
+| `public func matches(haystack: Array<UInt8>): SetMatches` | method | [port/src/bytes.cj:853](../port/src/bytes.cj#L853) |
+| `public func matchesAt(haystack: Array<UInt8>, start: Int64): SetMatches` | method | [port/src/bytes.cj:856](../port/src/bytes.cj#L856) |
+| `public func matchesReadAt(slots: Array<Bool>, haystack: Array<UInt8>, start: Int64): Bool` | method | [port/src/bytes.cj:859](../port/src/bytes.cj#L859) |
+
+## BytesRegexSetBuilder
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class BytesRegexSetBuilder` | class | [port/src/builder.cj:230](../port/src/builder.cj#L230) |
+| `public init()` | constructor | [port/src/builder.cj:233](../port/src/builder.cj#L233) |
+| `public init(patterns: Array<String>)` | constructor | [port/src/builder.cj:236](../port/src/builder.cj#L236) |
+| `public func pattern(value: String): BytesRegexSetBuilder` | method | [port/src/builder.cj:240](../port/src/builder.cj#L240) |
+| `public func build(): BytesRegexSet` | method | [port/src/builder.cj:244](../port/src/builder.cj#L244) |
+| `public func caseInsensitive(yes: Bool): BytesRegexSetBuilder` | method | [port/src/builder.cj:248](../port/src/builder.cj#L248) |
+| `public func multiLine(yes: Bool): BytesRegexSetBuilder` | method | [port/src/builder.cj:252](../port/src/builder.cj#L252) |
+| `public func dotMatchesNewLine(yes: Bool): BytesRegexSetBuilder` | method | [port/src/builder.cj:256](../port/src/builder.cj#L256) |
+| `public func swapGreed(yes: Bool): BytesRegexSetBuilder` | method | [port/src/builder.cj:260](../port/src/builder.cj#L260) |
+| `public func ignoreWhitespace(yes: Bool): BytesRegexSetBuilder` | method | [port/src/builder.cj:264](../port/src/builder.cj#L264) |
+| `public func crlf(yes: Bool): BytesRegexSetBuilder` | method | [port/src/builder.cj:268](../port/src/builder.cj#L268) |
+| `public func unicode(yes: Bool): BytesRegexSetBuilder` | method | [port/src/builder.cj:272](../port/src/builder.cj#L272) |
+| `public func octal(yes: Bool): BytesRegexSetBuilder` | method | [port/src/builder.cj:276](../port/src/builder.cj#L276) |
+| `public func lineTerminator(byte: Rune): BytesRegexSetBuilder` | method | [port/src/builder.cj:280](../port/src/builder.cj#L280) |
+| `public func nestLimit(limit: Int64): BytesRegexSetBuilder` | method | [port/src/builder.cj:287](../port/src/builder.cj#L287) |
+| `public func sizeLimit(limit: Int64): BytesRegexSetBuilder` | method | [port/src/builder.cj:294](../port/src/builder.cj#L294) |
+| `public func dfaSizeLimit(limit: Int64): BytesRegexSetBuilder` | method | [port/src/builder.cj:301](../port/src/builder.cj#L301) |
+
+## BytesSplitIter
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class BytesSplitIter` | class | [port/src/bytes.cj:965](../port/src/bytes.cj#L965) |
+| `public init(pull: () -> Option<Array<UInt8>>)` | constructor | [port/src/bytes.cj:967](../port/src/bytes.cj#L967) |
+| `public func next(): Option<Array<UInt8>>` | method | [port/src/bytes.cj:970](../port/src/bytes.cj#L970) |
+
+## CaptureIter
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class CaptureIter` | class | [port/src/nfa.cj:1231](../port/src/nfa.cj#L1231) |
+| `public init(pull: () -> Option<Captures>)` | constructor | [port/src/nfa.cj:1233](../port/src/nfa.cj#L1233) |
+| `public func next(): Option<Captures>` | method | [port/src/nfa.cj:1236](../port/src/nfa.cj#L1236) |
+
+## CaptureLocations
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class CaptureLocations` | class | [port/src/captures.cj:16](../port/src/captures.cj#L16) |
+| `public let size: Int64` | field | [port/src/captures.cj:17](../port/src/captures.cj#L17) |
+| `public func get(index: Int64): Option<CaptureSpan>` | method | [port/src/captures.cj:25](../port/src/captures.cj#L25) |
+
+## CaptureSpan
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class CaptureSpan` | class | [port/src/captures.cj:7](../port/src/captures.cj#L7) |
+| `public let start: Int64` | field | [port/src/captures.cj:8](../port/src/captures.cj#L8) |
+| `public let end: Int64` | field | [port/src/captures.cj:9](../port/src/captures.cj#L9) |
+
+## Captures
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class Captures` | class | [port/src/captures.cj:41](../port/src/captures.cj#L41) |
+| `public let size: Int64` | field | [port/src/captures.cj:45](../port/src/captures.cj#L45) |
+| `public func getMatch(): RegexMatch` | method | [port/src/captures.cj:52](../port/src/captures.cj#L52) |
+| `public func extract(count: Int64): Array<String>` | method | [port/src/captures.cj:60](../port/src/captures.cj#L60) |
+| `public func iter(): GroupIter` | method | [port/src/captures.cj:86](../port/src/captures.cj#L86) |
+| `public func get(index: Int64): Option<RegexMatch>` | method | [port/src/captures.cj:89](../port/src/captures.cj#L89) |
+| `public func name(value: String): Option<RegexMatch>` | method | [port/src/captures.cj:95](../port/src/captures.cj#L95) |
+| `public func expand(template: String): String` | method | [port/src/captures.cj:107](../port/src/captures.cj#L107) |
+| `public func expandInto(template: String, out: StringBuilder): Unit` | method | [port/src/captures.cj:112](../port/src/captures.cj#L112) |
+
+## GroupItem
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class GroupItem` | class | [port/src/captures.cj:198](../port/src/captures.cj#L198) |
+| `public let done: Bool` | field | [port/src/captures.cj:199](../port/src/captures.cj#L199) |
+| `public let value: Option<RegexMatch>` | field | [port/src/captures.cj:200](../port/src/captures.cj#L200) |
+
+## GroupIter
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class GroupIter` | class | [port/src/captures.cj:207](../port/src/captures.cj#L207) |
+| `public func len(): Int64` | method | [port/src/captures.cj:214](../port/src/captures.cj#L214) |
+| `public func sizeHint(): (Int64, Option<Int64>)` | method | [port/src/captures.cj:215](../port/src/captures.cj#L215) |
+| `public func clone(): GroupIter` | method | [port/src/captures.cj:218](../port/src/captures.cj#L218) |
+| `public func next(): GroupItem` | method | [port/src/captures.cj:223](../port/src/captures.cj#L223) |
+
+## Hir
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class Hir` | class | [port/src/syntax_hir.cj:215](../port/src/syntax_hir.cj#L215) |
+| `public func kind(): HirKind` | method | [port/src/syntax_hir.cj:223](../port/src/syntax_hir.cj#L223) |
+| `public func properties(): HirProperties` | method | [port/src/syntax_hir.cj:231](../port/src/syntax_hir.cj#L231) |
+| `public func subs(): Array<Hir>` | method | [port/src/syntax_hir.cj:234](../port/src/syntax_hir.cj#L234) |
+| `public func visit(enter: (Hir) -> Unit): Unit` | method | [port/src/syntax_hir.cj:243](../port/src/syntax_hir.cj#L243) |
+| `public func walk(enter: (Hir) -> Unit, leave: (Hir) -> Unit): Unit` | method | [port/src/syntax_hir.cj:257](../port/src/syntax_hir.cj#L257) |
+| `public func walkUntil(enter: (Hir) -> Bool, leave: (Hir) -> Bool): Bool` | method | [port/src/syntax_hir.cj:272](../port/src/syntax_hir.cj#L272) |
+| `public func toPattern(): String` | method | [port/src/syntax_hir.cj:285](../port/src/syntax_hir.cj#L285) |
+| `public static func empty(): Hir` | method | [port/src/syntax_hir.cj:290](../port/src/syntax_hir.cj#L290) |
+| `public static func fail(): Hir` | method | [port/src/syntax_hir.cj:293](../port/src/syntax_hir.cj#L293) |
+| `public static func literal(bytes: Array<UInt8>): Hir` | method | [port/src/syntax_hir.cj:296](../port/src/syntax_hir.cj#L296) |
+| `public static func unicodeClass(ranges: Array<HirRange>): Hir` | method | [port/src/syntax_hir.cj:303](../port/src/syntax_hir.cj#L303) |
+| `public static func byteClass(ranges: Array<HirRange>): Hir` | method | [port/src/syntax_hir.cj:306](../port/src/syntax_hir.cj#L306) |
+| `public static func capture(index: UInt32, name: Option<String>, sub: Hir): Hir` | method | [port/src/syntax_hir.cj:358](../port/src/syntax_hir.cj#L358) |
+| `public static func repetition(min: UInt32, max: Option<UInt32>, greedy: Bool, sub: Hir): Hir` | method | [port/src/syntax_hir.cj:361](../port/src/syntax_hir.cj#L361) |
+| `public static func concat(children: Array<Hir>): Hir` | method | [port/src/syntax_hir.cj:392](../port/src/syntax_hir.cj#L392) |
+| `public static func look(look: HirLook): Hir` | method | [port/src/syntax_hir.cj:435](../port/src/syntax_hir.cj#L435) |
+| `public static func dot(dot: HirDot): Hir` | method | [port/src/syntax_hir.cj:438](../port/src/syntax_hir.cj#L438) |
+| `public static func dotExcept(bytes: Bool, excluded: Int64): Hir` | method | [port/src/syntax_hir.cj:448](../port/src/syntax_hir.cj#L448) |
+| `public static func alternation(subs: Array<Hir>): Hir` | method | [port/src/syntax_hir.cj:451](../port/src/syntax_hir.cj#L451) |
+| `public static func parse(pattern: String): Hir` | method | [port/src/syntax_hir.cj:528](../port/src/syntax_hir.cj#L528) |
+| `public static func parse(pattern: String, utf8: Bool): Hir` | method | [port/src/syntax_hir.cj:531](../port/src/syntax_hir.cj#L531) |
+
+## HirCapture
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class HirCapture` | class | [port/src/syntax_hir.cj:101](../port/src/syntax_hir.cj#L101) |
+| `public let index: UInt32` | field | [port/src/syntax_hir.cj:102](../port/src/syntax_hir.cj#L102) |
+| `public let name: Option<String>` | field | [port/src/syntax_hir.cj:103](../port/src/syntax_hir.cj#L103) |
+| `public let sub: Hir` | field | [port/src/syntax_hir.cj:104](../port/src/syntax_hir.cj#L104) |
+
+## HirClass
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class HirClass` | class | [port/src/syntax_hir.cj:31](../port/src/syntax_hir.cj#L31) |
+| `public let isBytes: Bool` | field | [port/src/syntax_hir.cj:32](../port/src/syntax_hir.cj#L32) |
+| `public func ranges(): Array<HirRange>` | method | [port/src/syntax_hir.cj:38](../port/src/syntax_hir.cj#L38) |
+| `public func isEmpty(): Bool` | method | [port/src/syntax_hir.cj:41](../port/src/syntax_hir.cj#L41) |
+| `public func union(other: HirClass): Hir` | method | [port/src/syntax_hir.cj:44](../port/src/syntax_hir.cj#L44) |
+| `public func intersect(other: HirClass): Hir` | method | [port/src/syntax_hir.cj:47](../port/src/syntax_hir.cj#L47) |
+| `public func difference(other: HirClass): Hir` | method | [port/src/syntax_hir.cj:50](../port/src/syntax_hir.cj#L50) |
+| `public func negate(): Hir` | method | [port/src/syntax_hir.cj:53](../port/src/syntax_hir.cj#L53) |
+| `public func caseFold(): Hir` | method | [port/src/syntax_hir.cj:74](../port/src/syntax_hir.cj#L74) |
+
+## HirDot
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public enum HirDot` | enum | [port/src/syntax_hir.cj:133](../port/src/syntax_hir.cj#L133) |
+
+## HirKind
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public enum HirKind` | enum | [port/src/syntax_hir.cj:137](../port/src/syntax_hir.cj#L137) |
+
+## HirLook
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public enum HirLook` | enum | [port/src/syntax_hir.cj:112](../port/src/syntax_hir.cj#L112) |
+
+## HirProperties
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class HirProperties` | class | [port/src/syntax_hir.cj:148](../port/src/syntax_hir.cj#L148) |
+| `public func minimumLen(): Option<UInt64>` | method | [port/src/syntax_hir.cj:177](../port/src/syntax_hir.cj#L177) |
+| `public func maximumLen(): Option<UInt64>` | method | [port/src/syntax_hir.cj:180](../port/src/syntax_hir.cj#L180) |
+| `public func isUtf8(): Bool` | method | [port/src/syntax_hir.cj:183](../port/src/syntax_hir.cj#L183) |
+| `public func explicitCapturesLen(): Int64` | method | [port/src/syntax_hir.cj:186](../port/src/syntax_hir.cj#L186) |
+| `public func staticExplicitCapturesLen(): Option<Int64>` | method | [port/src/syntax_hir.cj:189](../port/src/syntax_hir.cj#L189) |
+| `public func isLiteral(): Bool` | method | [port/src/syntax_hir.cj:192](../port/src/syntax_hir.cj#L192) |
+| `public func isAlternationLiteral(): Bool` | method | [port/src/syntax_hir.cj:195](../port/src/syntax_hir.cj#L195) |
+| `public func lookSet(): UInt64` | method | [port/src/syntax_hir.cj:198](../port/src/syntax_hir.cj#L198) |
+| `public func lookSetPrefix(): UInt64` | method | [port/src/syntax_hir.cj:201](../port/src/syntax_hir.cj#L201) |
+| `public func lookSetPrefixAny(): UInt64` | method | [port/src/syntax_hir.cj:204](../port/src/syntax_hir.cj#L204) |
+| `public func lookSetSuffix(): UInt64` | method | [port/src/syntax_hir.cj:207](../port/src/syntax_hir.cj#L207) |
+| `public func lookSetSuffixAny(): UInt64` | method | [port/src/syntax_hir.cj:210](../port/src/syntax_hir.cj#L210) |
+
+## HirRange
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class HirRange` | class | [port/src/syntax_hir.cj:14](../port/src/syntax_hir.cj#L14) |
+| `public let start: Int64` | field | [port/src/syntax_hir.cj:15](../port/src/syntax_hir.cj#L15) |
+| `public let end: Int64` | field | [port/src/syntax_hir.cj:16](../port/src/syntax_hir.cj#L16) |
+| `public init(start: Int64, end: Int64)` | constructor | [port/src/syntax_hir.cj:17](../port/src/syntax_hir.cj#L17) |
+
+## HirRepetition
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class HirRepetition` | class | [port/src/syntax_hir.cj:88](../port/src/syntax_hir.cj#L88) |
+| `public let min: UInt32` | field | [port/src/syntax_hir.cj:89](../port/src/syntax_hir.cj#L89) |
+| `public let max: Option<UInt32>` | field | [port/src/syntax_hir.cj:90](../port/src/syntax_hir.cj#L90) |
+| `public let greedy: Bool` | field | [port/src/syntax_hir.cj:91](../port/src/syntax_hir.cj#L91) |
+| `public let sub: Hir` | field | [port/src/syntax_hir.cj:92](../port/src/syntax_hir.cj#L92) |
+
+## HirUnsupportedError
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class HirUnsupportedError <: Exception` | class | [port/src/syntax_hir.cj:8](../port/src/syntax_hir.cj#L8) |
+| `public init(message: String)` | constructor | [port/src/syntax_hir.cj:9](../port/src/syntax_hir.cj#L9) |
+
+## MatchIter
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class MatchIter` | class | [port/src/nfa.cj:1221](../port/src/nfa.cj#L1221) |
+| `public init(pull: () -> Option<RegexMatch>)` | constructor | [port/src/nfa.cj:1223](../port/src/nfa.cj#L1223) |
+| `public func next(): Option<RegexMatch>` | method | [port/src/nfa.cj:1226](../port/src/nfa.cj#L1226) |
+
+## PikeCache
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class PikeCache` | class | [port/src/pikevm.cj:8](../port/src/pikevm.cj#L8) |
+| `public func reset(): Unit` | method | [port/src/pikevm.cj:12](../port/src/pikevm.cj#L12) |
+| `public func hasMatch(): Bool` | method | [port/src/pikevm.cj:19](../port/src/pikevm.cj#L19) |
+| `public func patternId(): Int64` | method | [port/src/pikevm.cj:22](../port/src/pikevm.cj#L22) |
+| `public func groupStart(index: Int64): Int64` | method | [port/src/pikevm.cj:25](../port/src/pikevm.cj#L25) |
+| `public func groupEnd(index: Int64): Int64` | method | [port/src/pikevm.cj:32](../port/src/pikevm.cj#L32) |
+
+## PikeMatch
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class PikeMatch` | class | [port/src/pikevm.cj:63](../port/src/pikevm.cj#L63) |
+| `public let pattern: Int64` | field | [port/src/pikevm.cj:64](../port/src/pikevm.cj#L64) |
+| `public let captures: Captures` | field | [port/src/pikevm.cj:65](../port/src/pikevm.cj#L65) |
+| `public init(pattern: Int64, captures: Captures)` | constructor | [port/src/pikevm.cj:66](../port/src/pikevm.cj#L66) |
+| `public func start(): Int64` | method | [port/src/pikevm.cj:70](../port/src/pikevm.cj#L70) |
+| `public func end(): Int64` | method | [port/src/pikevm.cj:76](../port/src/pikevm.cj#L76) |
+
+## PikeVM
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class PikeVM` | class | [port/src/pikevm.cj:84](../port/src/pikevm.cj#L84) |
+| `public let cache: PikeCache` | field | [port/src/pikevm.cj:86](../port/src/pikevm.cj#L86) |
+| `public init(pattern: String)` | constructor | [port/src/pikevm.cj:87](../port/src/pikevm.cj#L87) |
+| `public init(patterns: Array<String>)` | constructor | [port/src/pikevm.cj:90](../port/src/pikevm.cj#L90) |
+| `public init(hir: Hir)` | constructor | [port/src/pikevm.cj:94](../port/src/pikevm.cj#L94) |
+| `public init(hirs: Array<Hir>)` | constructor | [port/src/pikevm.cj:97](../port/src/pikevm.cj#L97) |
+| `public func patternCount(): Int64` | method | [port/src/pikevm.cj:101](../port/src/pikevm.cj#L101) |
+| `public func reset(): Unit` | method | [port/src/pikevm.cj:104](../port/src/pikevm.cj#L104) |
+| `public func stateCount(pattern: Int64): Int64` | method | [port/src/pikevm.cj:107](../port/src/pikevm.cj#L107) |
+| `public func startState(pattern: Int64): Int64` | method | [port/src/pikevm.cj:110](../port/src/pikevm.cj#L110) |
+| `public func opName(pattern: Int64, state: Int64): String` | method | [port/src/pikevm.cj:113](../port/src/pikevm.cj#L113) |
+| `public func opNext(pattern: Int64, state: Int64): Int64` | method | [port/src/pikevm.cj:116](../port/src/pikevm.cj#L116) |
+| `public func opAlternate(pattern: Int64, state: Int64): Int64` | method | [port/src/pikevm.cj:119](../port/src/pikevm.cj#L119) |
+| `public func search(text: String): Option<PikeMatch>` | method | [port/src/pikevm.cj:122](../port/src/pikevm.cj#L122) |
+| `public func search(text: String, start: Int64, end: Int64, anchored: Bool): Option<PikeMatch>` | method | [port/src/pikevm.cj:125](../port/src/pikevm.cj#L125) |
+
+## Regex
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class Regex` | class | [port/src/nfa.cj:509](../port/src/nfa.cj#L509) |
+| `public init(pattern: String)` | constructor | [port/src/nfa.cj:518](../port/src/nfa.cj#L518) |
+| `public func asStr(): String` | method | [port/src/nfa.cj:653](../port/src/nfa.cj#L653) |
+| `public func staticCapturesLen(): Option<Int64>` | method | [port/src/nfa.cj:656](../port/src/nfa.cj#L656) |
+| `public func find(text: String): Option<RegexMatch>` | method | [port/src/nfa.cj:792](../port/src/nfa.cj#L792) |
+| `public func isMatch(text: String): Bool` | method | [port/src/nfa.cj:804](../port/src/nfa.cj#L804) |
+| `public func findAt(text: String, start: Int64): Option<RegexMatch>` | method | [port/src/nfa.cj:815](../port/src/nfa.cj#L815) |
+| `public func isMatchAt(text: String, start: Int64): Bool` | method | [port/src/nfa.cj:823](../port/src/nfa.cj#L823) |
+| `public func shortestMatch(text: String): Option<Int64>` | method | [port/src/nfa.cj:829](../port/src/nfa.cj#L829) |
+| `public func shortestMatchAt(text: String, start: Int64): Option<Int64>` | method | [port/src/nfa.cj:832](../port/src/nfa.cj#L832) |
+| `public func capturesAt(text: String, start: Int64): Option<Captures>` | method | [port/src/nfa.cj:840](../port/src/nfa.cj#L840) |
+| `public func findIter(text: String): MatchIter` | method | [port/src/nfa.cj:848](../port/src/nfa.cj#L848) |
+| `public func capturesIter(text: String): CaptureIter` | method | [port/src/nfa.cj:872](../port/src/nfa.cj#L872) |
+| `public func splitIter(text: String): SplitIter` | method | [port/src/nfa.cj:896](../port/src/nfa.cj#L896) |
+| `public func splitNIter(text: String, limit: Int64): SplitIter` | method | [port/src/nfa.cj:936](../port/src/nfa.cj#L936) |
+| `public func captureLocations(): CaptureLocations` | method | [port/src/nfa.cj:965](../port/src/nfa.cj#L965) |
+| `public func capturesRead(locations: CaptureLocations, text: String): Option<RegexMatch>` | method | [port/src/nfa.cj:968](../port/src/nfa.cj#L968) |
+| `public func capturesReadAt(locations: CaptureLocations, text: String, start: Int64): Option<RegexMatch>` | method | [port/src/nfa.cj:971](../port/src/nfa.cj#L971) |
+| `public func findAll(text: String): Array<RegexMatch>` | method | [port/src/nfa.cj:997](../port/src/nfa.cj#L997) |
+| `public func capturesLen(): Int64` | method | [port/src/nfa.cj:1021](../port/src/nfa.cj#L1021) |
+| `public func captureNames(): Array<Option<String>>` | method | [port/src/nfa.cj:1024](../port/src/nfa.cj#L1024) |
+| `public func captures(text: String): Option<Captures>` | method | [port/src/nfa.cj:1049](../port/src/nfa.cj#L1049) |
+| `public func capturesAll(text: String): Array<Captures>` | method | [port/src/nfa.cj:1056](../port/src/nfa.cj#L1056) |
+| `public func replace(text: String, replacement: String): String` | method | [port/src/nfa.cj:1076](../port/src/nfa.cj#L1076) |
+| `public func replaceAll(text: String, replacement: String): String` | method | [port/src/nfa.cj:1079](../port/src/nfa.cj#L1079) |
+| `public func replaceN(text: String, limit: Int64, replacement: String): String` | method | [port/src/nfa.cj:1083](../port/src/nfa.cj#L1083) |
+| `public func replaceLiteral(text: String, limit: Int64, replacement: String): String` | method | [port/src/nfa.cj:1096](../port/src/nfa.cj#L1096) |
+| `public func replaceWith(text: String, limit: Int64, replacer: (Captures) -> String): String` | method | [port/src/nfa.cj:1099](../port/src/nfa.cj#L1099) |
+| `public func split(text: String): Array<String>` | method | [port/src/nfa.cj:1133](../port/src/nfa.cj#L1133) |
+| `public func splitN(text: String, limit: Int64): Array<String>` | method | [port/src/nfa.cj:1137](../port/src/nfa.cj#L1137) |
+| `public func nfaStateCount(): Int64` | method | [port/src/nfa.cj:1173](../port/src/nfa.cj#L1173) |
+| `public func nfaStart(): Int64` | method | [port/src/nfa.cj:1176](../port/src/nfa.cj#L1176) |
+| `public func nfaOp(index: Int64): String` | method | [port/src/nfa.cj:1179](../port/src/nfa.cj#L1179) |
+| `public func nfaNext(index: Int64): Int64` | method | [port/src/nfa.cj:1193](../port/src/nfa.cj#L1193) |
+| `public func nfaAlternate(index: Int64): Int64` | method | [port/src/nfa.cj:1199](../port/src/nfa.cj#L1199) |
+| `public func searchWindow(text: String, start: Int64, end: Int64, anchored: Bool): Option<Captures>` | method | [port/src/nfa.cj:1205](../port/src/nfa.cj#L1205) |
+
+## RegexBuilder
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class RegexBuilder` | class | [port/src/builder.cj:9](../port/src/builder.cj#L9) |
+| `public init(pattern: String)` | constructor | [port/src/builder.cj:12](../port/src/builder.cj#L12) |
+| `public func build(): Regex` | method | [port/src/builder.cj:15](../port/src/builder.cj#L15) |
+| `public func caseInsensitive(yes: Bool): RegexBuilder` | method | [port/src/builder.cj:18](../port/src/builder.cj#L18) |
+| `public func multiLine(yes: Bool): RegexBuilder` | method | [port/src/builder.cj:22](../port/src/builder.cj#L22) |
+| `public func dotMatchesNewLine(yes: Bool): RegexBuilder` | method | [port/src/builder.cj:26](../port/src/builder.cj#L26) |
+| `public func swapGreed(yes: Bool): RegexBuilder` | method | [port/src/builder.cj:30](../port/src/builder.cj#L30) |
+| `public func ignoreWhitespace(yes: Bool): RegexBuilder` | method | [port/src/builder.cj:34](../port/src/builder.cj#L34) |
+| `public func crlf(yes: Bool): RegexBuilder` | method | [port/src/builder.cj:38](../port/src/builder.cj#L38) |
+| `public func unicode(yes: Bool): RegexBuilder` | method | [port/src/builder.cj:42](../port/src/builder.cj#L42) |
+| `public func octal(yes: Bool): RegexBuilder` | method | [port/src/builder.cj:46](../port/src/builder.cj#L46) |
+| `public func lineTerminator(byte: Rune): RegexBuilder` | method | [port/src/builder.cj:50](../port/src/builder.cj#L50) |
+| `public func nestLimit(limit: Int64): RegexBuilder` | method | [port/src/builder.cj:57](../port/src/builder.cj#L57) |
+| `public func sizeLimit(limit: Int64): RegexBuilder` | method | [port/src/builder.cj:64](../port/src/builder.cj#L64) |
+| `public func dfaSizeLimit(limit: Int64): RegexBuilder` | method | [port/src/builder.cj:71](../port/src/builder.cj#L71) |
+
+## RegexError
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class RegexError <: Exception` | class | [port/src/error.cj:34](../port/src/error.cj#L34) |
+| `public let errorKind: RegexErrorKind` | field | [port/src/error.cj:35](../port/src/error.cj#L35) |
+| `public let limit: Int64` | field | [port/src/error.cj:36](../port/src/error.cj#L36) |
+| `public let text: String` | field | [port/src/error.cj:37](../port/src/error.cj#L37) |
+| `public let phase: String` | field | [port/src/error.cj:39](../port/src/error.cj#L39) |
+| `public let name: String` | field | [port/src/error.cj:41](../port/src/error.cj#L41) |
+| `public let primary: Option<RegexErrorSpan>` | field | [port/src/error.cj:42](../port/src/error.cj#L42) |
+| `public let auxiliary: Option<RegexErrorSpan>` | field | [port/src/error.cj:43](../port/src/error.cj#L43) |
+| `public init(errorKind: RegexErrorKind, message: String, limit: Int64)` | constructor | [port/src/error.cj:44](../port/src/error.cj#L44) |
+| `public init(errorKind: RegexErrorKind, message: String, limit: Int64, phase: String, name: String, primary: Option<RegexErrorSpan>, auxiliary: Option<RegexErrorSpan>)` | constructor | [port/src/error.cj:47](../port/src/error.cj#L47) |
+| `public override func toString(): String` | method | [port/src/error.cj:58](../port/src/error.cj#L58) |
+| `public func structure(): String` | method | [port/src/error.cj:61](../port/src/error.cj#L61) |
+
+## RegexErrorKind
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public enum RegexErrorKind` | enum | [port/src/error.cj:7](../port/src/error.cj#L7) |
+
+## RegexErrorSpan
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class RegexErrorSpan` | class | [port/src/error.cj:13](../port/src/error.cj#L13) |
+| `public let startOffset: Int64` | field | [port/src/error.cj:14](../port/src/error.cj#L14) |
+| `public let startLine: Int64` | field | [port/src/error.cj:15](../port/src/error.cj#L15) |
+| `public let startColumn: Int64` | field | [port/src/error.cj:16](../port/src/error.cj#L16) |
+| `public let endOffset: Int64` | field | [port/src/error.cj:17](../port/src/error.cj#L17) |
+| `public let endLine: Int64` | field | [port/src/error.cj:18](../port/src/error.cj#L18) |
+| `public let endColumn: Int64` | field | [port/src/error.cj:19](../port/src/error.cj#L19) |
+| `public init(startOffset: Int64, startLine: Int64, startColumn: Int64, endOffset: Int64, endLine: Int64, endColumn: Int64)` | constructor | [port/src/error.cj:20](../port/src/error.cj#L20) |
+| `public func text(): String` | method | [port/src/error.cj:29](../port/src/error.cj#L29) |
+
+## RegexMatch
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class RegexMatch` | class | [port/src/nfa.cj:239](../port/src/nfa.cj#L239) |
+| `public let start: Int64` | field | [port/src/nfa.cj:240](../port/src/nfa.cj#L240) |
+| `public let end: Int64` | field | [port/src/nfa.cj:241](../port/src/nfa.cj#L241) |
+| `public let text: String` | field | [port/src/nfa.cj:242](../port/src/nfa.cj#L242) |
+| `public func isEmpty(): Bool` | method | [port/src/nfa.cj:248](../port/src/nfa.cj#L248) |
+| `public func len(): Int64` | method | [port/src/nfa.cj:251](../port/src/nfa.cj#L251) |
+| `public func asStr(): String` | method | [port/src/nfa.cj:254](../port/src/nfa.cj#L254) |
+
+## RegexSet
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class RegexSet` | class | [port/src/regex_set.cj:97](../port/src/regex_set.cj#L97) |
+| `public init(patterns: Array<String>)` | constructor | [port/src/regex_set.cj:104](../port/src/regex_set.cj#L104) |
+| `public func len(): Int64` | method | [port/src/regex_set.cj:153](../port/src/regex_set.cj#L153) |
+| `public func isEmpty(): Bool` | method | [port/src/regex_set.cj:156](../port/src/regex_set.cj#L156) |
+| `public func patterns(): Array<String>` | method | [port/src/regex_set.cj:159](../port/src/regex_set.cj#L159) |
+| `public func isMatch(text: String): Bool` | method | [port/src/regex_set.cj:162](../port/src/regex_set.cj#L162) |
+| `public func isMatchAt(text: String, start: Int64): Bool` | method | [port/src/regex_set.cj:165](../port/src/regex_set.cj#L165) |
+| `public func matches(text: String): SetMatches` | method | [port/src/regex_set.cj:168](../port/src/regex_set.cj#L168) |
+| `public func matchesAt(text: String, start: Int64): SetMatches` | method | [port/src/regex_set.cj:171](../port/src/regex_set.cj#L171) |
+| `public func matchesReadAt(slots: Array<Bool>, text: String, start: Int64): Bool` | method | [port/src/regex_set.cj:176](../port/src/regex_set.cj#L176) |
+
+## RegexSetBuilder
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class RegexSetBuilder` | class | [port/src/builder.cj:80](../port/src/builder.cj#L80) |
+| `public init()` | constructor | [port/src/builder.cj:83](../port/src/builder.cj#L83) |
+| `public init(patterns: Array<String>)` | constructor | [port/src/builder.cj:84](../port/src/builder.cj#L84) |
+| `public func pattern(value: String): RegexSetBuilder` | method | [port/src/builder.cj:87](../port/src/builder.cj#L87) |
+| `public func build(): RegexSet` | method | [port/src/builder.cj:91](../port/src/builder.cj#L91) |
+| `public func caseInsensitive(yes: Bool): RegexSetBuilder` | method | [port/src/builder.cj:94](../port/src/builder.cj#L94) |
+| `public func multiLine(yes: Bool): RegexSetBuilder` | method | [port/src/builder.cj:98](../port/src/builder.cj#L98) |
+| `public func dotMatchesNewLine(yes: Bool): RegexSetBuilder` | method | [port/src/builder.cj:102](../port/src/builder.cj#L102) |
+| `public func swapGreed(yes: Bool): RegexSetBuilder` | method | [port/src/builder.cj:106](../port/src/builder.cj#L106) |
+| `public func ignoreWhitespace(yes: Bool): RegexSetBuilder` | method | [port/src/builder.cj:110](../port/src/builder.cj#L110) |
+| `public func crlf(yes: Bool): RegexSetBuilder` | method | [port/src/builder.cj:114](../port/src/builder.cj#L114) |
+| `public func unicode(yes: Bool): RegexSetBuilder` | method | [port/src/builder.cj:118](../port/src/builder.cj#L118) |
+| `public func octal(yes: Bool): RegexSetBuilder` | method | [port/src/builder.cj:122](../port/src/builder.cj#L122) |
+| `public func lineTerminator(byte: Rune): RegexSetBuilder` | method | [port/src/builder.cj:126](../port/src/builder.cj#L126) |
+| `public func nestLimit(limit: Int64): RegexSetBuilder` | method | [port/src/builder.cj:133](../port/src/builder.cj#L133) |
+| `public func sizeLimit(limit: Int64): RegexSetBuilder` | method | [port/src/builder.cj:140](../port/src/builder.cj#L140) |
+| `public func dfaSizeLimit(limit: Int64): RegexSetBuilder` | method | [port/src/builder.cj:147](../port/src/builder.cj#L147) |
+
+## SetMatches
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class SetMatches` | class | [port/src/regex_set.cj:7](../port/src/regex_set.cj#L7) |
+| `public func len(): Int64` | method | [port/src/regex_set.cj:12](../port/src/regex_set.cj#L12) |
+| `public func matched(index: Int64): Bool` | method | [port/src/regex_set.cj:15](../port/src/regex_set.cj#L15) |
+| `public func matchedAny(): Bool` | method | [port/src/regex_set.cj:21](../port/src/regex_set.cj#L21) |
+| `public func matchedAll(): Bool` | method | [port/src/regex_set.cj:29](../port/src/regex_set.cj#L29) |
+| `public func indices(): Array<Int64>` | method | [port/src/regex_set.cj:37](../port/src/regex_set.cj#L37) |
+| `public func iter(): SetMatchesIter` | method | [port/src/regex_set.cj:47](../port/src/regex_set.cj#L47) |
+
+## SetMatchesIter
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class SetMatchesIter` | class | [port/src/regex_set.cj:54](../port/src/regex_set.cj#L54) |
+| `public func next(): Option<Int64>` | method | [port/src/regex_set.cj:65](../port/src/regex_set.cj#L65) |
+| `public func nextBack(): Option<Int64>` | method | [port/src/regex_set.cj:74](../port/src/regex_set.cj#L74) |
+| `public func sizeHint(): (Int64, Option<Int64>)` | method | [port/src/regex_set.cj:84](../port/src/regex_set.cj#L84) |
+| `public func clone(): SetMatchesIter` | method | [port/src/regex_set.cj:89](../port/src/regex_set.cj#L89) |
+
+## SplitIter
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class SplitIter` | class | [port/src/nfa.cj:1241](../port/src/nfa.cj#L1241) |
+| `public init(pull: () -> Option<String>)` | constructor | [port/src/nfa.cj:1243](../port/src/nfa.cj#L1243) |
+| `public func next(): Option<String>` | method | [port/src/nfa.cj:1246](../port/src/nfa.cj#L1246) |
+
+## SyntaxParser
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public class SyntaxParser` | class | [port/src/syntax_ast.cj:1605](../port/src/syntax_ast.cj#L1605) |
+| `public var caseInsensitive = false` | field | [port/src/syntax_ast.cj:1606](../port/src/syntax_ast.cj#L1606) |
+| `public var multiLine = false` | field | [port/src/syntax_ast.cj:1607](../port/src/syntax_ast.cj#L1607) |
+| `public var dotAll = false` | field | [port/src/syntax_ast.cj:1608](../port/src/syntax_ast.cj#L1608) |
+| `public var swapGreed = false` | field | [port/src/syntax_ast.cj:1609](../port/src/syntax_ast.cj#L1609) |
+| `public var ignoreWhitespace = false` | field | [port/src/syntax_ast.cj:1610](../port/src/syntax_ast.cj#L1610) |
+| `public var crlf = false` | field | [port/src/syntax_ast.cj:1611](../port/src/syntax_ast.cj#L1611) |
+| `public var unicode = true` | field | [port/src/syntax_ast.cj:1612](../port/src/syntax_ast.cj#L1612) |
+| `public var utf8 = true` | field | [port/src/syntax_ast.cj:1613](../port/src/syntax_ast.cj#L1613) |
+| `public var octal = false` | field | [port/src/syntax_ast.cj:1614](../port/src/syntax_ast.cj#L1614) |
+| `public var nestLimit: Int64 = 250` | field | [port/src/syntax_ast.cj:1615](../port/src/syntax_ast.cj#L1615) |
+| `public init()` | constructor | [port/src/syntax_ast.cj:1616](../port/src/syntax_ast.cj#L1616) |
+| `public func parseAst(pattern: String): Ast` | method | [port/src/syntax_ast.cj:1617](../port/src/syntax_ast.cj#L1617) |
+| `public func parseHir(pattern: String): Hir` | method | [port/src/syntax_ast.cj:1631](../port/src/syntax_ast.cj#L1631) |
+| `public func translate(ast: Ast): Hir` | method | [port/src/syntax_ast.cj:1636](../port/src/syntax_ast.cj#L1636) |
+
+## 顶层函数
+
+| 声明 | 种类 | 实现 |
+|---|---|---|
+| `public func escape(text: String): String` | function | [port/src/escape.cj:13](../port/src/escape.cj#L13) |
+| `public func hirLookName(look: HirLook): String` | function | [port/src/syntax_hir.cj:1468](../port/src/syntax_hir.cj#L1468) |

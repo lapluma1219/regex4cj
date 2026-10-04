@@ -4,7 +4,7 @@
 
 仓颉库和例子需要仓颉 1.1.3 SDK（`cjc`、`cjpm`）。带预期结果的演示和验收脚本还需要 Python 3.9+。只有完整 Rust 对照验收需要 Git 和 Rust/Cargo；无需先下载完整 Rust regex 仓库或参考语料。
 
-本版在 Apple Silicon macOS 上验证，其他平台尚未承诺可直接运行。先按 SDK 的安装说明配置环境，把 `CANGJIE_HOME` 指向 SDK 目录。未指定 `CANGJIE_HOME` 时，脚本优先使用项目同级的 `regex4cj-local/tools/cangjie-1.1.3`，其次使用 `tools/cangjie`。请用 `cjc --version` 确认实际版本；旧1.0.5目录保留不等于本次使用旧编译器。切换SDK后先清理或移走三个模块的target目录，避免复用旧编译产物。
+本版在 Apple Silicon macOS 上验证，其他平台尚未承诺可直接运行。先按 SDK 的安装说明配置环境，把 `CANGJIE_HOME` 指向 SDK 目录。脚本不会自动寻找同级 `regex4cj-local` 中的工具；也可以使用已经配置好的 PATH。请用 `cjc --version` 确认实际版本；旧1.0.5目录保留不等于本次使用旧编译器。切换SDK后先清理或移走三个模块的target目录，避免复用旧编译产物。
 
 从仓库或源码包进入项目根目录：
 
@@ -59,11 +59,11 @@ bash scripts/run.sh check
 bash scripts/run.sh verify
 ```
 
-`check` 用于日常试用：40 项原生测试加 20 个场景，完全不启动 Rust。报告中的原生测试应为零失败，场景分别为 13/13 和 7/7。
+`check` 用于日常试用：仓颉原生测试加 20 个场景，完全不启动 Rust。报告中的原生测试应为零失败，场景分别为 13/13 和 7/7。
 
 `verify` 用于严格验收，按锁文件构建固定 Rust 参照，运行数据检查、原生测试和差分用例。首次 Cargo 依赖下载需要网络；后续会利用缓存，整个套件可能持续数分钟。任何一步失败都会返回非零退出码。验收范围见 [现状](status.md)。本次跑过的条数以 `verification.json` 为准。
 
-默认报告在同级目录 `regex4cj-local/work/`：
+默认报告在仓库内 `.build/work/`（已被 Git 忽略）：
 
 - `showcase.json`：单模式场景的预期、实际与是否通过。
 - `verification-run.json`：整次验收的提交号、工作区状态、工具版本、阶段结果和最终状态。只有 `status: passed` 代表完成；`running` 也可能表示被强制中断，不能算通过。源码包无 Git 信息时提交号为空。
@@ -99,7 +99,7 @@ git clone https://github.com/lapluma1219/regex4cj.git
 cd regex4cj
 ```
 
-完整验收的 25 份上游测试数据在 `tests/upstream/`，含固定提交、哈希和许可证，脚本首先检查数据完整性。不需要原来的 `regex4cj-local/upstream/regex`，也不需要 CangjieSkills 或 CangjieCorpus。
+完整验收的 25 份原仓库测试数据在 `tests/upstream/`，含固定提交、哈希和许可证，脚本首先检查数据完整性。不需要原来的 `regex4cj-local/upstream/regex`，也不需要 CangjieSkills 或 CangjieCorpus。
 
 环境要求：Apple Silicon macOS、仓颉 1.1.3（cjc/cjpm）、兼容的 macOS SDK、Python 3.9+；完整验收另需 Git 和 Rust/Cargo。当前开发验收使用 Rust 1.98.1；Rust 参照固定在 `oracle/Cargo.toml` 的 rev，并使用 `Cargo.lock` 和 `--locked`。首次构建需要访问 GitHub 和 Cargo 依赖源。本项目不承诺离线首次构建或其他操作系统。
 
@@ -114,4 +114,4 @@ bash scripts/run.sh check
 bash scripts/run.sh verify
 ```
 
-检验交付时，应从待验收提交创建新的克隆目录，使用空的 REGEX4CJ_LOCAL、CARGO_HOME 和构建目录，保留 `verification-run.json` 与完整日志。工具链可以复用已安装版本，这与全新操作系统验证不同。不要复制旧 target 或旧上游检出。验收失败时，先查看报告最后一个阶段和日志。
+检验交付时，应从待验收提交创建新的克隆目录，使用空的 REGEX4CJ_LOCAL、CARGO_HOME 和构建目录，保留 `verification-run.json` 与完整日志。工具链可以复用已安装版本，这与全新操作系统验证不同。不要复制旧 target 或旧原仓库检出。验收失败时，先查看报告最后一个阶段和日志。

@@ -1,22 +1,12 @@
 #!/usr/bin/env bash
-# Source from bash. Local dependencies and caches are outside the Git repository.
+# Source from bash. Only installed toolchains are external prerequisites.
+# REGEX4CJ_LOCAL is a backwards-compatible override for generated outputs,
+# never a source of project inputs or an automatically discovered SDK.
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-export REGEX4CJ_LOCAL="${REGEX4CJ_LOCAL:-$(dirname "$PROJECT_ROOT")/regex4cj-local}"
+export REGEX4CJ_LOCAL="${REGEX4CJ_LOCAL:-$PROJECT_ROOT/.build}"
 mkdir -p "$REGEX4CJ_LOCAL/work"
-if [ -d "$REGEX4CJ_LOCAL/tools/rustup" ]; then
-  export CARGO_HOME="$REGEX4CJ_LOCAL/tools/cargo"
-  export RUSTUP_HOME="$REGEX4CJ_LOCAL/tools/rustup"
-  export PATH="$CARGO_HOME/bin:$PATH"
-fi
-export CARGO_TARGET_DIR="$REGEX4CJ_LOCAL/work/rust-target"
+export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-$REGEX4CJ_LOCAL/work/rust-target}"
 export TMPDIR="$REGEX4CJ_LOCAL/work"
-if [ -z "${CANGJIE_HOME:-}" ]; then
-  if [ -d "$REGEX4CJ_LOCAL/tools/cangjie-1.1.3" ]; then
-    export CANGJIE_HOME="$REGEX4CJ_LOCAL/tools/cangjie-1.1.3"
-  elif [ -d "$REGEX4CJ_LOCAL/tools/cangjie" ]; then
-    export CANGJIE_HOME="$REGEX4CJ_LOCAL/tools/cangjie"
-  fi
-fi
 if [ -n "${CANGJIE_HOME:-}" ]; then
   export PATH="$CANGJIE_HOME/bin:$CANGJIE_HOME/tools/bin:$PATH"
   if [ "$(uname -s)" = Darwin ]; then

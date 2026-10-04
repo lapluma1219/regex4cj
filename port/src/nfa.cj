@@ -185,26 +185,7 @@ class Input {
         // next boundary while retaining the original input for assertions.
         return lo
     }
-    func exact(byteOffset: Int64): Int64 {
-        let limit = offsets[offsets.size - 1]
-        if (byteOffset < 0 || byteOffset > limit) {
-            throw Exception("search bound is outside the haystack")
-        }
-        var lo: Int64 = 0
-        var hi = offsets.size
-        while (lo < hi) {
-            let mid = (lo + hi) / 2
-            if (offsets[mid] < byteOffset) {
-                lo = mid + 1
-            } else {
-                hi = mid
-            }
-        }
-        if (lo >= offsets.size || offsets[lo] != byteOffset) {
-            throw Exception("search bound is not a UTF-8 boundary")
-        }
-        return lo
-    }
+
 }
 
 func staticExplicit(expr: Expr): Option<Int64> {
@@ -1226,8 +1207,10 @@ public class Regex {
             throw Exception("invalid search range")
         }
         let input = Input(text)
-        let from = input.exact(start)
-        let until = input.exact(end)
+        let from = input.boundary(start)
+        var until = input.boundary(end)
+        if (input.offsets[until] != end) { until-- }
+        if (from > until || (anchored && input.offsets[from] != start)) { return None }
         match (search(input, from, until, anchored, true, false)) {
             case Some(hit) => Some(captureResult(text, input, hit))
             case None => None

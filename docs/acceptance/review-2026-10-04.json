@@ -1,0 +1,800 @@
+{
+  "run_id": "3e24812c-a928-40e1-93ae-31776c5994e3",
+  "status": "passed",
+  "started_at": "2026-10-04T14:34:59.209978+00:00",
+  "stages": [
+    {
+      "name": "upstream-data",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/check_upstream_data.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:34:59.428369+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:34:59.453872+00:00"
+    },
+    {
+      "name": "api-inventory",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/audit_api_surface.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:34:59.454621+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:34:59.535818+00:00"
+    },
+    {
+      "name": "cangjie-api-inventory",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/generate_api_catalog.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:34:59.536471+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:34:59.600454+00:00"
+    },
+    {
+      "name": "data-unicode",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/generate_unicode.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:34:59.601124+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:34:59.633249+00:00"
+    },
+    {
+      "name": "data-categories",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/generate_categories.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:34:59.633871+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:34:59.677409+00:00"
+    },
+    {
+      "name": "data-scripts",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/generate_scripts.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:34:59.678020+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:34:59.718078+00:00"
+    },
+    {
+      "name": "data-binary",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/generate_binary.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:34:59.718699+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:34:59.768720+00:00"
+    },
+    {
+      "name": "data-case_fold",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/generate_case_fold.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:34:59.769393+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:34:59.811314+00:00"
+    },
+    {
+      "name": "data-age_break",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/generate_age_break.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:34:59.812020+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:34:59.856370+00:00"
+    },
+    {
+      "name": "python-tests",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_category_generator.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:34:59.857054+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:34:59.899625+00:00"
+    },
+    {
+      "name": "rust-build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--manifest-path",
+        "oracle/Cargo.toml"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:34:59.900294+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:35:06.897628+00:00"
+    },
+    {
+      "name": "rust-test",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "oracle/Cargo.toml"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:35:06.898297+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:35:07.905407+00:00"
+    },
+    {
+      "name": "port-build",
+      "command": [
+        "cjpm",
+        "build"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:35:07.906734+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:35:11.395673+00:00"
+    },
+    {
+      "name": "cli-build",
+      "command": [
+        "cjpm",
+        "build"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:35:11.396352+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:35:16.149668+00:00"
+    },
+    {
+      "name": "examples/consumer-build",
+      "command": [
+        "cjpm",
+        "build"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:35:16.150393+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:35:19.799032+00:00"
+    },
+    {
+      "name": "consumer-test",
+      "command": [
+        "cjpm",
+        "test"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:35:19.799721+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:35:27.255617+00:00"
+    },
+    {
+      "name": "consumer-run",
+      "command": [
+        "cjpm",
+        "run"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:35:27.258173+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:35:31.376132+00:00"
+    },
+    {
+      "name": "verify",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:35:31.377733+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:35:46.462850+00:00"
+    },
+    {
+      "name": "verify_matching",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_matching.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:35:46.463753+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:36:12.471418+00:00"
+    },
+    {
+      "name": "verify_classes",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_classes.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:36:12.472212+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:36:50.643321+00:00"
+    },
+    {
+      "name": "verify_captures",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_captures.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:36:50.644102+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:37:28.818795+00:00"
+    },
+    {
+      "name": "verify_text_ops",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_text_ops.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:37:28.819759+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:38:12.062123+00:00"
+    },
+    {
+      "name": "verify_flags",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_flags.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:38:12.062962+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:38:53.549272+00:00"
+    },
+    {
+      "name": "verify_case",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_case.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:38:53.550230+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:39:27.218456+00:00"
+    },
+    {
+      "name": "verify_escapes",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_escapes.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:39:27.219360+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:39:44.796148+00:00"
+    },
+    {
+      "name": "verify_ascii_classes",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_ascii_classes.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:39:44.797051+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:40:07.471651+00:00"
+    },
+    {
+      "name": "verify_unicode",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_unicode.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:40:07.472461+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:40:24.791741+00:00"
+    },
+    {
+      "name": "verify_boundaries",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_boundaries.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:40:24.792749+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:40:49.570413+00:00"
+    },
+    {
+      "name": "verify_properties",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_properties.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:40:49.571352+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:41:23.348636+00:00"
+    },
+    {
+      "name": "verify_scripts",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_scripts.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:41:23.349508+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:43:01.511553+00:00"
+    },
+    {
+      "name": "verify_binary",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_binary.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:43:01.512522+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:43:23.637619+00:00"
+    },
+    {
+      "name": "verify_syntax",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_syntax.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:43:23.638506+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:43:28.061037+00:00"
+    },
+    {
+      "name": "verify_errors",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_errors.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:43:28.062223+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:43:30.257323+00:00"
+    },
+    {
+      "name": "verify_limits",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_limits.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:43:30.258414+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:43:32.928303+00:00"
+    },
+    {
+      "name": "verify_bytes",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_bytes.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:43:32.929480+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:43:35.108169+00:00"
+    },
+    {
+      "name": "verify_upstream_sample",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_upstream_sample.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:43:35.109088+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:43:43.904170+00:00"
+    },
+    {
+      "name": "verify_upstream_suite",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_upstream_suite.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:43:43.905045+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:44:20.107964+00:00"
+    },
+    {
+      "name": "verify_sets",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_sets.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:44:20.109177+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:45:02.391513+00:00"
+    },
+    {
+      "name": "verify_api_contracts",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_api_contracts.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:45:02.392376+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:45:25.616282+00:00"
+    },
+    {
+      "name": "verify_hir",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_hir.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:45:25.617309+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:45:43.943913+00:00"
+    },
+    {
+      "name": "verify_ast",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_ast.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:45:43.944882+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:45:57.652070+00:00"
+    },
+    {
+      "name": "verify_pike",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_pike.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:45:57.652920+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:46:18.770532+00:00"
+    },
+    {
+      "name": "verify_props",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_props.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:46:18.771810+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:46:20.651122+00:00"
+    },
+    {
+      "name": "verify_error_spans",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "tests/verify_error_spans.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:46:20.652400+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:46:22.285783+00:00"
+    },
+    {
+      "name": "showcase",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/showcase.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:46:22.286965+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:46:22.805428+00:00"
+    },
+    {
+      "name": "classification",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/classify.py",
+        "--demo"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-04T14:46:22.806615+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-04T14:46:23.105425+00:00"
+    }
+  ],
+  "scope": "Selected string/bytes Regex, RegexSet, AST/HIR and forward PikeVM contracts; not full workspace parity",
+  "commit": "b6e2727069aca79e15f5ed5c3c570104c0085560",
+  "dirty": true,
+  "environment": {
+    "platform": "macOS-26.6-arm64-arm-64bit",
+    "python": "3.9.6 (default, May 22 2026, 11:13:45) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+    "cangjie": "Cangjie Compiler: 1.1.3 (cjnative)\nTarget: aarch64-apple-darwin",
+    "rust": "rustc 1.98.1 (48a229cea 2026-09-01)",
+    "cargo": "cargo 1.98.1 (797e8a9bc 2026-08-05)"
+  },
+  "tested_source_sha256": {
+    "cli/cjpm.lock": "7b09643cc3e7107d2a0f09605871366c547525d40221945a60bee8a9a5e3f3b0",
+    "cli/cjpm.toml": "6d352f09ece1178f5e41e546fb49ac3ca522cf2eb4a4f833ca2d51387d843f22",
+    "cli/src/api_audit.cj": "3029717cd0ea33e652dfa15e8ef4e673f6877213e13967eec1157918b8f63716",
+    "cli/src/append_builder_audit.cj": "700ebda2dc821bb68b82aacc5271bf5da08633687d3f45e302458baaa095da38",
+    "cli/src/group_cursor_audit.cj": "914b81713e33a965918aecb58d0f9d42c0e6b5a2bb34ba982b109129995d38a4",
+    "cli/src/hir_audit.cj": "03bfbf8ed5971d9ea6a6f5d5e525163a5668781d3dc9237b75cc4b88c48c62f8",
+    "cli/src/lazy_audit.cj": "e73f6e44d744b1ec2382598127eeef4e7d09b3eab5acb94b1ee5661d735dcf0b",
+    "cli/src/main.cj": "9650bdf811c63c837aa957c54e5229016589a0bfe77b4e23626b85ce2ceddd4e",
+    "cli/src/set_iterator_audit.cj": "2dd8f002c2f63481a77c436caf5cd990eabe5c68f5ad8b470cb6b24cd3c182da",
+    "examples/classification-cases.json": "1ff2e102c26e587e618c40eaede9af93a46041bde21758c7c42210f41069d4cd",
+    "examples/classification-rules.json": "1318f04b8b5a6d64091be5ebf8d96b23bf29b9d21f8f6a403688d4b039bae6b0",
+    "examples/consumer/cjpm.lock": "7b09643cc3e7107d2a0f09605871366c547525d40221945a60bee8a9a5e3f3b0",
+    "examples/consumer/cjpm.toml": "23e65fa031b81b12b261fe8537ca29f1db958a6563cf86be7b212a55cdea37ba",
+    "examples/consumer/src/api_test.cj": "2044679c12720bcb1f1a98fe00a4cb925bd916211996e87d61d662c5048e4941",
+    "examples/consumer/src/append_builder_test.cj": "5cf27531642711b345d80b1bdde3179905024dfc0672964eb0e20291e0b10a05",
+    "examples/consumer/src/ast_test.cj": "0e9ac3fd2e14d5a9e6a81670ed376a2b687c112c7c4fc24980b2cbd2114bddc1",
+    "examples/consumer/src/group_cursor_test.cj": "be5666ef048518331eea83f51f2e6da4b8a21054f2ade18ced52dafb690a55e4",
+    "examples/consumer/src/hir_test.cj": "cfa865132003424c44aa6012272d11cef76537ddeba59b65639cb54ce6041b9e",
+    "examples/consumer/src/main.cj": "9d5937f32a8090ebde5ff0d86929a2efad346d048c09157a9b595cfbb3b0fe39",
+    "examples/consumer/src/pike_test.cj": "115f4dd9d5f66896c25778a04dea07edcffbdbde67f9a3ce24aeecb7e031ed8e",
+    "examples/consumer/src/review_test.cj": "d4558f7b9228a10a081b35e0d3537c4d4f5248c217330d6a882f575183aeac8b",
+    "examples/consumer/src/set_test.cj": "96c6d2feef38f983a9bcbda35b1ff4ea6e260f83fac77d325b0759f5c7b1da5e",
+    "examples/showcase.json": "8c81cf1205bbb21142e83e6bcdbaebb81c04993804bb2c59ae33c3814d652d0f",
+    "oracle/Cargo.lock": "dcf64a8a3f1cfdf84ad23ec6476b9c4f5a2cf02216d1a11f5df90d1455a268de",
+    "oracle/Cargo.toml": "7960bd5a3de7494bb55d54053d662b6c7014621aeda801ad4dfd84aa27f2d58c",
+    "oracle/src/api_audit.rs": "9a8b867dc4ca8d4abedb93c08d25ec3041be9bb80714d0c9703f91c693081b1a",
+    "oracle/src/ast_audit.rs": "347de0e61303d79abe886bdcf429429c812cd236ca5cf619e3d66df325790c64",
+    "oracle/src/hir_audit.rs": "7bb7fb0738d264d804467dada6718ceb4ec934427a007bcc6dc0bbfc8028ea9e",
+    "oracle/src/lazy_audit.rs": "8d002b040669a10e82ca2aaf38836d97024352481444ba5216a1c1cd6b3ee47f",
+    "oracle/src/main.rs": "63499a6e8e5ca1c8575c4c2e2bb2ef586a07b03cf229f3c68ad386ab6a0f28ed",
+    "oracle/src/pike.rs": "14da109d88d2321b0df02ddf1c7240a89b9fa17a3b83fe2d64bf28197befcb9f",
+    "oracle/src/suite.rs": "c12b7d0fded52e5495be33377f6c4e2313f4226dbf54fc046062f1ef1316e0da",
+    "port/LICENSE-APACHE": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+    "port/LICENSE-MIT": "6485b8ed310d3f0340bf1ad1f47645069ce4069dcc6bb46c7d5c6faf41de1fdb",
+    "port/README.md": "df0ce03bfa0590974e98c3779b3a23e624f813283840159bd4542b9c99ce32dc",
+    "port/THIRD_PARTY_NOTICES.md": "75cdbe17c9f96295c567286829f995aff513f11c140146977c3a5867f69eb45a",
+    "port/cjpm.lock": "7b09643cc3e7107d2a0f09605871366c547525d40221945a60bee8a9a5e3f3b0",
+    "port/cjpm.toml": "b9fecdd2038f596d8c6fd840d8c75c2b309df446b46ed3f04a5beafaa343e223",
+    "port/src/ascii_classes.cj": "c06b5c3f89c283aaf25481f088478b601824609297712c646a234d270b4bee03",
+    "port/src/budget.cj": "ffc6caaa85755cf608dbaa8bf5b19126a7368f3f7012c9483772b3c2a58dfab6",
+    "port/src/builder.cj": "02adf7d1bdfd6c42703de1b2234ffb23c89aba0a5a0e132ddbc22b6121f34ed5",
+    "port/src/bytes.cj": "54a35d5a6a5558fcfdbfe2e9579ba461c4133e1ef72d8ce730f4e9209785a1a6",
+    "port/src/captures.cj": "4b09f5dd79f9a8bb490ebfdfc40b8dcb9ec9c312d8ca651e99ba51bf1bb28019",
+    "port/src/case_fold.cj": "2954c4fd6b0c28f9c77e806e31022c5c05b4250cadf6b3e30aa83b29e71f9d1d",
+    "port/src/charset.cj": "69b6f2a2e380dbc44ce084c5ce95dc0351f12e9612021f134c2a65ca48a9ca09",
+    "port/src/error.cj": "5801f92f355c5016d1b271623f7212b7880ff3ec4a4e4a892139db6c8f7844e8",
+    "port/src/escape.cj": "c7120dc08de6981e30e774396fa743954f039e5db14fc6d04d599f17329f0414",
+    "port/src/look.cj": "fb61a65b867d71fc6fe63f757f4f8cb59100058cced1d016abae30ef133511c9",
+    "port/src/nfa.cj": "f430d2b890c6f1ea7a89befdc7373d36bbe682172563d7953a6cd4458379707c",
+    "port/src/normalize.cj": "1f537ce39d27be81d8ed84972077bb2e612ce8841e393fc4ac117d4af289db6b",
+    "port/src/parser.cj": "781669d3e903b50a9c108cdccce7f3ff315cf1de10633468d20cf140acabd19d",
+    "port/src/pikevm.cj": "7ab5780640d8a7d41c42c317f24021a8b95133b249b40ffddecefa48688b582e",
+    "port/src/properties.cj": "40f5bcd93c0d1e9a2fb72fbbb5fa9499dd03a3f7798778178ae41471c7dd7ed0",
+    "port/src/regex_set.cj": "1bcc20e3e05e387ff282e5a3a363127f32c2b1c0ff2a5c695599567451d37179",
+    "port/src/syntax_ast.cj": "6ca617d17160b2978a9a55609b17b13675e5a4e812dd42e98997db59f386021d",
+    "port/src/syntax_hir.cj": "3b0d809f339f463dd933a8f089c205aee3dafd7249974a2ccf82a63258d7fef6",
+    "port/src/unicode_age_break.cj": "0e57bfbbab9069f0e9b88f5f5a5353e6a0aa02b10de29209624b823335ef9841",
+    "port/src/unicode_binary.cj": "ce35c2a7b15ac768df53af556d1f6b833051b98184611ab3cb67f79e4a5d556f",
+    "port/src/unicode_categories.cj": "4a8a4a9942b817e09a05d12c1e4760afcd50f88edd56c45b960f505966129012",
+    "port/src/unicode_classes.cj": "781b1497931856944165a75d198b9191cd3e5bf238c3587e82897b393d900408",
+    "port/src/unicode_scripts.cj": "f40ce991288c46d6543ede6d69566333bad6d80f84909cf8ad0311da173b0fc0",
+    "scripts/audit_api_surface.py": "51ce7d02f448f338b8e4acb137bceb206b3bed3638a96fd6223ff1d57fe274e6",
+    "scripts/check_upstream_data.py": "fc0ae7860f1d7f7ff67dd1ff625bb072eccf645b51c7066374fbd61a8b2e4b50",
+    "scripts/classify.py": "5d81986763c8176cfc63d282db560b5ea5bd8a233f123c2dd637a83d2a85d2de",
+    "scripts/demo.sh": "5603593a6a2a0071b82d02f42c3ca8cfb2972037de1e9c824cbd29aa19271853",
+    "scripts/env.sh": "dbecb9c377eb231576c0f6c7d8927e4dc145bc715fced2c481f464f533bfbc7d",
+    "scripts/generate_age_break.py": "3f4eabfdbf01ebe3600bef989753ebaa481aee0b74c2229ff821c347822bb979",
+    "scripts/generate_api_catalog.py": "e212fd65468e2d6d60b60199eb10c8a6c7caa90ff9659ff1b15338cd2c056071",
+    "scripts/generate_binary.py": "d3b05f1b18cc91da9422e904f23f665d0770113eea818ccb46dac686ee2eac57",
+    "scripts/generate_case_fold.py": "6d71e853b6a4427dc5e743e028ea60dadec922d8b53d66074ca3ca1274eedba7",
+    "scripts/generate_categories.py": "75d604ffd8106c56ccf5de8b308866a139bdfcd7a53a3e01c98a680584b2a8b4",
+    "scripts/generate_scripts.py": "dee9cf46aa60fedbddcbe5acbb6e892b1e24e08caa985b8272461b86012c9edc",
+    "scripts/generate_unicode.py": "f34998637638c539912448100938f967ae25bb687ae95aeab034ac740fc60d1a",
+    "scripts/package.sh": "05cccd04e149e4bfe005b0ecd41d4219df1f334b08efd8f31a3cd707e2c23c14",
+    "scripts/run.sh": "6d99331e3787dddd7d0e4b6095eaa70ce4efbc46d64883b44c4906a90b5f23f5",
+    "scripts/show_captures.py": "ec991aa5f4ed9883de7e97309ba97669af6a67940c8ee2d1cfa225417807da81",
+    "scripts/show_text.py": "3588ad18ca07dc079420abcf380b700fc89808356c56fc4552a9539a85f66856",
+    "scripts/showcase.py": "1ee17eb5ce5564be3f77149e67723b1522994cc9426282fdba1c19ebd21c925a",
+    "scripts/verify.sh": "7e6ea194d0811ceb4e9d1448e2cc9c160534e01e62f73f512b7358255c136833",
+    "scripts/verify_runner.py": "6b11197ed1a759a6b1730fa3c665031903834eb7d842e74f9cc800dacdf05fec",
+    "tests/regex_test_support.py": "d3617a73f31065f0019778c589b40aa77e3afaa4ab74f11195cce37dae6a85c1",
+    "tests/test_category_generator.py": "f83388dbf6c3c0c6ab035999c01166d43be76bc09423a8404248f83657490677",
+    "tests/upstream/LICENSE-APACHE": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+    "tests/upstream/LICENSE-MIT": "6485b8ed310d3f0340bf1ad1f47645069ce4069dcc6bb46c7d5c6faf41de1fdb",
+    "tests/upstream/README.md": "4f20a7906bfe1b84c7823caeb0ca9a3368e9cc09d6d7aee49942433e463646d1",
+    "tests/upstream/manifest.json": "64c7aa03a1400d40864309c39f3ea6ebcaba06b00ad178272c684d6b0366f298",
+    "tests/upstream/testdata/README.md": "8c06d771da52048ac5b67de8b61f386a4aa70c904a7da4efec1aa86c710b0be5",
+    "tests/upstream/testdata/anchored.toml": "7a1b5cd81deed2099796a451bf764a3f9bd21f0d60c0fa46accd3a35666866f2",
+    "tests/upstream/testdata/bytes.toml": "1d84179165fd25f3b94bd2bfbeb43fc8a162041f7bf98b717e0f85cef7fb652b",
+    "tests/upstream/testdata/crazy.toml": "a146e2d2e23f1a57168979d9b1fc193c2ba38dca66294b61140d6d2a2958ec86",
+    "tests/upstream/testdata/crlf.toml": "d19cf22756434d145dd20946c00af01c102a556a252070405c3c8294129d9ece",
+    "tests/upstream/testdata/earliest.toml": "d561e643623ee1889b5b049fdcf3c7cb71b0c746d7eb822ddbd09d0acda2620b",
+    "tests/upstream/testdata/empty.toml": "738dbe92fbd8971385a1cf3affb0e956e5b692c858b9b48439d718f10801c08e",
+    "tests/upstream/testdata/expensive.toml": "5ce2f60209c99cdd2cdcb9d3069d1d5ca13d5e08a85e913efe57267b2f5f0e9d",
+    "tests/upstream/testdata/flags.toml": "9a7e001808195c84f2a7d3e18bc0a82c7386e60f03a616e99af00c3f7f2c3fd4",
+    "tests/upstream/testdata/fowler/basic.toml": "a82c7e233451cd7cfe0c3d817f3a1ab44478bb81ae62432efdd515fa8370275e",
+    "tests/upstream/testdata/fowler/nullsubexpr.toml": "cd812e7e8fa0469253b34f0db93b5883c9d8b9740fc4f7825a38e7df880a4eed",
+    "tests/upstream/testdata/fowler/repetition.toml": "8c09164f064b3db81309c53483863bdcec493781644de162416e9f485e772615",
+    "tests/upstream/testdata/iter.toml": "6875460302974a5b3073a7304a865c45aba9653c54afea2c4d26e1ea248a81f7",
+    "tests/upstream/testdata/leftmost-all.toml": "903bfbeff888b7664296f4d5aa367ce53d1dafe249ab0a3359223ae94d596396",
+    "tests/upstream/testdata/line-terminator.toml": "02148068137b69d95587966917bdf0697bf7eb41ad6d47387f2eb30f67d04fd9",
+    "tests/upstream/testdata/misc.toml": "32c9591655c6fb118dfefcb4de49a04820a63cb960533dfc2538cdaabf4f4047",
+    "tests/upstream/testdata/multiline.toml": "eb07cf5427e6ddbcf61f4cc64c2d74ff41b5ef75ef857959651b20196f3cd157",
+    "tests/upstream/testdata/no-unicode.toml": "d209da04506900fd5f69e48170cddaad0702355ac6176c3a75ab3ff96974457c",
+    "tests/upstream/testdata/overlapping.toml": "5d96497a7233566d40b05ba22047e483fa8662e45515a9be86da45cf6c28703a",
+    "tests/upstream/testdata/regression.toml": "0203facd366c50adb2120d87ea5da3a4d3effcb7cdd446c0d3f08ea472c64989",
+    "tests/upstream/testdata/set.toml": "dfd265dc1aee80026e881616840df0236ae9abf12467d7ec0e141a52c236128c",
+    "tests/upstream/testdata/substring.toml": "48122d9f3477ed81f95e3ad42c06e9bb25f849b66994601a75ceae0693b81866",
+    "tests/upstream/testdata/unicode.toml": "7e4b013039b0cdd85fa73f32d15d096182fe901643d4e40c0910087a736cd46d",
+    "tests/upstream/testdata/utf8.toml": "2eabce0582bcacb2073e08bbe7ca413f096d14d06e917b107949691e24f84b20",
+    "tests/upstream/testdata/word-boundary-special.toml": "7d0ea2f796478d1ca2a6954430cb1cfbd04031a182f8611cb50a7c73e443ce33",
+    "tests/upstream/testdata/word-boundary.toml": "51bc1c498ab825420340a2dd3e6623de4054937ba6d5020ff8cd14b1c1e45271",
+    "tests/verify.py": "9c00277e4b04c4fd7964122da6d67d071c350e93ff0ce435fafbca3eec8b1a7f",
+    "tests/verify_api_contracts.py": "40543bc0ad08099ec474ca3bb4220fff595bf2724d8fa0d8aab84308c7548f3d",
+    "tests/verify_ascii_classes.py": "88992ff0f7ace6bfb033a3da45a8dc2d92a992e30cf32474115e74729c845fa2",
+    "tests/verify_ast.py": "404d86d30505322afccfb77e3fceb2da30d7ba7d29a4f76c2863256b37fe2e51",
+    "tests/verify_binary.py": "1d3fd7fe9f487fa9f4e4180ff58664c26e2c2a0947f06e3fc72554173e749671",
+    "tests/verify_boundaries.py": "c5fc81f8d9cb6f43faaadcf33c844e09c9258d348cff91f4cf1efc48fe32f879",
+    "tests/verify_bytes.py": "b8056e4110b31463461950bd559fd63dd6435db2866c0924dad9b127792f8ac3",
+    "tests/verify_captures.py": "e7fdde711b269c7faa73f2d6a88925d3ddcb75fdb25e42c7cfc24e1eb9002c38",
+    "tests/verify_case.py": "50e18d6e8bb030acb07d9d118871b1bc526d4fae15155d315300fbde704f07cd",
+    "tests/verify_classes.py": "df731d553680dee92ec0d009b69179146c20d9ad6720065949145d190bbf58bf",
+    "tests/verify_error_spans.py": "c3e0acb47c6b5618457b1197b54cdd618631c44d58fd9524b5a638f9aff40a50",
+    "tests/verify_errors.py": "9dc35a90978337f6da514666d56f76d8b91c4f20e8a14f0643c7be5a60ebc314",
+    "tests/verify_escapes.py": "bca91cb9195325bd03bf9364ded31ec63022bfda33f361fcf7fef008247c3b27",
+    "tests/verify_flags.py": "a9611fd88d5b3387402fb25c1efe4a04ed86d485bf174d8da52ec8b22565005b",
+    "tests/verify_hir.py": "2a430106756c2c0e107dfefcbf0998ccf1d252c868c23c68709815e09c516330",
+    "tests/verify_limits.py": "d0d84c2446c97a759797ef0fd801ff0aa267597cc488a3ad84340dd76f64357f",
+    "tests/verify_matching.py": "5190bc57ffc6ef4068c50ca368dae68865e762bf9ba3d18b4710c7ca14db22fa",
+    "tests/verify_pike.py": "d60e3897b6f36e5cb6b632bb037548ac1093baad6ea284d2a286b5244fad2236",
+    "tests/verify_properties.py": "477ece6fc4b2bf6fae0a6475da2935e5eb65b117c19792cada7c09e03ce302fe",
+    "tests/verify_props.py": "2f0828e3667254aa9cd7091896129ed77a7f5a393745fde2724bafd2b1ca00e6",
+    "tests/verify_scripts.py": "3bd9741f6154f9a572215705f839b7d8b97ba36ed23a0fa00b1f5a7047fab2f1",
+    "tests/verify_sets.py": "dc410832895db5021f828911333a1c39d2985a32df53fb10e97d22a68c546bc7",
+    "tests/verify_syntax.py": "5388b2eb93e725b1f69f6fc9d187a3ee00a467a9d7db89c474b2c50a223a6548",
+    "tests/verify_text_ops.py": "1cca3a7d14e04ba4e01edd31f672199d83ec0be48912011446e8bb5ea58d6ed0",
+    "tests/verify_unicode.py": "514afe107ebaed70d306c43c9680a1dc8fc0a79939ac65d49e0bd5d26b2ab97c",
+    "tests/verify_upstream_sample.py": "b381cc5bb30d084b6603b0e8455623fa875edbfa88f7a8ef7b70364b1d98580f",
+    "tests/verify_upstream_suite.py": "7ccbf9e6066e4eb245c277d445f8a4f725b7f42bc57b6d5ff8fab23eb98772aa"
+  },
+  "baseline": {
+    "https://github.com/rust-lang/regex": "72d650cb0a880a01ab6dc2137c0888e8f89740f7",
+    "https://github.com/cangjielanguage-sig/CangjieSkills": "dc7617ef67ecfa0da606cb7ae5734aaddecd1e44",
+    "https://github.com/cangjielanguage/CangjieCorpus": "3573e3daf45a4b1ea904fce3ef34401b8c320729"
+  },
+  "checks": {
+    "escape_differential_passed": 336,
+    "literal_roundtrip_passed": 4,
+    "rust_only_matching_fixtures_passed": 6,
+    "matching_differential_passed": 594,
+    "find_and_is_match_checks_passed": 16,
+    "matching_golden_passed": 4,
+    "unsupported_patterns_rejected": 0,
+    "invalid_patterns_rejected": 8,
+    "resource_limits_checked": 0,
+    "cangjie_matching_engine_implemented": true,
+    "class_repetition_differential_passed": 881,
+    "class_repetition_golden_passed": 5,
+    "class_repetition_api_checks_passed": 10,
+    "class_repetition_invalid_rejected": 16,
+    "class_repetition_unsupported_rejected": 0,
+    "class_repetition_resource_limits_checked": 1,
+    "capture_differential_passed": 880,
+    "capture_golden_passed": 2,
+    "capture_name_checks_passed": 35,
+    "capture_invalid_rejected": 8,
+    "capture_unicode_names_passed": 2,
+    "capture_resource_limits_checked": 0,
+    "text_operations_differential_passed": 1037,
+    "text_operations_golden_passed": 7,
+    "text_operations_negative_limits_rejected": 4,
+    "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+    "flags_differential_passed": 960,
+    "flags_api_checks_passed": 12,
+    "flags_golden_passed": 4,
+    "flags_invalid_rejected": 14,
+    "flags_unsupported_rejected": 0,
+    "case_fold_differential_passed": 721,
+    "case_fold_golden_passed": 7,
+    "case_fold_invalid_rejected": 2,
+    "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
+    "scalar_escape_differential_passed": 366,
+    "scalar_escape_invalid_rejected": 22,
+    "scalar_escape_golden_passed": 3,
+    "scalar_escape_api_checks_passed": 4,
+    "scalar_escape_scope": "x/u/U fixed and braced scalar escapes plus a/f/v",
+    "ascii_classes_differential_passed": 496,
+    "ascii_classes_golden_passed": 5,
+    "ascii_classes_invalid_rejected": 4,
+    "ascii_classes_api_checks_passed": 4,
+    "ascii_classes_scope": "14 POSIX ASCII classes, Unicode complement, nested fallback",
+    "unicode_shorthand_differential_passed": 284,
+    "unicode_shorthand_golden_passed": 4,
+    "unicode_shorthand_invalid_rejected": 4,
+    "unicode_shorthand_api_checks_passed": 4,
+    "unicode_version": "16.0.0",
+    "unicode_range_counts": {
+      "d": 71,
+      "s": 10,
+      "w": 796
+    },
+    "unicode_scope": "Pinned Unicode 16.0.0 shorthand tables",
+    "word_boundary_differential_passed": 534,
+    "word_boundary_golden_passed": 5,
+    "word_boundary_api_checks_passed": 12,
+    "word_boundary_invalid_rejected": 2,
+    "word_boundary_unsupported_rejected": 0,
+    "word_boundary_scope": "Unicode 16 b/B at scalar boundaries",
+    "general_category_differential_passed": 702,
+    "general_category_golden_passed": 4,
+    "general_category_invalid_rejected": 11,
+    "general_category_unsupported_rejected": 0,
+    "general_category_api_checks_passed": 4,
+    "general_category_scope": "37 categories plus Any/ASCII/Assigned",
+    "script_differential_passed": 2148,
+    "script_golden_passed": 6,
+    "script_invalid_rejected": 9,
+    "script_api_checks_passed": 4,
+    "binary_property_differential_passed": 417,
+    "binary_property_golden_passed": 6,
+    "binary_property_invalid_rejected": 8,
+    "binary_property_api_checks_passed": 4,
+    "syntax_differential_passed": 88,
+    "syntax_invalid_rejected": 9,
+    "bytes_differential_passed": 48,
+    "upstream_sample_passed": 198,
+    "upstream_sample_skipped": 141,
+    "upstream_suite_passed": 3213,
+    "regex_set_differential_passed": 577,
+    "regex_set_golden_passed": 4,
+    "regex_set_error_checks_passed": 3,
+    "regex_set_single_regex_baseline_cases": 120,
+    "group_cursor_cases_passed": 54,
+    "api_contract_cases_passed": 2414,
+    "api_offset_differential_passed": 513,
+    "append_expansion_cases_passed": 80,
+    "builder_array_cases_passed": 4,
+    "set_iterator_contract_cases_passed": 128,
+    "builder_combination_cases_passed": 384,
+    "lazy_iterator_cases_passed": 1400,
+    "bytes_offset_contract_cases_passed": 260,
+    "hir_constructor_cases_passed": 235,
+    "hir_parse_cases_passed": 367,
+    "hir_print_cases_passed": 41,
+    "hir_invalid_rejected": 4,
+    "ast_review_regressions_passed": 19,
+    "ast_cases_passed": 83,
+    "ast_hir_cases_passed": 50,
+    "pike_cases_passed": 479,
+    "pike_invalid_rejected": 1,
+    "hir_property_cases_passed": 32,
+    "hir_pike_cases_passed": 6,
+    "error_span_cases_passed": 37
+  },
+  "finished_at": "2026-10-04T14:46:23.122233+00:00"
+}

@@ -1,0 +1,26 @@
+regex4cj 开源来源与交付说明
+
+本文件说明实际来源与依赖，不替代组委会可能要求的专用模板或签字材料。
+
+项目：regex4cj；仓颉模块：cjregex；声明版本：0.3.0。
+参照项目：https://github.com/rust-lang/regex
+固定提交：72d650cb0a880a01ab6dc2137c0888e8f89740f7
+参照主要库版本：regex 1.13.1；Unicode数据版本：16.0.0。
+许可：MIT OR Apache-2.0。完整许可在LICENSE-MIT、LICENSE-APACHE。
+版权与改编来源详见THIRD_PARTY_NOTICES.md；Unicode数据来源见data目录中的来源记录及数据文件许可信息。
+
+包含内容：仓颉实现、命令行调用者、仓颉消费者与测试、固定测试数据、
+Rust对照程序清单与锁文件、数据生成/校验脚本、说明及验收记录。
+tests/upstream保存已收录测试数据的来源、提交、哈希和许可。
+
+运行库为仓颉原生实现，不在运行时调用Rust库。
+完整开发验收需要Rust/Cargo；oracle通过固定Git提交下载regex、regex-syntax、
+regex-automata、regex-test及锁文件依赖。首次获取依赖需要网络。
+仓颉SDK、系统SDK、Rust工具链是环境前提，不随项目分发。
+
+所有必要项目输入均来自本仓库或声明的包依赖；不要求原作者的
+regex4cj-local目录、原仓库检出、Skills、Corpus或临时探针。
+.build为可删除的构建/验收输出目录，不是源码输入。
+
+本项目尚未完整实现原仓库全部公开行为，范围及差异见docs/status.md、
+docs/review-2026-10-04.md。通过样例验收不代表全量兼容或官方评分结论。

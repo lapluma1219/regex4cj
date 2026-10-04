@@ -49,7 +49,7 @@ def main():
         print('   实际：' + json.dumps(actual, ensure_ascii=False))
         print('   ' + ('PASS' if ok else 'FAIL') + ' — ' + case['note'], flush=True)
         results.append({'title': case['title'], 'passed': ok, 'expected': expected, 'actual': actual})
-    local = Path(os.environ.get('REGEX4CJ_LOCAL', str(ROOT.parent / 'regex4cj-local')))
+    local = Path(os.environ.get('REGEX4CJ_LOCAL', str(ROOT / '.build')))
     report = local / 'work/showcase.json'
     report.parent.mkdir(parents=True, exist_ok=True)
     report.write_text(json.dumps({'version': (ROOT / 'VERSION').read_text().strip(), 'cases': results}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

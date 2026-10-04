@@ -639,7 +639,9 @@ class AstReader {
         match (ch) {
             case r'A' => assertion(start, "StartText")
             case r'z' => assertion(start, "EndText")
-            case r'b' => assertion(start, "WordBoundary")
+            case r'b' => wordAssertion(start)
+            case r'<' => assertion(start, "WordBoundaryStartAngle")
+            case r'>' => assertion(start, "WordBoundaryEndAngle")
             case r'B' => assertion(start, "NotWordBoundary")
             case r'd' | r'D' => perlClass(start, ch == r'D', "Digit")
             case r's' | r'S' => perlClass(start, ch == r'S', "Space")
@@ -739,6 +741,23 @@ class AstReader {
             left--
         }
         literalKind(start, Rune(UInt32(value)), "HexFixed(${kindName})")
+    }
+    func wordAssertion(start: AstMark): Ast {
+        if (!at(r'{') || pos + 1 >= chars.size || chars[pos + 1] < r'a' || chars[pos + 1] > r'z') {
+            return assertion(start, "WordBoundary")
+        }
+        bump()
+        let name = StringBuilder()
+        while (pos < chars.size && !at(r'}')) { name.append(chars[pos]); bump() }
+        if (!eat(r'}')) { throw Exception("unclosed special word boundary") }
+        let kind = match (name.toString()) {
+            case "start" => "WordBoundaryStart"
+            case "end" => "WordBoundaryEnd"
+            case "start-half" => "WordBoundaryStartHalf"
+            case "end-half" => "WordBoundaryEndHalf"
+            case _ => throw Exception("unknown special word boundary")
+        }
+        assertion(start, kind)
     }
     func assertion(start: AstMark, kind: String): Ast {
         let result = leaf("assert", span(start), 0)
@@ -1008,6 +1027,12 @@ func astAssert(kind: String): String {
         case "EndText" => "\\z"
         case "WordBoundary" => "\\b"
         case "NotWordBoundary" => "\\B"
+        case "WordBoundaryStart" => "\\b{start}"
+        case "WordBoundaryEnd" => "\\b{end}"
+        case "WordBoundaryStartAngle" => "\\<"
+        case "WordBoundaryEndAngle" => "\\>"
+        case "WordBoundaryStartHalf" => "\\b{start-half}"
+        case "WordBoundaryEndHalf" => "\\b{end-half}"
         case _ => ""
     }
 }
@@ -1052,7 +1077,7 @@ func astLower(ast: Ast, flags: AstFlagState): Hir {
         case "flags" =>
             flags.apply(ast.flagMask, ast.flagValue)
             Hir.empty()
-        case "literal" => astLiteral(ast.code, flags.caseInsensitive, flags.unicode)
+        case "literal" => astLiteral(ast.code, flags.caseInsensitive, flags.unicode, ast.quantifier == "HexFixed(X)")
         case "dot" => astDot(flags)
         case "assert" => Hir.look(astLook(ast.quantifier, flags))
         case "perl" => astPerl(ast, flags)
@@ -1100,7 +1125,12 @@ func astLower(ast: Ast, flags: AstFlagState): Hir {
     }
 }
 
-func astLiteral(code: Int64, caseInsensitive: Bool, unicode: Bool): Hir {
+func astLiteral(code: Int64, caseInsensitive: Bool, unicode: Bool, byteEscape: Bool): Hir {
+    // Disabling Unicode changes classes/folding, not UTF-8 encoding of source
+    // characters. Only a fixed two-digit byte escape denotes a raw byte.
+    if (!unicode && code >= 128 && !byteEscape) {
+        return Hir.literal(String([Rune(UInt32(code))]).toArray())
+    }
     if (!caseInsensitive) {
         return if (unicode || code < 128) {
             Hir.literal(String([Rune(UInt32(code))]).toArray())
@@ -1344,7 +1374,15 @@ func astLook(kind: String, flags: AstFlagState): HirLook {
             } else {
                 HirLook.WordAsciiNegate
             }
-        case _ => HirLook.Start
+        case "WordBoundaryStart" | "WordBoundaryStartAngle" =>
+            if (flags.unicode) { HirLook.WordStartUnicode } else { HirLook.WordStartAscii }
+        case "WordBoundaryEnd" | "WordBoundaryEndAngle" =>
+            if (flags.unicode) { HirLook.WordEndUnicode } else { HirLook.WordEndAscii }
+        case "WordBoundaryStartHalf" =>
+            if (flags.unicode) { HirLook.WordStartHalfUnicode } else { HirLook.WordStartHalfAscii }
+        case "WordBoundaryEndHalf" =>
+            if (flags.unicode) { HirLook.WordEndHalfUnicode } else { HirLook.WordEndHalfAscii }
+        case _ => throw Exception("unknown AST assertion")
     }
 }
 
@@ -1512,26 +1550,26 @@ func astPrintLiteral(out: StringBuilder, ast: Ast): Unit {
             out.append(astHex(ast.code, 8))
         case "HexBrace(X)" =>
             out.append("\\x{")
-            out.append(astHex(ast.code, 2))
+            out.append(astHex(ast.code, 1))
             out.append("}")
         case "HexBrace(UnicodeShort)" =>
             out.append("\\u{")
-            out.append(astHex(ast.code, 4))
+            out.append(astHex(ast.code, 1))
             out.append("}")
         case "HexBrace(UnicodeLong)" =>
             out.append("\\U{")
-            out.append(astHex(ast.code, 8))
+            out.append(astHex(ast.code, 1))
             out.append("}")
         case _ => astPrintChar(out, Rune(UInt32(ast.code)))
     }
 }
 
 func astHex(code: Int64, width: Int64): String {
-    let digits = "0123456789abcdef"
+    let digits = "0123456789ABCDEF"
     var value = code
     var out = ""
     var left = width
-    while (left > 0) {
+    while (left > 0 || value > 0) {
         let index = value % 16
         out = digits[index..index + 1] + out
         value = value / 16

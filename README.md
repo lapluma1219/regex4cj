@@ -22,7 +22,7 @@ bash scripts/run.sh example
 bash scripts/run.sh find '\p{Han}+' 'A中文α'
 bash scripts/run.sh replace-all '(?<prefix>[A-Z]{2})-[0-9]{3}' 'AB-123 CD-456' '${prefix}-***'
 
-# 快速验收：40 项仓颉原生测试 + 20 个演示场景，不需要 Rust
+# 快速验收：仓颉原生测试 + 20 个演示场景，不需要 Rust
 bash scripts/run.sh check
 
 # 完整验收：另需 Git、Rust/Cargo；首次获取依赖需要网络
@@ -37,7 +37,7 @@ bash scripts/run.sh verify
 2. [学习指南](docs/learning-guide.md)：这个库做什么、从模式到结果如何实现、如何证明当前行为正确。
 3. [当前接口](docs/api.md)：查找、捕获、替换、分割、Builder、字节接口和 RegexSet。
 4. [接口审计](docs/api-audit.md)：逐项对应、已修复问题与尚未覆盖的能力。
-5. [现状](docs/status.md)：已经实现什么，距离复刻整个上游仓库还差什么。固定提交在 [baseline.json](docs/baseline.json)。
+5. [现状](docs/status.md)：已经实现什么，距离复刻整个原仓库仓库还差什么。固定提交在 [baseline.json](docs/baseline.json)。
 
 ## 多规则文本分类
 
@@ -58,10 +58,10 @@ bash scripts/run.sh classify '订单 AB-123 需要退款，也需要开发票'
 - 锚点、Unicode 词边界，以及内联 `i` / `m` / `s` / `U` / `x` / `R` / `u`。
 - Unicode 简单大小写折叠。匹配文本保持原样；`ß` 不会展开成两个字符的 `SS`。关掉 Unicode 后，大小写只折叠 A–Z。
 - 从原文字节偏移继续搜索，并提供早停终点、`next()` 迭代、固定捕获数量和可复用捕获位置。
-- `RegexBuilder` / `RegexSetBuilder`。八进制和自定义行终止符只在 Builder 上打开。嵌套默认 250，`sizeLimit` 默认约 10 MiB，按 Thompson 构造字节数检查。语法错误和编译超限的文本与固定上游 Display 相同。`dfaSizeLimit` 只影响字符串搜索缓存，不改变匹配文本。
+- `RegexBuilder` / `RegexSetBuilder`。八进制和自定义行终止符只在 Builder 上打开。嵌套默认 250，`sizeLimit` 默认约 10 MiB，按 Thompson 构造字节数检查。语法错误和编译超限的文本与固定原仓库 Display 相同。`dfaSizeLimit` 只影响字符串搜索缓存，不改变匹配文本。
 - Unicode 16.0.0 的 d/s/w、通用类别、Script/Script_Extensions、二元属性，以及 Age 与三种 Break 的集合查询。
 
-字符串接口只接受合法 UTF-8。字节接口是 `BytesRegex` 和 `BytesRegexSet`。没有 lazy DFA。前后查找和反向引用会报错，上游也会拒绝它们。regex-syntax / regex-automata 的公开类型没有移植。接口见 [当前接口](docs/api.md)。
+字符串接口只接受合法 UTF-8。字节接口是 `BytesRegex` 和 `BytesRegexSet`。没有 lazy DFA。前后查找和反向引用会报错，原仓库也会拒绝它们。现已提供部分 AST/HIR 和前向 PikeVM 公开入口，仍有重要缺口。接口见 [当前接口](docs/api.md)。
 
 ## 作为库依赖
 
@@ -76,15 +76,15 @@ cjregex = { path = "../regex4cj/port" }
 
 ## 交付与验证
 
-当前已通过 Apple Silicon macOS、仓颉1.1.3的完整41阶段验收，包含新增HIR对照，详见[验收记录](docs/acceptance/hir-slice-2026-10-04.md)。历史1.0.5报告保留为独立版本记录。验收范围和条数见 [现状](docs/status.md)。完整数字以最近一次 `bash scripts/run.sh verify` 写入的报告为准。通过有限测试不等于完全兼容上游。数字记录的是已经跑过的检查，不是完成百分比。
+当前复核、缺口及独立目录验收见 [复查报告](docs/review-2026-10-04.md)。历史验收各自对应其标注的代码版本。测试条数和接口数不代表完成百分比。
 
-构建缓存和报告默认写到同级 `regex4cj-local/`；可用 `REGEX4CJ_LOCAL` 指定其他位置。仓颉构建产物位于各包 `target/`。以上都不进入源码包。
+构建缓存和报告默认写到仓库内 `.build/`；可用 `REGEX4CJ_LOCAL` 指定其他位置。仓颉构建产物位于各包 `target/`。以上都不进入源码包。
 
-以 GitHub 仓库的已提交源码为主要交付物，直接克隆即可，无需压缩包。完整验收所需的上游测试数据已在 `tests/upstream/`，不依赖本机上游检出。Rust 参照仍由 Cargo 按固定提交和锁文件下载，首次需要联网。
+以 GitHub 仓库的已提交源码为主要交付物，直接克隆即可，无需压缩包。完整验收所需的原仓库测试数据已在 `tests/upstream/`，不依赖本机原仓库检出。Rust 参照仍由 Cargo 按固定提交和锁文件下载，首次需要联网。
 
 完整验收的最终状态、提交号、环境和阶段结果在 `$REGEX4CJ_LOCAL/work/verification-run.json`。只有 `status` 为 `passed` 才代表整次通过，`verification.json` 只是逐项计数。
 
-压缩包仅是可选副本，旧包不能代表当前代码。需要时，在 Git 工作区干净后运行 `bash scripts/package.sh`，生成 `dist/regex4cj-0.3.0.tar.gz` 和 SHA-256 文件。源码包包含文档、示例、测试、锁文件、Unicode 数据和许可证，不包含 SDK、完整上游仓库或机器专用配置。解压后依然使用同一套命令。
+压缩包仅是可选副本，旧包不能代表当前代码。需要时，在 Git 工作区干净后运行 `bash scripts/package.sh`，生成 `dist/regex4cj-0.3.0.tar.gz` 和 SHA-256 文件。源码包包含文档、示例、测试、锁文件、Unicode 数据和许可证，不包含 SDK、完整原仓库仓库或机器专用配置。解压后依然使用同一套命令。
 
 | 目录 | 用途 |
 |---|---|

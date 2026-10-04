@@ -21,6 +21,16 @@ def compare(*args):
         raise AssertionError(failure)
 
 
+review_patterns = [r'\x{4E2D}', r'\u{1}', r'\U{1F642}', r'\x{0}', r'\U0001F642', r'(?-u:é)', r'(?i-u:é)', r'(?-u:中)', r'(?i-u:🙂)',
+                   r'(?-u:\x{E9})', r'(?-u:\u00E9)',
+                   r'\b{start}', r'\b{end}', r'\b{start-half}', r'\b{end-half}',
+                   r'\<', r'\>', r'(?-u:\b{start})', r'\b{2}']
+for pattern in review_patterns:
+    compare('ast', pattern)
+    compare('ast-print', pattern)
+    r, c = run(RUST, 'hir', pattern, 'true'), run(CJ, 'ast-hir', pattern)
+    assert r.returncode == c.returncode == 0 and r.stdout == c.stdout, (pattern, r, c)
+
 patterns = [
     '', '(?<id>[0-9]{6})', 'a|b', '(?:a)', 'a*', 'a+', 'a?', 'a{2,3}', '^$', r'\b', '.',
     'ab', '(a)', 'a{2}', 'a{2,}', 'a??', '(?P<id>a)', 'a|', '|b', '()', '[abc]', '[^a]', '[a-c]',
@@ -55,6 +65,6 @@ again = run(CJ, 'hir', printed.stdout.strip(), 'true')
 original = run(CJ, 'hir', '(?<id>[0-9]{6})', 'true')
 assert again.stdout == original.stdout
 report = json.loads(REPORT.read_text()) if REPORT.exists() else {}
-report.update(ast_cases_passed=len(patterns), ast_hir_cases_passed=lowered)
+report.update(ast_review_regressions_passed=len(review_patterns), ast_cases_passed=len(patterns), ast_hir_cases_passed=lowered)
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 print(f'AST: {len(patterns)} shapes matched, {lowered} lowered to the same HIR', flush=True)

@@ -1,0 +1,105 @@
+# Third-party notices
+
+The functions `escape` and `isMetaCharacter` in `port/src/escape.cj` are adapted
+from `regex-syntax/src/lib.rs` in https://github.com/rust-lang/regex,
+commit `72d650cb0a880a01ab6dc2137c0888e8f89740f7`.
+
+The Thompson construction, ordered NFA simulation and empty-match iteration in
+`port/src/nfa.cj` are adapted from the same commit's
+`regex-automata/src/nfa/thompson/compiler.rs`, `pikevm.rs` and `util/iter.rs`.
+`port/src/parser.cj` is a new restricted syntax adapter, not a translation of the
+complete upstream parser. Character class and repetition behavior additionally
+follows `regex-syntax/src/ast/parse.rs`; `port/src/charset.cj` adapts the interval-set
+semantics of `regex-syntax/src/hir/interval.rs` to Cangjie, without its generic
+in-place implementation. Unicode simple case folding is applied by the parser
+before negation and before class intersection or difference, following
+`ClassUnicodeRange::case_fold_simple` and `Translator::unicode_fold_and_negate`. Capture numbering, names and
+capture slot semantics in `parser.cj`, `nfa.cj` and `captures.cj` follow the same
+upstream parser, Thompson compiler and PikeVM. `normalize.cj` adapts the empty-only
+repetition simplification from `regex-syntax/src/hir/mod.rs` (`Hir::repetition`).
+Replacement expansion in `captures.cj` adapts
+`regex-automata/src/util/interpolate.rs`. Replacement and splitting in `nfa.cj`
+follow `src/regex/string.rs` and `regex-automata/src/meta/regex.rs` from the same
+commit, with eager string results and Cangjie callback functions.
+Inline m/s/U/x/R/u flags and lexical scope additionally follow `regex-syntax/src/ast/parse.rs`
+and `regex-syntax/src/hir/translate.rs`. CRLF and word-boundary looks follow
+`regex-automata/src/util/look.rs`. Age and break-property tables in
+`port/src/unicode_age_break.cj` are generated from the pinned
+`regex-syntax/src/unicode_tables` age, grapheme, word and sentence tables.
+Age queries are cumulative, matching `unicode::ages`.
+Hexadecimal and control-character escapes follow `parse_hex`, `parse_hex_digits`,
+`parse_hex_brace` and `parse_escape` in the same upstream AST parser.
+POSIX classes in `ascii_classes.cj` adapt `ascii_class` in the upstream HIR
+translator; parser fallback follows `maybe_parse_ascii_class` in its AST parser.
+
+Copyright (c) 2014 The Rust Project Developers.
+
+Upstream is licensed under MIT OR Apache-2.0. Both original license texts are
+included as LICENSE-MIT and LICENSE-APACHE. The translated code retains this
+attribution. Original project code is also provided under MIT OR Apache-2.0.
+
+The Rust oracle resolves the original repository as a pinned Git dependency;
+its source and other dependencies are not vendored here. Reference tools and
+corpora (CangjieSkills, CangjieCorpus) and SDK distributions are local development
+resources, not included in this repository and not relicensed by this project.
+
+Unicode shorthand data in `data/unicode/perl_classes.json` and the generated
+`port/src/unicode_classes.cj` is derived from the pinned upstream's
+`regex-syntax/src/unicode_tables/perl_decimal.rs`, `perl_space.rs` and
+`perl_word.rs` (Unicode 16.0.0). Source file hashes are recorded in the JSON.
+The upstream Unicode data license is retained verbatim in
+`data/unicode/LICENSE-UNICODE`, including its copyright notice:
+Copyright © 1991-2018 Unicode, Inc. All rights reserved.
+These data retain their Unicode license; the project's MIT OR Apache-2.0
+license does not replace it. Shorthand semantics follow `perl_digit`,
+`perl_space` and `perl_word` in `regex-syntax/src/unicode.rs`.
+`scripts/generate_unicode.py` reproduces the import.
+
+Unicode word boundary assertions follow `is_word_unicode` and
+`is_word_unicode_negate` in the pinned `regex-automata/src/util/look.rs`.
+The Cangjie engine walks Unicode scalars and maps them back to UTF-8 offsets.
+
+Unicode general-category data in `data/unicode/general_categories.json` and
+`port/src/unicode_categories.cj` derives from `general_category.rs` and the
+General_Category aliases in `property_values.rs` under the same pinned
+upstream Unicode table directory. The source hashes are recorded in the JSON;
+these data retain `data/unicode/LICENSE-UNICODE`. Property parsing and name
+normalization follow `regex-syntax/src/ast/parse.rs` and `unicode.rs`.
+`scripts/generate_categories.py` reproduces the import.
+
+## Unicode Script / Script_Extensions tables
+
+`data/unicode/scripts.json` and `port/src/unicode_scripts.cj` derive from the
+pinned upstream `regex-syntax/src/unicode_tables/script.rs`, `script_extension.rs`
+and the Script / Script_Extensions alias sections in `property_values.rs`.
+The snapshot records source hashes and revision; `scripts/generate_scripts.py`
+provides reproducible import and generation. Unicode 16.0.0 data is covered by
+the retained `data/unicode/LICENSE-UNICODE` notice.
+
+## Unicode binary-property tables
+
+`data/unicode/binary_properties.json` and `port/src/unicode_binary.cj` derive
+from the pinned upstream `regex-syntax/src/unicode_tables/property_bool.rs`
+and the relevant aliases in `property_names.rs`. Source hashes and revision
+are recorded in the snapshot; `scripts/generate_binary.py` reproduces import
+and generation. Unicode 16.0.0 data retains `data/unicode/LICENSE-UNICODE`.
+
+## Unicode simple case folding
+
+`data/unicode/case_folding_simple.json` and `port/src/case_fold.cj` derive from
+the pinned upstream `regex-syntax/src/unicode_tables/case_folding_simple.rs`
+(Unicode 16.0.0). The snapshot records the source hash and revision;
+`scripts/generate_case_fold.py` reproduces the import. These data retain
+`data/unicode/LICENSE-UNICODE`.
+
+## RegexSet API and multi-pattern execution
+
+`port/src/regex_set.cj` follows the observable RegexSet / SetMatches contracts
+in the pinned upstream `src/regexset/string.rs`. It reuses this project's
+adapted Thompson compiler and assertion semantics with a new scalar-based
+multi-pattern executor. Result arrays, fixed resource limits and unsupported
+advanced interfaces differ from the Rust API; see `docs/api.md`.
+
+## Vendored upstream acceptance data
+
+`tests/upstream/testdata/` contains unmodified test fixtures from the pinned regex commit above, including its generated Fowler fixtures. Exact source paths and SHA-256 hashes are in `tests/upstream/manifest.json`. Upstream MIT and Apache-2.0 license texts are retained in `tests/upstream/`; original file comments are preserved. Only these test data are vendored, not the Rust implementation.

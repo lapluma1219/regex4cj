@@ -58,7 +58,7 @@ fn main() {
         Some("ast") if a.len()==2 => ast_audit::parse(&a[1]),
         Some("ast-print") if a.len()==2 => ast_audit::ast_print(&a[1]),
         Some("syntax-error") if a.len()==2 => ast_audit::syntax_error(&a[1]),
-        Some("pike") if a.len()>=6 => {
+        Some("pike") if a.len()>=5 => {
             let start: usize = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
             let end: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
             pike::search(start, end, a[3]=="true", &a[4], &a[5..]);

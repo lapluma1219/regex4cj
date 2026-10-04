@@ -1,3 +1,5 @@
+> 历史开发记录，不能当作完整语法库或52分的审计结论。当前限制及修复见 [复查报告](../review-2026-10-04.md)。
+
 # 语法层和 PikeVM
 
 这一批把三层入口补到可以单独调用：
@@ -14,4 +16,6 @@
 
 `Regex.find` 仍是不锚定、最左优先、不重叠。重叠匹配、反向 NFA、lazy DFA、完全 DFA、one-pass、有界回溯和 meta 没有做。状态编号不是上游编号。
 
-这一轮 45 个验收阶段全部通过，记录在 `regex4cj-local/work/verification-run.json`。基线提交是 `c01354b`，当时工作区还有未提交改动。
+这一轮 45 个验收阶段全部通过，原记录已归档为 [syntax-engine-original-run.json](syntax-engine-original-run.json)。基线提交是 `c01354b`，当时工作区还有未提交改动。
+
+该历史报告没有受测源码哈希，不能仅凭其基线提交和 dirty 状态证明后来提交的精确内容。

@@ -56,7 +56,7 @@ def main():
         ok = ids == case['expected_ids']
         print('预期编号：{}；{}\n'.format(case['expected_ids'], 'PASS' if ok else 'FAIL'), flush=True)
         results.append(dict(text=case['text'], expected_ids=case['expected_ids'], actual_ids=ids, passed=ok))
-    work = Path(os.environ.get('REGEX4CJ_LOCAL', ROOT.parent / 'regex4cj-local')) / 'work'
+    work = Path(os.environ.get('REGEX4CJ_LOCAL', ROOT / '.build')) / 'work'
     work.mkdir(parents=True, exist_ok=True)
     (work / 'classification.json').write_text(json.dumps(results, ensure_ascii=False, indent=2) + '\n')
     print('多规则分类验收：{}/{} 通过'.format(sum(r['passed'] for r in results), len(results)))

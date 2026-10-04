@@ -1,5 +1,6 @@
 """Run acceptance stages and persist a commit-bound run status independently of counters."""
 import datetime
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -32,7 +33,7 @@ def save(state):
 
 def main():
     state = {'run_id': str(uuid.uuid4()), 'status': 'running', 'started_at': now(),
-             'stages': [], 'scope': 'Pinned top-level string/bytes Regex and RegexSet; not the entire upstream workspace'}
+             'stages': [], 'scope': 'Selected string/bytes Regex, RegexSet, AST/HIR and forward PikeVM contracts; not full workspace parity'}
     save(state)
     try:
         # Old counters must never be mistaken for this invocation's results.
@@ -46,10 +47,13 @@ def main():
         state['environment'] = {'platform': platform.platform(), 'python': sys.version,
                                 'cangjie': output(['cjc', '--version']),
                                 'rust': output(['rustc', '--version']), 'cargo': output(['cargo', '--version'])}
+        source_files = sorted(p for folder in ['port', 'cli', 'oracle', 'tests', 'scripts', 'examples'] for p in (ROOT / folder).rglob('*') if p.is_file() and not any(part in ('target', '__pycache__') for part in p.relative_to(ROOT).parts))
+        state['tested_source_sha256'] = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_files}
         state['baseline'] = json.loads((ROOT / 'docs/baseline.json').read_text())
         save(state)
         stages = [('upstream-data', [sys.executable, 'scripts/check_upstream_data.py'], ROOT),
-                  ('api-inventory', [sys.executable, 'scripts/audit_api_surface.py', '--check'], ROOT)]
+                  ('api-inventory', [sys.executable, 'scripts/audit_api_surface.py', '--check'], ROOT),
+                  ('cangjie-api-inventory', [sys.executable, 'scripts/generate_api_catalog.py', '--check'], ROOT)]
         for name in ['unicode', 'categories', 'scripts', 'binary', 'case_fold', 'age_break']:
             stages.append(('data-' + name, [sys.executable, f'scripts/generate_{name}.py', '--check'], ROOT))
         stages += [('python-tests', [sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-p', 'test_category_generator.py'], ROOT)]
@@ -79,6 +83,9 @@ def main():
             if code:
                 raise RuntimeError(f'{name} exited with {code}')
         state['checks'] = json.loads((WORK / 'verification.json').read_text())
+        changed = [name for name, digest in state['tested_source_sha256'].items() if not (ROOT / name).is_file() or hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != digest]
+        if changed:
+            raise RuntimeError(f'Sources changed during verification: {changed}')
         state['status'] = 'passed'
     except (Exception, KeyboardInterrupt) as error:
         state['status'] = 'failed'

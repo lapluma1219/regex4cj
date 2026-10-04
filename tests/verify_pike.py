@@ -48,13 +48,17 @@ count = 0
 for start, end, anchored, text, *patterns in cases:
     compare('pike', str(start), str(end), anchored, text, *patterns)
     count += 1
-# A bound inside a scalar is a caller error. The pinned PikeVM reports no match
-# for this particular range; the public API rejects it instead of dropping it.
-mid_scalar = run(CJ, 'pike', '1', '2', 'false', 'é', 'a')
-assert mid_scalar.returncode == 2 and 'UTF-8 boundary' in mid_scalar.stderr, mid_scalar
+# Every byte offset is legal, including positions inside UTF-8 scalars.
+for text in ['éa', '中a', '🙂a']:
+    for start in range(len(text.encode()) + 1):
+        for end in range(start, len(text.encode()) + 1):
+            for anchored in ['true', 'false']:
+                for patterns in [[], [''], ['a'], ['.'], ['a', '']]:
+                    compare('pike', str(start), str(end), anchored, text, *patterns)
+                    count += 1
 reversed_range = run(CJ, 'pike', '2', '1', 'false', 'ab', 'a')
 assert reversed_range.returncode == 2 and 'invalid search range' in reversed_range.stderr, reversed_range
 report = json.loads(REPORT.read_text()) if REPORT.exists() else {}
-report.update(pike_cases_passed=count, pike_invalid_rejected=2)
+report.update(pike_cases_passed=count, pike_invalid_rejected=1)
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
-print(f'PikeVM: {count} searches matched, 2 invalid ranges rejected', flush=True)
+print(f'PikeVM: {count} searches matched, 1 invalid range rejected', flush=True)

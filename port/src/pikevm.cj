@@ -88,9 +88,6 @@ public class PikeVM {
         this([pattern])
     }
     public init(patterns: Array<String>) {
-        if (patterns.isEmpty()) {
-            throw Exception("at least one pattern is required")
-        }
         engines = Array<Regex>(patterns.size, {i => Regex(patterns[i])})
         cache = PikeCache()
     }
@@ -98,9 +95,6 @@ public class PikeVM {
         this([hir])
     }
     public init(hirs: Array<Hir>) {
-        if (hirs.isEmpty()) {
-            throw Exception("at least one pattern is required")
-        }
         engines = Array<Regex>(hirs.size, {i => Regex(hirs[i])})
         cache = PikeCache()
     }
@@ -129,6 +123,9 @@ public class PikeVM {
         search(text, 0, text.size, false)
     }
     public func search(text: String, start: Int64, end: Int64, anchored: Bool): Option<PikeMatch> {
+        if (start < 0 || end < start || end > text.size) {
+            throw Exception("invalid search range")
+        }
         var bestPattern: Int64 = -1
         var bestStart: Int64 = 0
         var best: Option<Captures> = None

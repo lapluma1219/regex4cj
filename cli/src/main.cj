@@ -334,7 +334,7 @@ main(args: Array<String>): Int64 {
             println(Hir.parse(args[1], args[2] == "true").toPattern())
             return 0
         }
-        if (args.size >= 6 && (args[0] == "pike" || args[0] == "pike-hir")) {
+        if (args.size >= 5 && (args[0] == "pike" || args[0] == "pike-hir")) {
             let start = Int64.parse(args[1])
             let end = Int64.parse(args[2])
             let vm = if (args[0] == "pike-hir") {

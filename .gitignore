@@ -15,3 +15,6 @@
 *.key
 # Local release archives and extracted clean-build verification
 /dist/
+
+# Reproducible, disposable outputs created inside any checkout
+/.build/
