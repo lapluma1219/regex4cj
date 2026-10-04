@@ -79,14 +79,24 @@ func hirLengthOverflowAndEmptyAreDistinctFromFailure(): Unit {
 
 @Test
 func hirRejectsUnimplementedStructuresExplicitly(): Unit {
-    var unsupported = false
-    try { Hir.parse("a|bc") } catch (_: HirUnsupportedError) { unsupported = true }
-    @Expect(unsupported, true)
+    match (Hir.parse("a|bc").kind()) {
+        case HirKind.Alternation(parts) => @Expect(parts.size, 2)
+        case _ => throw Exception("expected alternation")
+    }
+    @Expect(Hir.parse(".").toPattern().contains("["), true)
     var invalid = false
-    try { Hir.parse("(") } catch (_: RegexError) { invalid = true }
+    try {
+        Hir.parse("(")
+    } catch (_: RegexError) {
+        invalid = true
+    }
     @Expect(invalid, true)
     var badRange = false
-    try { Hir.byteClass([HirRange(0, 256)]) } catch (_: Exception) { badRange = true }
+    try {
+        Hir.byteClass([HirRange(0, 256)])
+    } catch (_: Exception) {
+        badRange = true
+    }
     @Expect(badRange, true)
     let raw = Hir.parse(#"(?-u:\xFF)"#, false)
     match (raw.kind()) {

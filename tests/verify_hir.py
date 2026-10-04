@@ -1,7 +1,6 @@
-"""Public HIR slice: compare normalized structure and every node's byte lengths.
+"""Public HIR: compare normalized structure, byte lengths and Display text.
 
-Scope is deliberately smaller than regex-syntax: no look, dot or alternation.
-The fixed Rust library independently parses/builds each input.
+The fixed Rust library independently parses and builds each input.
 """
 import json
 import random
@@ -25,8 +24,8 @@ def compare(*args):
 
 
 constructors = compare('hir-constructors').splitlines()
-assert len(constructors) == 205
-assert len({line.split('\t')[0] for line in constructors}) == 205
+assert len(constructors) == 235
+assert len({line.split('\t')[0] for line in constructors}) == 235
 patterns = [
     '', 'abc', '中文🙂', r'\x00', r'\x{10FFFF}', r'\x{D7FF}\x{E000}',
     '[0-9]{6}', 'a{0}', '(a){0}', '(?:){9,}', '(){2,}', '(){0,}',
@@ -35,6 +34,9 @@ patterns = [
     r'[\x{D7FF}-\x{E000}]', '[a中🙂]', r'(?-u:[a-z])', r'(?-u:\w)',
     '(?i:a)', '(?i:中)', '(?i-u:a)', '(?i-u:[a-c])',
     'ab(cd)ef', '(?<x>a)(b)?', '(?<名字>中)+?', '(?:ab)(?:cd)',
+    'a|b', 'a|ab', 'ab|cd', 'a|b|c', '|', 'abc[A-Z]|abc[a-z]',
+    '.', '(?s).', r'(?R-s).', '^', '$', '(?m)^', '(?m)$', r'(?mR)^',
+    r'\b', r'\B', r'\A', r'\z', r'(?-u:\b)', r'\b{start}', r'\b{end-half}',
     'a{2,4}?', '(?U:a+)', '(a{4294967295}){4294967295}',
     '((a{4294967295}){4294967295}){4294967295}',
     '(?x: a #comment\n b )', r'(?-u:é)', r'(?-u:\x7F)',
@@ -53,15 +55,22 @@ for pattern in patterns:
 for pattern in [r'(?-u:\xFF)', r'(?-u:[\x80-\xFF])', r'(?-u:[^a])']:
     compare('hir', pattern, 'false')
     count += 1
-# Distinguish invalid patterns from valid patterns outside the public slice.
-for pattern in ['a|bc', '.', '^a', r'\bword']:
-    r, c = run(RUST, 'hir', pattern, 'true'), run(CJ, 'hir', pattern, 'true')
-    assert r.returncode == 0 and c.returncode == 2 and 'public HIR slice' in c.stderr, (pattern, r, c)
+printed = 0
+for pattern in ['a', 'ab', r'\xff', '☃', '[a]', '[ab]', '[a-z]', r'[^\x01-\u{10FFFF}]', r'[-]',
+                '^', '$', '(?m)^', '(?m)$', r'\b', r'\B', 'a?', 'a??', 'a*', 'a*?', 'a+', 'a+?',
+                'a{1}', 'a{2}', 'a{1,}', 'a{1,5}', 'a{2}?', 'a{0}', '()', '(a)', '(?:a)',
+                '((((a))))', '|', '||', 'a|b', 'ab|cd', 'foo|bar|quux', r'(?-u:\b)']:
+    compare('hir-print', pattern, 'true')
+    printed += 1
+for pattern in [r'(?-u)\xff', r'(?-u)[ab]', r'(?-u)[a-\xFF]', r'(?-u)\B']:
+    compare('hir-print', pattern, 'false')
+    printed += 1
 for pattern in ['(', '[z-a]', 'a{4,2}', r'(?-u:\xFF)']:
     r, c = run(RUST, 'hir', pattern, 'true'), run(CJ, 'hir', pattern, 'true')
     assert r.returncode == c.returncode == 2, (pattern, r, c)
 report = json.loads(REPORT.read_text()) if REPORT.exists() else {}
-report.update(hir_constructor_cases_passed=205, hir_parse_cases_passed=count,
-              hir_unsupported_rejected=4, hir_invalid_rejected=4)
+report.pop('hir_unsupported_rejected', None)
+report.update(hir_constructor_cases_passed=235, hir_parse_cases_passed=count,
+              hir_print_cases_passed=printed, hir_invalid_rejected=4)
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
-print(f'HIR: {count} parse cases, 205 constructors, 4 explicit unsupported and 4 invalid rejected', flush=True)
+print(f'HIR: {count} parse cases, 235 constructors, {printed} print cases, 4 invalid rejected', flush=True)

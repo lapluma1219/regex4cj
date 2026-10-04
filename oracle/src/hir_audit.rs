@@ -1,4 +1,4 @@
-use regex_syntax::hir::{Hir,HirKind,Class,ClassUnicode,ClassUnicodeRange,ClassBytes,ClassBytesRange,Capture,Repetition};
+use regex_syntax::hir::{Hir,HirKind,Class,ClassUnicode,ClassUnicodeRange,ClassBytes,ClassBytesRange,Capture,Repetition,Look,Dot};
 use crate::hex_bytes;
 fn opt(n:Option<usize>)->String {n.map(|x|x.to_string()).unwrap_or("-".into())}
 pub fn shape(h:&Hir)->String {
@@ -10,14 +10,35 @@ pub fn shape(h:&Hir)->String {
             Class::Bytes(c)=>format!("B({})",c.iter().map(|r|format!("{}-{}",r.start(),r.end())).collect::<Vec<_>>().join(","))},
         HirKind::Repetition(r)=>format!("R({},{},{},{})",r.min,r.max.map(|n|n.to_string()).unwrap_or("-".into()),r.greedy,shape(&r.sub)),
         HirKind::Capture(c)=>format!("C({},{},{})",c.index,c.name.as_ref().map(|n|hex_bytes(n.as_bytes())).unwrap_or("-".into()),shape(&c.sub)),
+        HirKind::Look(l)=>format!("K({l:?})"),
         HirKind::Concat(s)=>format!("S({})",s.iter().map(shape).collect::<Vec<_>>().join(";")),
-        other=>format!("UNSUPPORTED({other:?})"),
+        HirKind::Alternation(s)=>format!("A({})",s.iter().map(shape).collect::<Vec<_>>().join(";")),
     };
     format!("{}{{{},{}}}",value,opt(h.properties().minimum_len()),opt(h.properties().maximum_len()))
 }
 pub fn parse(pattern:&str,utf8:bool) {
     match regex_syntax::ParserBuilder::new().utf8(utf8).build().parse(pattern) {
         Ok(h)=>println!("{}",shape(&h)),
+        Err(e)=>{eprintln!("{e}");std::process::exit(2);}
+    }
+}
+pub fn properties(pattern:&str,utf8:bool) {
+    match regex_syntax::ParserBuilder::new().utf8(utf8).build().parse(pattern) {
+        Ok(h)=>{
+            let p=h.properties();
+            let static_len=p.static_explicit_captures_len().map(|n|n.to_string()).unwrap_or("-".into());
+            println!("utf8\t{}\tcaptures\t{}\tstatic\t{}\tliteral\t{}\talt\t{}\tlook\t{}\tpre\t{}\tpany\t{}\tsuf\t{}\tsany\t{}",
+                if p.is_utf8(){1}else{0}, p.explicit_captures_len(), static_len,
+                if p.is_literal(){1}else{0}, if p.is_alternation_literal(){1}else{0},
+                p.look_set().bits, p.look_set_prefix().bits, p.look_set_prefix_any().bits,
+                p.look_set_suffix().bits, p.look_set_suffix_any().bits);
+        }
+        Err(e)=>{eprintln!("{e}");std::process::exit(2);}
+    }
+}
+pub fn print_hir(pattern:&str,utf8:bool) {
+    match regex_syntax::ParserBuilder::new().utf8(utf8).build().parse(pattern) {
+        Ok(h)=>println!("{h}"),
         Err(e)=>{eprintln!("{e}");std::process::exit(2);}
     }
 }
@@ -44,4 +65,29 @@ pub fn constructors() {
         println!("huge-{i}\t{}",shape(&huge));
     }
     println!("huge-concat\t{}",shape(&Hir::concat(vec![huge.clone(),huge])));
+    for look in [Look::Start,Look::End,Look::StartLF,Look::EndLF,Look::StartCRLF,Look::EndCRLF,
+        Look::WordAscii,Look::WordAsciiNegate,Look::WordUnicode,Look::WordUnicodeNegate,
+        Look::WordStartAscii,Look::WordEndAscii,Look::WordStartUnicode,Look::WordEndUnicode,
+        Look::WordStartHalfAscii,Look::WordEndHalfAscii,Look::WordStartHalfUnicode,Look::WordEndHalfUnicode] {
+        println!("look-{look:?}\t{}",shape(&Hir::look(look)));
+    }
+    for (name,dot) in [("AnyChar",Dot::AnyChar),("AnyByte",Dot::AnyByte),("AnyCharExceptLF",Dot::AnyCharExceptLF),
+        ("AnyCharExceptCRLF",Dot::AnyCharExceptCRLF),("AnyByteExceptLF",Dot::AnyByteExceptLF),
+        ("AnyByteExceptCRLF",Dot::AnyByteExceptCRLF)] {
+        println!("dot-{name}\t{}",shape(&Hir::dot(dot)));
+    }
+    println!("dot-except-char\t{}",shape(&Hir::dot(Dot::AnyCharExcept('!'))));
+    println!("dot-except-byte\t{}",shape(&Hir::dot(Dot::AnyByteExcept(255u8))));
+    println!("alt-chars\t{}",shape(&Hir::alternation(vec![Hir::literal("a".as_bytes()),Hir::literal("b".as_bytes())])));
+    println!("alt-keep\t{}",shape(&Hir::alternation(vec![Hir::literal("a".as_bytes()),Hir::literal("ab".as_bytes())])));
+    let upper=Hir::class(Class::Unicode(ClassUnicode::new([ClassUnicodeRange::new('A','Z')])));
+    let lower=Hir::class(Class::Unicode(ClassUnicode::new([ClassUnicodeRange::new('a','z')])));
+    println!("alt-prefix\t{}",shape(&Hir::alternation(vec![
+        Hir::concat(vec![Hir::literal("abc".as_bytes()),upper]),
+        Hir::concat(vec![Hir::literal("abc".as_bytes()),lower]),
+    ])));
+    println!("alt-bytes\t{}",shape(&Hir::alternation(vec![
+        Hir::class(Class::Bytes(ClassBytes::new([ClassBytesRange::new(200,201)]))),
+        Hir::class(Class::Bytes(ClassBytes::new([ClassBytesRange::new(202,210)]))),
+    ])));
 }

@@ -135,11 +135,10 @@ class Parser {
         failAt(start, end, message)
     }
     func failAt(start: Int64, end: Int64, message: String): Nothing {
-        throw RegexError(RegexErrorKind.Syntax, formatSyntaxError(source, start, end, message), -1)
+        throw syntaxError(source, start, end, -1, -1, message)
     }
     func failAux(start: Int64, end: Int64, auxStart: Int64, auxEnd: Int64, message: String): Nothing {
-        throw RegexError(RegexErrorKind.Syntax, formatSyntaxErrorSpans(source, start, end, auxStart, auxEnd, message),
-            -1)
+        throw syntaxError(source, start, end, auxStart, auxEnd, message)
     }
     func lookaroundPrefix(): Bool {
         if (pos + 1 < chars.size && chars[pos] == r'?' && (chars[pos + 1] == r'=' || chars[pos + 1] == r'!')) {
@@ -196,7 +195,7 @@ class Parser {
         let result = alternate()
         skipSpace()
         if (pos != chars.size) {
-            failAt(pos - 1, pos, "unopened group")
+            failAt(pos, pos + 1, "unopened group")
         }
         checkNest(result, 0)
         return result
@@ -255,7 +254,7 @@ class Parser {
                 break
             }
             if (expr.flagOnly) {
-                failAt(pos, pos + 1, "repetition operator missing expression")
+                failAt(pos, pos, "repetition operator missing expression")
             }
             let quantifierAt = pos
             repeatOrigin = pos
@@ -311,7 +310,7 @@ class Parser {
             failAt(repeatOrigin, pos, "unclosed counted repetition")
         }
         if (chars[pos] < r'0' || chars[pos] > r'9') {
-            failAt(pos, pos + 1, "repetition quantifier expects a valid decimal")
+            failAt(pos, pos, "repetition quantifier expects a valid decimal")
         }
         let digits = pos
         var value: Int64 = 0
@@ -372,7 +371,7 @@ class Parser {
                         nameEnd = pos - 1
                     } else {
                         if (at(r')')) {
-                            failAt(question, question + 1, "repetition operator missing expression")
+                            failAt(question, question, "repetition operator missing expression")
                         }
                         if (pos == chars.size) {
                             failAt(open, open + 1, "unclosed group")
@@ -446,8 +445,8 @@ class Parser {
                 expr.classNest = lastClassNest
                 expr.byteAtom = !unicode && !utf8
                 return expr
-            case r'{' => failAt(pos - 1, pos, "repetition operator missing expression")
-            case r'*' | r'+' | r'?' => failAt(pos - 1, pos, "repetition operator missing expression")
+            case r'{' => failAt(pos - 1, pos - 1, "repetition operator missing expression")
+            case r'*' | r'+' | r'?' => failAt(pos - 1, pos - 1, "repetition operator missing expression")
             case _ => return finishLiteral(c)
         }
     }

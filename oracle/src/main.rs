@@ -2,6 +2,8 @@ mod suite;
 mod hir_audit;
 mod api_audit;
 mod lazy_audit;
+mod pike;
+mod ast_audit;
 
 use regex::Regex;
 fn hex_text(text: &str) -> String {
@@ -51,6 +53,16 @@ fn main() {
     match a.first().map(String::as_str) {
         Some("hir-constructors") if a.len()==1 => hir_audit::constructors(),
         Some("hir") if a.len()==3 => hir_audit::parse(&a[1], a[2]=="true"),
+        Some("hir-print") if a.len()==3 => hir_audit::print_hir(&a[1], a[2]=="true"),
+        Some("hir-props") if a.len()==3 => hir_audit::properties(&a[1], a[2]=="true"),
+        Some("ast") if a.len()==2 => ast_audit::parse(&a[1]),
+        Some("ast-print") if a.len()==2 => ast_audit::ast_print(&a[1]),
+        Some("syntax-error") if a.len()==2 => ast_audit::syntax_error(&a[1]),
+        Some("pike") if a.len()>=6 => {
+            let start: usize = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            pike::search(start, end, a[3]=="true", &a[4], &a[5..]);
+        },
         Some("api-audit") if a.len() == 1 => api_audit::run(),
         Some("set-matches-at" | "set-is-match-at") if a.len() >= 3 => {
             let start: usize = match a[2].parse() {

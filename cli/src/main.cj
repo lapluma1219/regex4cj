@@ -287,6 +287,78 @@ main(args: Array<String>): Int64 {
             println(hirShape(Hir.parse(args[1], args[2] == "true")))
             return 0
         }
+        if (args.size == 3 && args[0] == "demo") {
+            let ast = Ast.parse(args[1])
+            println("ast\t${ast.shape()}")
+            println("hir\t${hirShape(ast.toHir())}")
+            println("print\t${ast.toPattern()}")
+            match (PikeVM(args[1]).search(args[2])) {
+                case None => println("match\tnone")
+                case Some(hit) =>
+                    println("match\t${hit.pattern}\t${hit.start()}\t${hit.end()}")
+                    for (i in 0..hit.captures.size) {
+                        match (hit.captures.get(i)) {
+                            case Some(group) => println("group\t${i}\t${group.start}\t${group.end}\t${group.asStr()}")
+                            case None => println("group\t${i}\t-")
+                        }
+                    }
+            }
+            return 0
+        }
+        if (args.size == 2 && args[0] == "syntax-error") {
+            try {
+                Regex(args[1])
+                println("ok")
+            } catch (e: RegexError) {
+                println(e.structure())
+            }
+            return 0
+        }
+        if (args.size == 2 && args[0] == "ast") {
+            println(Ast.parse(args[1]).shape())
+            return 0
+        }
+        if (args.size == 2 && args[0] == "ast-hir") {
+            println(hirShape(Ast.parse(args[1]).toHir()))
+            return 0
+        }
+        if (args.size == 2 && args[0] == "ast-print") {
+            println(Ast.parse(args[1]).toPattern())
+            return 0
+        }
+        if (args.size == 3 && args[0] == "hir-props") {
+            println(hirPropertyLine(Hir.parse(args[1], args[2] == "true")))
+            return 0
+        }
+        if (args.size == 3 && args[0] == "hir-print") {
+            println(Hir.parse(args[1], args[2] == "true").toPattern())
+            return 0
+        }
+        if (args.size >= 6 && (args[0] == "pike" || args[0] == "pike-hir")) {
+            let start = Int64.parse(args[1])
+            let end = Int64.parse(args[2])
+            let vm = if (args[0] == "pike-hir") {
+                let hirs = Array<Hir>(args.size - 5, {i => Hir.parse(args[i + 5])})
+                PikeVM(hirs)
+            } else {
+                let patterns = Array<String>(args.size - 5, {i => args[i + 5]})
+                PikeVM(patterns)
+            }
+            match (vm.search(args[4], start, end, args[3] == "true")) {
+                case None => println("none")
+                case Some(hit) =>
+                    println("pattern\t${hit.pattern}")
+                    println("span\t${hit.start()}\t${hit.end()}")
+                    for (i in 0..hit.captures.size) {
+                        match (hit.captures.get(i)) {
+                            case Some(group) => println(
+                                "group\t${i}\t${group.start}\t${group.end}\t${hexText(group.asStr())}")
+                            case None => println("group\t${i}\t-")
+                        }
+                    }
+            }
+            return 0
+        }
         if (args.size == 1 && args[0] == "api-audit") {
             apiContractAudit()
             return 0

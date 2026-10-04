@@ -185,6 +185,26 @@ class Input {
         // next boundary while retaining the original input for assertions.
         return lo
     }
+    func exact(byteOffset: Int64): Int64 {
+        let limit = offsets[offsets.size - 1]
+        if (byteOffset < 0 || byteOffset > limit) {
+            throw Exception("search bound is outside the haystack")
+        }
+        var lo: Int64 = 0
+        var hi = offsets.size
+        while (lo < hi) {
+            let mid = (lo + hi) / 2
+            if (offsets[mid] < byteOffset) {
+                lo = mid + 1
+            } else {
+                hi = mid
+            }
+        }
+        if (lo >= offsets.size || offsets[lo] != byteOffset) {
+            throw Exception("search bound is not a UTF-8 boundary")
+        }
+        return lo
+    }
 }
 
 func staticExplicit(expr: Expr): Option<Int64> {
@@ -340,6 +360,171 @@ func appendContext(out: StringBuilder, input: Input, index: Int64): Unit {
     }
 }
 
+func exprFromHir(hir: Hir): Expr {
+    match (hir.kind()) {
+        case HirKind.Empty => Expr(ExprKind.Empty, r' ', [], true)
+        case HirKind.Literal(bytes) => exprFromLiteral(bytes)
+        case HirKind.Class(klass) => exprFromClass(klass)
+        case HirKind.Look(look) => exprFromLook(look)
+        case HirKind.Repetition(rep) =>
+            let expr = Expr(ExprKind.Repeat, r' ', [exprFromHir(rep.sub)], rep.greedy)
+            expr.minimum = Int64(rep.min)
+            expr.maximum = match (rep.max) {
+                case Some(limit) => Int64(limit)
+                case None => -1
+            }
+            expr
+        case HirKind.Capture(cap) =>
+            let expr = Expr(ExprKind.Capture, r' ', [exprFromHir(cap.sub)], true)
+            expr.captureIndex = Int64(cap.index)
+            expr
+        case HirKind.Concat(children) => Expr(ExprKind.Concat, r' ',
+            Array<Expr>(children.size, {i => exprFromHir(children[i])}), true)
+        case HirKind.Alternation(children) => Expr(ExprKind.Alternate, r' ', Array<Expr>(children.size, {
+            i => exprFromHir(children[i])
+        }), true)
+    }
+}
+
+func exprFromLiteral(bytes: Array<UInt8>): Expr {
+    if (bytes.isEmpty()) {
+        return Expr(ExprKind.Empty, r' ', [], true)
+    }
+    let parts = ArrayList<Expr>()
+    var index: Int64 = 0
+    while (index < bytes.size) {
+        let first = Int64(bytes[index])
+        if (first < 0x80) {
+            parts.add(Expr(ExprKind.Literal, Rune(UInt32(first)), [], true))
+            index++
+            continue
+        }
+        let width = if ((first & 0xE0) == 0xC0) {
+            2
+        } else if ((first & 0xF0) == 0xE0) {
+            3
+        } else if ((first & 0xF8) == 0xF0) {
+            4
+        } else {
+            1
+        }
+        if (width == 1 || index + width > bytes.size) {
+            let raw = Expr(ExprKind.Literal, Rune(UInt32(first)), [], true)
+            raw.byteAtom = true
+            parts.add(raw)
+            index++
+            continue
+        }
+        var value = first & if (width == 2) {
+            0x1F
+        } else if (width == 3) {
+            0x0F
+        } else {
+            0x07
+        }
+        var valid = true
+        var next = index + 1
+        while (next < index + width) {
+            let cont = Int64(bytes[next])
+            if ((cont & 0xC0) != 0x80) {
+                valid = false
+                break
+            }
+            value = value * 64 + (cont & 0x3F)
+            next++
+        }
+        let minimum = if (width == 2) {
+            0x80
+        } else if (width == 3) {
+            0x800
+        } else {
+            0x10000
+        }
+        if (!valid || value < minimum || value > 0x10FFFF || (value >= 0xD800 && value <= 0xDFFF)) {
+            let raw = Expr(ExprKind.Literal, Rune(UInt32(first)), [], true)
+            raw.byteAtom = true
+            parts.add(raw)
+            index++
+        } else {
+            parts.add(Expr(ExprKind.Literal, Rune(UInt32(value)), [], true))
+            index += width
+        }
+    }
+    if (parts.size == 1) {
+        return parts[0]
+    }
+    Expr(ExprKind.Concat, r' ', parts.toArray(), true)
+}
+
+func exprFromClass(klass: HirClass): Expr {
+    let set = CharSet()
+    for (range in klass.ranges()) {
+        set.addRange(range.start, range.end)
+    }
+    let expr = Expr(ExprKind.CharacterClass, r' ', [], true)
+    expr.charset = set
+    expr.modeUnicode = !klass.isBytes
+    expr.byteAtom = klass.isBytes
+    expr
+}
+
+func exprFromLook(look: HirLook): Expr {
+    match (look) {
+        case HirLook.Start => lookExpr(ExprKind.Begin, 0, true, true)
+        case HirLook.End => lookExpr(ExprKind.End, 1, true, true)
+        case HirLook.StartLF => lookExpr(ExprKind.Begin, 2, true, true)
+        case HirLook.EndLF => lookExpr(ExprKind.End, 3, true, true)
+        case HirLook.StartCRLF => lookExpr(ExprKind.Begin, 4, true, true)
+        case HirLook.EndCRLF => lookExpr(ExprKind.End, 5, true, true)
+        case HirLook.WordAscii => lookExpr(ExprKind.WordBoundary, 6, false, true)
+        case HirLook.WordAsciiNegate => lookExpr(ExprKind.WordBoundary, 6, false, false)
+        case HirLook.WordUnicode => lookExpr(ExprKind.WordBoundary, 6, true, true)
+        case HirLook.WordUnicodeNegate => lookExpr(ExprKind.WordBoundary, 6, true, false)
+        case HirLook.WordStartAscii => lookExpr(ExprKind.WordBoundary, 7, false, true)
+        case HirLook.WordEndAscii => lookExpr(ExprKind.WordBoundary, 8, false, true)
+        case HirLook.WordStartUnicode => lookExpr(ExprKind.WordBoundary, 7, true, true)
+        case HirLook.WordEndUnicode => lookExpr(ExprKind.WordBoundary, 8, true, true)
+        case HirLook.WordStartHalfAscii => lookExpr(ExprKind.WordBoundary, 9, false, true)
+        case HirLook.WordEndHalfAscii => lookExpr(ExprKind.WordBoundary, 10, false, true)
+        case HirLook.WordStartHalfUnicode => lookExpr(ExprKind.WordBoundary, 9, true, true)
+        case HirLook.WordEndHalfUnicode => lookExpr(ExprKind.WordBoundary, 10, true, true)
+    }
+}
+
+func lookExpr(kind: ExprKind, mode: Int64, unicode: Bool, positive: Bool): Expr {
+    let expr = Expr(kind, r' ', [], true)
+    expr.modeKind = mode
+    expr.modeUnicode = unicode
+    expr.modePositive = positive
+    expr.modeTerm = r'\n'
+    expr
+}
+
+func hirCaptureNames(hir: Hir): Array<String> {
+    let highest = [0]
+    hir.visit({
+        node => match (node.kind()) {
+            case HirKind.Capture(cap) =>
+                let index = Int64(cap.index)
+                if (index > highest[0]) {
+                    highest[0] = index
+                }
+            case _ => ()
+        }
+    })
+    let names = Array<String>(highest[0] + 1, {_ => ""})
+    hir.visit({
+        node => match (node.kind()) {
+            case HirKind.Capture(cap) => names[Int64(cap.index)] = match (cap.name) {
+                case Some(text) => text
+                case None => ""
+            }
+            case _ => ()
+        }
+    })
+    names
+}
+
 public class Regex {
     private let source: String
     private let states: Array<State>
@@ -414,6 +599,76 @@ public class Regex {
             }
         })
     }
+    init(hir: Hir) {
+        source = ""
+        let options = PatternOptions()
+        let names = hirCaptureNames(hir)
+        let tree = exprFromHir(hir)
+        normalizeWidth(tree)
+        ensureWithinSizeLimit([tree], options.sizeLimit, true)
+        dfaLimit = options.dfaSizeLimit
+        staticLen = match (staticExplicit(tree)) {
+            case Some(count) => count + 1
+            case None => -1
+        }
+        let compiler = Compiler(options.sizeLimit)
+        let accept = compiler.add(Op.Accept, -1, -1)
+        startState = compiler.compile(tree, accept)
+        states = compiler.states.toArray()
+        let live = Array<Bool>(names.size, repeat: false)
+        if (live.size > 0) {
+            live[0] = true
+        }
+        var last: Int64 = 0
+        var needUnicode = false
+        var needAscii = false
+        for (state in states) {
+            match (state.op) {
+                case Op.Look(mode) =>
+                    if (mode.kind >= 6) {
+                        if (mode.unicode) {
+                            needUnicode = true
+                        } else {
+                            needAscii = true
+                        }
+                    }
+                case Op.Save(slot) =>
+                    let index = slot / 2
+                    if (index >= 0 && index < live.size) {
+                        live[index] = true
+                    }
+                    if (index > last) {
+                        last = index
+                    }
+                case _ => ()
+            }
+        }
+        unicodeWords = if (needUnicode) {
+            unicodeClass(r'w')
+        } else {
+            CharSet()
+        }
+        asciiWords = if (needAscii) {
+            match (asciiClass("word")) {
+                case Some(set) => set
+                case None => throw Exception("missing ASCII word class")
+            }
+        } else {
+            CharSet()
+        }
+        let width = if (last + 1 > names.size) {
+            last + 1
+        } else {
+            names.size
+        }
+        groupNames = Array<String>(width, {
+            i => if (i < live.size && live[i] && i < names.size) {
+                names[i]
+            } else {
+                ""
+            }
+        })
+    }
     public func asStr(): String {
         source
     }
@@ -458,6 +713,9 @@ public class Regex {
         }
     }
     private func search(input: Input, from: Int64, capture: Bool, earliest: Bool): Option<SearchMatch> {
+        search(input, from, input.chars.size, false, capture, earliest)
+    }
+    private func search(input: Input, from: Int64, until: Int64, anchored: Bool, capture: Bool, earliest: Bool): Option<SearchMatch> {
         var current = ArrayList<Thread>()
         var seen = Array<Bool>(states.size, repeat: false)
         var best: Option<SearchMatch> = None
@@ -478,9 +736,12 @@ public class Regex {
         } else {
             1
         })
-        while (pos <= input.chars.size) {
-            if (!found) {
+        while (pos <= until) {
+            if (!found && (!anchored || pos == from)) {
                 closure(current, seen, startState, pos, slots, pos, input)
+            }
+            if (anchored && pos != from && current.isEmpty()) {
+                return best
             }
             let next = ArrayList<Thread>()
             let nextSeen = Array<Bool>(states.size, repeat: false)
@@ -525,10 +786,9 @@ public class Regex {
                             best = Some(hit)
                             found = true
                             break
-                        case Op.Literal(c) => consume = pos < input.chars.size && input.chars[pos] == c
-                        case Op.CharacterClass(set) => consume = pos < input.chars.size && set.contains(
-                            input.chars[pos])
-                        case Op.Any(mode) => consume = pos < input.chars.size && passesDot(mode, input.chars[pos])
+                        case Op.Literal(c) => consume = pos < until && input.chars[pos] == c
+                        case Op.CharacterClass(set) => consume = pos < until && set.contains(input.chars[pos])
+                        case Op.Any(mode) => consume = pos < until && passesDot(mode, input.chars[pos])
                         case _ => ()
                     }
                     if (consume) {
@@ -928,6 +1188,50 @@ public class Regex {
         }
         result.add(text[lastByte..text.size])
         return result.toArray()
+    }
+    public func nfaStateCount(): Int64 {
+        states.size
+    }
+    public func nfaStart(): Int64 {
+        startState
+    }
+    public func nfaOp(index: Int64): String {
+        if (index < 0 || index >= states.size) {
+            throw Exception("state index out of bounds")
+        }
+        match (states[index].op) {
+            case Op.Literal(_) => "literal"
+            case Op.CharacterClass(_) => "class"
+            case Op.Any(_) => "any"
+            case Op.Look(_) => "look"
+            case Op.Split => "split"
+            case Op.Save(_) => "save"
+            case Op.Accept => "accept"
+        }
+    }
+    public func nfaNext(index: Int64): Int64 {
+        if (index < 0 || index >= states.size) {
+            throw Exception("state index out of bounds")
+        }
+        states[index].first
+    }
+    public func nfaAlternate(index: Int64): Int64 {
+        if (index < 0 || index >= states.size) {
+            throw Exception("state index out of bounds")
+        }
+        states[index].second
+    }
+    public func searchWindow(text: String, start: Int64, end: Int64, anchored: Bool): Option<Captures> {
+        if (start > end) {
+            throw Exception("invalid search range")
+        }
+        let input = Input(text)
+        let from = input.exact(start)
+        let until = input.exact(end)
+        match (search(input, from, until, anchored, true, false)) {
+            case Some(hit) => Some(captureResult(text, input, hit))
+            case None => None
+        }
     }
 }
 
