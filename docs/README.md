@@ -1,11 +1,10 @@
 # 文档入口
 
-- [上手与复现](getting-started.md)：安装环境、运行示例和验收。
-- [当前能力](status.md)、[复查结论](review-2026-10-04.md)：先看边界，再看测试数字。
-- [使用接口](api.md)、[语法与引擎](hir.md)、[声明目录](api-catalog.md)：查找用法。
-- [主要库接口审计](api-audit.md)：170条固有方法映射，不是全仓库接口总数。
-- [下一阶段约80%计划](milestone-80-plan.md)、[功能台账](coverage/README.md)：阶段 0 已锁定可选分数。台账验收分目前是 6，尚未发布约 80%。
-- [此前50%–60%计划](milestone-50-60-plan.md)：历史目标，完成情况以复查为准。
-- [赛事要求记录](competition-requirements.md)：已收集要求及待核实项。
+1. [上手指南](getting-started.md)：配置环境、运行、修改输入、独立复现。
+2. [当前能力与验收](status.md)：支持范围、限制和当前测试证据。
+3. [使用接口](api.md)、[语法与引擎](hir.md)、[声明目录](api-catalog.md)：调用方式。
+4. [主要库接口对应](api-audit.md)、[功能范围台账](coverage/README.md)：定位实现和已知差异。
+5. [比赛交付计划](delivery-plan.md)：唯一后续计划，以行为正确和可交付为第一目标。
+6. [赛事要求](competition-requirements.md)：已记录要求和待官方确认事项。
 
-`acceptance/`保留绑定不同代码版本的历史证据；旧报告不自动证明当前版本。JSON是机器证据，Markdown负责解释。生成数据的脚本位于`scripts/`，无需手改API清单。演示、幻灯片等历史材料以其标注基线为准。
+历史复盘、计划和验收报告已从当前文件树移除，可从Git历史查看。`validation/`只保留当前机器验收证据，不新增按日期堆叠的复盘文档。源码生成清单由`scripts/`维护。

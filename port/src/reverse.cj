@@ -52,15 +52,22 @@ public class ReverseNfa {
         }
     }
     public func search(text: String): Option<Int64> {
+        searchImpl(text, text.size, false)
+    }
+    // Recover the leftmost start for a known forward end. Retain all context
+    // for assertions and explore all reverse alternatives, regardless of greed.
+    func searchEndingAt(text: String, end: Int64): Option<Int64> {
+        searchImpl(text, end, true)
+    }
+    func searchImpl(text: String, limit: Int64, longest: Bool): Option<Int64> {
         let bytes = text.toArray()
-        let limit = bytes.size
         var pos = limit
         var current = ArrayList<Thread>()
         var best = -1
         var found = false
         var reading = true
         while (reading) {
-            if (!found && (!anchored || pos == limit)) {
+            if (!found && ((!anchored && !longest) || pos == limit)) {
                 let seen = Array<Bool>(states.size, repeat: false)
                 closure(current, seen, startState, pos, bytes)
             }
@@ -76,7 +83,7 @@ public class ReverseNfa {
                     case Op.Accept =>
                         best = pos
                         found = true
-                        halt = true
+                        halt = !longest
                     case Op.Literal(_) =>
                         if (byteMatches(state, bytes, pos)) {
                             closure(next, nextSeen, state.first, pos - 1, bytes)

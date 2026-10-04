@@ -1,4 +1,4 @@
-> 本文描述已提供的接口。AST 解析阶段、源位置及翻译配置仍有缺口，见 [当前复查](review-2026-10-04.md)；不要据此认为完整语法库已完成。
+> 这些是已提供的接口，仍有兼容边界，见 [当前能力](status.md)。
 
 # 公开HIR：先读取正则的组成
 
@@ -78,7 +78,7 @@ R表示重复，U表示Unicode字符类，花括号是该节点的最短/最长�
 
 `Hir.parse(pattern)`使用UTF-8安全模式；`Hir.parse(pattern, false)`允许模式匹配非法UTF-8字节，例如`(?-u:\xFF)`。这与是否开启Unicode语法模式是两个不同选项，字节类与Unicode类仍会保留不同结构。
 
-解析覆盖现有匹配器能接受的语法，包括分支、点号和断言。非法规则仍抛 `RegexError`。`toString()` 仍是原来的 Display 文本。`phase`、`name`、`primary` 和 `auxiliary` 另外给出种类和位置，位置里的偏移是 UTF-8 字节。`toPattern()` 的文本与上游 HIR Display 对照过一批模式。`visit` 是前序进入。`walk` 在子节点之后离开。`walkUntil` 可以在进入时停下。
+解析覆盖现有匹配器能接受的语法，包括分支、点号和断言。非法规则仍抛 `RegexError`。`toString()` 仍是原来的 Display 文本。`phase`、`name`、`primary` 和 `auxiliary` 另外给出种类和位置，位置里的偏移是 UTF-8 字节。`toPattern()` 的文本与原仓库 HIR Display 对照过一批模式。`visit` 是前序进入。`walk` 在子节点之后离开。`walkUntil` 可以在进入时停下。
 
 `Ast.toHir()` 按内联标志 `i`、`m`、`s`、`U`、`x`、`R`、`u` 的作用域降级。`(?U)a?` 在 AST 里仍是贪婪的 `?`，降级时才交换成非贪婪。Perl 类、`\p` 和 `[a&&b]` 这种类集合运算在 AST 里保留原写法，降级时走现有的字符类表。`SyntaxParser` 可以先改默认标志和 UTF-8 安全，再解析或翻译。
 
@@ -97,4 +97,4 @@ python3 tests/verify_hir.py
 
 验证使用锁定到原仓库固定提交的 regex-syntax 独立解析和构造，每个节点都比较结构、载荷及长度范围。当前这批是 367 组解析、235 组直接构造、41 组 Display 打印，另有 4 个非法规则。构造对照包括空类、反向/重叠范围、跨 Unicode 代理区间、非法 UTF-8、空捕获重复、字面量合并、断言、点号、分支前缀提取，以及 UInt64 长度溢出。原生测试另外检查返回数组被修改后不会影响节点。具体语法对照在 `python3 tests/verify_ast.py`，当前是 88 组形状、88 组 AST Display 和 50 组降级。其中 `(?-u:\xFF)`、`(?-u:.)`、`(?-u:\D)`、`(?-u:\pL)` 和未知属性先比较 AST，再比较翻译错误；`utf8` 关闭时 `(?-u:\xFF)` 的翻译与 HIR 一致。属性对照在 `python3 tests/verify_props.py`，当前是 32 组，另有 6 组从 HIR 编译后再搜索。语法错误的种类和位置在 `python3 tests/verify_error_spans.py`，当前是 37 组。
 
-`bash scripts/run.sh verify`已将HIR差分加入验收，共41个阶段。通过这些输入不代表完成了全部regex-syntax，更不能把节点种类或接口数直接换算为整个原仓库的完成百分比。
+`bash scripts/run.sh verify`包含HIR、AST和新增引擎的差分；当前阶段结果见`validation/latest.json`。通过这些输入不代表完成了全部regex-syntax，更不能把节点种类或接口数直接换算为整个原仓库的完成百分比。

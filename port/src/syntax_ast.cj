@@ -109,6 +109,9 @@ public class Ast {
     public var classItem: AstClassItem
     // Inline flag change. Bits are i, m, s, U, x, R, u. A flags node keeps the
     // change for the following siblings; a group applies it only to its body.
+    var flagSpelling: String = ""
+    var spellingMask: Int64 = 0
+    var spellingValue: Int64 = 0
     public var flagMask: Int64
     public var flagValue: Int64
     public var baseCaseInsensitive: Bool
@@ -200,7 +203,7 @@ public class Ast {
         astLower(this, astBaseFlags(this))
     }
     public static func parse(pattern: String): Ast {
-        AstReader(pattern).parse()
+        SyntaxParser().parseAst(pattern)
     }
     func groupToken(): String {
         if (captureName != "") {
@@ -266,17 +269,18 @@ class AstReader {
         if (chars.isEmpty()) {
             return leaf("empty", span(mark()), 0)
         }
+        let initial = scope.copy()
         let result = alternate()
         if (pos != chars.size) {
             throw Exception("unopened group")
         }
-        result.baseCaseInsensitive = scope.caseInsensitive
-        result.baseMultiLine = scope.multiline
-        result.baseDotAll = scope.dotAll
-        result.baseSwapGreed = scope.swapGreed
-        result.baseIgnoreWhitespace = scope.ignoreWhitespace
-        result.baseCrlf = scope.crlf
-        result.baseUnicode = scope.unicode
+        result.baseCaseInsensitive = initial.caseInsensitive
+        result.baseMultiLine = initial.multiline
+        result.baseDotAll = initial.dotAll
+        result.baseSwapGreed = initial.swapGreed
+        result.baseIgnoreWhitespace = initial.ignoreWhitespace
+        result.baseCrlf = initial.crlf
+        result.baseUnicode = initial.unicode
         result.source = source
         result
     }
@@ -295,9 +299,25 @@ class AstReader {
     func concat(): Ast {
         let start = mark()
         let parts = ArrayList<Ast>()
-        while (pos < chars.size && !at(r'|') && !at(r')')) {
+        while ((if (pos < chars.size) {
+                (if (!at(r'|')) {
+                    !at(r')')
+                } else {
+                    false
+                })
+            } else {
+                false
+            })) {
             skipLayout()
-            if (pos >= chars.size || at(r'|') || at(r')')) {
+            if ((if (pos >= chars.size) {
+                true
+            } else {
+                (if (at(r'|')) {
+                    true
+                } else {
+                    at(r')')
+                })
+            })) {
                 break
             }
             parts.add(repetition())
@@ -312,42 +332,43 @@ class AstReader {
     }
     func repetition(): Ast {
         let start = mark()
-        let body = atom()
+        var body = atom()
         skipLayout()
-        if (!(at(r'*') || at(r'+') || at(r'?') || at(r'{'))) {
-            return body
+        while ((pos < chars.size && (chars[pos] == r'*' || chars[pos] == r'+' || chars[pos] == r'?' || chars[pos] == r'{'))) {
+            let op = chars[pos]
+            bump()
+            var token = ""
+            match (op) {
+                case r'*' => token = "ZeroOrMore"
+                case r'+' => token = "OneOrMore"
+                case r'?' => token = "ZeroOrOne"
+                case _ => token = counted()
+            }
+            var greedy = true
+            if (eat(r'?')) {
+                greedy = false
+            }
+            let result = node("repeat", span(start), [body])
+            result.greedy = greedy
+            result.quantifier = token
+            match (op) {
+                case r'*' =>
+                    result.minimum = 0
+                    result.maximum = -1
+                case r'+' =>
+                    result.minimum = 1
+                    result.maximum = -1
+                case r'?' =>
+                    result.minimum = 0
+                    result.maximum = 1
+                case _ =>
+                    result.minimum = repeatMinimum
+                    result.maximum = repeatMaximum
+            }
+            body = result
+            skipLayout()
         }
-        let op = chars[pos]
-        bump()
-        var token = ""
-        match (op) {
-            case r'*' => token = "ZeroOrMore"
-            case r'+' => token = "OneOrMore"
-            case r'?' => token = "ZeroOrOne"
-            case _ => token = counted()
-        }
-        var greedy = true
-        if (eat(r'?')) {
-            greedy = false
-        }
-        let result = node("repeat", span(start), [body])
-        result.greedy = greedy
-        result.quantifier = token
-        match (op) {
-            case r'*' =>
-                result.minimum = 0
-                result.maximum = -1
-            case r'+' =>
-                result.minimum = 1
-                result.maximum = -1
-            case r'?' =>
-                result.minimum = 0
-                result.maximum = 1
-            case _ =>
-                result.minimum = repeatMinimum
-                result.maximum = repeatMaximum
-        }
-        result
+        body
     }
     func counted(): String {
         skipLayout()
@@ -403,7 +424,11 @@ class AstReader {
             if (eat(r':')) {
                 return finishGroup(start, false, "", false)
             }
-            if (at(r'<') || at(r'P')) {
+            if ((if (at(r'<')) {
+                true
+            } else {
+                at(r'P')
+            })) {
                 let withP = eat(r'P')
                 if (!eat(r'<')) {
                     throw Exception("unrecognized flag")
@@ -414,10 +439,14 @@ class AstReader {
                 }
                 return finishGroup(start, true, name, withP)
             }
+            let flagsStart = offset
             let read = readFlags()
+            let spelling = source[flagsStart..offset]
             if (eat(r')')) {
                 scope.apply(read[0], read[1])
-                return flagNode(start, read[0], read[1])
+                let result = flagNode(start, read[0], read[1])
+                rememberFlags(result, spelling)
+                return result
             }
             if (!eat(r':')) {
                 throw Exception("unrecognized flag")
@@ -428,19 +457,25 @@ class AstReader {
             scope.restore(saved)
             result.flagMask = read[0]
             result.flagValue = read[1]
+            rememberFlags(result, spelling)
             return result
         }
         finishGroup(start, true, "", false)
     }
     func finishGroup(start: AstMark, capturing: Bool, name: String, withP: Bool): Ast {
+        let saved = scope.copy()
+        let index = nextCapture
+        if (capturing) {
+            nextCapture++
+        }
         let body = alternate()
+        scope.restore(saved)
         if (!eat(r')')) {
             throw Exception("unclosed group")
         }
         let result = node("group", span(start), [body])
         if (capturing) {
-            result.captureIndex = nextCapture
-            nextCapture++
+            result.captureIndex = index
             result.captureName = name
             result.startsWithP = withP
         }
@@ -454,11 +489,24 @@ class AstReader {
         }
         out.toString()
     }
+    func rememberFlags(ast: Ast, spelling: String): Unit {
+        ast.flagSpelling = spelling
+        ast.spellingMask = ast.flagMask
+        ast.spellingValue = ast.flagValue
+    }
     func readFlags(): Array<Int64> {
         var enabled = true
         var mask: Int64 = 0
         var value: Int64 = 0
-        while (pos < chars.size && !at(r':') && !at(r')')) {
+        while ((if (pos < chars.size) {
+                (if (!at(r':')) {
+                    !at(r')')
+                } else {
+                    false
+                })
+            } else {
+                false
+            })) {
             if (eat(r'-')) {
                 enabled = false
                 continue
@@ -505,6 +553,7 @@ class AstReader {
         }
     }
     func bracket(start: AstMark): Ast {
+        skipLayout()
         let negated = eat(r'^')
         let item = classExpression()
         if (!eat(r']')) {
@@ -516,12 +565,12 @@ class AstReader {
         result
     }
     func classExpression(): AstClassItem {
-        var left = classUnion()
+        var left = classUnion(true)
         while (classOperator()) {
             let op = chars[pos]
             bump()
             bump()
-            let right = classUnion()
+            let right = classUnion(false)
             let kind = if (op == r'&') {
                 "Intersection"
             } else if (op == r'-') {
@@ -534,11 +583,27 @@ class AstReader {
         }
         left
     }
-    func classUnion(): AstClassItem {
+    func classUnion(leadingClose: Bool): AstClassItem {
         let items = ArrayList<AstClassItem>()
+        skipLayout()
+        if ((if (leadingClose) {
+            at(r']')
+        } else {
+            false
+        })) {
+            items.add(classPiece())
+        }
         while (pos < chars.size) {
             skipLayout()
-            if (pos >= chars.size || at(r']') || classOperator()) {
+            if ((if (pos >= chars.size) {
+                true
+            } else {
+                (if (at(r']')) {
+                    true
+                } else {
+                    classOperator()
+                })
+            })) {
                 break
             }
             items.add(classPiece())
@@ -561,6 +626,7 @@ class AstReader {
                 case Some(item) => return item
                 case None => ()
             }
+            skipLayout()
             let negated = eat(r'^')
             let inner = classExpression()
             if (!eat(r']')) {
@@ -568,27 +634,47 @@ class AstReader {
             }
             return classNode("Nest", span(start), 0, 0, negated, [inner], "")
         }
-        if (at(r'\\')) {
-            bump()
-            return classEscapeItem(start)
-        }
-        let begin = chars[pos]
-        bump()
-        let beginSpan = span(start)
+        let first = classEndpoint()
         skipLayout()
-        if (at(r'-') && pos + 1 < chars.size && chars[pos + 1] != r']' && chars[pos + 1] != r'-') {
+        if ((if (first.label == "Lit") {
+            (if (at(r'-')) {
+                (if (pos + 1 < chars.size) {
+                    (if (chars[pos + 1] != r']') {
+                        chars[pos + 1] != r'-'
+                    } else {
+                        false
+                    })
+                } else {
+                    false
+                })
+            } else {
+                false
+            })
+        } else {
+            false
+        })) {
             bump()
             skipLayout()
-            if (pos >= chars.size) {
-                throw Exception("unclosed character class")
+            let last = classEndpoint()
+            if (last.label != "Lit") {
+                throw Exception("invalid range boundary, must be a literal")
             }
-            let endStart = mark()
-            let end = chars[pos]
-            bump()
-            return classRange(span(start), beginSpan, "Verbatim", Int64(UInt32(begin)), span(endStart), "Verbatim",
-                Int64(UInt32(end)))
+            return classRange(spanCover(first.span, last.span), first.span, first.origin, first.start, last.span,
+                last.origin, last.start)
         }
-        classLit(beginSpan, "Verbatim", Int64(UInt32(begin)))
+        first
+    }
+    func classEndpoint(): AstClassItem {
+        let start = mark()
+        if (pos >= chars.size) {
+            throw Exception("unclosed character class")
+        }
+        if (eat(r'\\')) {
+            return classEscapeItem(start)
+        }
+        let ch = chars[pos]
+        bump()
+        classLit(span(start), "Verbatim", Int64(UInt32(ch)))
     }
     func classEscapeItem(start: AstMark): AstClassItem {
         if (pos >= chars.size) {
@@ -622,7 +708,11 @@ class AstReader {
     func classUnicodeItem(start: AstMark, negated: Bool): AstClassItem {
         if (eat(r'{')) {
             let text = StringBuilder()
-            while (pos < chars.size && !at(r'}')) {
+            while ((if (pos < chars.size) {
+                    !at(r'}')
+                } else {
+                    false
+                })) {
                 text.append(chars[pos])
                 bump()
             }
@@ -685,7 +775,15 @@ class AstReader {
         if (pos + 1 >= chars.size || chars[pos] != chars[pos + 1]) {
             return false
         }
-        at(r'&') || at(r'-') || at(r'~')
+        (if (at(r'&')) {
+            true
+        } else {
+            (if (at(r'-')) {
+                true
+            } else {
+                at(r'~')
+            })
+        })
     }
     func escaped(start: AstMark): Ast {
         if (pos >= chars.size) {
@@ -741,7 +839,11 @@ class AstReader {
     func unicodePropertyNode(start: AstMark, negated: Bool): Ast {
         if (eat(r'{')) {
             let text = StringBuilder()
-            while (pos < chars.size && !at(r'}')) {
+            while ((if (pos < chars.size) {
+                    !at(r'}')
+                } else {
+                    false
+                })) {
                 text.append(chars[pos])
                 bump()
             }
@@ -805,7 +907,11 @@ class AstReader {
         }
         bump()
         let name = StringBuilder()
-        while (pos < chars.size && !at(r'}')) {
+        while ((if (pos < chars.size) {
+                !at(r'}')
+            } else {
+                false
+            })) {
             name.append(chars[pos]);
             bump()
         }
@@ -1001,13 +1107,24 @@ func astPrintClass(ast: Ast, out: StringBuilder): Unit {
     out.append("]")
 }
 
+func astPrintClassLiteral(out: StringBuilder, code: Int64, origin: String): Unit {
+    if (origin == "Verbatim") {
+        out.append(String([Rune(UInt32(code))]));
+        return
+    }
+    let ast = Ast("literal", blankAstSpan(), [])
+    ast.code = code
+    ast.quantifier = origin
+    astPrintLiteral(out, ast)
+}
+
 func astPrintItem(item: AstClassItem, out: StringBuilder): Unit {
     match (item.label) {
-        case "Lit" => astPrintChar(out, Rune(UInt32(item.start)))
+        case "Lit" => astPrintClassLiteral(out, item.start, item.origin)
         case "Range" =>
-            astPrintChar(out, Rune(UInt32(item.start)))
+            astPrintClassLiteral(out, item.start, item.origin)
             out.append("-")
-            astPrintChar(out, Rune(UInt32(item.end)))
+            astPrintClassLiteral(out, item.end, item.endOrigin)
         case "Union" => for (child in item.children) {
             astPrintItem(child, out)
         }
@@ -1076,13 +1193,6 @@ func astPrintItem(item: AstClassItem, out: StringBuilder): Unit {
             astPrintItem(item.children[1], out)
         case _ => ()
     }
-}
-
-func astPrintChar(out: StringBuilder, ch: Rune): Unit {
-    if (hirMeta(ch)) {
-        out.append("\\")
-    }
-    out.append(String([ch]))
 }
 
 func astAssert(kind: String): String {
@@ -1324,6 +1434,14 @@ func astFinishAscii(set: CharSet): CharSet {
 func astItemSet(item: AstClassItem, flags: AstFlagState): CharSet {
     match (item.label) {
         case "Lit" | "Range" =>
+            if (!flags.unicode) {
+                if (item.start > 127 && item.origin != "HexFixed(X)") {
+                    throw translateError(flags.pattern, item.startSpan, "Unicode not allowed here")
+                }
+                if (item.label == "Range" && item.end > 127 && item.endOrigin != "HexFixed(X)") {
+                    throw translateError(flags.pattern, item.endSpan, "Unicode not allowed here")
+                }
+            }
             let set = CharSet()
             set.addRange(item.start, item.end)
             set
@@ -1542,7 +1660,8 @@ func astFlagBit(ch: Rune): Int64 {
 
 func astMeta(ch: Rune): Bool {
     match (ch) {
-        case r'\\' | r'.' | r'+' | r'*' | r'?' | r'(' | r')' | r'|' | r'[' | r']' | r'{' | r'}' | r'^' | r'$' => true
+        case r'\\' | r'.' | r'+' | r'*' | r'?' | r'(' | r')' | r'|' | r'[' | r']' | r'{' | r'}' | r'^' | r'$' | r'#'
+            | r'&' | r'-' | r'~' => true
         case _ => false
     }
 }
@@ -1624,6 +1743,9 @@ func astRunes(chars: ArrayList<Rune>, start: Int64, end: Int64): String {
 }
 
 func astFlagText(ast: Ast): String {
+    if (!ast.flagSpelling.isEmpty() && ast.flagMask == ast.spellingMask && ast.flagValue == ast.spellingValue) {
+        return ast.flagSpelling
+    }
     let names = ["i", "m", "s", "U", "x", "R", "u"]
     let bits = [AST_FLAG_I, AST_FLAG_M, AST_FLAG_S, AST_FLAG_SWAP, AST_FLAG_X, AST_FLAG_R, AST_FLAG_UNICODE]
     var enabled = ""
@@ -1679,7 +1801,7 @@ func astPrintLiteral(out: StringBuilder, ast: Ast): Unit {
             out.append("\\U{")
             out.append(astHex(ast.code, 1))
             out.append("}")
-        case _ => astPrintChar(out, Rune(UInt32(ast.code)))
+        case _ => out.append(String([Rune(UInt32(ast.code))]))
     }
 }
 
@@ -1722,18 +1844,23 @@ func astPrintPerl(out: StringBuilder, ast: Ast): Unit {
 }
 
 public class SyntaxParser {
-    public var caseInsensitive = false
-    public var multiLine = false
-    public var dotAll = false
-    public var swapGreed = false
-    public var ignoreWhitespace = false
-    public var crlf = false
-    public var unicode = true
-    public var utf8 = true
-    public var octal = false
+    public var caseInsensitive: Bool = false
+    public var multiLine: Bool = false
+    public var dotAll: Bool = false
+    public var swapGreed: Bool = false
+    public var ignoreWhitespace: Bool = false
+    public var crlf: Bool = false
+    public var unicode: Bool = true
+    public var utf8: Bool = true
+    public var octal: Bool = false
     public var nestLimit: Int64 = 250
     public init() {}
     public func parseAst(pattern: String): Ast {
+        let options = syntaxOptions(this)
+        options.utf8 = false
+        let validator = Parser(pattern, options)
+        validator.syntaxOnly = true
+        validator.parse()
         let reader = AstReader(pattern)
         reader.scope.caseInsensitive = caseInsensitive
         reader.scope.multiline = multiLine

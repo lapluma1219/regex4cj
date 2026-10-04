@@ -273,6 +273,9 @@ class DfaEngine {
         states.size
     }
     func search(text: String, sparse: Bool): Option<RegexMatch> {
+        if (startState < 0) {
+            return None
+        }
         let bytes = text.toArray()
         var state = startState
         var at: Int64 = 0
@@ -317,8 +320,7 @@ class DfaEngine {
         if (last == 0) {
             return Some(RegexMatch(0, 0, ""))
         }
-        let prefix = text[0..last]
-        match (reverse.search(prefix)) {
+        match (reverse.searchEndingAt(text, last)) {
             case Some(start) => Some(RegexMatch(start, last, text[start..last]))
             case None => throw Exception("reverse search missed a forward DFA match")
         }
@@ -364,29 +366,9 @@ class DfaEngine {
     func activate(state: PowState, byte: Int64, eoi: Bool): Eps {
         let seeds = ArrayList<Int64>()
         for (id in state.ids) {
-            let current = nfa[id]
-            var queued = false
-            match (current.op) {
-                case Op.Look(mode) =>
-                    if (needsNext(mode)) {
-                        if (lookPasses(mode, state.prevWord, byte, eoi)) {
-                            seeds.add(current.first)
-                            queued = true
-                        }
-                    }
-                case _ => ()
-            }
-            if (!queued) {
-                match (current.op) {
-                    case Op.Look(mode) =>
-                        if (!needsNext(mode)) {
-                            seeds.add(id)
-                        }
-                    case _ => seeds.add(id)
-                }
-            }
+            seeds.add(id)
         }
-        closeSeeds(seeds, state.absStart, state.lineStart, state.prevWord)
+        closeContext(seeds, state.absStart, state.lineStart, state.prevWord, true, byte, eoi)
     }
     func close(entry: Int64, absStart: Bool, lineStart: Bool, prevWord: Bool): Eps {
         let seeds = ArrayList<Int64>()
@@ -394,6 +376,10 @@ class DfaEngine {
         closeSeeds(seeds, absStart, lineStart, prevWord)
     }
     func closeSeeds(seeds: ArrayList<Int64>, absStart: Bool, lineStart: Bool, prevWord: Bool): Eps {
+        closeContext(seeds, absStart, lineStart, prevWord, false, 0, false)
+    }
+    func closeContext(seeds: ArrayList<Int64>, absStart: Bool, lineStart: Bool, prevWord: Bool, resolve: Bool,
+        byte: Int64, eoi: Bool): Eps {
         let stack = ArrayList<Int64>()
         var index = seeds.size
         while (index > 0) {
@@ -417,7 +403,11 @@ class DfaEngine {
                     stack.add(state.first)
                 case Op.Look(mode) =>
                     if (needsNext(mode)) {
-                        out.add(id)
+                        if (!resolve) {
+                            out.add(id)
+                        } else if (lookPasses(mode, prevWord, byte, eoi)) {
+                            stack.add(state.first)
+                        }
                     } else if (lookNow(mode, absStart, lineStart, prevWord)) {
                         stack.add(state.first)
                     }

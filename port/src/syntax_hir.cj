@@ -1088,12 +1088,31 @@ func hirSame(left: Hir, right: Hir): Bool {
             case _ => false
         }
         case HirKind.Repetition(a) => match (right.kind()) {
-            case HirKind.Repetition(b) => a.min == b.min && hirSameBound(a.max, b.max) && a.greedy == b.greedy &&
-                hirSame(a.sub, b.sub)
+            case HirKind.Repetition(b) => (if (a.min == b.min) {
+                (if (hirSameBound(a.max, b.max)) {
+                    (if (a.greedy == b.greedy) {
+                        hirSame(a.sub, b.sub)
+                    } else {
+                        false
+                    })
+                } else {
+                    false
+                })
+            } else {
+                false
+            })
             case _ => false
         }
         case HirKind.Capture(a) => match (right.kind()) {
-            case HirKind.Capture(b) => a.index == b.index && hirSameName(a.name, b.name) && hirSame(a.sub, b.sub)
+            case HirKind.Capture(b) => (if (a.index == b.index) {
+                (if (hirSameName(a.name, b.name)) {
+                    hirSame(a.sub, b.sub)
+                } else {
+                    false
+                })
+            } else {
+                false
+            })
             case _ => false
         }
         case HirKind.Concat(a) => match (right.kind()) {
@@ -1277,7 +1296,15 @@ func hirLiftPrefix(nodes: Array<Hir>): Option<Hir> {
         match (nodes[i].kind()) {
             case HirKind.Concat(children) =>
                 var count: Int64 = 0
-                while (count < prefix.size && count < children.size && hirSame(prefix[count], children[count])) {
+                while ((if (count < prefix.size) {
+                        (if (count < children.size) {
+                            hirSame(prefix[count], children[count])
+                        } else {
+                            false
+                        })
+                    } else {
+                        false
+                    })) {
                     count++
                 }
                 if (count == 0) {

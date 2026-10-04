@@ -66,7 +66,9 @@ public class SetMatchesIter {
         while (front < back) {
             let index = front
             front++
-            if (hits[index]) { return Some(index) }
+            if (hits[index]) {
+                return Some(index)
+            }
         }
         return None
     }
@@ -74,7 +76,9 @@ public class SetMatchesIter {
     public func nextBack(): Option<Int64> {
         while (front < back) {
             back--
-            if (hits[back]) { return Some(back) }
+            if (hits[back]) {
+                return Some(back)
+            }
         }
         return None
     }
@@ -242,7 +246,11 @@ public class RegexSet {
                             }
                         }
                     case Op.Literal(c) => consume = pos < input.chars.size && input.chars[pos] == c
-                    case Op.CharacterClass(set) => consume = pos < input.chars.size && set.contains(input.chars[pos])
+                    case Op.CharacterClass(set) => consume = (if (pos < input.chars.size) {
+                        set.contains(input.chars[pos])
+                    } else {
+                        false
+                    })
                     case Op.Any(mode) => consume = pos < input.chars.size && passesDot(mode, input.chars[pos])
                     case _ => ()
                 }

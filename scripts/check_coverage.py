@@ -27,11 +27,11 @@ def main():
                 if not (ROOT / path).is_file():
                     raise SystemExit(f'missing evidence {path}')
             accepted += item['weight']
-    locked = data['locked_before_implementation']
+    locked = data['selected_subsets']
     for key in ('A5', 'C4', 'E'):
         if key not in locked or not locked[key].strip():
-            raise SystemExit(f'{key} selection is not locked')
-    print(f'coverage ledger: weight 100, accepted {accepted}, locked A5/C4/E')
+            raise SystemExit(f'{key} selection is missing')
+    print('Coverage scope validated: weights total 100; no measured completion percentage.')
 
 
 if __name__ == '__main__':

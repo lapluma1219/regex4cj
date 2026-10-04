@@ -767,7 +767,11 @@ public class Regex {
                             found = true
                             break
                         case Op.Literal(c) => consume = pos < until && input.chars[pos] == c
-                        case Op.CharacterClass(set) => consume = pos < until && set.contains(input.chars[pos])
+                        case Op.CharacterClass(set) => consume = (if (pos < until) {
+                            set.contains(input.chars[pos])
+                        } else {
+                            false
+                        })
                         case Op.Any(mode) => consume = pos < until && passesDot(mode, input.chars[pos])
                         case _ => ()
                     }

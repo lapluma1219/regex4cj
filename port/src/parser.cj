@@ -73,6 +73,9 @@ class Parser {
     var lineTerminator: Rune = r'\n'
     var nestLimit: Int64 = 250
     var utf8 = true
+    // Syntax-only validation is used before building the concrete AST.
+    // It preserves grammar checks while deferring Unicode/UTF-8 semantics.
+    var syntaxOnly = false
     var literalByte = false
     var lastClassNest: Int64 = 0
     var openClassLevel: Int64 = 0
@@ -239,7 +242,15 @@ class Parser {
         let parts = ArrayList<Expr>()
         while (true) {
             skipSpace()
-            if (pos >= chars.size || at(r'|') || at(r')')) {
+            if ((if (pos >= chars.size) {
+                true
+            } else {
+                (if (at(r'|')) {
+                    true
+                } else {
+                    at(r')')
+                })
+            })) {
                 break
             }
             parts.add(repetition())
@@ -250,7 +261,8 @@ class Parser {
         var expr = atom()
         while (true) {
             skipSpace()
-            if (!(at(r'*') || at(r'+') || at(r'?') || at(r'{'))) {
+            if (!((pos < chars.size && (chars[pos] == r'*' || chars[pos] == r'+' || chars[pos] == r'?' || chars[pos] ==
+                r'{')))) {
                 break
             }
             if (expr.flagOnly) {
@@ -300,7 +312,11 @@ class Parser {
     // Count braces trim Unicode whitespace even when x is off. Comments and
     // whitespace between digits are skipped only while x is on.
     func skipCountSpace(): Unit {
-        while (pos < chars.size && whitespace.contains(chars[pos])) {
+        while ((if (pos < chars.size) {
+                whitespace.contains(chars[pos])
+            } else {
+                false
+            })) {
             pos++
         }
     }
@@ -358,7 +374,11 @@ class Parser {
                     if (at(r':')) {
                         capturing = false
                         pos++
-                    } else if (at(r'<') || at(r'P')) {
+                    } else if ((if (at(r'<')) {
+                        true
+                    } else {
+                        at(r'P')
+                    })) {
                         if (at(r'P')) {
                             pos++
                         }
@@ -508,7 +528,11 @@ class Parser {
         var negationAt: Int64 = -1
         let seen = ArrayList<Rune>()
         let seenAt = ArrayList<Int64>()
-        while (!at(r':') && !at(r')')) {
+        while ((if (!at(r':')) {
+                !at(r')')
+            } else {
+                false
+            })) {
             if (pos == chars.size) {
                 failAt(pos, pos, "expected flag but got end of regex")
             }
@@ -563,14 +587,42 @@ class Parser {
     func captureChar(c: Rune, first: Bool): Bool {
         ensureNameClasses()
         if (first) {
-            return c == r'_' || alphabetic.contains(c)
+            return (if (c == r'_') {
+                true
+            } else {
+                alphabetic.contains(c)
+            })
         }
-        return c == r'_' || c == r'.' || c == r'[' || c == r']' || alphabetic.contains(c) || nameNumbers.contains(c)
+        return (if (c == r'_') {
+            true
+        } else {
+            (if (c == r'.') {
+                true
+            } else {
+                (if (c == r'[') {
+                    true
+                } else {
+                    (if (c == r']') {
+                        true
+                    } else {
+                        (if (alphabetic.contains(c)) {
+                            true
+                        } else {
+                            nameNumbers.contains(c)
+                        })
+                    })
+                })
+            })
+        })
     }
     func captureName(): String {
         let name = StringBuilder()
         var first = true
-        while (pos < chars.size && !at(r'>')) {
+        while ((if (pos < chars.size) {
+                !at(r'>')
+            } else {
+                false
+            })) {
             let c = chars[pos]
             if (!captureChar(c, first)) {
                 failAt(pos, pos + 1, "invalid capture group character")
@@ -592,7 +644,15 @@ class Parser {
         if (pos + 1 >= chars.size || chars[pos] != chars[pos + 1]) {
             return false
         }
-        return at(r'&') || at(r'-') || at(r'~')
+        return (if (at(r'&')) {
+            true
+        } else {
+            (if (at(r'-')) {
+                true
+            } else {
+                at(r'~')
+            })
+        })
     }
     // Opening '[' has already been consumed. Class operators are left associative;
     // union (juxtaposition) binds more tightly, as in regex-syntax's class stack.
@@ -642,7 +702,11 @@ class Parser {
             pos++
             skipSpace()
         }
-        if (!hasLeadingHyphen && at(r']')) {
+        if ((if (!hasLeadingHyphen) {
+            at(r']')
+        } else {
+            false
+        })) {
             first.addRange(93, 93)
             noteClassItem()
             pos++
@@ -711,7 +775,7 @@ class Parser {
         return set
     }
     func rejectClassScalar(c: Rune): Unit {
-        if (!unicode && UInt32(c) > 127) {
+        if (!syntaxOnly && !unicode && UInt32(c) > 127) {
             failAt(pos - 1, pos, "Unicode not allowed here")
         }
     }
@@ -739,7 +803,15 @@ class Parser {
         let result = CharSet()
         while (true) {
             skipSpace()
-            if (pos >= chars.size || at(r']') || classOperator()) {
+            if ((if (pos >= chars.size) {
+                true
+            } else {
+                (if (at(r']')) {
+                    true
+                } else {
+                    classOperator()
+                })
+            })) {
                 break
             }
             if (at(r'[')) {
@@ -759,7 +831,15 @@ class Parser {
                 }
                 continue
             }
-            if (at(r'\\') && pos + 1 < chars.size && classEscape(chars[pos + 1])) {
+            if ((if (at(r'\\')) {
+                (if (pos + 1 < chars.size) {
+                    classEscape(chars[pos + 1])
+                } else {
+                    false
+                })
+            } else {
+                false
+            })) {
                 pos++
                 noteClassItem()
                 result.unionWith(escaped().charset)
@@ -930,7 +1010,11 @@ class Parser {
         let name = StringBuilder()
         if (at(r'{')) {
             pos++
-            while (pos < chars.size && !at(r'}')) {
+            while ((if (pos < chars.size) {
+                    !at(r'}')
+                } else {
+                    false
+                })) {
                 name.append(chars[pos]);
                 pos++
             }
@@ -944,6 +1028,9 @@ class Parser {
             }
             name.append(chars[pos]);
             pos++
+        }
+        if (syntaxOnly) {
+            return leaf(ExprKind.CharacterClass, r' ')
         }
         if (!unicode) {
             failAt(escapeStart, pos, "Unicode not allowed here")
@@ -972,7 +1059,11 @@ class Parser {
             case r'd' | r'D' | r's' | r'S' | r'w' | r'W' => return perlClass(c)
             case r'0' | r'1' | r'2' | r'3' | r'4' | r'5' | r'6' | r'7' | r'8' | r'9' => return numberEscape(c)
             case r'x' | r'u' | r'U' =>
-                let fixedByte = c == r'x' && !at(r'{')
+                let fixedByte = (if (c == r'x') {
+                    !at(r'{')
+                } else {
+                    false
+                })
                 let scalar = hexScalar(c)
                 let expr = leaf(ExprKind.Literal, scalar)
                 if (fixedByte && !unicode && UInt32(scalar) > 127) {
@@ -1063,7 +1154,11 @@ class Parser {
             r'B'
         }), 6)
         expr.modePositive = positive
-        if (!positive || !at(r'{')) {
+        if ((if (!positive) {
+            true
+        } else {
+            !at(r'{')
+        })) {
             return expr
         }
         let brace = pos

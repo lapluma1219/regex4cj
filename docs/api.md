@@ -1,8 +1,8 @@
 # 当前接口
 
-完整的公开入口数量、参数签名和逐项中文行为说明见[接口数量与行为清单](api-catalog.md)。该清单区分仓颉实际公开入口与上游方法审计条目，不将两者混作完成率。
+完整的公开入口数量、参数签名和逐项中文行为说明见[接口数量与行为清单](api-catalog.md)。该清单区分仓颉实际公开入口与原仓库方法审计条目，不将两者混作完成率。
 
-使用 `import cjregex.*`。可运行的调用在 `examples/consumer/src/main.cj`。这里写的是 v0.3.0 的仓颉接口。固定上游是 `regex` 提交 `72d650cb`，记在 [baseline.json](baseline.json)。它不是 regex-syntax、regex-automata 或 regex-lite 的公开类型。
+使用 `import cjregex.*`。可运行的调用在 `examples/consumer/src/main.cj`。这里写的是 v0.3.0 的仓颉接口。固定原仓库是 `regex` 提交 `72d650cb`，记在 [baseline.json](baseline.json)。它不是 regex-syntax、regex-automata 或 regex-lite 的公开类型。
 
 查找返回的区间是原输入的 UTF-8 字节偏移，半开区间 `[start, end)`。未找到匹配时返回 `None`、空数组或 `false`，不抛异常。
 
@@ -22,7 +22,7 @@ for (m in re.findAll("AB-123 CD-456")) {
 | `find(text)` | 第一条匹配，`Option<RegexMatch>` |
 | `findAll(text)` | 按顺序收集不重叠匹配 |
 | `findAt` / `isMatchAt` / `capturesAt` | 从原文字节偏移继续搜索。起点落在字符内部时，匹配从后续字符边界开始，断言仍保留原文上下文 |
-| `shortestMatch` / `shortestMatchAt` | 引擎确认匹配时的早停终点。本实现中 `a+` 在 `aaaaa` 上返回 `1`；上游不保证数学最短，也不保证不同引擎返回相同终点 |
+| `shortestMatch` / `shortestMatchAt` | 引擎确认匹配时的早停终点。本实现中 `a+` 在 `aaaaa` 上返回 `1`；原仓库不保证数学最短，也不保证不同引擎返回相同终点 |
 | `findIter().next()` | 与 `findAll` 同一套空匹配推进，按需取下一条 |
 | `asStr()` | 编译时的原始模式 |
 
@@ -53,7 +53,7 @@ for (m in re.findAll("AB-123 CD-456")) {
 
 命名组写成 `(?<number>[0-9]+)` 或 `(?<名>a)`。未参与的组和捕获到空文本不是一回事。
 
-`captureLocations()` 只保存整型位置，不保存文本。应使用同一个 Regex 创建的位置对象。`capturesRead` / `capturesReadAt` 成功时覆盖全部槽；失败后 `get` 返回 `None`，不保留旧命中的可读位置。已经返回的 `Captures` 不会被下一次搜索改写。这里复用的是位置容器，尚不保证像上游一样复用内部搜索内存。
+`captureLocations()` 只保存整型位置，不保存文本。应使用同一个 Regex 创建的位置对象。`capturesRead` / `capturesReadAt` 成功时覆盖全部槽；失败后 `get` 返回 `None`，不保留旧命中的可读位置。已经返回的 `Captures` 不会被下一次搜索改写。这里复用的是位置容器，尚不保证像原仓库一样复用内部搜索内存。
 
 ## 替换与分割
 
@@ -96,11 +96,11 @@ for (m in re.findAll("AB-123 CD-456")) {
 | `sizeLimit` | 按 Thompson 构造字节数检查，正向与反向取较大值。默认约 10 MiB。`\w` 在 `45000` 失败，在 `50044` 成功。单条有限字面量可以在限额为 0 时编译 |
 | `dfaSizeLimit` | 字符串搜索的缓存预算。小于 128 时仍用原来的 NFA。匹配文本不变。没有 lazy DFA，字节搜索不读取它 |
 
-`RegexSetBuilder` 使用同一组选项。RegexSet 不会把有限字面量绕过 `sizeLimit`。Set 搜索不提供上游 DFA 缓存；`dfaSizeLimit` 在 Set 和 bytes 上没有对应的缓存效果，不能据此声称资源行为与 Rust 相同。
+`RegexSetBuilder` 使用同一组选项。RegexSet 不会把有限字面量绕过 `sizeLimit`。Set 搜索不提供原仓库 DFA 缓存；`dfaSizeLimit` 在 Set 和 bytes 上没有对应的缓存效果，不能据此声称资源行为与 Rust 相同。
 
 ## 错误
 
-语法错误和编译超限抛出 `RegexError`，它是 `Exception` 的子类，所以 `catch (Exception)` 仍能接住。`toString()` 按固定上游 Display 实现并通过现有错误样例对照：语法错误带模式和脱字符，超限是 `Compiled regex exceeds size limit of N bytes.`。负数限额、越界起点抛普通 `Exception`；Rust 的无符号参数不能表达负数，越界起点按上游契约可 panic。合法范围内的字符内部起点不应报错。
+语法错误和编译超限抛出 `RegexError`，它是 `Exception` 的子类，所以 `catch (Exception)` 仍能接住。`toString()` 按固定原仓库 Display 实现并通过现有错误样例对照：语法错误带模式和脱字符，超限是 `Compiled regex exceeds size limit of N bytes.`。负数限额、越界起点抛普通 `Exception`；Rust 的无符号参数不能表达负数，越界起点按原仓库契约可 panic。合法范围内的字符内部起点不应报错。
 
 `escape(text)` 把普通文本转成正则字面量。它不是 JSON 或 shell 转义。
 
@@ -158,7 +158,7 @@ bash scripts/run.sh set-matches '订单 AB-123 退款' '退款' '发票' '[A-Z]{
 
 ## 这套接口不提供的东西
 
-- 前后查找和反向引用。上游的字符串接口也会拒绝它们。
+- 前后查找和反向引用。原仓库的字符串接口也会拒绝它们。
 - Break 属性只判断字符属于哪个集合，不把文本切成词或句。
 - 没有 `regex!` 宏，也没有 Rust 的 `Iterator`、`Replacer`、`FromStr`、`Debug` 这些 trait。对应行为是上面的方法、数组和回调。
 - 顶层 `Regex` 不是完整的 regex-syntax、regex-automata、regex-lite 或 regex-capi。`PikeVM`、`ReverseNfa`、`BoundedBacktracker`、`DenseDfa` 和 `SparseDfa` 是单独的搜索类型，见 [现状](status.md)。
@@ -175,4 +175,4 @@ bash scripts/run.sh set-matches '订单 AB-123 退款' '退款' '发票' '[A-Z]{
 
 ## 公开语法结构（HIR切片）
 
-新增Hir及相关不可变模型，支持读取和构造空、字面量、字符类、重复、捕获、连接六类结构，并查询最短/最长匹配字节数。详见[HIR使用与范围](hir.md)。这是regex-syntax的部分公开能力，不等于完整解析结构库；未支持的节点会明确报错。
+新增Hir及相关不可变模型，支持读取和构造空、字面量、字符类、断言、重复、捕获、连接、分支八类结构，并查询最短/最长匹配字节数。详见[HIR使用与范围](hir.md)。这是regex-syntax的部分公开能力，不等于完整解析结构库；未支持的节点会明确报错。

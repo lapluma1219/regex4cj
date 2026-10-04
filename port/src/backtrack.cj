@@ -212,7 +212,11 @@ public class BoundedBacktracker {
                             walking = false
                         }
                     case Op.CharacterClass(set) =>
-                        if (at < input.chars.size && set.contains(input.chars[at])) {
+                        if ((if (at < input.chars.size) {
+                            set.contains(input.chars[at])
+                        } else {
+                            false
+                        })) {
                             sid = state.first
                             at++
                         } else {

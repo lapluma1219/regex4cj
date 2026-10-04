@@ -6,7 +6,7 @@ Acceptance stage: api-inventory
 API inventory checked: 170 inherent methods; traits/macros reviewed separately
 
 Acceptance stage: cangjie-api-inventory
-Cangjie declarations: 280 callables, 84 fields
+Cangjie declarations: 303 callables, 96 fields
 
 Acceptance stage: data-unicode
 Unicode 16.0.0 tables verified: d=71 ranges, s=10 ranges, w=796 ranges
@@ -41,8 +41,8 @@ Acceptance stage: rust-build
    Compiling memchr v2.8.3
    Compiling hashbrown v0.17.1
    Compiling equivalent v1.0.2
-   Compiling winnow v0.7.15
    Compiling anyhow v1.0.104
+   Compiling winnow v0.7.15
    Compiling regex-syntax v0.8.11 (https://github.com/rust-lang/regex.git?rev=72d650cb0a880a01ab6dc2137c0888e8f89740f7#72d650cb)
    Compiling aho-corasick v1.1.5
    Compiling indexmap v2.14.2
@@ -56,12 +56,12 @@ Acceptance stage: rust-build
    Compiling toml_edit v0.22.27
    Compiling toml v0.8.23
    Compiling regex-test v0.1.1 (https://github.com/rust-lang/regex.git?rev=72d650cb0a880a01ab6dc2137c0888e8f89740f7#72d650cb)
-   Compiling regex-oracle v0.1.0 (/private/var/folders/xc/7s79qz2966j773sgl_d77kxh0000gn/T/regex4cj-review-kr_2u13b/repo/oracle)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.97s
+   Compiling regex-oracle v0.1.0 (/Users/jalonyan/Desktop/regex4cj/.build/delivery-checkout/oracle)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.65s
 
 Acceptance stage: rust-test
-   Compiling regex-oracle v0.1.0 (/private/var/folders/xc/7s79qz2966j773sgl_d77kxh0000gn/T/regex4cj-review-kr_2u13b/repo/oracle)
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.44s
+   Compiling regex-oracle v0.1.0 (/Users/jalonyan/Desktop/regex4cj/.build/delivery-checkout/oracle)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.45s
      Running unittests src/main.rs (.build/work/rust-target/debug/deps/regex_oracle-7b2019ec63b4e57d)
 
 running 3 tests
@@ -88,118 +88,132 @@ Acceptance stage: consumer-test
 
 
 
-📦 group regex_consumer                0% [--------------------]      (00:00:00)
-🧪 test TestCase_simpleCaseFoldingKeepsOriginalText.simpleCas...      (00:00:00)
+📦 group regex_consumer                3% [--------------------]      (00:00:00)
+🧪 test TestCase_nulReplacementAndSplit.nulReplacementAndSplit        (00:00:00)
 
-passed: 0, failed: 0                  0% [--------------------]  0/46 (00:00:00) 
+passed: 2, failed: 0                  3% [--------------------]  2/52 (00:00:00) 
 
 
-📦 group regex_consumer              100% [||||||||||||||||||||] ✓    (00:00:00)
 
-passed: 46, failed: 0               100% [||||||||||||||||||||] 46/46 (00:00:01) --------------------------------------------------------------------------------------------------
-TP: regex_consumer, time elapsed: 359277000 ns, RESULT:
-    TCS: TestCase_simpleCaseFoldingKeepsOriginalText, time elapsed: 14101000 ns, RESULT:
-    [ PASSED ] CASE: simpleCaseFoldingKeepsOriginalText (13378000 ns)
-    TCS: TestCase_nulMatchingAndEscape, time elapsed: 2626000 ns, RESULT:
-    [ PASSED ] CASE: nulMatchingAndEscape (2386000 ns)
-    TCS: TestCase_nulReplacementAndSplit, time elapsed: 3053000 ns, RESULT:
-    [ PASSED ] CASE: nulReplacementAndSplit (2881000 ns)
-    TCS: TestCase_captureAbsenceAndBounds, time elapsed: 688000 ns, RESULT:
-    [ PASSED ] CASE: captureAbsenceAndBounds (554000 ns)
+📦 group regex_consumer               94% [||||||||||||||||||--]      (00:00:00)
+🧪 test TestCase_setAgreesWithIndependentRegexes.setAgreesWit...      (00:00:00)
+
+passed: 49, failed: 0                94% [||||||||||||||||||--] 49/52 (00:00:01) --------------------------------------------------------------------------------------------------
+TP: regex_consumer, time elapsed: 374430000 ns, RESULT:
+    TCS: TestCase_simpleCaseFoldingKeepsOriginalText, time elapsed: 14163000 ns, RESULT:
+    [ PASSED ] CASE: simpleCaseFoldingKeepsOriginalText (13423000 ns)
+    TCS: TestCase_nulMatchingAndEscape, time elapsed: 2686000 ns, RESULT:
+    [ PASSED ] CASE: nulMatchingAndEscape (2491000 ns)
+    TCS: TestCase_nulReplacementAndSplit, time elapsed: 3265000 ns, RESULT:
+    [ PASSED ] CASE: nulReplacementAndSplit (3105000 ns)
+    TCS: TestCase_captureAbsenceAndBounds, time elapsed: 672000 ns, RESULT:
+    [ PASSED ] CASE: captureAbsenceAndBounds (542000 ns)
     TCS: TestCase_captureResultsAndMetadataAreIndependent, time elapsed: 709000 ns, RESULT:
-    [ PASSED ] CASE: captureResultsAndMetadataAreIndependent (560000 ns)
-    TCS: TestCase_retainedCaptureAndTemplateExpansion, time elapsed: 173000 ns, RESULT:
-    [ PASSED ] CASE: retainedCaptureAndTemplateExpansion (36000 ns)
-    TCS: TestCase_callbackLimitAndNoMatch, time elapsed: 152000 ns, RESULT:
-    [ PASSED ] CASE: callbackLimitAndNoMatch (29000 ns)
-    TCS: TestCase_callbackExceptionAndReuse, time elapsed: 1383000 ns, RESULT:
-    [ PASSED ] CASE: callbackExceptionAndReuse (1259000 ns)
-    TCS: TestCase_callbackCanReuseSameRegex, time elapsed: 943000 ns, RESULT:
-    [ PASSED ] CASE: callbackCanReuseSameRegex (825000 ns)
-    TCS: TestCase_zeroWidthUnicodeAndLimits, time elapsed: 5326000 ns, RESULT:
-    [ PASSED ] CASE: zeroWidthUnicodeAndLimits (5100000 ns)
-    TCS: TestCase_invalidPatternAndNegativeLimit, time elapsed: 266000 ns, RESULT:
-    [ PASSED ] CASE: invalidPatternAndNegativeLimit (130000 ns)
-    TCS: TestCase_multilineAndDotAllFlags, time elapsed: 4951000 ns, RESULT:
-    [ PASSED ] CASE: multilineAndDotAllFlags (4729000 ns)
-    TCS: TestCase_scopedGreedAndAbsoluteAnchors, time elapsed: 4012000 ns, RESULT:
-    [ PASSED ] CASE: scopedGreedAndAbsoluteAnchors (3858000 ns)
-    TCS: TestCase_escapedNulAndUnicodeScalars, time elapsed: 2842000 ns, RESULT:
-    [ PASSED ] CASE: escapedNulAndUnicodeScalars (2677000 ns)
-    TCS: TestCase_posixClassesWithNul, time elapsed: 3151000 ns, RESULT:
-    [ PASSED ] CASE: posixClassesWithNul (2988000 ns)
-    TCS: TestCase_posixClassesAreAsciiAndNamesCanFallBack, time elapsed: 2920000 ns, RESULT:
-    [ PASSED ] CASE: posixClassesAreAsciiAndNamesCanFallBack (2788000 ns)
-    TCS: TestCase_unicodeShorthandsAndNul, time elapsed: 58566000 ns, RESULT:
-    [ PASSED ] CASE: unicodeShorthandsAndNul (58275000 ns)
-    TCS: TestCase_unicodeWordBoundaries, time elapsed: 16489000 ns, RESULT:
-    [ PASSED ] CASE: unicodeWordBoundaries (16193000 ns)
-    TCS: TestCase_unicodeGeneralCategories, time elapsed: 50236000 ns, RESULT:
-    [ PASSED ] CASE: unicodeGeneralCategories (50042000 ns)
-    TCS: TestCase_unicodeScripts, time elapsed: 7567000 ns, RESULT:
-    [ PASSED ] CASE: unicodeScripts (7403000 ns)
-    TCS: TestCase_unicodeBinaryProperties, time elapsed: 29473000 ns, RESULT:
-    [ PASSED ] CASE: unicodeBinaryProperties (29296000 ns)
-    TCS: TestCase_searchFromOffsetAndConfiguredSyntax, time elapsed: 16973000 ns, RESULT:
-    [ PASSED ] CASE: searchFromOffsetAndConfiguredSyntax (16781000 ns)
-    TCS: TestCase_bytesRegexMatchesRawBytes, time elapsed: 965000 ns, RESULT:
-    [ PASSED ] CASE: bytesRegexMatchesRawBytes (732000 ns)
-    TCS: TestCase_byteIteratorsSnapshotAndKeepIndependentCursors, time elapsed: 181000 ns, RESULT:
+    [ PASSED ] CASE: captureResultsAndMetadataAreIndependent (598000 ns)
+    TCS: TestCase_retainedCaptureAndTemplateExpansion, time elapsed: 255000 ns, RESULT:
+    [ PASSED ] CASE: retainedCaptureAndTemplateExpansion (58000 ns)
+    TCS: TestCase_callbackLimitAndNoMatch, time elapsed: 164000 ns, RESULT:
+    [ PASSED ] CASE: callbackLimitAndNoMatch (35000 ns)
+    TCS: TestCase_callbackExceptionAndReuse, time elapsed: 1548000 ns, RESULT:
+    [ PASSED ] CASE: callbackExceptionAndReuse (1386000 ns)
+    TCS: TestCase_callbackCanReuseSameRegex, time elapsed: 1031000 ns, RESULT:
+    [ PASSED ] CASE: callbackCanReuseSameRegex (899000 ns)
+    TCS: TestCase_zeroWidthUnicodeAndLimits, time elapsed: 5624000 ns, RESULT:
+    [ PASSED ] CASE: zeroWidthUnicodeAndLimits (5416000 ns)
+    TCS: TestCase_invalidPatternAndNegativeLimit, time elapsed: 242000 ns, RESULT:
+    [ PASSED ] CASE: invalidPatternAndNegativeLimit (114000 ns)
+    TCS: TestCase_multilineAndDotAllFlags, time elapsed: 4938000 ns, RESULT:
+    [ PASSED ] CASE: multilineAndDotAllFlags (4763000 ns)
+    TCS: TestCase_scopedGreedAndAbsoluteAnchors, time elapsed: 4063000 ns, RESULT:
+    [ PASSED ] CASE: scopedGreedAndAbsoluteAnchors (3908000 ns)
+    TCS: TestCase_escapedNulAndUnicodeScalars, time elapsed: 2912000 ns, RESULT:
+    [ PASSED ] CASE: escapedNulAndUnicodeScalars (2763000 ns)
+    TCS: TestCase_posixClassesWithNul, time elapsed: 3191000 ns, RESULT:
+    [ PASSED ] CASE: posixClassesWithNul (3065000 ns)
+    TCS: TestCase_posixClassesAreAsciiAndNamesCanFallBack, time elapsed: 3040000 ns, RESULT:
+    [ PASSED ] CASE: posixClassesAreAsciiAndNamesCanFallBack (2922000 ns)
+    TCS: TestCase_unicodeShorthandsAndNul, time elapsed: 56056000 ns, RESULT:
+    [ PASSED ] CASE: unicodeShorthandsAndNul (55803000 ns)
+    TCS: TestCase_unicodeWordBoundaries, time elapsed: 12703000 ns, RESULT:
+    [ PASSED ] CASE: unicodeWordBoundaries (12494000 ns)
+    TCS: TestCase_unicodeGeneralCategories, time elapsed: 49090000 ns, RESULT:
+    [ PASSED ] CASE: unicodeGeneralCategories (48845000 ns)
+    TCS: TestCase_unicodeScripts, time elapsed: 8005000 ns, RESULT:
+    [ PASSED ] CASE: unicodeScripts (7861000 ns)
+    TCS: TestCase_unicodeBinaryProperties, time elapsed: 29693000 ns, RESULT:
+    [ PASSED ] CASE: unicodeBinaryProperties (29528000 ns)
+    TCS: TestCase_searchFromOffsetAndConfiguredSyntax, time elapsed: 17444000 ns, RESULT:
+    [ PASSED ] CASE: searchFromOffsetAndConfiguredSyntax (17316000 ns)
+    TCS: TestCase_bytesRegexMatchesRawBytes, time elapsed: 782000 ns, RESULT:
+    [ PASSED ] CASE: bytesRegexMatchesRawBytes (686000 ns)
+    TCS: TestCase_byteIteratorsSnapshotAndKeepIndependentCursors, time elapsed: 155000 ns, RESULT:
     [ PASSED ] CASE: byteIteratorsSnapshotAndKeepIndependentCursors (37000 ns)
-    TCS: TestCase_lazySplitLimitsAndByteCaptureMetadata, time elapsed: 198000 ns, RESULT:
-    [ PASSED ] CASE: lazySplitLimitsAndByteCaptureMetadata (57000 ns)
-    TCS: TestCase_appendExpansionPreservesBuffers, time elapsed: 621000 ns, RESULT:
-    [ PASSED ] CASE: appendExpansionPreservesBuffers (523000 ns)
-    TCS: TestCase_setBuilderArrayConstructionAndErrors, time elapsed: 217000 ns, RESULT:
-    [ PASSED ] CASE: setBuilderArrayConstructionAndErrors (85000 ns)
-    TCS: TestCase_astKeepsTheGroupThatHirCollapses, time elapsed: 1601000 ns, RESULT:
-    [ PASSED ] CASE: astKeepsTheGroupThatHirCollapses (1477000 ns)
-    TCS: TestCase_groupCursorCopiesHaveIndependentPositions, time elapsed: 186000 ns, RESULT:
-    [ PASSED ] CASE: groupCursorCopiesHaveIndependentPositions (64000 ns)
-    TCS: TestCase_setSizeHintTracksSlotsNotHits, time elapsed: 139000 ns, RESULT:
-    [ PASSED ] CASE: setSizeHintTracksSlotsNotHits (37000 ns)
-    TCS: TestCase_hirExposesSixDigitStructure, time elapsed: 158000 ns, RESULT:
-    [ PASSED ] CASE: hirExposesSixDigitStructure (53000 ns)
-    TCS: TestCase_hirSmartConstructorsPreserveSnapshots, time elapsed: 123000 ns, RESULT:
+    TCS: TestCase_lazySplitLimitsAndByteCaptureMetadata, time elapsed: 170000 ns, RESULT:
+    [ PASSED ] CASE: lazySplitLimitsAndByteCaptureMetadata (50000 ns)
+    TCS: TestCase_appendExpansionPreservesBuffers, time elapsed: 584000 ns, RESULT:
+    [ PASSED ] CASE: appendExpansionPreservesBuffers (481000 ns)
+    TCS: TestCase_setBuilderArrayConstructionAndErrors, time elapsed: 205000 ns, RESULT:
+    [ PASSED ] CASE: setBuilderArrayConstructionAndErrors (76000 ns)
+    TCS: TestCase_astKeepsTheGroupThatHirCollapses, time elapsed: 1496000 ns, RESULT:
+    [ PASSED ] CASE: astKeepsTheGroupThatHirCollapses (1385000 ns)
+    TCS: TestCase_boundedBacktrackerReportsCapturesAndBudgetErrors, time elapsed: 168000 ns, RESULT:
+    [ PASSED ] CASE: boundedBacktrackerReportsCapturesAndBudgetErrors (59000 ns)
+    TCS: TestCase_denseAndSparseDfaReportTheSameSpan, time elapsed: 6439000 ns, RESULT:
+    [ PASSED ] CASE: denseAndSparseDfaReportTheSameSpan (6335000 ns)
+    TCS: TestCase_syntaxValidationKeepsTranslationSeparate, time elapsed: 608000 ns, RESULT:
+    [ PASSED ] CASE: syntaxValidationKeepsTranslationSeparate (508000 ns)
+    TCS: TestCase_dfaReverseRecoveryRetainsPriorityAndContext, time elapsed: 21679000 ns, RESULT:
+    [ PASSED ] CASE: dfaReverseRecoveryRetainsPriorityAndContext (21493000 ns)
+    TCS: TestCase_groupCursorCopiesHaveIndependentPositions, time elapsed: 215000 ns, RESULT:
+    [ PASSED ] CASE: groupCursorCopiesHaveIndependentPositions (73000 ns)
+    TCS: TestCase_setSizeHintTracksSlotsNotHits, time elapsed: 284000 ns, RESULT:
+    [ PASSED ] CASE: setSizeHintTracksSlotsNotHits (47000 ns)
+    TCS: TestCase_hirExposesSixDigitStructure, time elapsed: 207000 ns, RESULT:
+    [ PASSED ] CASE: hirExposesSixDigitStructure (80000 ns)
+    TCS: TestCase_hirSmartConstructorsPreserveSnapshots, time elapsed: 167000 ns, RESULT:
     [ PASSED ] CASE: hirSmartConstructorsPreserveSnapshots (16000 ns)
-    TCS: TestCase_hirLengthOverflowAndEmptyAreDistinctFromFailure, time elapsed: 156000 ns, RESULT:
-    [ PASSED ] CASE: hirLengthOverflowAndEmptyAreDistinctFromFailure (19000 ns)
-    TCS: TestCase_hirRejectsUnimplementedStructuresExplicitly, time elapsed: 166000 ns, RESULT:
-    [ PASSED ] CASE: hirRejectsUnimplementedStructuresExplicitly (55000 ns)
-    TCS: TestCase_pikeReportsPatternSpanAndCaptures, time elapsed: 1573000 ns, RESULT:
-    [ PASSED ] CASE: pikeReportsPatternSpanAndCaptures (1448000 ns)
-    TCS: TestCase_pikeAnchoredSearchSeesTextOutsideTheRange, time elapsed: 210000 ns, RESULT:
-    [ PASSED ] CASE: pikeAnchoredSearchSeesTextOutsideTheRange (76000 ns)
-    TCS: TestCase_anchoredSearchIsNotTheSameAsACaret, time elapsed: 210000 ns, RESULT:
-    [ PASSED ] CASE: anchoredSearchIsNotTheSameAsACaret (31000 ns)
-    TCS: TestCase_reviewedAstUnicodeAndBoundaryRoundTrips, time elapsed: 222000 ns, RESULT:
-    [ PASSED ] CASE: reviewedAstUnicodeAndBoundaryRoundTrips (86000 ns)
-    TCS: TestCase_reviewedPikeByteRangesAndEmptyPatternSet, time elapsed: 668000 ns, RESULT:
-    [ PASSED ] CASE: reviewedPikeByteRangesAndEmptyPatternSet (544000 ns)
-    TCS: TestCase_emptySetAndEmptyMatches, time elapsed: 175000 ns, RESULT:
+    TCS: TestCase_hirLengthOverflowAndEmptyAreDistinctFromFailure, time elapsed: 159000 ns, RESULT:
+    [ PASSED ] CASE: hirLengthOverflowAndEmptyAreDistinctFromFailure (17000 ns)
+    TCS: TestCase_hirRejectsUnimplementedStructuresExplicitly, time elapsed: 233000 ns, RESULT:
+    [ PASSED ] CASE: hirRejectsUnimplementedStructuresExplicitly (68000 ns)
+    TCS: TestCase_literalsUtf8AndEarliestMatchThePinnedCorpus, time elapsed: 8074000 ns, RESULT:
+    [ PASSED ] CASE: literalsUtf8AndEarliestMatchThePinnedCorpus (7937000 ns)
+    TCS: TestCase_pikeReportsPatternSpanAndCaptures, time elapsed: 1465000 ns, RESULT:
+    [ PASSED ] CASE: pikeReportsPatternSpanAndCaptures (1368000 ns)
+    TCS: TestCase_pikeAnchoredSearchSeesTextOutsideTheRange, time elapsed: 178000 ns, RESULT:
+    [ PASSED ] CASE: pikeAnchoredSearchSeesTextOutsideTheRange (62000 ns)
+    TCS: TestCase_anchoredSearchIsNotTheSameAsACaret, time elapsed: 138000 ns, RESULT:
+    [ PASSED ] CASE: anchoredSearchIsNotTheSameAsACaret (19000 ns)
+    TCS: TestCase_reverseSearchReportsTheMatchStart, time elapsed: 170000 ns, RESULT:
+    [ PASSED ] CASE: reverseSearchReportsTheMatchStart (63000 ns)
+    TCS: TestCase_reviewedAstUnicodeAndBoundaryRoundTrips, time elapsed: 206000 ns, RESULT:
+    [ PASSED ] CASE: reviewedAstUnicodeAndBoundaryRoundTrips (98000 ns)
+    TCS: TestCase_reviewedPikeByteRangesAndEmptyPatternSet, time elapsed: 627000 ns, RESULT:
+    [ PASSED ] CASE: reviewedPikeByteRangesAndEmptyPatternSet (524000 ns)
+    TCS: TestCase_emptySetAndEmptyMatches, time elapsed: 164000 ns, RESULT:
     [ PASSED ] CASE: emptySetAndEmptyMatches (36000 ns)
-    TCS: TestCase_setOverlapDuplicatesAndOrdering, time elapsed: 192000 ns, RESULT:
-    [ PASSED ] CASE: setOverlapDuplicatesAndOrdering (78000 ns)
-    TCS: TestCase_setResultsAndPatternsAreIndependent, time elapsed: 164000 ns, RESULT:
-    [ PASSED ] CASE: setResultsAndPatternsAreIndependent (27000 ns)
-    TCS: TestCase_setNulAndUnicode, time elapsed: 1635000 ns, RESULT:
-    [ PASSED ] CASE: setNulAndUnicode (1529000 ns)
-    TCS: TestCase_setAgreesWithIndependentRegexes, time elapsed: 118683000 ns, RESULT:
-    [ PASSED ] CASE: setAgreesWithIndependentRegexes (118481000 ns)
-    TCS: TestCase_setInvalidIndexAndConstruction, time elapsed: 1156000 ns, RESULT:
-    [ PASSED ] CASE: setInvalidIndexAndConstruction (1036000 ns)
-    TCS: TestCase_setIteratorDirectionsCloneAndLifetime, time elapsed: 198000 ns, RESULT:
-    [ PASSED ] CASE: setIteratorDirectionsCloneAndLifetime (76000 ns)
-Summary: TOTAL: 46
-    PASSED: 46, SKIPPED: 0, ERROR: 0
+    TCS: TestCase_setOverlapDuplicatesAndOrdering, time elapsed: 188000 ns, RESULT:
+    [ PASSED ] CASE: setOverlapDuplicatesAndOrdering (72000 ns)
+    TCS: TestCase_setResultsAndPatternsAreIndependent, time elapsed: 133000 ns, RESULT:
+    [ PASSED ] CASE: setResultsAndPatternsAreIndependent (25000 ns)
+    TCS: TestCase_setNulAndUnicode, time elapsed: 1604000 ns, RESULT:
+    [ PASSED ] CASE: setNulAndUnicode (1508000 ns)
+    TCS: TestCase_setAgreesWithIndependentRegexes, time elapsed: 101879000 ns, RESULT:
+    [ PASSED ] CASE: setAgreesWithIndependentRegexes (101723000 ns)
+    TCS: TestCase_setInvalidIndexAndConstruction, time elapsed: 1114000 ns, RESULT:
+    [ PASSED ] CASE: setInvalidIndexAndConstruction (1007000 ns)
+    TCS: TestCase_setIteratorDirectionsCloneAndLifetime, time elapsed: 190000 ns, RESULT:
+    [ PASSED ] CASE: setIteratorDirectionsCloneAndLifetime (69000 ns)
+Summary: TOTAL: 52
+    PASSED: 52, SKIPPED: 0, ERROR: 0
     FAILED: 0
 --------------------------------------------------------------------------------------------------
-Project tests finished, time elapsed: 360534000 ns, RESULT:
-TP: regex_consumer.*, time elapsed: 360459000 ns, RESULT:
+Project tests finished, time elapsed: 375635000 ns, RESULT:
+TP: regex_consumer.*, time elapsed: 375584000 ns, RESULT:
     PASSED:
-    TP: regex_consumer, time elapsed: 359277000 ns
-Summary: TOTAL: 46
-    PASSED: 46, SKIPPED: 0, ERROR: 0
+    TP: regex_consumer, time elapsed: 374430000 ns
+Summary: TOTAL: 52
+    PASSED: 52, SKIPPED: 0, ERROR: 0
     FAILED: 0
 --------------------------------------------------------------------------------------------------
 cjpm test success
@@ -815,16 +829,37 @@ Acceptance stage: verify_hir
 HIR: 367 parse cases, 235 constructors, 41 print cases, 4 invalid rejected
 
 Acceptance stage: verify_ast
-AST: 83 shapes matched, 50 lowered to the same HIR
+AST: 88 shapes matched, 50 lowered to the same HIR
 
 Acceptance stage: verify_pike
-PikeVM: 479 searches matched, 1 invalid range rejected
+PikeVM: 494 searches matched, 1 invalid range rejected
 
 Acceptance stage: verify_props
 HIR properties: 32 matched; HIR PikeVM: 6
 
 Acceptance stage: verify_error_spans
 syntax error spans matched: 37
+
+Acceptance stage: verify_literals
+literal extraction: 32 patterns, prefix and suffix
+
+Acceptance stage: verify_utf8
+utf8 sequences: 12 ranges
+
+Acceptance stage: verify_reverse
+reverse NFA: 45 searches matched
+
+Acceptance stage: verify_backtrack
+backtrack: 42 searches matched
+
+Acceptance stage: verify_dfa
+dfa: 35 patterns matched on dense and sparse
+
+Acceptance stage: verify_engine_edges
+Engine and syntax edge differential: 401 passed
+
+Acceptance stage: coverage-ledger
+Coverage scope validated: weights total 100; no measured completion percentage.
 
 Acceptance stage: showcase
 
@@ -923,7 +958,7 @@ Acceptance stage: showcase
    实际：[]
    PASS — 4 落在 password 的 w 上。w 前面还是字母，所以这里没有词边界，也不会另起一段文本再搜。
 
-场景验收：13/13 通过；报告：/private/var/folders/xc/7s79qz2966j773sgl_d77kxh0000gn/T/regex4cj-review-kr_2u13b/repo/.build/work/showcase.json
+场景验收：13/13 通过；报告：/Users/jalonyan/Desktop/regex4cj/.build/delivery-checkout/.build/work/showcase.json
 
 Acceptance stage: classification
 文本："订单 AB-123 需要退款"
@@ -962,4 +997,4 @@ Acceptance stage: classification
 预期编号：[3]；PASS
 
 多规则分类验收：7/7 通过
-Complete acceptance passed. Report: /private/var/folders/xc/7s79qz2966j773sgl_d77kxh0000gn/T/regex4cj-review-kr_2u13b/repo/.build/work/verification-run.json
+Complete acceptance passed. Report: /Users/jalonyan/Desktop/regex4cj/.build/delivery-checkout/.build/work/verification-run.json

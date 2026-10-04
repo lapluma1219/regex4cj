@@ -33,14 +33,15 @@ def save(state):
 
 def main():
     state = {'run_id': str(uuid.uuid4()), 'status': 'running', 'started_at': now(),
-             'stages': [], 'scope': 'Selected string/bytes Regex, RegexSet, AST/HIR and forward PikeVM contracts; not full workspace parity'}
+             'stages': [], 'scope': 'Selected Regex, syntax, literal/UTF-8 tools, PikeVM, reverse NFA, bounded backtracker and DFA contracts; not full workspace parity'}
     save(state)
     try:
         # Old counters must never be mistaken for this invocation's results.
         for name in ['verification.json', 'showcase.json', 'classification.json',
                      'matching-failure.json', 'hir-failure.json', 'upstream-suite-failures.json', 'upstream-sample-skips.json',
                      'api-contract-failures.json', 'pike-failure.json', 'ast-failure.json', 'props-failure.json',
-                     'error-span-failure.json']:
+                     'error-span-failure.json', 'engine-edges-failure.json', 'dfa-failure.json',
+                     'backtrack-failure.json', 'reverse-failure.json', 'literal-failure.json', 'utf8-failure.json']:
             (WORK / name).unlink(missing_ok=True)
         state['commit'] = output(['git', 'rev-parse', 'HEAD']) if (ROOT / '.git').exists() else None
         state['dirty'] = bool(output(['git', 'status', '--porcelain'])) if state['commit'] else None
@@ -69,7 +70,7 @@ def main():
                      'verify_errors', 'verify_limits', 'verify_bytes', 'verify_upstream_sample',
                      'verify_upstream_suite', 'verify_sets', 'verify_api_contracts', 'verify_hir',
                      'verify_ast', 'verify_pike', 'verify_props', 'verify_error_spans',
-                     'verify_literals', 'verify_utf8', 'verify_reverse', 'verify_backtrack', 'verify_dfa']:
+                     'verify_literals', 'verify_utf8', 'verify_reverse', 'verify_backtrack', 'verify_dfa', 'verify_engine_edges']:
             stages.append((name, [sys.executable, f'tests/{name}.py'], ROOT))
         stages.append(('coverage-ledger', [sys.executable, 'scripts/check_coverage.py'], ROOT))
         stages += [('showcase', [sys.executable, 'scripts/showcase.py'], ROOT),

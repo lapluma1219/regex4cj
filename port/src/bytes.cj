@@ -544,7 +544,11 @@ func byteConsumeWidth(state: State, haystack: Array<UInt8>, pos: Int64): Int64 {
             }
         case Op.CharacterClass(set) =>
             if (state.byteAtom) {
-                if (pos < haystack.size && set.contains(Rune(UInt32(haystack[pos])))) {
+                if ((if (pos < haystack.size) {
+                    set.contains(Rune(UInt32(haystack[pos])))
+                } else {
+                    false
+                })) {
                     return 1
                 }
                 return 0
@@ -754,7 +758,9 @@ public class BytesGroupIter {
         this.groups = groups
     }
     // Remaining slots include groups that did not participate in the match.
-    public func len(): Int64 { groups.size - index }
+    public func len(): Int64 {
+        groups.size - index
+    }
     public func sizeHint(): (Int64, Option<Int64>) {
         (len(), Some(len()))
     }

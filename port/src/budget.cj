@@ -15,8 +15,10 @@ const LITERAL_LENGTH_LIMIT: Int64 = 100
 const LITERAL_TOTAL_LIMIT: Int64 = 250
 
 func ensureWithinSizeLimit(exprs: Array<Expr>, limit: Int64, captures: Bool): Unit {
-    if (captures && exprs.size == 1 && literalBypass(exprs[0])) {
-        return
+    if (captures && exprs.size == 1) {
+        if (literalBypass(exprs[0])) {
+            return
+        }
     }
     let forward = ThompsonBudget(false, captures, limit).compileMany(exprs)
     let reverse = ThompsonBudget(true, false, limit).compileMany(exprs)
@@ -989,7 +991,11 @@ func hasStartAnchor(expr: Expr): Bool {
                 ok
             }
         case ExprKind.Capture => hasStartAnchor(expr.children[0])
-        case ExprKind.Repeat => expr.minimum > 0 && hasStartAnchor(expr.children[0])
+        case ExprKind.Repeat => (if (expr.minimum > 0) {
+            hasStartAnchor(expr.children[0])
+        } else {
+            false
+        })
         case _ => false
     }
 }
@@ -1019,7 +1025,11 @@ func hasEndAnchor(expr: Expr): Bool {
                 ok
             }
         case ExprKind.Capture => hasEndAnchor(expr.children[0])
-        case ExprKind.Repeat => expr.minimum > 0 && hasEndAnchor(expr.children[0])
+        case ExprKind.Repeat => (if (expr.minimum > 0) {
+            hasEndAnchor(expr.children[0])
+        } else {
+            false
+        })
         case _ => false
     }
 }
