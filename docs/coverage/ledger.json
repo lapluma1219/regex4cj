@@ -1,0 +1,37 @@
+{
+  "scale": "milestone-50-60-plan weights",
+  "note": "Accepted points count only status 验收通过. 有差异 and 实现中 score zero. This file does not publish a completion percentage.",
+  "locked_before_implementation": {
+    "A5": "The 1 point is the public size-limit and nest-limit error contract: CompiledTooBig text, nonnegative rejection, and the statement that dfaSizeLimit is a string step-cache budget. Send, Sync, and Rust memory layout stay outside this point.",
+    "C4": "The 2 points are capture metadata (names, length, static length) and SetMatches bidirectional iteration as shared result types. Input and PikeVM captures already listed under C1/C3 are not scored again here.",
+    "E": "The 1 point is upstream regex-cli find match for the NFA/PikeVM command: span text and exit status. This repository's demo CLI does not count, and generate/serialize commands stay outside this point."
+  },
+  "items": [
+    {"id": "A1", "weight": 8, "status": "有差异", "evidence": ["tests/verify_matching.py"], "note": "String and bytes search has a large differential. Iterator copy contracts are still incomplete."},
+    {"id": "A2", "weight": 5, "status": "有差异", "evidence": ["tests/verify_captures.py"], "note": "Captures are tested. Independent iterator copies are not fully audited."},
+    {"id": "A3", "weight": 5, "status": "有差异", "evidence": ["tests/verify_text_ops.py"], "note": "Replace and split are tested. Mid-iteration state copies are not fully audited."},
+    {"id": "A4", "weight": 4, "status": "有差异", "evidence": ["tests/verify_sets.py"], "note": "RegexSet matching and SetMatches iteration exist. The full builder matrix is not closed."},
+    {"id": "A5", "weight": 3, "status": "未开始", "evidence": [], "note": "Only the locked 1-point subset may be accepted later. The other 2 points stay open."},
+    {"id": "B1", "weight": 8, "status": "有差异", "evidence": ["tests/verify_hir.py", "tests/verify_props.py"], "note": "HIR nodes, class operations, and the tested properties exist. memory_usage is not claimed."},
+    {"id": "B2", "weight": 8, "status": "有差异", "evidence": ["tests/verify_ast.py"], "note": "AST parse no longer runs the matcher first. Class items carry spans and literal kinds for the differential corpus. The corpus is not every AST field."},
+    {"id": "B3", "weight": 4, "status": "有差异", "evidence": ["tests/verify_ast.py"], "note": "translate honors utf8. (?-u:\\xFF), (?-u:.), (?-u:\\D), and unknown properties fail at translation. The full translator is not closed."},
+    {"id": "B4", "weight": 3, "status": "有差异", "evidence": ["tests/verify_ast.py", "tests/verify_hir.py"], "note": "AST and HIR display were compared on the corpus. walk and walkUntil exist. The upstream visitor trait is not fully audited."},
+    {"id": "B5", "weight": 2, "status": "验收通过", "evidence": ["tests/verify_literals.py", "tests/verify_utf8.py"], "note": "Default prefix and suffix extraction matches regex-syntax on the corpus, including class, repeat, and total limits. Public UTF-8 sequences match Utf8Sequences debug text. memory_usage is not part of this item."},
+    {"id": "C1", "weight": 4, "status": "有差异", "evidence": ["tests/verify_pike.py"], "note": "String ranges, anchoring, and pattern ids exist. There is no independent Input type or byte PikeVM."},
+    {"id": "C2a", "weight": 3, "status": "有差异", "evidence": [], "note": "Forward NFA construction is inside Regex. It is not yet a public object with a checked state graph."},
+    {"id": "C2b", "weight": 2, "status": "验收通过", "evidence": ["tests/verify_reverse.py"], "note": "Reverse search walks bytes backward and reports the match start. Offsets match dense DFA try_search_rev, including anchors and multi-byte scalars. Captures are omitted. Unicode word boundaries are outside this oracle because that DFA refuses them."},
+    {"id": "C3a", "weight": 1, "status": "有差异", "evidence": ["tests/verify_pike.py"], "note": "Forward search with a range and an anchor exists."},
+    {"id": "C3b", "weight": 1, "status": "有差异", "evidence": ["tests/verify_pike.py"], "note": "Multiple patterns are searched one Regex at a time, then ordered. That is not one multi-pattern PikeVM."},
+    {"id": "C3c", "weight": 1, "status": "有差异", "evidence": [], "note": "PikeCache stores the previous capture slots. It is not the search thread queue."},
+    {"id": "C3d", "weight": 2, "status": "有差异", "evidence": ["tests/verify_pike.py"], "note": "whichOverlapping returns the same pattern-id set as PikeVM which_overlapping_matches on the corpus. Each pattern is still searched separately, so this point stays open."},
+    {"id": "C3e", "weight": 1, "status": "有差异", "evidence": ["tests/verify_pike.py"], "note": "searchEarliest matches regex-automata earliest spans on the corpus. quit is still absent, so this point stays open."},
+    {"id": "C4", "weight": 5, "status": "未开始", "evidence": [], "note": "Only the locked 2-point subset may be accepted later."},
+    {"id": "D1", "weight": 6, "status": "有差异", "evidence": ["tests/verify_dfa.py"], "note": "DenseDfa and SparseDfa match dfa::regex::Regex spans for one pattern on the corpus, including anchors and ASCII word boundaries. Unicode word boundaries fail during construction. The match start is the reverse NFA on the forward end. Quit bytes, multiple patterns, overlapping search, CRLF anchors, and the upstream byte size limit are absent, so these 6 points stay open."},
+    {"id": "D2", "weight": 4, "status": "未开始", "evidence": [], "note": "Hybrid DFA is absent. dfaSizeLimit remains a string step-cache budget."},
+    {"id": "D3", "weight": 2, "status": "未开始", "evidence": [], "note": "One-pass search is absent."},
+    {"id": "D4", "weight": 2, "status": "验收通过", "evidence": ["tests/verify_backtrack.py"], "note": "Visited-set backtracking matches BoundedBacktracker spans and captures on the corpus. A haystack that does not fit in the visited table returns haystack-too-long instead of a miss. maxHaystackLen uses this NFA's state count, so the numeric limit is not the upstream number."},
+    {"id": "D5", "weight": 4, "status": "未开始", "evidence": [], "note": "Meta engine and the optimization passes around it are absent. Regex.find is still the existing matcher."},
+    {"id": "D6", "weight": 2, "status": "未开始", "evidence": [], "note": "Serialization is absent."},
+    {"id": "E", "weight": 10, "status": "未开始", "evidence": [], "note": "Only the locked 1-point regex-cli find match subset may be accepted later."}
+  ]
+}

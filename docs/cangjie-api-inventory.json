@@ -1,15 +1,63 @@
 {
   "scope": "Explicit declarations in port/src/*.cj; not Rust parity or a completion percentage.",
   "counts": {
-    "class": 42,
-    "constructor": 30,
-    "method": 248,
-    "field": 84,
+    "class": 49,
+    "constructor": 36,
+    "method": 260,
+    "field": 96,
     "enum": 4,
-    "function": 2
+    "function": 7
   },
-  "callable_count": 280,
+  "callable_count": 303,
   "items": [
+    {
+      "owner": "BoundedBacktracker",
+      "name": "BoundedBacktracker",
+      "kind": "class",
+      "signature": "public class BoundedBacktracker",
+      "file": "port/src/backtrack.cj",
+      "line": 14
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String)",
+      "file": "port/src/backtrack.cj",
+      "line": 26
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String, visitedCapacity: Int64)",
+      "file": "port/src/backtrack.cj",
+      "line": 29
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "stateCount",
+      "kind": "method",
+      "signature": "public func stateCount(): Int64",
+      "file": "port/src/backtrack.cj",
+      "line": 96
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "maxHaystackLen",
+      "kind": "method",
+      "signature": "public func maxHaystackLen(): Int64",
+      "file": "port/src/backtrack.cj",
+      "line": 101
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(text: String): Option<Captures>",
+      "file": "port/src/backtrack.cj",
+      "line": 114
+    },
     {
       "owner": "RegexBuilder",
       "name": "RegexBuilder",
@@ -1291,6 +1339,70 @@
       "line": 223
     },
     {
+      "owner": "DenseDfa",
+      "name": "DenseDfa",
+      "kind": "class",
+      "signature": "public class DenseDfa",
+      "file": "port/src/dfa.cj",
+      "line": 559
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String)",
+      "file": "port/src/dfa.cj",
+      "line": 561
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "stateCount",
+      "kind": "method",
+      "signature": "public func stateCount(): Int64",
+      "file": "port/src/dfa.cj",
+      "line": 564
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(text: String): Option<RegexMatch>",
+      "file": "port/src/dfa.cj",
+      "line": 567
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "SparseDfa",
+      "kind": "class",
+      "signature": "public class SparseDfa",
+      "file": "port/src/dfa.cj",
+      "line": 572
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String)",
+      "file": "port/src/dfa.cj",
+      "line": 574
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "stateCount",
+      "kind": "method",
+      "signature": "public func stateCount(): Int64",
+      "file": "port/src/dfa.cj",
+      "line": 577
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(text: String): Option<RegexMatch>",
+      "file": "port/src/dfa.cj",
+      "line": 580
+    },
+    {
       "owner": "RegexErrorKind",
       "name": "RegexErrorKind",
       "kind": "enum",
@@ -1480,7 +1592,7 @@
       "kind": "class",
       "signature": "public class RegexMatch",
       "file": "port/src/nfa.cj",
-      "line": 239
+      "line": 238
     },
     {
       "owner": "RegexMatch",
@@ -1488,7 +1600,7 @@
       "kind": "field",
       "signature": "public let start: Int64",
       "file": "port/src/nfa.cj",
-      "line": 240
+      "line": 239
     },
     {
       "owner": "RegexMatch",
@@ -1496,7 +1608,7 @@
       "kind": "field",
       "signature": "public let end: Int64",
       "file": "port/src/nfa.cj",
-      "line": 241
+      "line": 240
     },
     {
       "owner": "RegexMatch",
@@ -1504,7 +1616,7 @@
       "kind": "field",
       "signature": "public let text: String",
       "file": "port/src/nfa.cj",
-      "line": 242
+      "line": 241
     },
     {
       "owner": "RegexMatch",
@@ -1512,7 +1624,7 @@
       "kind": "method",
       "signature": "public func isEmpty(): Bool",
       "file": "port/src/nfa.cj",
-      "line": 248
+      "line": 247
     },
     {
       "owner": "RegexMatch",
@@ -1520,7 +1632,7 @@
       "kind": "method",
       "signature": "public func len(): Int64",
       "file": "port/src/nfa.cj",
-      "line": 251
+      "line": 250
     },
     {
       "owner": "RegexMatch",
@@ -1528,7 +1640,7 @@
       "kind": "method",
       "signature": "public func asStr(): String",
       "file": "port/src/nfa.cj",
-      "line": 254
+      "line": 253
     },
     {
       "owner": "Regex",
@@ -1536,7 +1648,7 @@
       "kind": "class",
       "signature": "public class Regex",
       "file": "port/src/nfa.cj",
-      "line": 509
+      "line": 508
     },
     {
       "owner": "Regex",
@@ -1544,7 +1656,7 @@
       "kind": "constructor",
       "signature": "public init(pattern: String)",
       "file": "port/src/nfa.cj",
-      "line": 518
+      "line": 517
     },
     {
       "owner": "Regex",
@@ -1552,7 +1664,7 @@
       "kind": "method",
       "signature": "public func asStr(): String",
       "file": "port/src/nfa.cj",
-      "line": 653
+      "line": 652
     },
     {
       "owner": "Regex",
@@ -1560,7 +1672,15 @@
       "kind": "method",
       "signature": "public func staticCapturesLen(): Option<Int64>",
       "file": "port/src/nfa.cj",
-      "line": 656
+      "line": 655
+    },
+    {
+      "owner": "Regex",
+      "name": "searchEarliest",
+      "kind": "method",
+      "signature": "public func searchEarliest(text: String): Option<Captures>",
+      "file": "port/src/nfa.cj",
+      "line": 791
     },
     {
       "owner": "Regex",
@@ -1568,7 +1688,7 @@
       "kind": "method",
       "signature": "public func find(text: String): Option<RegexMatch>",
       "file": "port/src/nfa.cj",
-      "line": 792
+      "line": 798
     },
     {
       "owner": "Regex",
@@ -1576,7 +1696,7 @@
       "kind": "method",
       "signature": "public func isMatch(text: String): Bool",
       "file": "port/src/nfa.cj",
-      "line": 804
+      "line": 810
     },
     {
       "owner": "Regex",
@@ -1584,7 +1704,7 @@
       "kind": "method",
       "signature": "public func findAt(text: String, start: Int64): Option<RegexMatch>",
       "file": "port/src/nfa.cj",
-      "line": 815
+      "line": 821
     },
     {
       "owner": "Regex",
@@ -1592,7 +1712,7 @@
       "kind": "method",
       "signature": "public func isMatchAt(text: String, start: Int64): Bool",
       "file": "port/src/nfa.cj",
-      "line": 823
+      "line": 829
     },
     {
       "owner": "Regex",
@@ -1600,7 +1720,7 @@
       "kind": "method",
       "signature": "public func shortestMatch(text: String): Option<Int64>",
       "file": "port/src/nfa.cj",
-      "line": 829
+      "line": 835
     },
     {
       "owner": "Regex",
@@ -1608,7 +1728,7 @@
       "kind": "method",
       "signature": "public func shortestMatchAt(text: String, start: Int64): Option<Int64>",
       "file": "port/src/nfa.cj",
-      "line": 832
+      "line": 838
     },
     {
       "owner": "Regex",
@@ -1616,7 +1736,7 @@
       "kind": "method",
       "signature": "public func capturesAt(text: String, start: Int64): Option<Captures>",
       "file": "port/src/nfa.cj",
-      "line": 840
+      "line": 846
     },
     {
       "owner": "Regex",
@@ -1624,7 +1744,7 @@
       "kind": "method",
       "signature": "public func findIter(text: String): MatchIter",
       "file": "port/src/nfa.cj",
-      "line": 848
+      "line": 854
     },
     {
       "owner": "Regex",
@@ -1632,7 +1752,7 @@
       "kind": "method",
       "signature": "public func capturesIter(text: String): CaptureIter",
       "file": "port/src/nfa.cj",
-      "line": 872
+      "line": 878
     },
     {
       "owner": "Regex",
@@ -1640,7 +1760,7 @@
       "kind": "method",
       "signature": "public func splitIter(text: String): SplitIter",
       "file": "port/src/nfa.cj",
-      "line": 896
+      "line": 902
     },
     {
       "owner": "Regex",
@@ -1648,7 +1768,7 @@
       "kind": "method",
       "signature": "public func splitNIter(text: String, limit: Int64): SplitIter",
       "file": "port/src/nfa.cj",
-      "line": 936
+      "line": 942
     },
     {
       "owner": "Regex",
@@ -1656,7 +1776,7 @@
       "kind": "method",
       "signature": "public func captureLocations(): CaptureLocations",
       "file": "port/src/nfa.cj",
-      "line": 965
+      "line": 971
     },
     {
       "owner": "Regex",
@@ -1664,7 +1784,7 @@
       "kind": "method",
       "signature": "public func capturesRead(locations: CaptureLocations, text: String): Option<RegexMatch>",
       "file": "port/src/nfa.cj",
-      "line": 968
+      "line": 974
     },
     {
       "owner": "Regex",
@@ -1672,7 +1792,7 @@
       "kind": "method",
       "signature": "public func capturesReadAt(locations: CaptureLocations, text: String, start: Int64): Option<RegexMatch>",
       "file": "port/src/nfa.cj",
-      "line": 971
+      "line": 977
     },
     {
       "owner": "Regex",
@@ -1680,7 +1800,7 @@
       "kind": "method",
       "signature": "public func findAll(text: String): Array<RegexMatch>",
       "file": "port/src/nfa.cj",
-      "line": 997
+      "line": 1003
     },
     {
       "owner": "Regex",
@@ -1688,7 +1808,7 @@
       "kind": "method",
       "signature": "public func capturesLen(): Int64",
       "file": "port/src/nfa.cj",
-      "line": 1021
+      "line": 1027
     },
     {
       "owner": "Regex",
@@ -1696,7 +1816,7 @@
       "kind": "method",
       "signature": "public func captureNames(): Array<Option<String>>",
       "file": "port/src/nfa.cj",
-      "line": 1024
+      "line": 1030
     },
     {
       "owner": "Regex",
@@ -1704,7 +1824,7 @@
       "kind": "method",
       "signature": "public func captures(text: String): Option<Captures>",
       "file": "port/src/nfa.cj",
-      "line": 1049
+      "line": 1055
     },
     {
       "owner": "Regex",
@@ -1712,7 +1832,7 @@
       "kind": "method",
       "signature": "public func capturesAll(text: String): Array<Captures>",
       "file": "port/src/nfa.cj",
-      "line": 1056
+      "line": 1062
     },
     {
       "owner": "Regex",
@@ -1720,7 +1840,7 @@
       "kind": "method",
       "signature": "public func replace(text: String, replacement: String): String",
       "file": "port/src/nfa.cj",
-      "line": 1076
+      "line": 1082
     },
     {
       "owner": "Regex",
@@ -1728,7 +1848,7 @@
       "kind": "method",
       "signature": "public func replaceAll(text: String, replacement: String): String",
       "file": "port/src/nfa.cj",
-      "line": 1079
+      "line": 1085
     },
     {
       "owner": "Regex",
@@ -1736,7 +1856,7 @@
       "kind": "method",
       "signature": "public func replaceN(text: String, limit: Int64, replacement: String): String",
       "file": "port/src/nfa.cj",
-      "line": 1083
+      "line": 1089
     },
     {
       "owner": "Regex",
@@ -1744,7 +1864,7 @@
       "kind": "method",
       "signature": "public func replaceLiteral(text: String, limit: Int64, replacement: String): String",
       "file": "port/src/nfa.cj",
-      "line": 1096
+      "line": 1102
     },
     {
       "owner": "Regex",
@@ -1752,7 +1872,7 @@
       "kind": "method",
       "signature": "public func replaceWith(text: String, limit: Int64, replacer: (Captures) -> String): String",
       "file": "port/src/nfa.cj",
-      "line": 1099
+      "line": 1105
     },
     {
       "owner": "Regex",
@@ -1760,7 +1880,7 @@
       "kind": "method",
       "signature": "public func split(text: String): Array<String>",
       "file": "port/src/nfa.cj",
-      "line": 1133
+      "line": 1139
     },
     {
       "owner": "Regex",
@@ -1768,7 +1888,7 @@
       "kind": "method",
       "signature": "public func splitN(text: String, limit: Int64): Array<String>",
       "file": "port/src/nfa.cj",
-      "line": 1137
+      "line": 1143
     },
     {
       "owner": "Regex",
@@ -1776,7 +1896,7 @@
       "kind": "method",
       "signature": "public func nfaStateCount(): Int64",
       "file": "port/src/nfa.cj",
-      "line": 1173
+      "line": 1179
     },
     {
       "owner": "Regex",
@@ -1784,7 +1904,7 @@
       "kind": "method",
       "signature": "public func nfaStart(): Int64",
       "file": "port/src/nfa.cj",
-      "line": 1176
+      "line": 1182
     },
     {
       "owner": "Regex",
@@ -1792,7 +1912,7 @@
       "kind": "method",
       "signature": "public func nfaOp(index: Int64): String",
       "file": "port/src/nfa.cj",
-      "line": 1179
+      "line": 1185
     },
     {
       "owner": "Regex",
@@ -1800,7 +1920,7 @@
       "kind": "method",
       "signature": "public func nfaNext(index: Int64): Int64",
       "file": "port/src/nfa.cj",
-      "line": 1193
+      "line": 1199
     },
     {
       "owner": "Regex",
@@ -1808,7 +1928,7 @@
       "kind": "method",
       "signature": "public func nfaAlternate(index: Int64): Int64",
       "file": "port/src/nfa.cj",
-      "line": 1199
+      "line": 1205
     },
     {
       "owner": "Regex",
@@ -1816,7 +1936,7 @@
       "kind": "method",
       "signature": "public func searchWindow(text: String, start: Int64, end: Int64, anchored: Bool): Option<Captures>",
       "file": "port/src/nfa.cj",
-      "line": 1205
+      "line": 1211
     },
     {
       "owner": "MatchIter",
@@ -1824,7 +1944,7 @@
       "kind": "class",
       "signature": "public class MatchIter",
       "file": "port/src/nfa.cj",
-      "line": 1221
+      "line": 1231
     },
     {
       "owner": "MatchIter",
@@ -1832,7 +1952,7 @@
       "kind": "constructor",
       "signature": "public init(pull: () -> Option<RegexMatch>)",
       "file": "port/src/nfa.cj",
-      "line": 1223
+      "line": 1233
     },
     {
       "owner": "MatchIter",
@@ -1840,7 +1960,7 @@
       "kind": "method",
       "signature": "public func next(): Option<RegexMatch>",
       "file": "port/src/nfa.cj",
-      "line": 1226
+      "line": 1236
     },
     {
       "owner": "CaptureIter",
@@ -1848,7 +1968,7 @@
       "kind": "class",
       "signature": "public class CaptureIter",
       "file": "port/src/nfa.cj",
-      "line": 1231
+      "line": 1241
     },
     {
       "owner": "CaptureIter",
@@ -1856,7 +1976,7 @@
       "kind": "constructor",
       "signature": "public init(pull: () -> Option<Captures>)",
       "file": "port/src/nfa.cj",
-      "line": 1233
+      "line": 1243
     },
     {
       "owner": "CaptureIter",
@@ -1864,7 +1984,7 @@
       "kind": "method",
       "signature": "public func next(): Option<Captures>",
       "file": "port/src/nfa.cj",
-      "line": 1236
+      "line": 1246
     },
     {
       "owner": "SplitIter",
@@ -1872,7 +1992,7 @@
       "kind": "class",
       "signature": "public class SplitIter",
       "file": "port/src/nfa.cj",
-      "line": 1241
+      "line": 1251
     },
     {
       "owner": "SplitIter",
@@ -1880,7 +2000,7 @@
       "kind": "constructor",
       "signature": "public init(pull: () -> Option<String>)",
       "file": "port/src/nfa.cj",
-      "line": 1243
+      "line": 1253
     },
     {
       "owner": "SplitIter",
@@ -1888,7 +2008,7 @@
       "kind": "method",
       "signature": "public func next(): Option<String>",
       "file": "port/src/nfa.cj",
-      "line": 1246
+      "line": 1256
     },
     {
       "owner": "PikeCache",
@@ -2092,11 +2212,27 @@
     },
     {
       "owner": "PikeVM",
+      "name": "whichOverlapping",
+      "kind": "method",
+      "signature": "public func whichOverlapping(text: String): Array<Int64>",
+      "file": "port/src/pikevm.cj",
+      "line": 122
+    },
+    {
+      "owner": "PikeVM",
+      "name": "searchEarliest",
+      "kind": "method",
+      "signature": "public func searchEarliest(text: String): Option<PikeMatch>",
+      "file": "port/src/pikevm.cj",
+      "line": 131
+    },
+    {
+      "owner": "PikeVM",
       "name": "search",
       "kind": "method",
       "signature": "public func search(text: String): Option<PikeMatch>",
       "file": "port/src/pikevm.cj",
-      "line": 122
+      "line": 165
     },
     {
       "owner": "PikeVM",
@@ -2104,7 +2240,7 @@
       "kind": "method",
       "signature": "public func search(text: String, start: Int64, end: Int64, anchored: Bool): Option<PikeMatch>",
       "file": "port/src/pikevm.cj",
-      "line": 125
+      "line": 168
     },
     {
       "owner": "SetMatches",
@@ -2283,6 +2419,30 @@
       "line": 176
     },
     {
+      "owner": "ReverseNfa",
+      "name": "ReverseNfa",
+      "kind": "class",
+      "signature": "public class ReverseNfa",
+      "file": "port/src/reverse.cj",
+      "line": 8
+    },
+    {
+      "owner": "ReverseNfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String)",
+      "file": "port/src/reverse.cj",
+      "line": 14
+    },
+    {
+      "owner": "ReverseNfa",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(text: String): Option<Int64>",
+      "file": "port/src/reverse.cj",
+      "line": 54
+    },
+    {
       "owner": "AstSpan",
       "name": "AstSpan",
       "kind": "class",
@@ -2372,11 +2532,51 @@
     },
     {
       "owner": "AstClassItem",
+      "name": "span",
+      "kind": "field",
+      "signature": "public let span: AstSpan",
+      "file": "port/src/syntax_ast.cj",
+      "line": 31
+    },
+    {
+      "owner": "AstClassItem",
+      "name": "startSpan",
+      "kind": "field",
+      "signature": "public let startSpan: AstSpan",
+      "file": "port/src/syntax_ast.cj",
+      "line": 33
+    },
+    {
+      "owner": "AstClassItem",
+      "name": "origin",
+      "kind": "field",
+      "signature": "public let origin: String",
+      "file": "port/src/syntax_ast.cj",
+      "line": 34
+    },
+    {
+      "owner": "AstClassItem",
+      "name": "endSpan",
+      "kind": "field",
+      "signature": "public let endSpan: AstSpan",
+      "file": "port/src/syntax_ast.cj",
+      "line": 35
+    },
+    {
+      "owner": "AstClassItem",
+      "name": "endOrigin",
+      "kind": "field",
+      "signature": "public let endOrigin: String",
+      "file": "port/src/syntax_ast.cj",
+      "line": 36
+    },
+    {
+      "owner": "AstClassItem",
       "name": "start",
       "kind": "field",
       "signature": "public let start: Int64",
       "file": "port/src/syntax_ast.cj",
-      "line": 31
+      "line": 37
     },
     {
       "owner": "AstClassItem",
@@ -2384,7 +2584,7 @@
       "kind": "field",
       "signature": "public let end: Int64",
       "file": "port/src/syntax_ast.cj",
-      "line": 32
+      "line": 38
     },
     {
       "owner": "AstClassItem",
@@ -2392,7 +2592,7 @@
       "kind": "field",
       "signature": "public let negated: Bool",
       "file": "port/src/syntax_ast.cj",
-      "line": 33
+      "line": 39
     },
     {
       "owner": "AstClassItem",
@@ -2400,7 +2600,7 @@
       "kind": "field",
       "signature": "public let children: Array<AstClassItem>",
       "file": "port/src/syntax_ast.cj",
-      "line": 34
+      "line": 40
     },
     {
       "owner": "AstClassItem",
@@ -2408,7 +2608,15 @@
       "kind": "field",
       "signature": "public let name: String",
       "file": "port/src/syntax_ast.cj",
-      "line": 35
+      "line": 41
+    },
+    {
+      "owner": "AstClassItem",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(label: String, span: AstSpan, startSpan: AstSpan, origin: String, endSpan: AstSpan, endOrigin: String, start: Int64, end: Int64, negated: Bool, children: Array<AstClassItem>, name: String)",
+      "file": "port/src/syntax_ast.cj",
+      "line": 42
     },
     {
       "owner": "AstClassItem",
@@ -2416,7 +2624,7 @@
       "kind": "constructor",
       "signature": "public init(label: String, start: Int64, end: Int64, negated: Bool, children: Array<AstClassItem>, name: String)",
       "file": "port/src/syntax_ast.cj",
-      "line": 36
+      "line": 56
     },
     {
       "owner": "AstClassItem",
@@ -2424,7 +2632,7 @@
       "kind": "method",
       "signature": "public func text(): String",
       "file": "port/src/syntax_ast.cj",
-      "line": 44
+      "line": 59
     },
     {
       "owner": "Ast",
@@ -2432,7 +2640,7 @@
       "kind": "class",
       "signature": "public class Ast",
       "file": "port/src/syntax_ast.cj",
-      "line": 71
+      "line": 97
     },
     {
       "owner": "Ast",
@@ -2440,7 +2648,7 @@
       "kind": "field",
       "signature": "public let label: String",
       "file": "port/src/syntax_ast.cj",
-      "line": 72
+      "line": 98
     },
     {
       "owner": "Ast",
@@ -2448,7 +2656,7 @@
       "kind": "field",
       "signature": "public let span: AstSpan",
       "file": "port/src/syntax_ast.cj",
-      "line": 73
+      "line": 99
     },
     {
       "owner": "Ast",
@@ -2456,7 +2664,7 @@
       "kind": "field",
       "signature": "public var code: Int64",
       "file": "port/src/syntax_ast.cj",
-      "line": 74
+      "line": 100
     },
     {
       "owner": "Ast",
@@ -2464,7 +2672,7 @@
       "kind": "field",
       "signature": "public var greedy: Bool",
       "file": "port/src/syntax_ast.cj",
-      "line": 75
+      "line": 101
     },
     {
       "owner": "Ast",
@@ -2472,7 +2680,7 @@
       "kind": "field",
       "signature": "public var negated: Bool",
       "file": "port/src/syntax_ast.cj",
-      "line": 76
+      "line": 102
     },
     {
       "owner": "Ast",
@@ -2480,7 +2688,7 @@
       "kind": "field",
       "signature": "public var captureIndex: Int64",
       "file": "port/src/syntax_ast.cj",
-      "line": 77
+      "line": 103
     },
     {
       "owner": "Ast",
@@ -2488,7 +2696,7 @@
       "kind": "field",
       "signature": "public var captureName: String",
       "file": "port/src/syntax_ast.cj",
-      "line": 78
+      "line": 104
     },
     {
       "owner": "Ast",
@@ -2496,7 +2704,7 @@
       "kind": "field",
       "signature": "public var startsWithP: Bool",
       "file": "port/src/syntax_ast.cj",
-      "line": 79
+      "line": 105
     },
     {
       "owner": "Ast",
@@ -2504,7 +2712,7 @@
       "kind": "field",
       "signature": "public var quantifier: String",
       "file": "port/src/syntax_ast.cj",
-      "line": 80
+      "line": 106
     },
     {
       "owner": "Ast",
@@ -2512,7 +2720,7 @@
       "kind": "field",
       "signature": "public var minimum: Int64",
       "file": "port/src/syntax_ast.cj",
-      "line": 81
+      "line": 107
     },
     {
       "owner": "Ast",
@@ -2520,7 +2728,7 @@
       "kind": "field",
       "signature": "public var maximum: Int64",
       "file": "port/src/syntax_ast.cj",
-      "line": 82
+      "line": 108
     },
     {
       "owner": "Ast",
@@ -2528,7 +2736,7 @@
       "kind": "field",
       "signature": "public var classItem: AstClassItem",
       "file": "port/src/syntax_ast.cj",
-      "line": 83
+      "line": 109
     },
     {
       "owner": "Ast",
@@ -2536,7 +2744,7 @@
       "kind": "field",
       "signature": "public var flagMask: Int64",
       "file": "port/src/syntax_ast.cj",
-      "line": 86
+      "line": 112
     },
     {
       "owner": "Ast",
@@ -2544,7 +2752,7 @@
       "kind": "field",
       "signature": "public var flagValue: Int64",
       "file": "port/src/syntax_ast.cj",
-      "line": 87
+      "line": 113
     },
     {
       "owner": "Ast",
@@ -2552,7 +2760,7 @@
       "kind": "field",
       "signature": "public var baseCaseInsensitive: Bool",
       "file": "port/src/syntax_ast.cj",
-      "line": 88
+      "line": 114
     },
     {
       "owner": "Ast",
@@ -2560,7 +2768,7 @@
       "kind": "field",
       "signature": "public var baseMultiLine: Bool",
       "file": "port/src/syntax_ast.cj",
-      "line": 89
+      "line": 115
     },
     {
       "owner": "Ast",
@@ -2568,7 +2776,7 @@
       "kind": "field",
       "signature": "public var baseDotAll: Bool",
       "file": "port/src/syntax_ast.cj",
-      "line": 90
+      "line": 116
     },
     {
       "owner": "Ast",
@@ -2576,7 +2784,7 @@
       "kind": "field",
       "signature": "public var baseSwapGreed: Bool",
       "file": "port/src/syntax_ast.cj",
-      "line": 91
+      "line": 117
     },
     {
       "owner": "Ast",
@@ -2584,7 +2792,7 @@
       "kind": "field",
       "signature": "public var baseIgnoreWhitespace: Bool",
       "file": "port/src/syntax_ast.cj",
-      "line": 92
+      "line": 118
     },
     {
       "owner": "Ast",
@@ -2592,7 +2800,7 @@
       "kind": "field",
       "signature": "public var baseCrlf: Bool",
       "file": "port/src/syntax_ast.cj",
-      "line": 93
+      "line": 119
     },
     {
       "owner": "Ast",
@@ -2600,7 +2808,15 @@
       "kind": "field",
       "signature": "public var baseUnicode: Bool",
       "file": "port/src/syntax_ast.cj",
-      "line": 94
+      "line": 120
+    },
+    {
+      "owner": "Ast",
+      "name": "source",
+      "kind": "field",
+      "signature": "public var source: String",
+      "file": "port/src/syntax_ast.cj",
+      "line": 121
     },
     {
       "owner": "Ast",
@@ -2608,7 +2824,7 @@
       "kind": "method",
       "signature": "public func subs(): Array<Ast>",
       "file": "port/src/syntax_ast.cj",
-      "line": 120
+      "line": 148
     },
     {
       "owner": "Ast",
@@ -2616,7 +2832,7 @@
       "kind": "method",
       "signature": "public func visit(enter: (Ast) -> Unit): Unit",
       "file": "port/src/syntax_ast.cj",
-      "line": 123
+      "line": 151
     },
     {
       "owner": "Ast",
@@ -2624,7 +2840,7 @@
       "kind": "method",
       "signature": "public func walk(enter: (Ast) -> Unit, leave: (Ast) -> Unit): Unit",
       "file": "port/src/syntax_ast.cj",
-      "line": 129
+      "line": 157
     },
     {
       "owner": "Ast",
@@ -2632,7 +2848,7 @@
       "kind": "method",
       "signature": "public func walkUntil(enter: (Ast) -> Bool, leave: (Ast) -> Bool): Bool",
       "file": "port/src/syntax_ast.cj",
-      "line": 137
+      "line": 165
     },
     {
       "owner": "Ast",
@@ -2640,7 +2856,7 @@
       "kind": "method",
       "signature": "public func shape(): String",
       "file": "port/src/syntax_ast.cj",
-      "line": 149
+      "line": 177
     },
     {
       "owner": "Ast",
@@ -2648,7 +2864,7 @@
       "kind": "method",
       "signature": "public func toPattern(): String",
       "file": "port/src/syntax_ast.cj",
-      "line": 166
+      "line": 194
     },
     {
       "owner": "Ast",
@@ -2656,7 +2872,7 @@
       "kind": "method",
       "signature": "public func toHir(): Hir",
       "file": "port/src/syntax_ast.cj",
-      "line": 171
+      "line": 199
     },
     {
       "owner": "Ast",
@@ -2664,7 +2880,7 @@
       "kind": "method",
       "signature": "public static func parse(pattern: String): Ast",
       "file": "port/src/syntax_ast.cj",
-      "line": 174
+      "line": 202
     },
     {
       "owner": "SyntaxParser",
@@ -2672,7 +2888,7 @@
       "kind": "class",
       "signature": "public class SyntaxParser",
       "file": "port/src/syntax_ast.cj",
-      "line": 1605
+      "line": 1724
     },
     {
       "owner": "SyntaxParser",
@@ -2680,7 +2896,7 @@
       "kind": "field",
       "signature": "public var caseInsensitive = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1606
+      "line": 1725
     },
     {
       "owner": "SyntaxParser",
@@ -2688,7 +2904,7 @@
       "kind": "field",
       "signature": "public var multiLine = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1607
+      "line": 1726
     },
     {
       "owner": "SyntaxParser",
@@ -2696,7 +2912,7 @@
       "kind": "field",
       "signature": "public var dotAll = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1608
+      "line": 1727
     },
     {
       "owner": "SyntaxParser",
@@ -2704,7 +2920,7 @@
       "kind": "field",
       "signature": "public var swapGreed = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1609
+      "line": 1728
     },
     {
       "owner": "SyntaxParser",
@@ -2712,7 +2928,7 @@
       "kind": "field",
       "signature": "public var ignoreWhitespace = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1610
+      "line": 1729
     },
     {
       "owner": "SyntaxParser",
@@ -2720,7 +2936,7 @@
       "kind": "field",
       "signature": "public var crlf = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1611
+      "line": 1730
     },
     {
       "owner": "SyntaxParser",
@@ -2728,7 +2944,7 @@
       "kind": "field",
       "signature": "public var unicode = true",
       "file": "port/src/syntax_ast.cj",
-      "line": 1612
+      "line": 1731
     },
     {
       "owner": "SyntaxParser",
@@ -2736,7 +2952,7 @@
       "kind": "field",
       "signature": "public var utf8 = true",
       "file": "port/src/syntax_ast.cj",
-      "line": 1613
+      "line": 1732
     },
     {
       "owner": "SyntaxParser",
@@ -2744,7 +2960,7 @@
       "kind": "field",
       "signature": "public var octal = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1614
+      "line": 1733
     },
     {
       "owner": "SyntaxParser",
@@ -2752,7 +2968,7 @@
       "kind": "field",
       "signature": "public var nestLimit: Int64 = 250",
       "file": "port/src/syntax_ast.cj",
-      "line": 1615
+      "line": 1734
     },
     {
       "owner": "SyntaxParser",
@@ -2760,7 +2976,7 @@
       "kind": "constructor",
       "signature": "public init()",
       "file": "port/src/syntax_ast.cj",
-      "line": 1616
+      "line": 1735
     },
     {
       "owner": "SyntaxParser",
@@ -2768,7 +2984,7 @@
       "kind": "method",
       "signature": "public func parseAst(pattern: String): Ast",
       "file": "port/src/syntax_ast.cj",
-      "line": 1617
+      "line": 1736
     },
     {
       "owner": "SyntaxParser",
@@ -2776,7 +2992,7 @@
       "kind": "method",
       "signature": "public func parseHir(pattern: String): Hir",
       "file": "port/src/syntax_ast.cj",
-      "line": 1631
+      "line": 1748
     },
     {
       "owner": "SyntaxParser",
@@ -2784,7 +3000,7 @@
       "kind": "method",
       "signature": "public func translate(ast: Ast): Hir",
       "file": "port/src/syntax_ast.cj",
-      "line": 1636
+      "line": 1753
     },
     {
       "owner": "HirUnsupportedError",
@@ -3289,6 +3505,126 @@
       "signature": "public func hirLookName(look: HirLook): String",
       "file": "port/src/syntax_hir.cj",
       "line": 1468
+    },
+    {
+      "owner": "LiteralPiece",
+      "name": "LiteralPiece",
+      "kind": "class",
+      "signature": "public class LiteralPiece",
+      "file": "port/src/syntax_literal.cj",
+      "line": 7
+    },
+    {
+      "owner": "LiteralPiece",
+      "name": "exact",
+      "kind": "field",
+      "signature": "public let exact: Bool",
+      "file": "port/src/syntax_literal.cj",
+      "line": 8
+    },
+    {
+      "owner": "LiteralPiece",
+      "name": "bytes",
+      "kind": "field",
+      "signature": "public let bytes: Array<UInt8>",
+      "file": "port/src/syntax_literal.cj",
+      "line": 9
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "LiteralSeq",
+      "kind": "class",
+      "signature": "public class LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 16
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "finite",
+      "kind": "field",
+      "signature": "public let finite: Bool",
+      "file": "port/src/syntax_literal.cj",
+      "line": 17
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "pieces",
+      "kind": "field",
+      "signature": "public let pieces: Array<LiteralPiece>",
+      "file": "port/src/syntax_literal.cj",
+      "line": 18
+    },
+    {
+      "owner": "顶层函数",
+      "name": "extractLiterals",
+      "kind": "function",
+      "signature": "public func extractLiterals(hir: Hir): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 25
+    },
+    {
+      "owner": "顶层函数",
+      "name": "extractLiterals",
+      "kind": "function",
+      "signature": "public func extractLiterals(hir: Hir, suffix: Bool): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 29
+    },
+    {
+      "owner": "顶层函数",
+      "name": "formatLiterals",
+      "kind": "function",
+      "signature": "public func formatLiterals(hir: Hir, suffix: Bool): String",
+      "file": "port/src/syntax_literal.cj",
+      "line": 34
+    },
+    {
+      "owner": "Utf8Sequence",
+      "name": "Utf8Sequence",
+      "kind": "class",
+      "signature": "public class Utf8Sequence",
+      "file": "port/src/utf8seq.cj",
+      "line": 7
+    },
+    {
+      "owner": "Utf8Sequence",
+      "name": "starts",
+      "kind": "field",
+      "signature": "public let starts: Array<Int64>",
+      "file": "port/src/utf8seq.cj",
+      "line": 8
+    },
+    {
+      "owner": "Utf8Sequence",
+      "name": "ends",
+      "kind": "field",
+      "signature": "public let ends: Array<Int64>",
+      "file": "port/src/utf8seq.cj",
+      "line": 9
+    },
+    {
+      "owner": "Utf8Sequence",
+      "name": "text",
+      "kind": "method",
+      "signature": "public func text(): String",
+      "file": "port/src/utf8seq.cj",
+      "line": 14
+    },
+    {
+      "owner": "顶层函数",
+      "name": "utf8SequenceLines",
+      "kind": "function",
+      "signature": "public func utf8SequenceLines(start: Int64, end: Int64): String",
+      "file": "port/src/utf8seq.cj",
+      "line": 29
+    },
+    {
+      "owner": "顶层函数",
+      "name": "utf8SequencesOf",
+      "kind": "function",
+      "signature": "public func utf8SequencesOf(start: Int64, end: Int64): Array<Utf8Sequence>",
+      "file": "port/src/utf8seq.cj",
+      "line": 41
     }
   ]
 }

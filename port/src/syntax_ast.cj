@@ -28,44 +28,70 @@ public class AstSpan {
 
 public class AstClassItem {
     public let label: String
+    public let span: AstSpan
+    // For a range, this is the start literal. Other items repeat span.
+    public let startSpan: AstSpan
+    public let origin: String
+    public let endSpan: AstSpan
+    public let endOrigin: String
     public let start: Int64
     public let end: Int64
     public let negated: Bool
     public let children: Array<AstClassItem>
     public let name: String
-    public init(label: String, start: Int64, end: Int64, negated: Bool, children: Array<AstClassItem>, name: String) {
+    public init(label: String, span: AstSpan, startSpan: AstSpan, origin: String, endSpan: AstSpan, endOrigin: String,
+        start: Int64, end: Int64, negated: Bool, children: Array<AstClassItem>, name: String) {
         this.label = label
+        this.span = span
+        this.startSpan = startSpan
+        this.origin = origin
+        this.endSpan = endSpan
+        this.endOrigin = endOrigin
         this.start = start
         this.end = end
         this.negated = negated
         this.children = children.clone()
         this.name = name
     }
+    public init(label: String, start: Int64, end: Int64, negated: Bool, children: Array<AstClassItem>, name: String) {
+        this(label, blankAstSpan(), blankAstSpan(), "", blankAstSpan(), "", start, end, negated, children, name)
+    }
     public func text(): String {
         match (label) {
-            case "Lit" => "Lit(${start})"
-            case "Range" => "Range(${start},${end})"
-            case "Union" =>
-                var body = ""
-                for (child in children) {
-                    if (!body.isEmpty()) {
-                        body += ","
-                    }
-                    body += child.text()
-                }
-                "Union(${body})"
-            case "Empty" => "Empty"
-            case "Ascii" => "Ascii(${negated},${name})"
-            case "Perl" => "Perl(${negated},${name})"
-            case "UniLetter" => "Uni(${negated},OneLetter('${name}'))"
-            case "UniBrace" => "Uni(${negated},${astPropertyKind(name)})"
-            case "Nest" => "Nest(${negated},${children[0].text()})"
-            case "Intersection" => "Op(Intersection,${children[0].text()},${children[1].text()})"
-            case "Difference" => "Op(Difference,${children[0].text()},${children[1].text()})"
-            case "SymmetricDifference" => "Op(SymmetricDifference,${children[0].text()},${children[1].text()})"
+            case "Lit" => "Lit(${span.text()},${origin},${start})"
+            case "Range" => "Range(${span.text()},${startSpan.text()},${origin},${start},${endSpan.text()},${endOrigin},${end})"
+            case "Union" => "Union(${span.text()},${joinItemText(children)})"
+            case "Empty" => "Empty(${span.text()})"
+            case "Ascii" => "Ascii(${span.text()},${negated},${name})"
+            case "Perl" => "Perl(${span.text()},${negated},${name})"
+            case "UniLetter" => "Uni(${span.text()},${negated},OneLetter('${name}'))"
+            case "UniBrace" => "Uni(${span.text()},${negated},${astPropertyKind(name)})"
+            case "Nest" => "Nest(${span.text()},${negated},${children[0].text()})"
+            case "Intersection" => "Op(Intersection,${span.text()},${children[0].text()},${children[1].text()})"
+            case "Difference" => "Op(Difference,${span.text()},${children[0].text()},${children[1].text()})"
+            case "SymmetricDifference" => "Op(SymmetricDifference,${span.text()},${children[0].text()},${children[1].text()})"
             case _ => label
         }
     }
+}
+
+func blankAstSpan(): AstSpan {
+    AstSpan(0, 1, 1, 0, 1, 1)
+}
+
+func spanCover(start: AstSpan, end: AstSpan): AstSpan {
+    AstSpan(start.startOffset, start.startLine, start.startColumn, end.endOffset, end.endLine, end.endColumn)
+}
+
+func joinItemText(children: Array<AstClassItem>): String {
+    var body = ""
+    for (child in children) {
+        if (!body.isEmpty()) {
+            body += ","
+        }
+        body += child.text()
+    }
+    body
 }
 
 public class Ast {
@@ -92,6 +118,7 @@ public class Ast {
     public var baseIgnoreWhitespace: Bool
     public var baseCrlf: Bool
     public var baseUnicode: Bool
+    public var source: String
     let children: Array<Ast>
     init(label: String, span: AstSpan, children: Array<Ast>) {
         this.label = label
@@ -116,6 +143,7 @@ public class Ast {
         baseIgnoreWhitespace = false
         baseCrlf = false
         baseUnicode = true
+        source = ""
     }
     public func subs(): Array<Ast> {
         children.clone()
@@ -172,8 +200,6 @@ public class Ast {
         astLower(this, astBaseFlags(this))
     }
     public static func parse(pattern: String): Ast {
-        // Reuse the matching parser so syntax errors keep the upstream display.
-        Parser(pattern, PatternOptions()).parse()
         AstReader(pattern).parse()
     }
     func groupToken(): String {
@@ -215,6 +241,7 @@ class AstMark {
 
 class AstReader {
     let chars: Array<Rune>
+    let source: String
     var pos: Int64 = 0
     var offset: Int64 = 0
     var line: Int64 = 1
@@ -231,6 +258,7 @@ class AstReader {
             collected.add(ch)
         }
         chars = collected.toArray()
+        source = pattern
         scope = AstFlagState()
         whitespace = binaryWhite_Space()
     }
@@ -249,6 +277,7 @@ class AstReader {
         result.baseIgnoreWhitespace = scope.ignoreWhitespace
         result.baseCrlf = scope.crlf
         result.baseUnicode = scope.unicode
+        result.source = source
         result
     }
     func alternate(): Ast {
@@ -500,7 +529,8 @@ class AstReader {
             } else {
                 "SymmetricDifference"
             }
-            left = AstClassItem(kind, 0, 0, false, [left, right], "")
+            let covered = spanCover(left.span, right.span)
+            left = classNode(kind, covered, 0, 0, false, [left, right], "")
         }
         left
     }
@@ -514,15 +544,20 @@ class AstReader {
             items.add(classPiece())
         }
         match (items.size) {
-            case 0 => AstClassItem("Empty", 0, 0, false, [], "")
+            case 0 =>
+                let here = mark()
+                classNode("Empty", span(here), 0, 0, false, [], "")
             case 1 => items[0]
-            case _ => AstClassItem("Union", 0, 0, false, items.toArray(), "")
+            case _ =>
+                let covered = spanCover(items[0].span, items[items.size - 1].span)
+                classNode("Union", covered, 0, 0, false, items.toArray(), "")
         }
     }
     func classPiece(): AstClassItem {
+        let start = mark()
         if (at(r'[')) {
             bump()
-            match (classAsciiItem()) {
+            match (classAsciiItem(start)) {
                 case Some(item) => return item
                 case None => ()
             }
@@ -531,14 +566,15 @@ class AstReader {
             if (!eat(r']')) {
                 throw Exception("unclosed character class")
             }
-            return AstClassItem("Nest", 0, 0, negated, [inner], "")
+            return classNode("Nest", span(start), 0, 0, negated, [inner], "")
         }
         if (at(r'\\')) {
             bump()
-            return classEscapeItem()
+            return classEscapeItem(start)
         }
         let begin = chars[pos]
         bump()
+        let beginSpan = span(start)
         skipLayout()
         if (at(r'-') && pos + 1 < chars.size && chars[pos + 1] != r']' && chars[pos + 1] != r'-') {
             bump()
@@ -546,36 +582,44 @@ class AstReader {
             if (pos >= chars.size) {
                 throw Exception("unclosed character class")
             }
+            let endStart = mark()
             let end = chars[pos]
             bump()
-            return AstClassItem("Range", Int64(UInt32(begin)), Int64(UInt32(end)), false, [], "")
+            return classRange(span(start), beginSpan, "Verbatim", Int64(UInt32(begin)), span(endStart), "Verbatim",
+                Int64(UInt32(end)))
         }
-        AstClassItem("Lit", Int64(UInt32(begin)), Int64(UInt32(begin)), false, [], "")
+        classLit(beginSpan, "Verbatim", Int64(UInt32(begin)))
     }
-    func classEscapeItem(): AstClassItem {
+    func classEscapeItem(start: AstMark): AstClassItem {
         if (pos >= chars.size) {
             throw Exception("incomplete escape sequence")
         }
         let ch = chars[pos]
         bump()
         match (ch) {
-            case r'd' | r'D' => AstClassItem("Perl", 0, 0, ch == r'D', [], "Digit")
-            case r's' | r'S' => AstClassItem("Perl", 0, 0, ch == r'S', [], "Space")
-            case r'w' | r'W' => AstClassItem("Perl", 0, 0, ch == r'W', [], "Word")
-            case r'p' | r'P' => classUnicodeItem(ch == r'P')
-            case r'n' => AstClassItem("Lit", 10, 10, false, [], "")
-            case r'r' => AstClassItem("Lit", 13, 13, false, [], "")
-            case r't' => AstClassItem("Lit", 9, 9, false, [], "")
-            case r'a' => AstClassItem("Lit", 7, 7, false, [], "")
-            case r'f' => AstClassItem("Lit", 12, 12, false, [], "")
-            case r'v' => AstClassItem("Lit", 11, 11, false, [], "")
+            case r'd' | r'D' => classNode("Perl", span(start), 0, 0, ch == r'D', [], "Digit")
+            case r's' | r'S' => classNode("Perl", span(start), 0, 0, ch == r'S', [], "Space")
+            case r'w' | r'W' => classNode("Perl", span(start), 0, 0, ch == r'W', [], "Word")
+            case r'p' | r'P' => classUnicodeItem(start, ch == r'P')
+            case r'n' => classLit(span(start), "Special(LineFeed)", 10)
+            case r'r' => classLit(span(start), "Special(CarriageReturn)", 13)
+            case r't' => classLit(span(start), "Special(Tab)", 9)
+            case r'a' => classLit(span(start), "Special(Bell)", 7)
+            case r'f' => classLit(span(start), "Special(FormFeed)", 12)
+            case r'v' => classLit(span(start), "Special(VerticalTab)", 11)
             case r'x' | r'u' | r'U' =>
-                let node = hexLiteral(mark(), ch)
-                AstClassItem("Lit", node.code, node.code, false, [], "")
-            case _ => AstClassItem("Lit", Int64(UInt32(ch)), Int64(UInt32(ch)), false, [], "")
+                let node = hexLiteral(start, ch)
+                classLit(node.span, node.quantifier, node.code)
+            case _ =>
+                let origin = if (astMeta(ch)) {
+                    "Meta"
+                } else {
+                    "Superfluous"
+                }
+                classLit(span(start), origin, Int64(UInt32(ch)))
         }
     }
-    func classUnicodeItem(negated: Bool): AstClassItem {
+    func classUnicodeItem(start: AstMark, negated: Bool): AstClassItem {
         if (eat(r'{')) {
             let text = StringBuilder()
             while (pos < chars.size && !at(r'}')) {
@@ -585,16 +629,16 @@ class AstReader {
             if (!eat(r'}')) {
                 throw Exception("unclosed Unicode property")
             }
-            return AstClassItem("UniBrace", 0, 0, negated, [], text.toString())
+            return classNode("UniBrace", span(start), 0, 0, negated, [], text.toString())
         }
         if (pos >= chars.size) {
             throw Exception("incomplete escape sequence")
         }
         let letter = chars[pos]
         bump()
-        AstClassItem("UniLetter", 0, 0, negated, [], String([letter]))
+        classNode("UniLetter", span(start), 0, 0, negated, [], String([letter]))
     }
-    func classAsciiItem(): Option<AstClassItem> {
+    func classAsciiItem(start: AstMark): Option<AstClassItem> {
         if (!at(r':')) {
             return None<AstClassItem>
         }
@@ -622,7 +666,20 @@ class AstReader {
             bump()
             left--
         }
-        Some(AstClassItem("Ascii", 0, 0, negated, [], kind))
+        Some(classNode("Ascii", span(start), 0, 0, negated, [], kind))
+    }
+    func classNode(label: String, itemSpan: AstSpan, start: Int64, end: Int64, negated: Bool,
+        children: Array<AstClassItem>, name: String): AstClassItem {
+        let blank = blankAstSpan()
+        AstClassItem(label, itemSpan, itemSpan, "", blank, "", start, end, negated, children, name)
+    }
+    func classLit(itemSpan: AstSpan, origin: String, code: Int64): AstClassItem {
+        let blank = blankAstSpan()
+        AstClassItem("Lit", itemSpan, itemSpan, origin, blank, "", code, code, false, [], "")
+    }
+    func classRange(itemSpan: AstSpan, startSpan: AstSpan, origin: String, start: Int64, endSpan: AstSpan,
+        endOrigin: String, end: Int64): AstClassItem {
+        AstClassItem("Range", itemSpan, startSpan, origin, endSpan, endOrigin, start, end, false, [], "")
     }
     func classOperator(): Bool {
         if (pos + 1 >= chars.size || chars[pos] != chars[pos + 1]) {
@@ -748,8 +805,13 @@ class AstReader {
         }
         bump()
         let name = StringBuilder()
-        while (pos < chars.size && !at(r'}')) { name.append(chars[pos]); bump() }
-        if (!eat(r'}')) { throw Exception("unclosed special word boundary") }
+        while (pos < chars.size && !at(r'}')) {
+            name.append(chars[pos]);
+            bump()
+        }
+        if (!eat(r'}')) {
+            throw Exception("unclosed special word boundary")
+        }
         let kind = match (name.toString()) {
             case "start" => "WordBoundaryStart"
             case "end" => "WordBoundaryEnd"
@@ -834,6 +896,8 @@ class AstFlagState {
     var ignoreWhitespace: Bool = false
     var crlf: Bool = false
     var unicode: Bool = true
+    var utf8: Bool = true
+    var pattern: String = ""
     init() {}
     func apply(mask: Int64, value: Int64): Unit {
         if ((mask & AST_FLAG_I) != 0) {
@@ -871,6 +935,8 @@ class AstFlagState {
         ignoreWhitespace = saved.ignoreWhitespace
         crlf = saved.crlf
         unicode = saved.unicode
+        utf8 = saved.utf8
+        pattern = saved.pattern
     }
 }
 
@@ -1077,11 +1143,11 @@ func astLower(ast: Ast, flags: AstFlagState): Hir {
         case "flags" =>
             flags.apply(ast.flagMask, ast.flagValue)
             Hir.empty()
-        case "literal" => astLiteral(ast.code, flags.caseInsensitive, flags.unicode, ast.quantifier == "HexFixed(X)")
-        case "dot" => astDot(flags)
+        case "literal" => astLiteral(ast, flags)
+        case "dot" => astDot(ast, flags)
         case "assert" => Hir.look(astLook(ast.quantifier, flags))
         case "perl" => astPerl(ast, flags)
-        case "unicode" => hirFromCharSet(false, unicodeProperty(ast.captureName, ast.negated, flags.caseInsensitive))
+        case "unicode" => hirFromCharSet(false, astUnicodeSet(ast.span, ast.captureName, ast.negated, flags))
         case "class" => astClass(ast, flags)
         case "repeat" =>
             let child = astLower(ast.children[0], flags)
@@ -1125,13 +1191,18 @@ func astLower(ast: Ast, flags: AstFlagState): Hir {
     }
 }
 
-func astLiteral(code: Int64, caseInsensitive: Bool, unicode: Bool, byteEscape: Bool): Hir {
-    // Disabling Unicode changes classes/folding, not UTF-8 encoding of source
-    // characters. Only a fixed two-digit byte escape denotes a raw byte.
+func astLiteral(ast: Ast, flags: AstFlagState): Hir {
+    let code = ast.code
+    let unicode = flags.unicode
+    let byteEscape = ast.quantifier == "HexFixed(X)"
+    // A non-ASCII \xNN byte can match invalid UTF-8. Source characters stay UTF-8.
+    if (!unicode && byteEscape && code > 127 && flags.utf8) {
+        throw translateError(flags.pattern, ast.span, "pattern can match invalid UTF-8")
+    }
     if (!unicode && code >= 128 && !byteEscape) {
         return Hir.literal(String([Rune(UInt32(code))]).toArray())
     }
-    if (!caseInsensitive) {
+    if (!flags.caseInsensitive) {
         return if (unicode || code < 128) {
             Hir.literal(String([Rune(UInt32(code))]).toArray())
         } else {
@@ -1145,6 +1216,7 @@ func astLiteral(code: Int64, caseInsensitive: Bool, unicode: Bool, byteEscape: B
     } else {
         set.caseFoldAscii()
     }
+    astRejectUtf8(ast.span, flags, set)
     hirFromCharSet(!unicode, set)
 }
 
@@ -1157,6 +1229,7 @@ func astClass(ast: Ast, flags: AstFlagState): Hir {
     if (!flags.unicode) {
         set = astFinishAscii(set)
     }
+    astRejectUtf8(ast.span, flags, set)
     hirFromCharSet(!flags.unicode, set)
 }
 
@@ -1172,7 +1245,9 @@ func astFold(set: CharSet, flags: AstFlagState): Unit {
 }
 
 func astPerl(ast: Ast, flags: AstFlagState): Hir {
-    hirFromCharSet(!flags.unicode, astPerlSet(ast.quantifier, ast.negated, flags))
+    let set = astPerlSet(ast.quantifier, ast.negated, flags)
+    astRejectUtf8(ast.span, flags, set)
+    hirFromCharSet(!flags.unicode, set)
 }
 
 func astBaseFlags(ast: Ast): AstFlagState {
@@ -1184,10 +1259,38 @@ func astBaseFlags(ast: Ast): AstFlagState {
     flags.ignoreWhitespace = ast.baseIgnoreWhitespace
     flags.crlf = ast.baseCrlf
     flags.unicode = ast.baseUnicode
+    flags.utf8 = true
+    flags.pattern = ast.source
     flags
 }
 
-func astDot(flags: AstFlagState): Hir {
+func astRejectUtf8(span: AstSpan, flags: AstFlagState, set: CharSet): Unit {
+    if (flags.utf8 && !flags.unicode && set.exceedsAscii()) {
+        throw translateError(flags.pattern, span, "pattern can match invalid UTF-8")
+    }
+}
+
+func astUnicodeSet(span: AstSpan, name: String, negated: Bool, flags: AstFlagState): CharSet {
+    if (!flags.unicode) {
+        throw translateError(flags.pattern, span, "Unicode not allowed here")
+    }
+    try {
+        unicodeProperty(name, negated, flags.caseInsensitive)
+    } catch (e: RegexError) {
+        throw e
+    } catch (e: Exception) {
+        let text = e.toString()
+        if (text.contains("value not found")) {
+            throw translateError(flags.pattern, span, "Unicode property value not found")
+        }
+        throw translateError(flags.pattern, span, "Unicode property not found")
+    }
+}
+
+func astDot(ast: Ast, flags: AstFlagState): Hir {
+    if (flags.utf8 && !flags.unicode) {
+        throw translateError(flags.pattern, ast.span, "pattern can match invalid UTF-8")
+    }
     if (flags.dotAll) {
         return if (flags.unicode) {
             Hir.dot(HirDot.AnyChar)
@@ -1232,7 +1335,7 @@ func astItemSet(item: AstClassItem, flags: AstFlagState): CharSet {
             set
         case "Ascii" => astAsciiSet(item.name, item.negated, flags)
         case "Perl" => astPerlSet(item.name, item.negated, flags)
-        case "UniLetter" | "UniBrace" => unicodeProperty(item.name, item.negated, flags.caseInsensitive)
+        case "UniLetter" | "UniBrace" => astUnicodeSet(item.span, item.name, item.negated, flags)
         case "Nest" =>
             var inner = astItemSet(item.children[0], flags)
             astFold(inner, flags)
@@ -1375,13 +1478,29 @@ func astLook(kind: String, flags: AstFlagState): HirLook {
                 HirLook.WordAsciiNegate
             }
         case "WordBoundaryStart" | "WordBoundaryStartAngle" =>
-            if (flags.unicode) { HirLook.WordStartUnicode } else { HirLook.WordStartAscii }
+            if (flags.unicode) {
+                HirLook.WordStartUnicode
+            } else {
+                HirLook.WordStartAscii
+            }
         case "WordBoundaryEnd" | "WordBoundaryEndAngle" =>
-            if (flags.unicode) { HirLook.WordEndUnicode } else { HirLook.WordEndAscii }
+            if (flags.unicode) {
+                HirLook.WordEndUnicode
+            } else {
+                HirLook.WordEndAscii
+            }
         case "WordBoundaryStartHalf" =>
-            if (flags.unicode) { HirLook.WordStartHalfUnicode } else { HirLook.WordStartHalfAscii }
+            if (flags.unicode) {
+                HirLook.WordStartHalfUnicode
+            } else {
+                HirLook.WordStartHalfAscii
+            }
         case "WordBoundaryEndHalf" =>
-            if (flags.unicode) { HirLook.WordEndHalfUnicode } else { HirLook.WordEndHalfAscii }
+            if (flags.unicode) {
+                HirLook.WordEndHalfUnicode
+            } else {
+                HirLook.WordEndHalfAscii
+            }
         case _ => throw Exception("unknown AST assertion")
     }
 }
@@ -1615,8 +1734,6 @@ public class SyntaxParser {
     public var nestLimit: Int64 = 250
     public init() {}
     public func parseAst(pattern: String): Ast {
-        let options = syntaxOptions(this)
-        Parser(pattern, options).parse()
         let reader = AstReader(pattern)
         reader.scope.caseInsensitive = caseInsensitive
         reader.scope.multiline = multiLine
@@ -1642,6 +1759,8 @@ public class SyntaxParser {
         flags.ignoreWhitespace = ignoreWhitespace
         flags.crlf = crlf
         flags.unicode = unicode
+        flags.utf8 = utf8
+        flags.pattern = ast.source
         astLower(ast, flags)
     }
 }

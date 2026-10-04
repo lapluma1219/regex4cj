@@ -50,6 +50,27 @@ func hexBytes(bytes: Array<UInt8>): String {
     return result.toString()
 }
 
+func plainException(e: Exception): String {
+    let text = e.toString()
+    let prefix = "Exception: "
+    if (text.startsWith(prefix)) {
+        return text[prefix.size..]
+    }
+    return text
+}
+
+func printBacktrack(caps: Captures): Unit {
+    println("pattern\t0")
+    let whole = caps.getMatch()
+    println("span\t${whole.start}\t${whole.end}")
+    for (i in 0..caps.size) {
+        match (caps.get(i)) {
+            case Some(group) => println("group\t${i}\t${group.start}\t${group.end}\t${hexText(group.asStr())}")
+            case None => println("group\t${i}\t-")
+        }
+    }
+}
+
 func hexText(text: String): String {
     let result = StringBuilder()
     for (byte in text.toArray()) {
@@ -318,6 +339,17 @@ main(args: Array<String>): Int64 {
             println(Ast.parse(args[1]).shape())
             return 0
         }
+        if (args.size == 3 && args[0] == "ast-translate") {
+            let ast = Ast.parse(args[1])
+            let parser = SyntaxParser()
+            parser.utf8 = args[2] == "true"
+            try {
+                println(hirShape(parser.translate(ast)))
+            } catch (e: RegexError) {
+                println(e.structure())
+            }
+            return 0
+        }
         if (args.size == 2 && args[0] == "ast-hir") {
             println(hirShape(Ast.parse(args[1]).toHir()))
             return 0
@@ -332,6 +364,99 @@ main(args: Array<String>): Int64 {
         }
         if (args.size == 3 && args[0] == "hir-print") {
             println(Hir.parse(args[1], args[2] == "true").toPattern())
+            return 0
+        }
+        if (args.size == 3 && args[0] == "nfa-rev") {
+            match (ReverseNfa(args[1]).search(args[2])) {
+                case Some(offset) => println("offset\t${offset}")
+                case None => println("none")
+            }
+            return 0
+        }
+        if (args.size == 3 && args[0] == "literals") {
+            if (args[1] != "prefix" && args[1] != "suffix") {
+                throw Exception("literal kind must be prefix or suffix")
+            }
+            println(formatLiterals(Hir.parse(args[2]), args[1] == "suffix"))
+            return 0
+        }
+        if (args.size == 3 && args[0] == "utf8") {
+            println(utf8SequenceLines(Int64.parse(args[1]), Int64.parse(args[2])))
+            return 0
+        }
+        if (args.size >= 3 && args[0] == "pike-overlap") {
+            let patterns = Array<String>(args.size - 2, {i => args[i + 2]})
+            let ids = PikeVM(patterns).whichOverlapping(args[1])
+            println("count\t${ids.size}")
+            for (id in ids) {
+                println("id\t${id}")
+            }
+            return 0
+        }
+        if (args.size == 4 && args[0] == "dfa") {
+            if (args[1] != "dense" && args[1] != "sparse") {
+                throw Exception("dfa kind must be dense or sparse")
+            }
+            try {
+                let found = if (args[1] == "dense") {
+                    DenseDfa(args[2]).search(args[3])
+                } else {
+                    SparseDfa(args[2]).search(args[3])
+                }
+                match (found) {
+                    case Some(hit) => println("span\t${hit.start}\t${hit.end}")
+                    case None => println("none")
+                }
+            } catch (e: Exception) {
+                println("error\t${plainException(e)}")
+            }
+            return 0
+        }
+        if (args.size == 3 && args[0] == "backtrack-info") {
+            let engine = if (args[1] == "default") {
+                BoundedBacktracker(args[2])
+            } else {
+                BoundedBacktracker(args[2], Int64.parse(args[1]))
+            }
+            println("states\t${engine.stateCount()}")
+            println("max\t${engine.maxHaystackLen()}")
+            return 0
+        }
+        if (args.size == 4 && args[0] == "backtrack") {
+            let engine = if (args[1] == "default") {
+                BoundedBacktracker(args[2])
+            } else {
+                BoundedBacktracker(args[2], Int64.parse(args[1]))
+            }
+            try {
+                match (engine.search(args[3])) {
+                    case None => println("none")
+                    case Some(caps) => printBacktrack(caps)
+                }
+            } catch (e: Exception) {
+                let text = plainException(e)
+                if (!text.startsWith("haystack of length ")) {
+                    throw e
+                }
+                println("error\t${text}")
+            }
+            return 0
+        }
+        if (args.size >= 3 && args[0] == "pike-earliest") {
+            let patterns = Array<String>(args.size - 2, {i => args[i + 2]})
+            match (PikeVM(patterns).searchEarliest(args[1])) {
+                case None => println("none")
+                case Some(hit) =>
+                    println("pattern\t${hit.pattern}")
+                    println("span\t${hit.start()}\t${hit.end()}")
+                    for (i in 0..hit.captures.size) {
+                        match (hit.captures.get(i)) {
+                            case Some(group) => println(
+                                "group\t${i}\t${group.start}\t${group.end}\t${hexText(group.asStr())}")
+                            case None => println("group\t${i}\t-")
+                        }
+                    }
+            }
             return 0
         }
         if (args.size >= 5 && (args[0] == "pike" || args[0] == "pike-hir")) {

@@ -97,6 +97,29 @@ class SourceSpan {
 }
 
 // Column is a 1-based scalar index on the line, matching regex-syntax Position.
+func translateError(pattern: String, span: AstSpan, message: String): RegexError {
+    let start = scalarAt(pattern, span.startOffset)
+    let end = scalarAt(pattern, span.endOffset)
+    let display = formatSyntaxErrorSpans(pattern, start, end, -1, -1, message)
+    let classified = classifySyntax(message)
+    let primary = RegexErrorSpan(span.startOffset, span.startLine, span.startColumn, span.endOffset, span.endLine,
+        span.endColumn)
+    RegexError(RegexErrorKind.Syntax, display, -1, classified[0], classified[1], Some(primary), None<RegexErrorSpan>)
+}
+
+func scalarAt(pattern: String, byteOffset: Int64): Int64 {
+    var offset: Int64 = 0
+    var index: Int64 = 0
+    for (ch in pattern.runes()) {
+        if (offset >= byteOffset) {
+            return index
+        }
+        offset += utf8Width(ch)
+        index++
+    }
+    index
+}
+
 func syntaxError(pattern: String, start: Int64, end: Int64, auxStart: Int64, auxEnd: Int64, message: String): RegexError {
     let display = formatSyntaxErrorSpans(pattern, start, end, auxStart, auxEnd, message)
     let classified = classifySyntax(message)

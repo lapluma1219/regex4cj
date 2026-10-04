@@ -161,7 +161,7 @@ bash scripts/run.sh set-matches '订单 AB-123 退款' '退款' '发票' '[A-Z]{
 - 前后查找和反向引用。上游的字符串接口也会拒绝它们。
 - Break 属性只判断字符属于哪个集合，不把文本切成词或句。
 - 没有 `regex!` 宏，也没有 Rust 的 `Iterator`、`Replacer`、`FromStr`、`Debug` 这些 trait。对应行为是上面的方法、数组和回调。
-- 没有 regex-syntax、regex-automata、regex-lite、regex-capi 的公开类型。
+- 顶层 `Regex` 不是完整的 regex-syntax、regex-automata、regex-lite 或 regex-capi。`PikeVM`、`ReverseNfa`、`BoundedBacktracker`、`DenseDfa` 和 `SparseDfa` 是单独的搜索类型，见 [现状](status.md)。
 
 ### 捕获组迭代器的剩余数量与复制
 

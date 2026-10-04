@@ -84,7 +84,7 @@ R表示重复，U表示Unicode字符类，花括号是该节点的最短/最长�
 
 `Hir.properties()` 还提供是否总是匹配合法 UTF-8、显式捕获数、静态捕获数、字面量判定，以及断言集合。长度口径仍是 UTF-8 字节。`PikeVM` 也可以直接接收 `Hir`，不必先把结构打印回字符串。
 
-还没有字面量提取和公开 UTF-8 范围工具。`[:digit:]` 和 `[:^alpha:]` 已经是 AST 里的具名类节点，降级时走现有的 ASCII 类表。`Hir.subs()` 放在 Hir 对象上，是对原仓库 `HirKind::subs` 的显式适配。
+`extractLiterals` 按 `regex-syntax` 默认限额提取前缀或后缀字面量。`utf8SequencesOf` 把标量区间展开成与 `Utf8Sequences` 相同的字节区间。`memory_usage` 仍没有。`[:digit:]` 和 `[:^alpha:]` 已经是 AST 里的具名类节点，降级时走现有的 ASCII 类表。字符类子项带有字节跨度和字面量来源。`Ast.parse` 只做语法分析；`(?-u:\xFF)` 和未知 Unicode 属性先得到语法树，翻译时才按 `utf8` 和属性表拒绝。`Hir.subs()` 放在 Hir 对象上，是对原仓库 `HirKind::subs` 的显式适配。
 
 ## 如何验证
 
@@ -95,6 +95,6 @@ bash scripts/run.sh build
 python3 tests/verify_hir.py
 ```
 
-验证使用锁定到原仓库固定提交的 regex-syntax 独立解析和构造，每个节点都比较结构、载荷及长度范围。当前这批是 367 组解析、235 组直接构造、41 组 Display 打印，另有 4 个非法规则。构造对照包括空类、反向/重叠范围、跨 Unicode 代理区间、非法 UTF-8、空捕获重复、字面量合并、断言、点号、分支前缀提取，以及 UInt64 长度溢出。原生测试另外检查返回数组被修改后不会影响节点。具体语法对照在 `python3 tests/verify_ast.py`，当前是 83 组形状、83 组 AST Display 和 50 组降级。属性对照在 `python3 tests/verify_props.py`，当前是 32 组，另有 6 组从 HIR 编译后再搜索。语法错误的种类和位置在 `python3 tests/verify_error_spans.py`，当前是 37 组。
+验证使用锁定到原仓库固定提交的 regex-syntax 独立解析和构造，每个节点都比较结构、载荷及长度范围。当前这批是 367 组解析、235 组直接构造、41 组 Display 打印，另有 4 个非法规则。构造对照包括空类、反向/重叠范围、跨 Unicode 代理区间、非法 UTF-8、空捕获重复、字面量合并、断言、点号、分支前缀提取，以及 UInt64 长度溢出。原生测试另外检查返回数组被修改后不会影响节点。具体语法对照在 `python3 tests/verify_ast.py`，当前是 88 组形状、88 组 AST Display 和 50 组降级。其中 `(?-u:\xFF)`、`(?-u:.)`、`(?-u:\D)`、`(?-u:\pL)` 和未知属性先比较 AST，再比较翻译错误；`utf8` 关闭时 `(?-u:\xFF)` 的翻译与 HIR 一致。属性对照在 `python3 tests/verify_props.py`，当前是 32 组，另有 6 组从 HIR 编译后再搜索。语法错误的种类和位置在 `python3 tests/verify_error_spans.py`，当前是 37 组。
 
 `bash scripts/run.sh verify`已将HIR差分加入验收，共41个阶段。通过这些输入不代表完成了全部regex-syntax，更不能把节点种类或接口数直接换算为整个原仓库的完成百分比。

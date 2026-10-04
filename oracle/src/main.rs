@@ -4,6 +4,10 @@ mod api_audit;
 mod lazy_audit;
 mod pike;
 mod ast_audit;
+mod literal_audit;
+mod reverse_audit;
+mod backtrack_audit;
+mod dfa_audit;
 
 use regex::Regex;
 fn hex_text(text: &str) -> String {
@@ -56,8 +60,21 @@ fn main() {
         Some("hir-print") if a.len()==3 => hir_audit::print_hir(&a[1], a[2]=="true"),
         Some("hir-props") if a.len()==3 => hir_audit::properties(&a[1], a[2]=="true"),
         Some("ast") if a.len()==2 => ast_audit::parse(&a[1]),
+        Some("ast-translate") if a.len()==3 => ast_audit::ast_translate(&a[1], a[2]=="true"),
         Some("ast-print") if a.len()==2 => ast_audit::ast_print(&a[1]),
         Some("syntax-error") if a.len()==2 => ast_audit::syntax_error(&a[1]),
+        Some("literals") if a.len()==3 => literal_audit::literals(&a[1], &a[2]),
+        Some("utf8") if a.len()==3 => {
+            let start: u32 = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: u32 = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            literal_audit::utf8(start, end);
+        },
+        Some("nfa-rev") if a.len()==3 => reverse_audit::search(&a[1], &a[2]),
+        Some("backtrack-info") if a.len()==3 => backtrack_audit::info(&a[1], &a[2]),
+        Some("backtrack") if a.len()==4 => backtrack_audit::search(&a[1], &a[2], &a[3]),
+        Some("dfa") if a.len()==4 => dfa_audit::search(&a[1], &a[2], &a[3]),
+        Some("pike-overlap") if a.len()>=3 => pike::overlapping(&a[1], &a[2..]),
+        Some("pike-earliest") if a.len()>=3 => pike::earliest(&a[1], &a[2..]),
         Some("pike") if a.len()>=5 => {
             let start: usize = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
             let end: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });

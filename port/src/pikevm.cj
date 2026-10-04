@@ -119,6 +119,49 @@ public class PikeVM {
     public func opAlternate(pattern: Int64, state: Int64): Int64 {
         engine(pattern).nfaAlternate(state)
     }
+    public func whichOverlapping(text: String): Array<Int64> {
+        let ids = ArrayList<Int64>()
+        for (i in 0..engines.size) {
+            if (engines[i].isMatch(text)) {
+                ids.add(i)
+            }
+        }
+        ids.toArray()
+    }
+    public func searchEarliest(text: String): Option<PikeMatch> {
+        var bestPattern: Int64 = -1
+        var bestStart: Int64 = 0
+        var bestEnd: Int64 = 0
+        var best: Option<Captures> = None
+        for (i in 0..engines.size) {
+            match (engines[i].searchEarliest(text)) {
+                case None => ()
+                case Some(found) =>
+                    let at = match (found.get(0)) {
+                        case Some(hit) => hit.start
+                        case None => 0
+                    }
+                    let stop = match (found.get(0)) {
+                        case Some(hit) => hit.end
+                        case None => 0
+                    }
+                    if (bestPattern < 0 || stop < bestEnd || (stop == bestEnd && at < bestStart)) {
+                        bestPattern = i
+                        bestStart = at
+                        bestEnd = stop
+                        best = Some(found)
+                    }
+            }
+        }
+        match (best) {
+            case Some(found) =>
+                cache.remember(bestPattern, found)
+                Some(PikeMatch(bestPattern, found))
+            case None =>
+                cache.reset()
+                None
+        }
+    }
     public func search(text: String): Option<PikeMatch> {
         search(text, 0, text.size, false)
     }

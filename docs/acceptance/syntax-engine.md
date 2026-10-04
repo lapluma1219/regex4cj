@@ -5,7 +5,7 @@
 这一批把三层入口补到可以单独调用：
 
 - `Hir` 增加断言、分支和点号到字符类的转换。`toPattern()` 与固定上游的 HIR Display 对照了 41 组。构造对照 235 组，解析对照 367 组。
-- `Ast` 保留分组、重复、括号类、Perl 类、Unicode 属性、`[a&&b]`、`[a--b]`、`[a~~b]`，以及 `[:digit:]`、`[:^alpha:]`。83 组形状与 regex-syntax 一致，其中 50 组 `toHir()` 与 `Hir.parse` 的结构一致。同一批 83 组的 `toPattern()` 与 AST Display 一致。`(?U)a?` 的贪婪位保持语法上的 true，降到 HIR 才换成非贪婪。
+- `Ast` 保留分组、重复、括号类、Perl 类、Unicode 属性、`[a&&b]`、`[a--b]`、`[a~~b]`，以及 `[:digit:]`、`[:^alpha:]`。字符类子项带有字节跨度和字面量来源。88 组形状与 regex-syntax 一致，其中 50 组 `toHir()` 与 `Hir.parse` 的结构一致。同一批模式的 `toPattern()` 与 AST Display 一致。`(?-u:\xFF)`、`(?-u:.)`、`(?-u:\D)` 和未知 Unicode 属性可以先形成 AST；默认 `utf8` 打开时，翻译再拒绝它们。`SyntaxParser.utf8 = false` 时，`(?-u:\xFF)` 的翻译与 `Hir.parse` 一致。`(?U)a?` 的贪婪位保持语法上的 true，降到 HIR 才换成非贪婪。
 - `Hir.properties()` 增加 UTF-8、显式捕获数、静态捕获数、字面量判定和断言集合。32 组和 regex-syntax 一致。最短、最长长度的原有 367 组解析和 235 组构造仍然一致。
 - `SyntaxParser` 带上和 Builder 相同的标志、八进制、嵌套上限和 UTF-8 安全配置，可以解析 AST、解析 HIR，或把 AST 翻译成 HIR。
 - `PikeVM` 可以从 `Hir` 直接编译再搜索。同一批模式上，这条路径和从模式字符串编译的搜索结果一致，抽了 6 组。此前 19 组和 regex-automata 的范围、锚定、多模式对照仍然有效。

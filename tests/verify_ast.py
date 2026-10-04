@@ -42,6 +42,7 @@ patterns = [
     '(?x:a{2, 3})', '(?x:a#c\nb)', '(?i)a|b', '(?i:[^a])', '(?-u:\\d)', '(?mR:.)',
     '[a&&b]', '[ab&&b]', '[a--b]', '[a~~b]', '[a&&[bc]]', r'[\d&&\w]', '[a&&b&&c]',
     '[[:digit:]]', '[[:^alpha:]]', '[a[:digit:]]', '[[:word:]&&[:digit:]]',
+    r'(?-u:\xFF)', r'\p{NotAProperty}', r'(?-u:.)', r'(?-u:\D)', r'(?-u:\pL)',
 ]
 for pattern in patterns:
     compare('ast', pattern)
@@ -59,6 +60,10 @@ for pattern in ['(?<id>[0-9]{6})', 'a|b', '(?:a)', 'a*', 'ab', '(a)', '^', '.', 
     lowered += 1
 for pattern in patterns:
     compare('ast-print', pattern)
+for pattern, utf8 in [(r'(?-u:\xFF)', 'true'), (r'\p{NotAProperty}', 'true'), (r'(?-u:.)', 'true'),
+                      (r'(?-u:\D)', 'true'), (r'(?-u:\pL)', 'true'), (r'(?-u:\xFF)', 'false'),
+                      (r'(?-u:\w)', 'false'), (r'\p{sc=Nope}', 'true')]:
+    compare('ast-translate', pattern, utf8)
 printed = run(CJ, 'ast-print', '(?<id>[0-9]{6})')
 assert printed.returncode == 0 and printed.stdout.strip() == '(?<id>[0-9]{6})', printed
 again = run(CJ, 'hir', printed.stdout.strip(), 'true')

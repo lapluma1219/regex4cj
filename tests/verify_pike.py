@@ -56,6 +56,31 @@ for text in ['éa', '中a', '🙂a']:
                 for patterns in [[], [''], ['a'], ['.'], ['a', '']]:
                     compare('pike', str(start), str(end), anchored, text, *patterns)
                     count += 1
+overlap = [
+    ('foobar', r'\w+', r'\d+', r'\pL+', 'foo', 'bar', 'barfoo', 'foobar'),
+    ('samwise', 'sam', 'samwise'),
+    ('', 'a*', 'b'),
+    ('aaa', 'a+', 'b'),
+    ('abc', 'a', 'bc', 'ab', 'z'),
+]
+for text, *patterns in overlap:
+    compare('pike-overlap', text, *patterns)
+    count += 1
+earliest = [
+    ('aaa', 'a+'),
+    ('aaa', 'a*'),
+    ('aaa', 'a?'),
+    ('aaa', 'a{3}'),
+    ('xyz', 'a+'),
+    ('aaa', 'a', 'a+'),
+    ('aaa', 'a+', 'a'),
+    ('id=123456', r'(?<id>[0-9]{6})'),
+    ('foobar', 'foo', 'foobar', 'bar'),
+    ('ab', 'a|ab'),
+]
+for text, *patterns in earliest:
+    compare('pike-earliest', text, *patterns)
+    count += 1
 reversed_range = run(CJ, 'pike', '2', '1', 'false', 'ab', 'a')
 assert reversed_range.returncode == 2 and 'invalid search range' in reversed_range.stderr, reversed_range
 report = json.loads(REPORT.read_text()) if REPORT.exists() else {}

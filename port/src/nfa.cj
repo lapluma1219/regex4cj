@@ -185,7 +185,6 @@ class Input {
         // next boundary while retaining the original input for assertions.
         return lo
     }
-
 }
 
 func staticExplicit(expr: Expr): Option<Int64> {
@@ -789,6 +788,13 @@ public class Regex {
         }
         return best
     }
+    public func searchEarliest(text: String): Option<Captures> {
+        let input = Input(text)
+        match (search(input, 0, true, true)) {
+            case Some(hit) => Some(captureResult(text, input, hit))
+            case None => None
+        }
+    }
     public func find(text: String): Option<RegexMatch> {
         let input = Input(text)
         match (search(input, 0, false, false)) {
@@ -1209,8 +1215,12 @@ public class Regex {
         let input = Input(text)
         let from = input.boundary(start)
         var until = input.boundary(end)
-        if (input.offsets[until] != end) { until-- }
-        if (from > until || (anchored && input.offsets[from] != start)) { return None }
+        if (input.offsets[until] != end) {
+            until--
+        }
+        if (from > until || (anchored && input.offsets[from] != start)) {
+            return None
+        }
         match (search(input, from, until, anchored, true, false)) {
             case Some(hit) => Some(captureResult(text, input, hit))
             case None => None

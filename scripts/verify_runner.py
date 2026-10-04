@@ -68,8 +68,10 @@ def main():
                      'verify_boundaries', 'verify_properties', 'verify_scripts', 'verify_binary', 'verify_syntax',
                      'verify_errors', 'verify_limits', 'verify_bytes', 'verify_upstream_sample',
                      'verify_upstream_suite', 'verify_sets', 'verify_api_contracts', 'verify_hir',
-                     'verify_ast', 'verify_pike', 'verify_props', 'verify_error_spans']:
+                     'verify_ast', 'verify_pike', 'verify_props', 'verify_error_spans',
+                     'verify_literals', 'verify_utf8', 'verify_reverse', 'verify_backtrack', 'verify_dfa']:
             stages.append((name, [sys.executable, f'tests/{name}.py'], ROOT))
+        stages.append(('coverage-ledger', [sys.executable, 'scripts/check_coverage.py'], ROOT))
         stages += [('showcase', [sys.executable, 'scripts/showcase.py'], ROOT),
                    ('classification', [sys.executable, 'scripts/classify.py', '--demo'], ROOT)]
         for name, command, cwd in stages:

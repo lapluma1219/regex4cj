@@ -42,22 +42,32 @@ fn group(kind: &ast::GroupKind) -> String {
 fn set(kind: &ast::ClassSet) -> String {
     match kind {
         ast::ClassSet::Item(item) => item_shape(item),
-        ast::ClassSet::BinaryOp(op) => format!("Op({:?},{},{})", op.kind, set(&op.lhs), set(&op.rhs)),
+        ast::ClassSet::BinaryOp(op) => format!("Op({:?},{},{},{})", op.kind, sp(&op.span), set(&op.lhs), set(&op.rhs)),
     }
 }
 fn item_shape(item: &ast::ClassSetItem) -> String {
     match item {
-        ast::ClassSetItem::Empty(_) => "Empty".into(),
-        ast::ClassSetItem::Literal(l) => format!("Lit({})", u32::from(l.c)),
-        ast::ClassSetItem::Range(r) => format!("Range({},{})", u32::from(r.start.c), u32::from(r.end.c)),
+        ast::ClassSetItem::Empty(span) => format!("Empty({})", sp(span)),
+        ast::ClassSetItem::Literal(l) => format!("Lit({},{:?},{})", sp(&l.span), l.kind, u32::from(l.c)),
+        ast::ClassSetItem::Range(r) => format!(
+            "Range({},{},{:?},{},{},{:?},{})",
+            sp(&r.span),
+            sp(&r.start.span),
+            r.start.kind,
+            u32::from(r.start.c),
+            sp(&r.end.span),
+            r.end.kind,
+            u32::from(r.end.c)
+        ),
         ast::ClassSetItem::Union(u) => format!(
-            "Union({})",
+            "Union({},{})",
+            sp(&u.span),
             u.items.iter().map(item_shape).collect::<Vec<_>>().join(",")
         ),
-        ast::ClassSetItem::Perl(c) => format!("Perl({},{:?})", c.negated, c.kind),
-        ast::ClassSetItem::Unicode(c) => format!("Uni({},{:?})", c.negated, c.kind),
-        ast::ClassSetItem::Bracketed(c) => format!("Nest({},{})", c.negated, set(&c.kind)),
-        ast::ClassSetItem::Ascii(c) => format!("Ascii({},{:?})", c.negated, c.kind),
+        ast::ClassSetItem::Perl(c) => format!("Perl({},{},{:?})", sp(&c.span), c.negated, c.kind),
+        ast::ClassSetItem::Unicode(c) => format!("Uni({},{},{:?})", sp(&c.span), c.negated, c.kind),
+        ast::ClassSetItem::Bracketed(c) => format!("Nest({},{},{})", sp(&c.span), c.negated, set(&c.kind)),
+        ast::ClassSetItem::Ascii(c) => format!("Ascii({},{},{:?})", sp(&c.span), c.negated, c.kind),
     }
 }
 fn ast_kind(kind: &ast::ErrorKind) -> &'static str {
@@ -132,6 +142,26 @@ pub fn syntax_error(pattern: &str) {
         Err(err) => {
             eprintln!("{err}");
             std::process::exit(2);
+        }
+    }
+}
+pub fn ast_translate(pattern: &str, utf8: bool) {
+    let tree = match ast::parse::Parser::new().parse(pattern) {
+        Ok(tree) => tree,
+        Err(e) => {
+            eprintln!("{e}");
+            std::process::exit(2);
+        }
+    };
+    let mut translator = regex_syntax::hir::translate::TranslatorBuilder::new()
+        .utf8(utf8)
+        .build();
+    match translator.translate(pattern, &tree) {
+        Ok(hir) => println!("{}", crate::hir_audit::shape(&hir)),
+        Err(err) => {
+            println!("translate\t{}", hir_kind(err.kind()));
+            println!("span\t{}", sp(err.span()));
+            println!("aux\t-");
         }
     }
 }
