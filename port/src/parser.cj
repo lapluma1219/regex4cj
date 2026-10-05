@@ -22,6 +22,9 @@ class Expr {
     var captureIndex: Int64 = -1
     var nestNode = false
     var classNest: Int64 = 0
+    var spanStart: Int64 = 0
+    var spanEnd: Int64 = 0
+    var spanMarked: Bool = false
     var byteAtom = false
     var modeKind: Int64 = 0
     var modeTerm: Rune = r'\n'
@@ -82,6 +85,11 @@ class Parser {
     var openClassPeak: Int64 = 0
     var openClassItems: Int64 = 0
     var classDepth: Int64 = 0
+    var sealedClass: Expr = Expr(ExprKind.Empty, r' ', [], true)
+    var pieceNodes = ArrayList<Expr>()
+    var pieceFrom: Int64 = -1
+    var pieceTo: Int64 = -1
+    var pieceCount: Int64 = 0
     var escapeStart: Int64 = 0
     var repeatOrigin: Int64 = 0
     var nameReady = false
@@ -142,6 +150,47 @@ class Parser {
     }
     func failAux(start: Int64, end: Int64, auxStart: Int64, auxEnd: Int64, message: String): Nothing {
         throw syntaxError(source, start, end, auxStart, auxEnd, message)
+    }
+    func located(expr: Expr, start: Int64, end: Int64): Expr {
+        expr.spanStart = start
+        expr.spanEnd = end
+        expr.spanMarked = true
+        expr
+    }
+    func resetPieces(): Unit {
+        pieceNodes = ArrayList<Expr>()
+        pieceFrom = -1
+        pieceTo = -1
+        pieceCount = 0
+    }
+    func isClassNode(node: Expr): Bool {
+        match (node.kind) {
+            case ExprKind.CharacterClass => true
+            case _ => false
+        }
+    }
+    func notePiece(start: Int64, end: Int64, node: Expr): Unit {
+        if (pieceFrom < 0 || start < pieceFrom) {
+            pieceFrom = start
+        }
+        if (end > pieceTo) {
+            pieceTo = end
+        }
+        pieceCount++
+        if (node.nestNode || isClassNode(node)) {
+            pieceNodes.add(node)
+        }
+    }
+    func pieceSet(): Expr {
+        if (pieceCount >= 2) {
+            let node = Expr(ExprKind.Concat, r' ', pieceNodes.toArray(), true)
+            node.nestNode = true
+            return located(node, pieceFrom, pieceTo)
+        }
+        if (pieceNodes.size == 1) {
+            return pieceNodes[0]
+        }
+        leaf(ExprKind.Empty, r' ')
     }
     func lookaroundPrefix(): Bool {
         if (pos + 1 < chars.size && chars[pos] == r'?' && (chars[pos + 1] == r'=' || chars[pos + 1] == r'!')) {
@@ -212,14 +261,20 @@ class Parser {
                 }
             case ExprKind.Repeat | ExprKind.Capture => next = depth + 1
             case ExprKind.CharacterClass =>
-                if (depth + expr.classNest > nestLimit) {
-                    failAt(0, chars.size, "exceed the maximum number of nested parentheses/brackets (${nestLimit})")
+                let bracket = depth + 1
+                if (bracket > nestLimit) {
+                    failAt(expr.spanStart, expr.spanEnd,
+                        "exceed the maximum number of nested parentheses/brackets (${nestLimit})")
+                }
+                for (child in expr.children) {
+                    checkNest(child, bracket)
                 }
                 return
             case _ => ()
         }
         if (next > nestLimit) {
-            failAt(0, chars.size, "exceed the maximum number of nested parentheses/brackets (${nestLimit})")
+            failAt(expr.spanStart, expr.spanEnd,
+                "exceed the maximum number of nested parentheses/brackets (${nestLimit})")
         }
         for (child in expr.children) {
             checkNest(child, next)
@@ -236,7 +291,13 @@ class Parser {
             pos++
             parts.add(concat())
         }
-        return Expr(ExprKind.Alternate, r' ', parts.toArray(), true)
+        let expr = Expr(ExprKind.Alternate, r' ', parts.toArray(), true)
+        if (parts.size > 0) {
+            expr.spanStart = parts[0].spanStart
+            expr.spanEnd = parts[parts.size - 1].spanEnd
+            expr.spanMarked = true
+        }
+        return expr
     }
     func concat(): Expr {
         let parts = ArrayList<Expr>()
@@ -255,7 +316,13 @@ class Parser {
             }
             parts.add(repetition())
         }
-        return Expr(ExprKind.Concat, r' ', parts.toArray(), true)
+        let expr = Expr(ExprKind.Concat, r' ', parts.toArray(), true)
+        if (parts.size > 0) {
+            expr.spanStart = parts[0].spanStart
+            expr.spanEnd = parts[parts.size - 1].spanEnd
+            expr.spanMarked = true
+        }
+        return expr
     }
     func repetition(): Expr {
         var expr = atom()
@@ -303,9 +370,13 @@ class Parser {
                 greedy = !greedy
                 pos++
             }
-            expr = Expr(ExprKind.Repeat, quantifier, [expr], greedy)
-            expr.minimum = minimum
-            expr.maximum = maximum
+            let repeated = Expr(ExprKind.Repeat, quantifier, [expr], greedy)
+            repeated.minimum = minimum
+            repeated.maximum = maximum
+            repeated.spanStart = expr.spanStart
+            repeated.spanEnd = pos
+            repeated.spanMarked = true
+            expr = repeated
         }
         return expr
     }
@@ -403,7 +474,7 @@ class Parser {
                             depth--
                             let directive = leaf(ExprKind.Empty, r' ')
                             directive.flagOnly = true
-                            return directive
+                            return located(directive, open, pos)
                         }
                         pos++ // ':' begins a scoped noncapturing group
                     }
@@ -441,33 +512,36 @@ class Parser {
                 if (!capturing) {
                     let wrap = Expr(ExprKind.Concat, r' ', [expr], true)
                     wrap.nestNode = true
-                    return wrap
+                    return located(wrap, open, pos)
                 }
                 let group = Expr(ExprKind.Capture, r' ', [expr], true)
                 group.captureIndex = index
-                return group
-            case r'.' => return dot()
-            case r'^' | r'$' => return anchor(c == r'^')
+                return located(group, open, pos)
+            case r'.' => return located(dot(), pos - 1, pos)
+            case r'^' | r'$' => return located(anchor(c == r'^'), pos - 1, pos)
             case r'\\' =>
+                let slash = pos - 1
                 let expr = escaped()
                 match (expr.kind) {
                     case ExprKind.Literal =>
                         if (expr.byteAtom) {
-                            return expr
+                            return located(expr, slash, pos)
                         }
-                        return finishLiteral(expr.ch)
-                    case _ => return expr
+                        return located(finishLiteral(expr.ch), slash, pos)
+                    case _ => return located(expr, slash, pos)
                 }
             case r'[' =>
-                let expr = leaf(ExprKind.CharacterClass, c)
+                let open = pos - 1
+                let charset = characterClass()
+                let expr = Expr(ExprKind.CharacterClass, c, sealedClass.children, true)
                 expr.modeUnicode = unicode // Preserve class kind for the public HIR adapter.
-                expr.charset = characterClass()
+                expr.charset = charset
                 expr.classNest = lastClassNest
                 expr.byteAtom = !unicode && !utf8
-                return expr
+                return located(expr, open, pos)
             case r'{' => failAt(pos - 1, pos - 1, "repetition operator missing expression")
             case r'*' | r'+' | r'?' => failAt(pos - 1, pos - 1, "repetition operator missing expression")
-            case _ => return finishLiteral(c)
+            case _ => return located(finishLiteral(c), pos - 1, pos)
         }
     }
     func dot(): Expr {
@@ -679,13 +753,17 @@ class Parser {
             0
         }
         classDepth++
-        let tooDeep = classDepth > nestLimit
         let savedLevel = openClassLevel
         let savedPeak = openClassPeak
         let savedItems = openClassItems
+        let savedNodes = pieceNodes
+        let savedFrom = pieceFrom
+        let savedTo = pieceTo
+        let savedCount = pieceCount
         openClassLevel = 1
         openClassPeak = 1
         openClassItems = 0
+        resetPieces()
         skipSpace()
         var negate = false
         if (at(r'^')) {
@@ -696,8 +774,10 @@ class Parser {
         var first = CharSet()
         var hasLeadingHyphen = false
         while (at(r'-')) {
+            let hyphen = pos
             first.addRange(45, 45)
             noteClassItem()
+            notePiece(hyphen, hyphen + 1, leaf(ExprKind.Empty, r' '))
             hasLeadingHyphen = true
             pos++
             skipSpace()
@@ -707,17 +787,41 @@ class Parser {
         } else {
             false
         })) {
+            let bracket = pos
             first.addRange(93, 93)
             noteClassItem()
+            notePiece(bracket, bracket + 1, leaf(ExprKind.Empty, r' '))
             pos++
             skipSpace()
         }
         first.unionWith(classUnion())
+        var setNode = pieceSet()
+        var setFrom = pieceFrom
         while (classOperator()) {
             let op = chars[pos]
             pos += 2
             noteClassOp()
+            let leftNode = setNode
+            let leftFrom = setFrom
+            resetPieces()
             let rhs = classUnion()
+            let rightNode = pieceSet()
+            let kids = ArrayList<Expr>()
+            if (leftNode.nestNode || isClassNode(leftNode)) {
+                kids.add(leftNode)
+            }
+            if (rightNode.nestNode || isClassNode(rightNode)) {
+                kids.add(rightNode)
+            }
+            let combined = Expr(ExprKind.Concat, r' ', kids.toArray(), true)
+            combined.nestNode = true
+            let opStart = if (leftFrom >= 0) {
+                leftFrom
+            } else {
+                pieceFrom
+            }
+            setNode = located(combined, opStart, pieceTo)
+            setFrom = setNode.spanStart
             // Fold each operand before intersection or difference. Folding only
             // the final set would drop equivalents that the other side removed.
             foldClass(first)
@@ -737,9 +841,16 @@ class Parser {
         }
         pos++
         classDepth--
-        if (tooDeep) {
-            failAt(start, pos, "exceed the maximum number of nested parentheses/brackets (${nestLimit})")
+        let nestKids = if (setNode.nestNode || isClassNode(setNode)) {
+            [setNode]
+        } else {
+            Array<Expr>()
         }
+        sealedClass = located(Expr(ExprKind.CharacterClass, r'[', nestKids, true), start, pos)
+        pieceNodes = savedNodes
+        pieceFrom = savedFrom
+        pieceTo = savedTo
+        pieceCount = savedCount
         let mine = openClassPeak
         openClassLevel = savedLevel
         openClassPeak = savedPeak
@@ -815,18 +926,22 @@ class Parser {
                 break
             }
             if (at(r'[')) {
+                let bracket = pos
                 pos++
                 match (namedClass()) {
                     case Some(named) =>
                         noteClassItem()
+                        notePiece(bracket, pos, leaf(ExprKind.Empty, r' '))
                         result.unionWith(named)
                     case None =>
                         let nested = characterClass()
+                        let nestedNode = sealedClass
                         let combined = openClassLevel + lastClassNest
                         if (combined > openClassPeak) {
                             openClassPeak = combined
                         }
                         noteClassItem()
+                        notePiece(nestedNode.spanStart, nestedNode.spanEnd, nestedNode)
                         result.unionWith(nested)
                 }
                 continue
@@ -840,9 +955,11 @@ class Parser {
             } else {
                 false
             })) {
+                let slash = pos
                 pos++
                 noteClassItem()
                 result.unionWith(escaped().charset)
+                notePiece(slash, pos, leaf(ExprKind.Empty, r' '))
                 skipSpace()
                 if (at(r'-') && pos + 1 < chars.size && chars[pos + 1] != r']' && chars[pos + 1] != r'-') {
                     failAt(pos - 1, pos, "invalid range boundary, must be a literal")
@@ -871,6 +988,7 @@ class Parser {
                 rejectClassScalar(high)
             }
             noteClassItem()
+            notePiece(rangeStart, pos, leaf(ExprKind.Empty, r' '))
             result.addRange(Int64(UInt32(low)), Int64(UInt32(high)))
         }
         return result
@@ -1183,7 +1301,7 @@ class Parser {
         }
         let nameEnd = pos
         if (!at(r'}')) {
-            failAt(nameStart, pos, "special word boundary assertion is either unclosed or contains an invalid character")
+            failAt(brace, pos, "special word boundary assertion is either unclosed or contains an invalid character")
         }
         pos++
         match (name.toString()) {

@@ -95,11 +95,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "regex-lite"
+version = "0.1.9"
+source = "git+https://github.com/rust-lang/regex.git?rev=72d650cb0a880a01ab6dc2137c0888e8f89740f7#72d650cb0a880a01ab6dc2137c0888e8f89740f7"
+
+[[package]]
 name = "regex-oracle"
 version = "0.1.0"
 dependencies = [
  "regex",
  "regex-automata",
+ "regex-lite",
  "regex-syntax",
  "regex-test",
 ]

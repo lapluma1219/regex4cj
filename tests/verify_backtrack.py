@@ -118,4 +118,21 @@ compare("1", "a+", "aaaa")
 check_budget(RUST)
 check_budget(CJ)
 
-print("backtrack: %s searches matched" % len(cases))
+queries = [
+    ("backtrack-query", "1048576", "1", "4", "no", "false", "xaaa", "a+"),
+    ("backtrack-query", "1048576", "0", "3", "no", "true", "aaa", "a+"),
+    ("backtrack-query", "1048576", "3", "6", "no", "false", "foo123bar", r"\b123\b"),
+    ("backtrack-query", "1048576", "1", "3", "yes", "false", "aba", "a"),
+    ("backtrack-many", "1048576", "0", "3", "no", "false", "aaa", "a+", "a"),
+    ("backtrack-many", "1048576", "0", "3", "1", "false", "aaa", "a+", "a"),
+    ("backtrack-many", "1048576", "0", "3", "9", "false", "aaa", "a+", "a"),
+    ("backtrack-many", "1048576", "0", "6", "no", "false", "foo123", "[a-z0-9]{6}", "[a-z][a-z0-9]{5}"),
+    ("backtrack-many", "1048576", "0", "6", "1", "false", "foo123", "[a-z0-9]{6}", "[a-z][a-z0-9]{5}"),
+]
+for args in queries:
+    rust, cj = run(RUST, *args), run(CJ, *args)
+    if rust.returncode or cj.returncode or rust.stdout != cj.stdout:
+        raise AssertionError(dict(args=args, rust=rust.stdout, cangjie=cj.stdout,
+                                   rust_error=rust.stderr, cangjie_error=cj.stderr))
+
+print("backtrack: %s searches matched, %s input queries" % (len(cases), len(queries)))

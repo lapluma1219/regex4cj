@@ -81,6 +81,20 @@ earliest = [
 for text, *patterns in earliest:
     compare('pike-earliest', text, *patterns)
     count += 1
+configured = [
+    ('0', '3', '1', 'false', 'aaa', 'a+', 'a'),
+    ('0', '3', '0', 'false', 'aaa', 'a+', 'a'),
+    ('0', '3', '9', 'false', 'aaa', 'a+', 'a'),
+    ('1', '4', 'no', 'false', 'xaaa', 'a+'),
+    ('0', '3', 'yes', 'true', 'aaa', 'a+'),
+    ('2', '3', 'no', 'false', 'aba', '^a'),
+    ('2', '3', 'yes', 'false', 'aba', 'a'),
+    ('3', '6', 'no', 'false', 'foo123bar', r'\b123\b'),
+    ('1', '3', 'no', 'false', 'aba', 'a'),
+]
+for start, end, mode, earliest_flag, text, *patterns in configured:
+    compare('pike-config', start, end, mode, earliest_flag, text, *patterns)
+    count += 1
 reversed_range = run(CJ, 'pike', '2', '1', 'false', 'ab', 'a')
 assert reversed_range.returncode == 2 and 'invalid search range' in reversed_range.stderr, reversed_range
 report = json.loads(REPORT.read_text()) if REPORT.exists() else {}

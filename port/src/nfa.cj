@@ -13,18 +13,26 @@ class State {
     var first: Int64
     var second: Int64
     var byteAtom = false
+    var patternId: Int64 = 0
     init(op: Op, first: Int64, second: Int64) {
         this.op = op
         this.first = first
         this.second = second
+        patternId = 0
     }
 }
 
 class Compiler {
     let states = ArrayList<State>()
     let sizeLimit: Int64
+    let whichCaptures: Int64
     init(sizeLimit: Int64) {
+        this(sizeLimit, 0)
+    }
+    // 0 keeps every group, 1 keeps only the implicit whole-match group, 2 keeps none.
+    init(sizeLimit: Int64, whichCaptures: Int64) {
         this.sizeLimit = sizeLimit
+        this.whichCaptures = whichCaptures
     }
     func add(op: Op, first: Int64, second: Int64): Int64 {
         states.add(State(op, first, second))
@@ -43,6 +51,9 @@ class Compiler {
     func compile(expr: Expr, next: Int64): Int64 {
         match (expr.kind) {
             case ExprKind.Capture =>
+                if (whichCaptures == 2 || (whichCaptures == 1 && expr.captureIndex != 0)) {
+                    return compile(expr.children[0], next)
+                }
                 let end = add(Op.Save(expr.captureIndex * 2 + 1), next, -1)
                 let body = compile(expr.children[0], end)
                 return add(Op.Save(expr.captureIndex * 2), body, -1)
@@ -855,121 +866,95 @@ public class Regex {
             case None => None
         }
     }
+    // cursor[0] is the next scalar, cursor[1] is the previous match end.
+    private func advance(input: Input, cursor: Array<Int64>, capture: Bool): Option<SearchMatch> {
+        while (cursor[0] <= input.chars.size) {
+            match (search(input, cursor[0], capture, false)) {
+                case None => return None
+                case Some(hit) =>
+                    if (hit.start == hit.end && hit.end == cursor[1]) {
+                        cursor[0] = hit.end + 1
+                        continue
+                    }
+                    cursor[1] = hit.end
+                    cursor[0] = hit.end
+                    return Some(hit)
+            }
+        }
+        None
+    }
     public func findIter(text: String): MatchIter {
         let input = Input(text)
-        let cursor = [0]
-        let previousEnd = [-1]
-        MatchIter(
-            {
-                =>
-                    while (cursor[0] <= input.chars.size) {
-                        match (search(input, cursor[0], false, false)) {
-                            case None => return None
-                            case Some(hit) =>
-                                if (hit.start == hit.end && hit.end == previousEnd[0]) {
-                                    cursor[0] = hit.end + 1
-                                    continue
-                                }
-                                previousEnd[0] = hit.end
-                                cursor[0] = hit.end
-                                return Some(matched(text, input, hit))
-                        }
-                    }
-                    return None
+        MatchIter({
+            cursor => match (advance(input, cursor, false)) {
+                case Some(hit) => Some(matched(text, input, hit))
+                case None => None
             }
-        )
+        }, [0, -1])
     }
     public func capturesIter(text: String): CaptureIter {
         let input = Input(text)
-        let cursor = [0]
-        let previousEnd = [-1]
-        CaptureIter(
-            {
-                =>
-                    while (cursor[0] <= input.chars.size) {
-                        match (search(input, cursor[0], true, false)) {
-                            case None => return None
-                            case Some(hit) =>
-                                if (hit.start == hit.end && hit.end == previousEnd[0]) {
-                                    cursor[0] = hit.end + 1
-                                    continue
-                                }
-                                previousEnd[0] = hit.end
-                                cursor[0] = hit.end
-                                return Some(captureResult(text, input, hit))
-                        }
-                    }
-                    return None
+        CaptureIter({
+            cursor => match (advance(input, cursor, true)) {
+                case Some(hit) => Some(captureResult(text, input, hit))
+                case None => None
             }
-        )
+        }, [0, -1])
     }
     public func splitIter(text: String): SplitIter {
-        let input = Input(text)
-        let cursor = [0]
-        let previousEnd = [-1]
-        let lastByte = [0]
-        let done = [0]
-        SplitIter(
-            {
-                =>
-                    if (done[0] == 2) {
-                        return None
-                    }
-                    while (done[0] == 0 && cursor[0] <= input.chars.size) {
-                        match (search(input, cursor[0], false, false)) {
-                            case None =>
-                                done[0] = 1
-                                break
-                            case Some(hit) =>
-                                if (hit.start == hit.end && hit.end == previousEnd[0]) {
-                                    cursor[0] = hit.end + 1
-                                    continue
-                                }
-                                let part = text[lastByte[0]..input.offsets[hit.start]]
-                                lastByte[0] = input.offsets[hit.end]
-                                previousEnd[0] = hit.end
-                                cursor[0] = hit.end
-                                return Some(part)
-                        }
-                    }
-                    if (done[0] == 0 && cursor[0] > input.chars.size) {
-                        done[0] = 1
-                    }
-                    if (done[0] == 1) {
-                        done[0] = 2
-                        return Some(text[lastByte[0]..text.size])
-                    }
-                    return None
-            }
-        )
+        splitLimited(text, -1)
     }
     public func splitNIter(text: String, limit: Int64): SplitIter {
         if (limit < 0) {
             throw Exception("split limit must be nonnegative")
         }
-        let matches = findIter(text)
-        let count = [0]
-        let last = [0]
-        let done = [limit == 0]
+        splitLimited(text, limit)
+    }
+    // limit < 0 means unlimited. State is cursor, previous end, last byte, count, phase.
+    private func splitLimited(text: String, limit: Int64): SplitIter {
+        let input = Input(text)
+        let bounded = limit >= 0
         SplitIter(
             {
-                =>
-                    if (done[0]) {
+                state =>
+                    if (state[4] == 2) {
                         return None
                     }
-                    if (count[0] < limit - 1) {
-                        match (matches.next()) {
+                    while (state[4] == 0 && state[0] <= input.chars.size) {
+                        if (bounded && state[3] >= limit - 1) {
+                            break
+                        }
+                        match (search(input, state[0], false, false)) {
+                            case None =>
+                                state[4] = 1
+                                break
                             case Some(hit) =>
-                                let part = text[last[0]..hit.start]
-                                last[0] = hit.end
-                                count[0]++
+                                if (hit.start == hit.end && hit.end == state[1]) {
+                                    state[0] = hit.end + 1
+                                    continue
+                                }
+                                let part = text[state[2]..input.offsets[hit.start]]
+                                state[2] = input.offsets[hit.end]
+                                state[1] = hit.end
+                                state[0] = hit.end
+                                state[3]++
                                 return Some(part)
-                            case None => ()
                         }
                     }
-                    done[0] = true
-                    return Some(text[last[0]..text.size])
-            }
+                    if (state[4] == 0) {
+                        state[4] = 1
+                    }
+                    if (state[4] == 1) {
+                        state[4] = 2
+                        return Some(text[state[2]..text.size])
+                    }
+                    None
+            },
+            [0, -1, 0, 0, if (bounded && limit == 0) {
+                2
+            } else {
+                0
+            }]
         )
     }
     public func captureLocations(): CaptureLocations {
@@ -1232,32 +1217,51 @@ public class Regex {
     }
 }
 
+func copyInts(state: Array<Int64>): Array<Int64> {
+    Array<Int64>(state.size, {i => state[i]})
+}
+
 public class MatchIter {
-    private let pull: () -> Option<RegexMatch>
-    public init(pull: () -> Option<RegexMatch>) {
-        this.pull = pull
+    private let step: (Array<Int64>) -> Option<RegexMatch>
+    private let state: Array<Int64>
+    public init(step: (Array<Int64>) -> Option<RegexMatch>, state: Array<Int64>) {
+        this.step = step
+        this.state = state
     }
     public func next(): Option<RegexMatch> {
-        pull()
+        step(state)
+    }
+    public func clone(): MatchIter {
+        MatchIter(step, copyInts(state))
     }
 }
 
 public class CaptureIter {
-    private let pull: () -> Option<Captures>
-    public init(pull: () -> Option<Captures>) {
-        this.pull = pull
+    private let step: (Array<Int64>) -> Option<Captures>
+    private let state: Array<Int64>
+    public init(step: (Array<Int64>) -> Option<Captures>, state: Array<Int64>) {
+        this.step = step
+        this.state = state
     }
     public func next(): Option<Captures> {
-        pull()
+        step(state)
+    }
+    public func clone(): CaptureIter {
+        CaptureIter(step, copyInts(state))
     }
 }
 
 public class SplitIter {
-    private let pull: () -> Option<String>
-    public init(pull: () -> Option<String>) {
-        this.pull = pull
+    private let step: (Array<Int64>) -> Option<String>
+    private let state: Array<Int64>
+    public init(step: (Array<Int64>) -> Option<String>, state: Array<Int64>) {
+        this.step = step
+        this.state = state
     }
     public func next(): Option<String> {
-        pull()
+        step(state)
+    }
+    public func clone(): SplitIter {
+        SplitIter(step, copyInts(state))
     }
 }

@@ -23,7 +23,7 @@ for (m in re.findAll("AB-123 CD-456")) {
 | `findAll(text)` | 按顺序收集不重叠匹配 |
 | `findAt` / `isMatchAt` / `capturesAt` | 从原文字节偏移继续搜索。起点落在字符内部时，匹配从后续字符边界开始，断言仍保留原文上下文 |
 | `shortestMatch` / `shortestMatchAt` | 引擎确认匹配时的早停终点。本实现中 `a+` 在 `aaaaa` 上返回 `1`；原仓库不保证数学最短，也不保证不同引擎返回相同终点 |
-| `findIter().next()` | 与 `findAll` 同一套空匹配推进，按需取下一条 |
+| `findIter().next()` | 与 `findAll` 同一套空匹配推进，按需取下一条。`clone()` 复制当前游标，之后两边各自前进 |
 | `asStr()` | 编译时的原始模式 |
 
 `RegexMatch` 还有 `isEmpty()`、`len()` 和 `asStr()`。`text` 是原文切片。大小写匹配不会把结果改成折叠后的字符：`(?i)k` 匹配 `K` 时，取回的文本仍是 `K`。`ß` 只和 `ẞ` 互配，不会把 `SS` 当成一个 `ß`。
@@ -110,7 +110,7 @@ for (m in re.findAll("AB-123 CD-456")) {
 
 `BytesRegex` 和 `BytesRegexSet` 的输入、匹配片段和替换结果都是 `Array<UInt8>`，可以包含非法 UTF-8。查找、捕获、`expand`、替换、分割和 RegexSet 的命中查询都有对应方法。`(?-u).` 匹配一个字节。同一个模式在字符串 `Regex` 上构造失败。
 
-bytes 已提供 `findIter`、`capturesIter`、`splitIter`、`splitNIter`，分别返回 `BytesMatchIter`、`BytesCaptureIter`、`BytesSplitIter`，以 `next()` 按需读取。原有 `findAll`、`capturesAll`、`split`、`splitN` 仍返回数组。新增 `capturesRead(locations, bytes)` 等同起点为0的 `capturesReadAt`。
+bytes 已提供 `findIter`、`capturesIter`、`splitIter`、`splitNIter`，分别返回 `BytesMatchIter`、`BytesCaptureIter`、`BytesSplitIter`，以 `next()` 按需读取。这三个迭代器都可以 `clone()`，复制的是当时的游标。原有 `findAll`、`capturesAll`、`split`、`splitN` 仍返回数组。新增 `capturesRead(locations, bytes)` 等同起点为0的 `capturesReadAt`。
 
 bytes 迭代器创建时复制输入数组作为快照，之后每次 `next()` 才执行下一次搜索，没有预先收集全部匹配。外部修改输入、修改已返回的匹配字节或交错使用两个迭代器，不会改变另一个游标的结果。结束后持续返回 None。输入快照仍需 O(输入字节数) 的空间，这不是流式文件读取，也不是 Rust 的零复制借用。
 
@@ -161,7 +161,7 @@ bash scripts/run.sh set-matches '订单 AB-123 退款' '退款' '发票' '[A-Z]{
 - 前后查找和反向引用。原仓库的字符串接口也会拒绝它们。
 - Break 属性只判断字符属于哪个集合，不把文本切成词或句。
 - 没有 `regex!` 宏，也没有 Rust 的 `Iterator`、`Replacer`、`FromStr`、`Debug` 这些 trait。对应行为是上面的方法、数组和回调。
-- 顶层 `Regex` 不是完整的 regex-syntax、regex-automata、regex-lite 或 regex-capi。`PikeVM`、`ReverseNfa`、`BoundedBacktracker`、`DenseDfa` 和 `SparseDfa` 是单独的搜索类型，见 [现状](status.md)。
+- 顶层 `Regex` 不是完整的 regex-syntax、regex-automata、regex-lite 或 regex-capi。`PikeVM` 在公开的 `ThompsonNfa` 上搜索，`ReverseNfa`、`BoundedBacktracker`、`DenseDfa` 和 `SparseDfa` 仍是单独的搜索类型，见 [现状](status.md)。`SearchInput` 描述字节或字符串、搜索范围、锚定、指定模式和 earliest。`ReverseNfa.search` 也接收它：范围外的字节仍可供断言查看，锚定要求匹配结束在范围终点。多模式构造可打开每个模式的起点，`find` 返回模式编号和起点；默认单模式构造仍拒绝指定模式编号。空模式列表得到永不命中的反向图。`ThompsonNfa` 可以从 HIR 构建，大小上限失败的种类是 `CompiledTooBig`，和语法解析的 `parse` 阶段分开。Pike 和有界回溯遇到非法 UTF-8 时走前向字节自动机。`PikeCache.captureWorkspace()` 是搜索期间捕获槽池的行数；`reset` 清掉命中，但保留这些行。`BoundedBacktracker.searchAll` 和 `PikeVM.searchAll` 都返回非重叠匹配，空匹配的推进与原仓库 `Searcher` 相同。回溯的 `searchAll` 也可以只扫 `SearchInput` 的一段范围；锚定输入最多一条。`PikeVM.whichOverlapping` 也接收 `SearchInput`。Pike 和有界回溯都可以按 `WhichCaptures` 保留全部分组、只保留整段匹配，或不记录捕获；不记录时匹配仍成立，但报不出区间。反向 NFA 与前向 DFA 共用字节编译器。`DenseDfa` 和 `SparseDfa` 可以一次接收多个模式，也可以搜索无法构成 UTF-8 的原始字节，`DfaMatch.pattern` 是命中的模式编号。多一个 `patternStarts` 参数时，会为每个模式准备锚定起点，`SearchInput` 的指定模式编号才会生效；不传这个参数时，指定模式仍会拒绝。`DenseDfa.overlap` 与 `SparseDfa.overlap` 做重叠搜索，原始字节同样可以，`DfaHalf` 只包含模式编号和终点。`HybridDfa` 按需生成状态，可以一次接收多个模式，也可以打开每个模式的锚定起点；`reset` 清空缓存；它不替换 `dfaSizeLimit`。`OnePass` 只做锚定搜索，非 one-pass 模式在构造时拒绝。`MetaRegex` 依次尝试 one-pass、惰性 DFA 和 `PikeVM`，必选字面前缀只跳过起点，不替换 `Regex.find`。`memoryUsage` 按本地表计数。`DenseDfa` 另接受字节上限。`LiteRegex` 关闭 Unicode，并拒绝 `\p` / `\P`。`Rure` 转发 `Regex` 的匹配；`capi/rure.h` 只记录名字对应，没有 C ABI。`DenseDfa.toImage` / `fromImage` 用 `CJD1` 重放模式并核对状态数，不是原仓库的转移表线格式。`LiteralLimits` 配置字面量提取的四项上限。`LiteralSeq` 返回新序列，可以交叉、合并、截断、按偏好最小化和优化，并查询最长公共前后缀以及合并或交叉后的最大条数。嵌套超限的错误会标出和原仓库相同的区间。`SparseDfa.retainsDenseTable()` 在区间生成后为 false。
 
 ### 捕获组迭代器的剩余数量与复制
 

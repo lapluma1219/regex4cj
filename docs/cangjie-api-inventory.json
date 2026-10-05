@@ -1,14 +1,14 @@
 {
   "scope": "Explicit declarations in port/src/*.cj; not Rust parity or a completion percentage.",
   "counts": {
-    "class": 49,
-    "constructor": 36,
-    "method": 260,
-    "field": 96,
+    "class": 61,
+    "constructor": 80,
+    "method": 359,
+    "field": 118,
     "enum": 4,
-    "function": 7
+    "function": 12
   },
-  "callable_count": 303,
+  "callable_count": 451,
   "items": [
     {
       "owner": "BoundedBacktracker",
@@ -24,7 +24,7 @@
       "kind": "constructor",
       "signature": "public init(pattern: String)",
       "file": "port/src/backtrack.cj",
-      "line": 26
+      "line": 36
     },
     {
       "owner": "BoundedBacktracker",
@@ -32,7 +32,39 @@
       "kind": "constructor",
       "signature": "public init(pattern: String, visitedCapacity: Int64)",
       "file": "port/src/backtrack.cj",
-      "line": 29
+      "line": 39
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String, visitedCapacity: Int64, whichCaptures: Int64)",
+      "file": "port/src/backtrack.cj",
+      "line": 42
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>)",
+      "file": "port/src/backtrack.cj",
+      "line": 127
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, visitedCapacity: Int64)",
+      "file": "port/src/backtrack.cj",
+      "line": 130
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, visitedCapacity: Int64, whichCaptures: Int64)",
+      "file": "port/src/backtrack.cj",
+      "line": 133
     },
     {
       "owner": "BoundedBacktracker",
@@ -40,7 +72,15 @@
       "kind": "method",
       "signature": "public func stateCount(): Int64",
       "file": "port/src/backtrack.cj",
-      "line": 96
+      "line": 194
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "memoryUsage",
+      "kind": "method",
+      "signature": "public func memoryUsage(): Int64",
+      "file": "port/src/backtrack.cj",
+      "line": 197
     },
     {
       "owner": "BoundedBacktracker",
@@ -48,7 +88,31 @@
       "kind": "method",
       "signature": "public func maxHaystackLen(): Int64",
       "file": "port/src/backtrack.cj",
-      "line": 101
+      "line": 209
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "createCache",
+      "kind": "method",
+      "signature": "public func createCache(): BacktrackCache",
+      "file": "port/src/backtrack.cj",
+      "line": 222
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "searchAll",
+      "kind": "method",
+      "signature": "public func searchAll(text: String): Array<PikeMatch>",
+      "file": "port/src/backtrack.cj",
+      "line": 225
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "searchAll",
+      "kind": "method",
+      "signature": "public func searchAll(input: SearchInput): Array<PikeMatch>",
+      "file": "port/src/backtrack.cj",
+      "line": 231
     },
     {
       "owner": "BoundedBacktracker",
@@ -56,7 +120,39 @@
       "kind": "method",
       "signature": "public func search(text: String): Option<Captures>",
       "file": "port/src/backtrack.cj",
-      "line": 114
+      "line": 273
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "isMatch",
+      "kind": "method",
+      "signature": "public func isMatch(input: SearchInput): Bool",
+      "file": "port/src/backtrack.cj",
+      "line": 279
+    },
+    {
+      "owner": "BoundedBacktracker",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(cache: BacktrackCache, input: SearchInput): Option<PikeMatch>",
+      "file": "port/src/backtrack.cj",
+      "line": 307
+    },
+    {
+      "owner": "BacktrackCache",
+      "name": "BacktrackCache",
+      "kind": "class",
+      "signature": "public class BacktrackCache",
+      "file": "port/src/backtrack.cj",
+      "line": 514
+    },
+    {
+      "owner": "BacktrackCache",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init()",
+      "file": "port/src/backtrack.cj",
+      "line": 517
     },
     {
       "owner": "RegexBuilder",
@@ -736,7 +832,7 @@
       "kind": "method",
       "signature": "public func findIter(haystack: Array<UInt8>): BytesMatchIter",
       "file": "port/src/bytes.cj",
-      "line": 172
+      "line": 166
     },
     {
       "owner": "BytesRegex",
@@ -744,7 +840,7 @@
       "kind": "method",
       "signature": "public func capturesIter(haystack: Array<UInt8>): BytesCaptureIter",
       "file": "port/src/bytes.cj",
-      "line": 182
+      "line": 175
     },
     {
       "owner": "BytesRegex",
@@ -752,7 +848,7 @@
       "kind": "method",
       "signature": "public func splitIter(haystack: Array<UInt8>): BytesSplitIter",
       "file": "port/src/bytes.cj",
-      "line": 192
+      "line": 184
     },
     {
       "owner": "BytesRegex",
@@ -760,7 +856,7 @@
       "kind": "method",
       "signature": "public func splitNIter(haystack: Array<UInt8>, limit: Int64): BytesSplitIter",
       "file": "port/src/bytes.cj",
-      "line": 195
+      "line": 187
     },
     {
       "owner": "BytesRegex",
@@ -768,7 +864,7 @@
       "kind": "method",
       "signature": "public func capturesRead(locations: CaptureLocations, haystack: Array<UInt8>): Option<BytesMatch>",
       "file": "port/src/bytes.cj",
-      "line": 228
+      "line": 222
     },
     {
       "owner": "BytesRegex",
@@ -776,7 +872,7 @@
       "kind": "method",
       "signature": "public func findAll(haystack: Array<UInt8>): Array<BytesMatch>",
       "file": "port/src/bytes.cj",
-      "line": 231
+      "line": 225
     },
     {
       "owner": "BytesRegex",
@@ -784,7 +880,7 @@
       "kind": "method",
       "signature": "public func captures(haystack: Array<UInt8>): Option<BytesCaptures>",
       "file": "port/src/bytes.cj",
-      "line": 356
+      "line": 350
     },
     {
       "owner": "BytesRegex",
@@ -792,7 +888,7 @@
       "kind": "method",
       "signature": "public func capturesAt(haystack: Array<UInt8>, start: Int64): Option<BytesCaptures>",
       "file": "port/src/bytes.cj",
-      "line": 359
+      "line": 353
     },
     {
       "owner": "BytesRegex",
@@ -800,7 +896,7 @@
       "kind": "method",
       "signature": "public func capturesAll(haystack: Array<UInt8>): Array<BytesCaptures>",
       "file": "port/src/bytes.cj",
-      "line": 365
+      "line": 359
     },
     {
       "owner": "BytesRegex",
@@ -808,7 +904,7 @@
       "kind": "method",
       "signature": "public func capturesReadAt(locations: CaptureLocations, haystack: Array<UInt8>, start: Int64): Option<BytesMatch>",
       "file": "port/src/bytes.cj",
-      "line": 384
+      "line": 378
     },
     {
       "owner": "BytesRegex",
@@ -816,7 +912,7 @@
       "kind": "method",
       "signature": "public func replace(haystack: Array<UInt8>, replacement: Array<UInt8>): Array<UInt8>",
       "file": "port/src/bytes.cj",
-      "line": 408
+      "line": 402
     },
     {
       "owner": "BytesRegex",
@@ -824,7 +920,7 @@
       "kind": "method",
       "signature": "public func replaceAll(haystack: Array<UInt8>, replacement: Array<UInt8>): Array<UInt8>",
       "file": "port/src/bytes.cj",
-      "line": 411
+      "line": 405
     },
     {
       "owner": "BytesRegex",
@@ -832,7 +928,7 @@
       "kind": "method",
       "signature": "public func replaceN(haystack: Array<UInt8>, limit: Int64, replacement: Array<UInt8>): Array<UInt8>",
       "file": "port/src/bytes.cj",
-      "line": 414
+      "line": 408
     },
     {
       "owner": "BytesRegex",
@@ -840,7 +936,7 @@
       "kind": "method",
       "signature": "public func replaceLiteral(haystack: Array<UInt8>, limit: Int64, replacement: Array<UInt8>): Array<UInt8>",
       "file": "port/src/bytes.cj",
-      "line": 427
+      "line": 421
     },
     {
       "owner": "BytesRegex",
@@ -848,7 +944,7 @@
       "kind": "method",
       "signature": "public func replaceWith(haystack: Array<UInt8>, limit: Int64, replacer: (BytesCaptures) -> Array<UInt8>): Array<UInt8>",
       "file": "port/src/bytes.cj",
-      "line": 430
+      "line": 424
     },
     {
       "owner": "BytesRegex",
@@ -856,7 +952,7 @@
       "kind": "method",
       "signature": "public func split(haystack: Array<UInt8>): Array<Array<UInt8>>",
       "file": "port/src/bytes.cj",
-      "line": 433
+      "line": 427
     },
     {
       "owner": "BytesRegex",
@@ -864,7 +960,7 @@
       "kind": "method",
       "signature": "public func splitN(haystack: Array<UInt8>, limit: Int64): Array<Array<UInt8>>",
       "file": "port/src/bytes.cj",
-      "line": 436
+      "line": 430
     },
     {
       "owner": "BytesCaptures",
@@ -872,7 +968,7 @@
       "kind": "class",
       "signature": "public class BytesCaptures",
       "file": "port/src/bytes.cj",
-      "line": 595
+      "line": 589
     },
     {
       "owner": "BytesCaptures",
@@ -880,7 +976,7 @@
       "kind": "field",
       "signature": "public let size: Int64",
       "file": "port/src/bytes.cj",
-      "line": 599
+      "line": 593
     },
     {
       "owner": "BytesCaptures",
@@ -888,7 +984,7 @@
       "kind": "method",
       "signature": "public func getMatch(): BytesMatch",
       "file": "port/src/bytes.cj",
-      "line": 606
+      "line": 600
     },
     {
       "owner": "BytesCaptures",
@@ -896,7 +992,7 @@
       "kind": "method",
       "signature": "public func get(index: Int64): Option<BytesMatch>",
       "file": "port/src/bytes.cj",
-      "line": 612
+      "line": 606
     },
     {
       "owner": "BytesCaptures",
@@ -904,7 +1000,7 @@
       "kind": "method",
       "signature": "public func iter(): BytesGroupIter",
       "file": "port/src/bytes.cj",
-      "line": 618
+      "line": 612
     },
     {
       "owner": "BytesCaptures",
@@ -912,7 +1008,7 @@
       "kind": "method",
       "signature": "public func extract(count: Int64): Array<Array<UInt8>>",
       "file": "port/src/bytes.cj",
-      "line": 621
+      "line": 615
     },
     {
       "owner": "BytesCaptures",
@@ -920,7 +1016,7 @@
       "kind": "method",
       "signature": "public func name(value: String): Option<BytesMatch>",
       "file": "port/src/bytes.cj",
-      "line": 647
+      "line": 641
     },
     {
       "owner": "BytesCaptures",
@@ -928,7 +1024,7 @@
       "kind": "method",
       "signature": "public func expand(template: Array<UInt8>): Array<UInt8>",
       "file": "port/src/bytes.cj",
-      "line": 659
+      "line": 653
     },
     {
       "owner": "BytesCaptures",
@@ -936,7 +1032,7 @@
       "kind": "method",
       "signature": "public func expandInto(template: Array<UInt8>, out: ArrayList<UInt8>): Unit",
       "file": "port/src/bytes.cj",
-      "line": 664
+      "line": 658
     },
     {
       "owner": "BytesGroupItem",
@@ -944,7 +1040,7 @@
       "kind": "class",
       "signature": "public class BytesGroupItem",
       "file": "port/src/bytes.cj",
-      "line": 745
+      "line": 739
     },
     {
       "owner": "BytesGroupItem",
@@ -952,7 +1048,7 @@
       "kind": "field",
       "signature": "public let done: Bool",
       "file": "port/src/bytes.cj",
-      "line": 746
+      "line": 740
     },
     {
       "owner": "BytesGroupItem",
@@ -960,7 +1056,7 @@
       "kind": "field",
       "signature": "public let value: Option<BytesMatch>",
       "file": "port/src/bytes.cj",
-      "line": 747
+      "line": 741
     },
     {
       "owner": "BytesGroupIter",
@@ -968,7 +1064,7 @@
       "kind": "class",
       "signature": "public class BytesGroupIter",
       "file": "port/src/bytes.cj",
-      "line": 754
+      "line": 748
     },
     {
       "owner": "BytesGroupIter",
@@ -976,7 +1072,7 @@
       "kind": "method",
       "signature": "public func len(): Int64",
       "file": "port/src/bytes.cj",
-      "line": 761
+      "line": 755
     },
     {
       "owner": "BytesGroupIter",
@@ -984,7 +1080,7 @@
       "kind": "method",
       "signature": "public func sizeHint(): (Int64, Option<Int64>)",
       "file": "port/src/bytes.cj",
-      "line": 764
+      "line": 758
     },
     {
       "owner": "BytesGroupIter",
@@ -992,7 +1088,7 @@
       "kind": "method",
       "signature": "public func clone(): BytesGroupIter",
       "file": "port/src/bytes.cj",
-      "line": 767
+      "line": 761
     },
     {
       "owner": "BytesGroupIter",
@@ -1000,7 +1096,7 @@
       "kind": "method",
       "signature": "public func next(): BytesGroupItem",
       "file": "port/src/bytes.cj",
-      "line": 772
+      "line": 766
     },
     {
       "owner": "BytesRegexSet",
@@ -1008,7 +1104,7 @@
       "kind": "class",
       "signature": "public class BytesRegexSet",
       "file": "port/src/bytes.cj",
-      "line": 787
+      "line": 781
     },
     {
       "owner": "BytesRegexSet",
@@ -1016,7 +1112,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>)",
       "file": "port/src/bytes.cj",
-      "line": 794
+      "line": 788
     },
     {
       "owner": "BytesRegexSet",
@@ -1024,7 +1120,7 @@
       "kind": "method",
       "signature": "public func len(): Int64",
       "file": "port/src/bytes.cj",
-      "line": 844
+      "line": 838
     },
     {
       "owner": "BytesRegexSet",
@@ -1032,7 +1128,7 @@
       "kind": "method",
       "signature": "public func isEmpty(): Bool",
       "file": "port/src/bytes.cj",
-      "line": 847
+      "line": 841
     },
     {
       "owner": "BytesRegexSet",
@@ -1040,7 +1136,7 @@
       "kind": "method",
       "signature": "public func patterns(): Array<String>",
       "file": "port/src/bytes.cj",
-      "line": 850
+      "line": 844
     },
     {
       "owner": "BytesRegexSet",
@@ -1048,7 +1144,7 @@
       "kind": "method",
       "signature": "public func isMatch(haystack: Array<UInt8>): Bool",
       "file": "port/src/bytes.cj",
-      "line": 853
+      "line": 847
     },
     {
       "owner": "BytesRegexSet",
@@ -1056,7 +1152,7 @@
       "kind": "method",
       "signature": "public func isMatchAt(haystack: Array<UInt8>, start: Int64): Bool",
       "file": "port/src/bytes.cj",
-      "line": 856
+      "line": 850
     },
     {
       "owner": "BytesRegexSet",
@@ -1064,7 +1160,7 @@
       "kind": "method",
       "signature": "public func matches(haystack: Array<UInt8>): SetMatches",
       "file": "port/src/bytes.cj",
-      "line": 859
+      "line": 853
     },
     {
       "owner": "BytesRegexSet",
@@ -1072,7 +1168,7 @@
       "kind": "method",
       "signature": "public func matchesAt(haystack: Array<UInt8>, start: Int64): SetMatches",
       "file": "port/src/bytes.cj",
-      "line": 862
+      "line": 856
     },
     {
       "owner": "BytesRegexSet",
@@ -1080,7 +1176,7 @@
       "kind": "method",
       "signature": "public func matchesReadAt(slots: Array<Bool>, haystack: Array<UInt8>, start: Int64): Bool",
       "file": "port/src/bytes.cj",
-      "line": 865
+      "line": 859
     },
     {
       "owner": "BytesMatchIter",
@@ -1088,15 +1184,15 @@
       "kind": "class",
       "signature": "public class BytesMatchIter",
       "file": "port/src/bytes.cj",
-      "line": 951
+      "line": 945
     },
     {
       "owner": "BytesMatchIter",
       "name": "init",
       "kind": "constructor",
-      "signature": "public init(pull: () -> Option<BytesMatch>)",
+      "signature": "public init(step: (Array<Int64>) -> Option<BytesMatch>, state: Array<Int64>)",
       "file": "port/src/bytes.cj",
-      "line": 953
+      "line": 948
     },
     {
       "owner": "BytesMatchIter",
@@ -1104,7 +1200,15 @@
       "kind": "method",
       "signature": "public func next(): Option<BytesMatch>",
       "file": "port/src/bytes.cj",
-      "line": 956
+      "line": 952
+    },
+    {
+      "owner": "BytesMatchIter",
+      "name": "clone",
+      "kind": "method",
+      "signature": "public func clone(): BytesMatchIter",
+      "file": "port/src/bytes.cj",
+      "line": 955
     },
     {
       "owner": "BytesCaptureIter",
@@ -1112,13 +1216,13 @@
       "kind": "class",
       "signature": "public class BytesCaptureIter",
       "file": "port/src/bytes.cj",
-      "line": 961
+      "line": 960
     },
     {
       "owner": "BytesCaptureIter",
       "name": "init",
       "kind": "constructor",
-      "signature": "public init(pull: () -> Option<BytesCaptures>)",
+      "signature": "public init(step: (Array<Int64>) -> Option<BytesCaptures>, state: Array<Int64>)",
       "file": "port/src/bytes.cj",
       "line": 963
     },
@@ -1128,7 +1232,15 @@
       "kind": "method",
       "signature": "public func next(): Option<BytesCaptures>",
       "file": "port/src/bytes.cj",
-      "line": 966
+      "line": 967
+    },
+    {
+      "owner": "BytesCaptureIter",
+      "name": "clone",
+      "kind": "method",
+      "signature": "public func clone(): BytesCaptureIter",
+      "file": "port/src/bytes.cj",
+      "line": 970
     },
     {
       "owner": "BytesSplitIter",
@@ -1136,15 +1248,15 @@
       "kind": "class",
       "signature": "public class BytesSplitIter",
       "file": "port/src/bytes.cj",
-      "line": 971
+      "line": 975
     },
     {
       "owner": "BytesSplitIter",
       "name": "init",
       "kind": "constructor",
-      "signature": "public init(pull: () -> Option<Array<UInt8>>)",
+      "signature": "public init(step: (Array<Int64>) -> Option<Array<UInt8>>, state: Array<Int64>)",
       "file": "port/src/bytes.cj",
-      "line": 973
+      "line": 978
     },
     {
       "owner": "BytesSplitIter",
@@ -1152,7 +1264,15 @@
       "kind": "method",
       "signature": "public func next(): Option<Array<UInt8>>",
       "file": "port/src/bytes.cj",
-      "line": 976
+      "line": 982
+    },
+    {
+      "owner": "BytesSplitIter",
+      "name": "clone",
+      "kind": "method",
+      "signature": "public func clone(): BytesSplitIter",
+      "file": "port/src/bytes.cj",
+      "line": 985
     },
     {
       "owner": "CaptureSpan",
@@ -1244,11 +1364,19 @@
     },
     {
       "owner": "Captures",
+      "name": "groupName",
+      "kind": "method",
+      "signature": "public func groupName(index: Int64): String",
+      "file": "port/src/captures.cj",
+      "line": 89
+    },
+    {
+      "owner": "Captures",
       "name": "get",
       "kind": "method",
       "signature": "public func get(index: Int64): Option<RegexMatch>",
       "file": "port/src/captures.cj",
-      "line": 89
+      "line": 95
     },
     {
       "owner": "Captures",
@@ -1256,7 +1384,7 @@
       "kind": "method",
       "signature": "public func name(value: String): Option<RegexMatch>",
       "file": "port/src/captures.cj",
-      "line": 95
+      "line": 101
     },
     {
       "owner": "Captures",
@@ -1264,7 +1392,7 @@
       "kind": "method",
       "signature": "public func expand(template: String): String",
       "file": "port/src/captures.cj",
-      "line": 107
+      "line": 113
     },
     {
       "owner": "Captures",
@@ -1272,7 +1400,7 @@
       "kind": "method",
       "signature": "public func expandInto(template: String, out: StringBuilder): Unit",
       "file": "port/src/captures.cj",
-      "line": 112
+      "line": 118
     },
     {
       "owner": "GroupItem",
@@ -1280,7 +1408,7 @@
       "kind": "class",
       "signature": "public class GroupItem",
       "file": "port/src/captures.cj",
-      "line": 198
+      "line": 204
     },
     {
       "owner": "GroupItem",
@@ -1288,7 +1416,7 @@
       "kind": "field",
       "signature": "public let done: Bool",
       "file": "port/src/captures.cj",
-      "line": 199
+      "line": 205
     },
     {
       "owner": "GroupItem",
@@ -1296,7 +1424,7 @@
       "kind": "field",
       "signature": "public let value: Option<RegexMatch>",
       "file": "port/src/captures.cj",
-      "line": 200
+      "line": 206
     },
     {
       "owner": "GroupIter",
@@ -1304,7 +1432,7 @@
       "kind": "class",
       "signature": "public class GroupIter",
       "file": "port/src/captures.cj",
-      "line": 207
+      "line": 213
     },
     {
       "owner": "GroupIter",
@@ -1312,7 +1440,7 @@
       "kind": "method",
       "signature": "public func len(): Int64",
       "file": "port/src/captures.cj",
-      "line": 214
+      "line": 220
     },
     {
       "owner": "GroupIter",
@@ -1320,7 +1448,7 @@
       "kind": "method",
       "signature": "public func sizeHint(): (Int64, Option<Int64>)",
       "file": "port/src/captures.cj",
-      "line": 215
+      "line": 223
     },
     {
       "owner": "GroupIter",
@@ -1328,7 +1456,7 @@
       "kind": "method",
       "signature": "public func clone(): GroupIter",
       "file": "port/src/captures.cj",
-      "line": 218
+      "line": 226
     },
     {
       "owner": "GroupIter",
@@ -1336,7 +1464,87 @@
       "kind": "method",
       "signature": "public func next(): GroupItem",
       "file": "port/src/captures.cj",
-      "line": 223
+      "line": 231
+    },
+    {
+      "owner": "DfaHalf",
+      "name": "DfaHalf",
+      "kind": "class",
+      "signature": "public class DfaHalf",
+      "file": "port/src/dfa.cj",
+      "line": 1011
+    },
+    {
+      "owner": "DfaHalf",
+      "name": "pattern",
+      "kind": "field",
+      "signature": "public let pattern: Int64",
+      "file": "port/src/dfa.cj",
+      "line": 1012
+    },
+    {
+      "owner": "DfaHalf",
+      "name": "end",
+      "kind": "field",
+      "signature": "public let end: Int64",
+      "file": "port/src/dfa.cj",
+      "line": 1013
+    },
+    {
+      "owner": "DfaHalf",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: Int64, end: Int64)",
+      "file": "port/src/dfa.cj",
+      "line": 1014
+    },
+    {
+      "owner": "DfaMatch",
+      "name": "DfaMatch",
+      "kind": "class",
+      "signature": "public class DfaMatch",
+      "file": "port/src/dfa.cj",
+      "line": 1020
+    },
+    {
+      "owner": "DfaMatch",
+      "name": "pattern",
+      "kind": "field",
+      "signature": "public let pattern: Int64",
+      "file": "port/src/dfa.cj",
+      "line": 1021
+    },
+    {
+      "owner": "DfaMatch",
+      "name": "start",
+      "kind": "field",
+      "signature": "public let start: Int64",
+      "file": "port/src/dfa.cj",
+      "line": 1022
+    },
+    {
+      "owner": "DfaMatch",
+      "name": "end",
+      "kind": "field",
+      "signature": "public let end: Int64",
+      "file": "port/src/dfa.cj",
+      "line": 1023
+    },
+    {
+      "owner": "DfaMatch",
+      "name": "text",
+      "kind": "field",
+      "signature": "public let text: String",
+      "file": "port/src/dfa.cj",
+      "line": 1024
+    },
+    {
+      "owner": "DfaMatch",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: Int64, start: Int64, end: Int64, text: String)",
+      "file": "port/src/dfa.cj",
+      "line": 1025
     },
     {
       "owner": "DenseDfa",
@@ -1344,7 +1552,7 @@
       "kind": "class",
       "signature": "public class DenseDfa",
       "file": "port/src/dfa.cj",
-      "line": 549
+      "line": 1033
     },
     {
       "owner": "DenseDfa",
@@ -1352,7 +1560,63 @@
       "kind": "constructor",
       "signature": "public init(pattern: String)",
       "file": "port/src/dfa.cj",
-      "line": 551
+      "line": 1035
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String, quit: Array<UInt8>)",
+      "file": "port/src/dfa.cj",
+      "line": 1038
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>)",
+      "file": "port/src/dfa.cj",
+      "line": 1041
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, quit: Array<UInt8>)",
+      "file": "port/src/dfa.cj",
+      "line": 1044
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool)",
+      "file": "port/src/dfa.cj",
+      "line": 1047
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool, patternStarts: Bool)",
+      "file": "port/src/dfa.cj",
+      "line": 1050
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, byteLimit: Int64)",
+      "file": "port/src/dfa.cj",
+      "line": 1053
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "overlap",
+      "kind": "method",
+      "signature": "public static func overlap(patterns: Array<String>): DenseDfa",
+      "file": "port/src/dfa.cj",
+      "line": 1056
     },
     {
       "owner": "DenseDfa",
@@ -1360,15 +1624,71 @@
       "kind": "method",
       "signature": "public func stateCount(): Int64",
       "file": "port/src/dfa.cj",
-      "line": 554
+      "line": 1059
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "memoryUsage",
+      "kind": "method",
+      "signature": "public func memoryUsage(): Int64",
+      "file": "port/src/dfa.cj",
+      "line": 1062
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "retainsDenseTable",
+      "kind": "method",
+      "signature": "public func retainsDenseTable(): Bool",
+      "file": "port/src/dfa.cj",
+      "line": 1065
     },
     {
       "owner": "DenseDfa",
       "name": "search",
       "kind": "method",
-      "signature": "public func search(text: String): Option<RegexMatch>",
+      "signature": "public func search(text: String): Option<DfaMatch>",
       "file": "port/src/dfa.cj",
-      "line": 557
+      "line": 1068
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(input: SearchInput): Option<DfaMatch>",
+      "file": "port/src/dfa.cj",
+      "line": 1071
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "searchOverlapping",
+      "kind": "method",
+      "signature": "public func searchOverlapping(text: String): Array<DfaHalf>",
+      "file": "port/src/dfa.cj",
+      "line": 1074
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "searchOverlapping",
+      "kind": "method",
+      "signature": "public func searchOverlapping(input: SearchInput): Array<DfaHalf>",
+      "file": "port/src/dfa.cj",
+      "line": 1077
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "toImage",
+      "kind": "method",
+      "signature": "public func toImage(): Array<UInt8>",
+      "file": "port/src/dfa.cj",
+      "line": 1083
+    },
+    {
+      "owner": "DenseDfa",
+      "name": "fromImage",
+      "kind": "method",
+      "signature": "public static func fromImage(bytes: Array<UInt8>): DenseDfa",
+      "file": "port/src/dfa.cj",
+      "line": 1100
     },
     {
       "owner": "SparseDfa",
@@ -1376,7 +1696,7 @@
       "kind": "class",
       "signature": "public class SparseDfa",
       "file": "port/src/dfa.cj",
-      "line": 562
+      "line": 1151
     },
     {
       "owner": "SparseDfa",
@@ -1384,7 +1704,55 @@
       "kind": "constructor",
       "signature": "public init(pattern: String)",
       "file": "port/src/dfa.cj",
-      "line": 564
+      "line": 1153
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String, quit: Array<UInt8>)",
+      "file": "port/src/dfa.cj",
+      "line": 1156
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>)",
+      "file": "port/src/dfa.cj",
+      "line": 1159
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, quit: Array<UInt8>)",
+      "file": "port/src/dfa.cj",
+      "line": 1162
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool)",
+      "file": "port/src/dfa.cj",
+      "line": 1165
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool, patternStarts: Bool)",
+      "file": "port/src/dfa.cj",
+      "line": 1168
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "overlap",
+      "kind": "method",
+      "signature": "public static func overlap(patterns: Array<String>): SparseDfa",
+      "file": "port/src/dfa.cj",
+      "line": 1171
     },
     {
       "owner": "SparseDfa",
@@ -1392,15 +1760,159 @@
       "kind": "method",
       "signature": "public func stateCount(): Int64",
       "file": "port/src/dfa.cj",
-      "line": 567
+      "line": 1174
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "memoryUsage",
+      "kind": "method",
+      "signature": "public func memoryUsage(): Int64",
+      "file": "port/src/dfa.cj",
+      "line": 1177
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "retainsDenseTable",
+      "kind": "method",
+      "signature": "public func retainsDenseTable(): Bool",
+      "file": "port/src/dfa.cj",
+      "line": 1180
     },
     {
       "owner": "SparseDfa",
       "name": "search",
       "kind": "method",
-      "signature": "public func search(text: String): Option<RegexMatch>",
+      "signature": "public func search(text: String): Option<DfaMatch>",
       "file": "port/src/dfa.cj",
-      "line": 570
+      "line": 1183
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(input: SearchInput): Option<DfaMatch>",
+      "file": "port/src/dfa.cj",
+      "line": 1186
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "searchOverlapping",
+      "kind": "method",
+      "signature": "public func searchOverlapping(text: String): Array<DfaHalf>",
+      "file": "port/src/dfa.cj",
+      "line": 1189
+    },
+    {
+      "owner": "SparseDfa",
+      "name": "searchOverlapping",
+      "kind": "method",
+      "signature": "public func searchOverlapping(input: SearchInput): Array<DfaHalf>",
+      "file": "port/src/dfa.cj",
+      "line": 1192
+    },
+    {
+      "owner": "HybridDfa",
+      "name": "HybridDfa",
+      "kind": "class",
+      "signature": "public class HybridDfa",
+      "file": "port/src/dfa.cj",
+      "line": 1197
+    },
+    {
+      "owner": "HybridDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String)",
+      "file": "port/src/dfa.cj",
+      "line": 1199
+    },
+    {
+      "owner": "HybridDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String, quit: Array<UInt8>)",
+      "file": "port/src/dfa.cj",
+      "line": 1202
+    },
+    {
+      "owner": "HybridDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, cacheLimit: Int64, clearLimit: Int64)",
+      "file": "port/src/dfa.cj",
+      "line": 1205
+    },
+    {
+      "owner": "HybridDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, cacheLimit: Int64, clearLimit: Int64, patternStarts: Bool)",
+      "file": "port/src/dfa.cj",
+      "line": 1208
+    },
+    {
+      "owner": "HybridDfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, cacheLimit: Int64, clearLimit: Int64, patternStarts: Bool, matchAll: Bool)",
+      "file": "port/src/dfa.cj",
+      "line": 1211
+    },
+    {
+      "owner": "HybridDfa",
+      "name": "overlap",
+      "kind": "method",
+      "signature": "public static func overlap(patterns: Array<String>): HybridDfa",
+      "file": "port/src/dfa.cj",
+      "line": 1214
+    },
+    {
+      "owner": "HybridDfa",
+      "name": "stateCount",
+      "kind": "method",
+      "signature": "public func stateCount(): Int64",
+      "file": "port/src/dfa.cj",
+      "line": 1217
+    },
+    {
+      "owner": "HybridDfa",
+      "name": "memoryUsage",
+      "kind": "method",
+      "signature": "public func memoryUsage(): Int64",
+      "file": "port/src/dfa.cj",
+      "line": 1220
+    },
+    {
+      "owner": "HybridDfa",
+      "name": "reset",
+      "kind": "method",
+      "signature": "public func reset(): Unit",
+      "file": "port/src/dfa.cj",
+      "line": 1223
+    },
+    {
+      "owner": "HybridDfa",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(text: String): Option<DfaMatch>",
+      "file": "port/src/dfa.cj",
+      "line": 1226
+    },
+    {
+      "owner": "HybridDfa",
+      "name": "searchOverlapping",
+      "kind": "method",
+      "signature": "public func searchOverlapping(text: String): Array<DfaHalf>",
+      "file": "port/src/dfa.cj",
+      "line": 1229
+    },
+    {
+      "owner": "HybridDfa",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(input: SearchInput): Option<DfaMatch>",
+      "file": "port/src/dfa.cj",
+      "line": 1232
     },
     {
       "owner": "RegexErrorKind",
@@ -1587,12 +2099,108 @@
       "line": 13
     },
     {
+      "owner": "LiteRegex",
+      "name": "LiteRegex",
+      "kind": "class",
+      "signature": "public class LiteRegex",
+      "file": "port/src/lite.cj",
+      "line": 8
+    },
+    {
+      "owner": "LiteRegex",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String)",
+      "file": "port/src/lite.cj",
+      "line": 11
+    },
+    {
+      "owner": "LiteRegex",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(text: String): Option<PikeMatch>",
+      "file": "port/src/lite.cj",
+      "line": 16
+    },
+    {
+      "owner": "LiteRegex",
+      "name": "isMatch",
+      "kind": "method",
+      "signature": "public func isMatch(text: String): Bool",
+      "file": "port/src/lite.cj",
+      "line": 19
+    },
+    {
+      "owner": "LiteRegex",
+      "name": "searchAll",
+      "kind": "method",
+      "signature": "public func searchAll(text: String): Array<PikeMatch>",
+      "file": "port/src/lite.cj",
+      "line": 22
+    },
+    {
+      "owner": "MetaRegex",
+      "name": "MetaRegex",
+      "kind": "class",
+      "signature": "public class MetaRegex",
+      "file": "port/src/meta.cj",
+      "line": 47
+    },
+    {
+      "owner": "MetaRegex",
+      "name": "engineName",
+      "kind": "field",
+      "signature": "public let engineName: String",
+      "file": "port/src/meta.cj",
+      "line": 52
+    },
+    {
+      "owner": "MetaRegex",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String)",
+      "file": "port/src/meta.cj",
+      "line": 53
+    },
+    {
+      "owner": "MetaRegex",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>)",
+      "file": "port/src/meta.cj",
+      "line": 56
+    },
+    {
+      "owner": "MetaRegex",
+      "name": "memoryUsage",
+      "kind": "method",
+      "signature": "public func memoryUsage(): Int64",
+      "file": "port/src/meta.cj",
+      "line": 72
+    },
+    {
+      "owner": "MetaRegex",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(text: String): Option<PikeMatch>",
+      "file": "port/src/meta.cj",
+      "line": 80
+    },
+    {
+      "owner": "MetaRegex",
+      "name": "searchAll",
+      "kind": "method",
+      "signature": "public func searchAll(text: String): Array<PikeMatch>",
+      "file": "port/src/meta.cj",
+      "line": 83
+    },
+    {
       "owner": "RegexMatch",
       "name": "RegexMatch",
       "kind": "class",
       "signature": "public class RegexMatch",
       "file": "port/src/nfa.cj",
-      "line": 238
+      "line": 249
     },
     {
       "owner": "RegexMatch",
@@ -1600,7 +2208,7 @@
       "kind": "field",
       "signature": "public let start: Int64",
       "file": "port/src/nfa.cj",
-      "line": 239
+      "line": 250
     },
     {
       "owner": "RegexMatch",
@@ -1608,7 +2216,7 @@
       "kind": "field",
       "signature": "public let end: Int64",
       "file": "port/src/nfa.cj",
-      "line": 240
+      "line": 251
     },
     {
       "owner": "RegexMatch",
@@ -1616,7 +2224,7 @@
       "kind": "field",
       "signature": "public let text: String",
       "file": "port/src/nfa.cj",
-      "line": 241
+      "line": 252
     },
     {
       "owner": "RegexMatch",
@@ -1624,7 +2232,7 @@
       "kind": "method",
       "signature": "public func isEmpty(): Bool",
       "file": "port/src/nfa.cj",
-      "line": 247
+      "line": 258
     },
     {
       "owner": "RegexMatch",
@@ -1632,7 +2240,7 @@
       "kind": "method",
       "signature": "public func len(): Int64",
       "file": "port/src/nfa.cj",
-      "line": 250
+      "line": 261
     },
     {
       "owner": "RegexMatch",
@@ -1640,7 +2248,7 @@
       "kind": "method",
       "signature": "public func asStr(): String",
       "file": "port/src/nfa.cj",
-      "line": 253
+      "line": 264
     },
     {
       "owner": "Regex",
@@ -1648,7 +2256,7 @@
       "kind": "class",
       "signature": "public class Regex",
       "file": "port/src/nfa.cj",
-      "line": 508
+      "line": 519
     },
     {
       "owner": "Regex",
@@ -1656,7 +2264,7 @@
       "kind": "constructor",
       "signature": "public init(pattern: String)",
       "file": "port/src/nfa.cj",
-      "line": 517
+      "line": 528
     },
     {
       "owner": "Regex",
@@ -1664,7 +2272,7 @@
       "kind": "method",
       "signature": "public func asStr(): String",
       "file": "port/src/nfa.cj",
-      "line": 652
+      "line": 663
     },
     {
       "owner": "Regex",
@@ -1672,7 +2280,7 @@
       "kind": "method",
       "signature": "public func staticCapturesLen(): Option<Int64>",
       "file": "port/src/nfa.cj",
-      "line": 655
+      "line": 666
     },
     {
       "owner": "Regex",
@@ -1680,7 +2288,7 @@
       "kind": "method",
       "signature": "public func searchEarliest(text: String): Option<Captures>",
       "file": "port/src/nfa.cj",
-      "line": 795
+      "line": 806
     },
     {
       "owner": "Regex",
@@ -1688,7 +2296,7 @@
       "kind": "method",
       "signature": "public func find(text: String): Option<RegexMatch>",
       "file": "port/src/nfa.cj",
-      "line": 802
+      "line": 813
     },
     {
       "owner": "Regex",
@@ -1696,7 +2304,7 @@
       "kind": "method",
       "signature": "public func isMatch(text: String): Bool",
       "file": "port/src/nfa.cj",
-      "line": 814
+      "line": 825
     },
     {
       "owner": "Regex",
@@ -1704,7 +2312,7 @@
       "kind": "method",
       "signature": "public func findAt(text: String, start: Int64): Option<RegexMatch>",
       "file": "port/src/nfa.cj",
-      "line": 825
+      "line": 836
     },
     {
       "owner": "Regex",
@@ -1712,7 +2320,7 @@
       "kind": "method",
       "signature": "public func isMatchAt(text: String, start: Int64): Bool",
       "file": "port/src/nfa.cj",
-      "line": 833
+      "line": 844
     },
     {
       "owner": "Regex",
@@ -1720,7 +2328,7 @@
       "kind": "method",
       "signature": "public func shortestMatch(text: String): Option<Int64>",
       "file": "port/src/nfa.cj",
-      "line": 839
+      "line": 850
     },
     {
       "owner": "Regex",
@@ -1728,7 +2336,7 @@
       "kind": "method",
       "signature": "public func shortestMatchAt(text: String, start: Int64): Option<Int64>",
       "file": "port/src/nfa.cj",
-      "line": 842
+      "line": 853
     },
     {
       "owner": "Regex",
@@ -1736,7 +2344,7 @@
       "kind": "method",
       "signature": "public func capturesAt(text: String, start: Int64): Option<Captures>",
       "file": "port/src/nfa.cj",
-      "line": 850
+      "line": 861
     },
     {
       "owner": "Regex",
@@ -1744,7 +2352,7 @@
       "kind": "method",
       "signature": "public func findIter(text: String): MatchIter",
       "file": "port/src/nfa.cj",
-      "line": 858
+      "line": 886
     },
     {
       "owner": "Regex",
@@ -1752,7 +2360,7 @@
       "kind": "method",
       "signature": "public func capturesIter(text: String): CaptureIter",
       "file": "port/src/nfa.cj",
-      "line": 882
+      "line": 895
     },
     {
       "owner": "Regex",
@@ -1760,7 +2368,7 @@
       "kind": "method",
       "signature": "public func splitIter(text: String): SplitIter",
       "file": "port/src/nfa.cj",
-      "line": 906
+      "line": 904
     },
     {
       "owner": "Regex",
@@ -1768,7 +2376,7 @@
       "kind": "method",
       "signature": "public func splitNIter(text: String, limit: Int64): SplitIter",
       "file": "port/src/nfa.cj",
-      "line": 946
+      "line": 907
     },
     {
       "owner": "Regex",
@@ -1776,7 +2384,7 @@
       "kind": "method",
       "signature": "public func captureLocations(): CaptureLocations",
       "file": "port/src/nfa.cj",
-      "line": 975
+      "line": 960
     },
     {
       "owner": "Regex",
@@ -1784,7 +2392,7 @@
       "kind": "method",
       "signature": "public func capturesRead(locations: CaptureLocations, text: String): Option<RegexMatch>",
       "file": "port/src/nfa.cj",
-      "line": 978
+      "line": 963
     },
     {
       "owner": "Regex",
@@ -1792,7 +2400,7 @@
       "kind": "method",
       "signature": "public func capturesReadAt(locations: CaptureLocations, text: String, start: Int64): Option<RegexMatch>",
       "file": "port/src/nfa.cj",
-      "line": 981
+      "line": 966
     },
     {
       "owner": "Regex",
@@ -1800,7 +2408,7 @@
       "kind": "method",
       "signature": "public func findAll(text: String): Array<RegexMatch>",
       "file": "port/src/nfa.cj",
-      "line": 1007
+      "line": 992
     },
     {
       "owner": "Regex",
@@ -1808,7 +2416,7 @@
       "kind": "method",
       "signature": "public func capturesLen(): Int64",
       "file": "port/src/nfa.cj",
-      "line": 1031
+      "line": 1016
     },
     {
       "owner": "Regex",
@@ -1816,7 +2424,7 @@
       "kind": "method",
       "signature": "public func captureNames(): Array<Option<String>>",
       "file": "port/src/nfa.cj",
-      "line": 1034
+      "line": 1019
     },
     {
       "owner": "Regex",
@@ -1824,7 +2432,7 @@
       "kind": "method",
       "signature": "public func captures(text: String): Option<Captures>",
       "file": "port/src/nfa.cj",
-      "line": 1059
+      "line": 1044
     },
     {
       "owner": "Regex",
@@ -1832,7 +2440,7 @@
       "kind": "method",
       "signature": "public func capturesAll(text: String): Array<Captures>",
       "file": "port/src/nfa.cj",
-      "line": 1066
+      "line": 1051
     },
     {
       "owner": "Regex",
@@ -1840,7 +2448,7 @@
       "kind": "method",
       "signature": "public func replace(text: String, replacement: String): String",
       "file": "port/src/nfa.cj",
-      "line": 1086
+      "line": 1071
     },
     {
       "owner": "Regex",
@@ -1848,7 +2456,7 @@
       "kind": "method",
       "signature": "public func replaceAll(text: String, replacement: String): String",
       "file": "port/src/nfa.cj",
-      "line": 1089
+      "line": 1074
     },
     {
       "owner": "Regex",
@@ -1856,7 +2464,7 @@
       "kind": "method",
       "signature": "public func replaceN(text: String, limit: Int64, replacement: String): String",
       "file": "port/src/nfa.cj",
-      "line": 1093
+      "line": 1078
     },
     {
       "owner": "Regex",
@@ -1864,7 +2472,7 @@
       "kind": "method",
       "signature": "public func replaceLiteral(text: String, limit: Int64, replacement: String): String",
       "file": "port/src/nfa.cj",
-      "line": 1106
+      "line": 1091
     },
     {
       "owner": "Regex",
@@ -1872,7 +2480,7 @@
       "kind": "method",
       "signature": "public func replaceWith(text: String, limit: Int64, replacer: (Captures) -> String): String",
       "file": "port/src/nfa.cj",
-      "line": 1109
+      "line": 1094
     },
     {
       "owner": "Regex",
@@ -1880,7 +2488,7 @@
       "kind": "method",
       "signature": "public func split(text: String): Array<String>",
       "file": "port/src/nfa.cj",
-      "line": 1143
+      "line": 1128
     },
     {
       "owner": "Regex",
@@ -1888,7 +2496,7 @@
       "kind": "method",
       "signature": "public func splitN(text: String, limit: Int64): Array<String>",
       "file": "port/src/nfa.cj",
-      "line": 1147
+      "line": 1132
     },
     {
       "owner": "Regex",
@@ -1896,7 +2504,7 @@
       "kind": "method",
       "signature": "public func nfaStateCount(): Int64",
       "file": "port/src/nfa.cj",
-      "line": 1183
+      "line": 1168
     },
     {
       "owner": "Regex",
@@ -1904,7 +2512,7 @@
       "kind": "method",
       "signature": "public func nfaStart(): Int64",
       "file": "port/src/nfa.cj",
-      "line": 1186
+      "line": 1171
     },
     {
       "owner": "Regex",
@@ -1912,7 +2520,7 @@
       "kind": "method",
       "signature": "public func nfaOp(index: Int64): String",
       "file": "port/src/nfa.cj",
-      "line": 1189
+      "line": 1174
     },
     {
       "owner": "Regex",
@@ -1920,7 +2528,7 @@
       "kind": "method",
       "signature": "public func nfaNext(index: Int64): Int64",
       "file": "port/src/nfa.cj",
-      "line": 1203
+      "line": 1188
     },
     {
       "owner": "Regex",
@@ -1928,7 +2536,7 @@
       "kind": "method",
       "signature": "public func nfaAlternate(index: Int64): Int64",
       "file": "port/src/nfa.cj",
-      "line": 1209
+      "line": 1194
     },
     {
       "owner": "Regex",
@@ -1936,7 +2544,7 @@
       "kind": "method",
       "signature": "public func searchWindow(text: String, start: Int64, end: Int64, anchored: Bool): Option<Captures>",
       "file": "port/src/nfa.cj",
-      "line": 1215
+      "line": 1200
     },
     {
       "owner": "MatchIter",
@@ -1944,15 +2552,15 @@
       "kind": "class",
       "signature": "public class MatchIter",
       "file": "port/src/nfa.cj",
-      "line": 1235
+      "line": 1224
     },
     {
       "owner": "MatchIter",
       "name": "init",
       "kind": "constructor",
-      "signature": "public init(pull: () -> Option<RegexMatch>)",
+      "signature": "public init(step: (Array<Int64>) -> Option<RegexMatch>, state: Array<Int64>)",
       "file": "port/src/nfa.cj",
-      "line": 1237
+      "line": 1227
     },
     {
       "owner": "MatchIter",
@@ -1960,7 +2568,15 @@
       "kind": "method",
       "signature": "public func next(): Option<RegexMatch>",
       "file": "port/src/nfa.cj",
-      "line": 1240
+      "line": 1231
+    },
+    {
+      "owner": "MatchIter",
+      "name": "clone",
+      "kind": "method",
+      "signature": "public func clone(): MatchIter",
+      "file": "port/src/nfa.cj",
+      "line": 1234
     },
     {
       "owner": "CaptureIter",
@@ -1968,15 +2584,15 @@
       "kind": "class",
       "signature": "public class CaptureIter",
       "file": "port/src/nfa.cj",
-      "line": 1245
+      "line": 1239
     },
     {
       "owner": "CaptureIter",
       "name": "init",
       "kind": "constructor",
-      "signature": "public init(pull: () -> Option<Captures>)",
+      "signature": "public init(step: (Array<Int64>) -> Option<Captures>, state: Array<Int64>)",
       "file": "port/src/nfa.cj",
-      "line": 1247
+      "line": 1242
     },
     {
       "owner": "CaptureIter",
@@ -1984,7 +2600,15 @@
       "kind": "method",
       "signature": "public func next(): Option<Captures>",
       "file": "port/src/nfa.cj",
-      "line": 1250
+      "line": 1246
+    },
+    {
+      "owner": "CaptureIter",
+      "name": "clone",
+      "kind": "method",
+      "signature": "public func clone(): CaptureIter",
+      "file": "port/src/nfa.cj",
+      "line": 1249
     },
     {
       "owner": "SplitIter",
@@ -1992,13 +2616,13 @@
       "kind": "class",
       "signature": "public class SplitIter",
       "file": "port/src/nfa.cj",
-      "line": 1255
+      "line": 1254
     },
     {
       "owner": "SplitIter",
       "name": "init",
       "kind": "constructor",
-      "signature": "public init(pull: () -> Option<String>)",
+      "signature": "public init(step: (Array<Int64>) -> Option<String>, state: Array<Int64>)",
       "file": "port/src/nfa.cj",
       "line": 1257
     },
@@ -2008,7 +2632,71 @@
       "kind": "method",
       "signature": "public func next(): Option<String>",
       "file": "port/src/nfa.cj",
-      "line": 1260
+      "line": 1261
+    },
+    {
+      "owner": "SplitIter",
+      "name": "clone",
+      "kind": "method",
+      "signature": "public func clone(): SplitIter",
+      "file": "port/src/nfa.cj",
+      "line": 1264
+    },
+    {
+      "owner": "OnePass",
+      "name": "OnePass",
+      "kind": "class",
+      "signature": "public class OnePass",
+      "file": "port/src/onepass.cj",
+      "line": 8
+    },
+    {
+      "owner": "OnePass",
+      "name": "engineName",
+      "kind": "field",
+      "signature": "public let engineName: String = \"onepass\"",
+      "file": "port/src/onepass.cj",
+      "line": 10
+    },
+    {
+      "owner": "OnePass",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String)",
+      "file": "port/src/onepass.cj",
+      "line": 11
+    },
+    {
+      "owner": "OnePass",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>)",
+      "file": "port/src/onepass.cj",
+      "line": 14
+    },
+    {
+      "owner": "OnePass",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(text: String): Option<PikeMatch>",
+      "file": "port/src/onepass.cj",
+      "line": 24
+    },
+    {
+      "owner": "OnePass",
+      "name": "searchAnchored",
+      "kind": "method",
+      "signature": "public func searchAnchored(text: String, at: Int64): Option<PikeMatch>",
+      "file": "port/src/onepass.cj",
+      "line": 27
+    },
+    {
+      "owner": "OnePass",
+      "name": "searchAll",
+      "kind": "method",
+      "signature": "public func searchAll(text: String): Array<PikeMatch>",
+      "file": "port/src/onepass.cj",
+      "line": 30
     },
     {
       "owner": "PikeCache",
@@ -2024,7 +2712,23 @@
       "kind": "method",
       "signature": "public func reset(): Unit",
       "file": "port/src/pikevm.cj",
-      "line": 12
+      "line": 20
+    },
+    {
+      "owner": "PikeCache",
+      "name": "captureWorkspace",
+      "kind": "method",
+      "signature": "public func captureWorkspace(): Int64",
+      "file": "port/src/pikevm.cj",
+      "line": 31
+    },
+    {
+      "owner": "PikeCache",
+      "name": "activeThreads",
+      "kind": "method",
+      "signature": "public func activeThreads(): Int64",
+      "file": "port/src/pikevm.cj",
+      "line": 73
     },
     {
       "owner": "PikeCache",
@@ -2032,7 +2736,7 @@
       "kind": "method",
       "signature": "public func hasMatch(): Bool",
       "file": "port/src/pikevm.cj",
-      "line": 19
+      "line": 109
     },
     {
       "owner": "PikeCache",
@@ -2040,7 +2744,7 @@
       "kind": "method",
       "signature": "public func patternId(): Int64",
       "file": "port/src/pikevm.cj",
-      "line": 22
+      "line": 112
     },
     {
       "owner": "PikeCache",
@@ -2048,7 +2752,7 @@
       "kind": "method",
       "signature": "public func groupStart(index: Int64): Int64",
       "file": "port/src/pikevm.cj",
-      "line": 25
+      "line": 115
     },
     {
       "owner": "PikeCache",
@@ -2056,7 +2760,7 @@
       "kind": "method",
       "signature": "public func groupEnd(index: Int64): Int64",
       "file": "port/src/pikevm.cj",
-      "line": 32
+      "line": 122
     },
     {
       "owner": "PikeMatch",
@@ -2064,7 +2768,7 @@
       "kind": "class",
       "signature": "public class PikeMatch",
       "file": "port/src/pikevm.cj",
-      "line": 63
+      "line": 153
     },
     {
       "owner": "PikeMatch",
@@ -2072,7 +2776,7 @@
       "kind": "field",
       "signature": "public let pattern: Int64",
       "file": "port/src/pikevm.cj",
-      "line": 64
+      "line": 154
     },
     {
       "owner": "PikeMatch",
@@ -2080,7 +2784,7 @@
       "kind": "field",
       "signature": "public let captures: Captures",
       "file": "port/src/pikevm.cj",
-      "line": 65
+      "line": 155
     },
     {
       "owner": "PikeMatch",
@@ -2088,7 +2792,7 @@
       "kind": "constructor",
       "signature": "public init(pattern: Int64, captures: Captures)",
       "file": "port/src/pikevm.cj",
-      "line": 66
+      "line": 156
     },
     {
       "owner": "PikeMatch",
@@ -2096,7 +2800,7 @@
       "kind": "method",
       "signature": "public func start(): Int64",
       "file": "port/src/pikevm.cj",
-      "line": 70
+      "line": 160
     },
     {
       "owner": "PikeMatch",
@@ -2104,7 +2808,7 @@
       "kind": "method",
       "signature": "public func end(): Int64",
       "file": "port/src/pikevm.cj",
-      "line": 76
+      "line": 166
     },
     {
       "owner": "PikeVM",
@@ -2112,7 +2816,7 @@
       "kind": "class",
       "signature": "public class PikeVM",
       "file": "port/src/pikevm.cj",
-      "line": 84
+      "line": 174
     },
     {
       "owner": "PikeVM",
@@ -2120,7 +2824,7 @@
       "kind": "field",
       "signature": "public let cache: PikeCache",
       "file": "port/src/pikevm.cj",
-      "line": 86
+      "line": 176
     },
     {
       "owner": "PikeVM",
@@ -2128,7 +2832,7 @@
       "kind": "constructor",
       "signature": "public init(pattern: String)",
       "file": "port/src/pikevm.cj",
-      "line": 87
+      "line": 177
     },
     {
       "owner": "PikeVM",
@@ -2136,7 +2840,15 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>)",
       "file": "port/src/pikevm.cj",
-      "line": 90
+      "line": 180
+    },
+    {
+      "owner": "PikeVM",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, whichCaptures: Int64)",
+      "file": "port/src/pikevm.cj",
+      "line": 183
     },
     {
       "owner": "PikeVM",
@@ -2144,7 +2856,7 @@
       "kind": "constructor",
       "signature": "public init(hir: Hir)",
       "file": "port/src/pikevm.cj",
-      "line": 94
+      "line": 187
     },
     {
       "owner": "PikeVM",
@@ -2152,7 +2864,7 @@
       "kind": "constructor",
       "signature": "public init(hirs: Array<Hir>)",
       "file": "port/src/pikevm.cj",
-      "line": 97
+      "line": 190
     },
     {
       "owner": "PikeVM",
@@ -2160,7 +2872,15 @@
       "kind": "method",
       "signature": "public func patternCount(): Int64",
       "file": "port/src/pikevm.cj",
-      "line": 101
+      "line": 194
+    },
+    {
+      "owner": "PikeVM",
+      "name": "memoryUsage",
+      "kind": "method",
+      "signature": "public func memoryUsage(): Int64",
+      "file": "port/src/pikevm.cj",
+      "line": 197
     },
     {
       "owner": "PikeVM",
@@ -2168,7 +2888,15 @@
       "kind": "method",
       "signature": "public func reset(): Unit",
       "file": "port/src/pikevm.cj",
-      "line": 104
+      "line": 200
+    },
+    {
+      "owner": "PikeVM",
+      "name": "graph",
+      "kind": "method",
+      "signature": "public func graph(): ThompsonNfa",
+      "file": "port/src/pikevm.cj",
+      "line": 203
     },
     {
       "owner": "PikeVM",
@@ -2176,7 +2904,7 @@
       "kind": "method",
       "signature": "public func stateCount(pattern: Int64): Int64",
       "file": "port/src/pikevm.cj",
-      "line": 107
+      "line": 206
     },
     {
       "owner": "PikeVM",
@@ -2184,7 +2912,7 @@
       "kind": "method",
       "signature": "public func startState(pattern: Int64): Int64",
       "file": "port/src/pikevm.cj",
-      "line": 110
+      "line": 209
     },
     {
       "owner": "PikeVM",
@@ -2192,7 +2920,7 @@
       "kind": "method",
       "signature": "public func opName(pattern: Int64, state: Int64): String",
       "file": "port/src/pikevm.cj",
-      "line": 113
+      "line": 212
     },
     {
       "owner": "PikeVM",
@@ -2200,7 +2928,7 @@
       "kind": "method",
       "signature": "public func opNext(pattern: Int64, state: Int64): Int64",
       "file": "port/src/pikevm.cj",
-      "line": 116
+      "line": 215
     },
     {
       "owner": "PikeVM",
@@ -2208,7 +2936,7 @@
       "kind": "method",
       "signature": "public func opAlternate(pattern: Int64, state: Int64): Int64",
       "file": "port/src/pikevm.cj",
-      "line": 119
+      "line": 218
     },
     {
       "owner": "PikeVM",
@@ -2216,7 +2944,15 @@
       "kind": "method",
       "signature": "public func whichOverlapping(text: String): Array<Int64>",
       "file": "port/src/pikevm.cj",
-      "line": 122
+      "line": 221
+    },
+    {
+      "owner": "PikeVM",
+      "name": "whichOverlapping",
+      "kind": "method",
+      "signature": "public func whichOverlapping(input: SearchInput): Array<Int64>",
+      "file": "port/src/pikevm.cj",
+      "line": 224
     },
     {
       "owner": "PikeVM",
@@ -2224,7 +2960,7 @@
       "kind": "method",
       "signature": "public func searchEarliest(text: String): Option<PikeMatch>",
       "file": "port/src/pikevm.cj",
-      "line": 131
+      "line": 227
     },
     {
       "owner": "PikeVM",
@@ -2232,7 +2968,7 @@
       "kind": "method",
       "signature": "public func search(text: String): Option<PikeMatch>",
       "file": "port/src/pikevm.cj",
-      "line": 165
+      "line": 230
     },
     {
       "owner": "PikeVM",
@@ -2240,7 +2976,31 @@
       "kind": "method",
       "signature": "public func search(text: String, start: Int64, end: Int64, anchored: Bool): Option<PikeMatch>",
       "file": "port/src/pikevm.cj",
-      "line": 168
+      "line": 233
+    },
+    {
+      "owner": "PikeVM",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(input: SearchInput): Option<PikeMatch>",
+      "file": "port/src/pikevm.cj",
+      "line": 236
+    },
+    {
+      "owner": "PikeVM",
+      "name": "isMatch",
+      "kind": "method",
+      "signature": "public func isMatch(input: SearchInput): Bool",
+      "file": "port/src/pikevm.cj",
+      "line": 239
+    },
+    {
+      "owner": "PikeVM",
+      "name": "searchAll",
+      "kind": "method",
+      "signature": "public func searchAll(text: String): Array<PikeMatch>",
+      "file": "port/src/pikevm.cj",
+      "line": 244
     },
     {
       "owner": "SetMatches",
@@ -2419,12 +3179,44 @@
       "line": 180
     },
     {
+      "owner": "ReverseMatch",
+      "name": "ReverseMatch",
+      "kind": "class",
+      "signature": "public class ReverseMatch",
+      "file": "port/src/reverse.cj",
+      "line": 8
+    },
+    {
+      "owner": "ReverseMatch",
+      "name": "pattern",
+      "kind": "field",
+      "signature": "public let pattern: Int64",
+      "file": "port/src/reverse.cj",
+      "line": 9
+    },
+    {
+      "owner": "ReverseMatch",
+      "name": "offset",
+      "kind": "field",
+      "signature": "public let offset: Int64",
+      "file": "port/src/reverse.cj",
+      "line": 10
+    },
+    {
+      "owner": "ReverseMatch",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: Int64, offset: Int64)",
+      "file": "port/src/reverse.cj",
+      "line": 11
+    },
+    {
       "owner": "ReverseNfa",
       "name": "ReverseNfa",
       "kind": "class",
       "signature": "public class ReverseNfa",
       "file": "port/src/reverse.cj",
-      "line": 8
+      "line": 17
     },
     {
       "owner": "ReverseNfa",
@@ -2432,7 +3224,31 @@
       "kind": "constructor",
       "signature": "public init(pattern: String)",
       "file": "port/src/reverse.cj",
-      "line": 14
+      "line": 26
+    },
+    {
+      "owner": "ReverseNfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>)",
+      "file": "port/src/reverse.cj",
+      "line": 29
+    },
+    {
+      "owner": "ReverseNfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, patternStarts: Bool)",
+      "file": "port/src/reverse.cj",
+      "line": 32
+    },
+    {
+      "owner": "ReverseNfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, patternStarts: Bool, sizeLimit: Int64)",
+      "file": "port/src/reverse.cj",
+      "line": 35
     },
     {
       "owner": "ReverseNfa",
@@ -2440,7 +3256,207 @@
       "kind": "method",
       "signature": "public func search(text: String): Option<Int64>",
       "file": "port/src/reverse.cj",
-      "line": 54
+      "line": 108
+    },
+    {
+      "owner": "ReverseNfa",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(input: SearchInput): Option<Int64>",
+      "file": "port/src/reverse.cj",
+      "line": 114
+    },
+    {
+      "owner": "ReverseNfa",
+      "name": "find",
+      "kind": "method",
+      "signature": "public func find(input: SearchInput): Option<ReverseMatch>",
+      "file": "port/src/reverse.cj",
+      "line": 120
+    },
+    {
+      "owner": "Rure",
+      "name": "Rure",
+      "kind": "class",
+      "signature": "public class Rure",
+      "file": "port/src/rure.cj",
+      "line": 6
+    },
+    {
+      "owner": "Rure",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(pattern: String)",
+      "file": "port/src/rure.cj",
+      "line": 8
+    },
+    {
+      "owner": "Rure",
+      "name": "isMatch",
+      "kind": "method",
+      "signature": "public func isMatch(text: String): Bool",
+      "file": "port/src/rure.cj",
+      "line": 11
+    },
+    {
+      "owner": "Rure",
+      "name": "find",
+      "kind": "method",
+      "signature": "public func find(text: String): Option<RegexMatch>",
+      "file": "port/src/rure.cj",
+      "line": 14
+    },
+    {
+      "owner": "Rure",
+      "name": "findAt",
+      "kind": "method",
+      "signature": "public func findAt(text: String, at: Int64): Option<RegexMatch>",
+      "file": "port/src/rure.cj",
+      "line": 17
+    },
+    {
+      "owner": "顶层函数",
+      "name": "debugByte",
+      "kind": "function",
+      "signature": "public func debugByte(byte: Int64): String",
+      "file": "port/src/search_input.cj",
+      "line": 50
+    },
+    {
+      "owner": "SearchInput",
+      "name": "SearchInput",
+      "kind": "class",
+      "signature": "public class SearchInput",
+      "file": "port/src/search_input.cj",
+      "line": 78
+    },
+    {
+      "owner": "SearchInput",
+      "name": "bytes",
+      "kind": "field",
+      "signature": "public let bytes: Array<UInt8>",
+      "file": "port/src/search_input.cj",
+      "line": 79
+    },
+    {
+      "owner": "SearchInput",
+      "name": "text",
+      "kind": "field",
+      "signature": "public let text: String",
+      "file": "port/src/search_input.cj",
+      "line": 80
+    },
+    {
+      "owner": "SearchInput",
+      "name": "utf8",
+      "kind": "field",
+      "signature": "public let utf8: Bool",
+      "file": "port/src/search_input.cj",
+      "line": 81
+    },
+    {
+      "owner": "SearchInput",
+      "name": "start",
+      "kind": "field",
+      "signature": "public let start: Int64",
+      "file": "port/src/search_input.cj",
+      "line": 82
+    },
+    {
+      "owner": "SearchInput",
+      "name": "end",
+      "kind": "field",
+      "signature": "public let end: Int64",
+      "file": "port/src/search_input.cj",
+      "line": 83
+    },
+    {
+      "owner": "SearchInput",
+      "name": "anchor",
+      "kind": "field",
+      "signature": "public let anchor: Int64",
+      "file": "port/src/search_input.cj",
+      "line": 84
+    },
+    {
+      "owner": "SearchInput",
+      "name": "pattern",
+      "kind": "field",
+      "signature": "public let pattern: Int64",
+      "file": "port/src/search_input.cj",
+      "line": 85
+    },
+    {
+      "owner": "SearchInput",
+      "name": "earliest",
+      "kind": "field",
+      "signature": "public let earliest: Bool",
+      "file": "port/src/search_input.cj",
+      "line": 86
+    },
+    {
+      "owner": "SearchInput",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(text: String)",
+      "file": "port/src/search_input.cj",
+      "line": 87
+    },
+    {
+      "owner": "SearchInput",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(bytes: Array<UInt8>)",
+      "file": "port/src/search_input.cj",
+      "line": 90
+    },
+    {
+      "owner": "SearchInput",
+      "name": "span",
+      "kind": "method",
+      "signature": "public func span(start: Int64, end: Int64): SearchInput",
+      "file": "port/src/search_input.cj",
+      "line": 110
+    },
+    {
+      "owner": "SearchInput",
+      "name": "anchored",
+      "kind": "method",
+      "signature": "public func anchored(yes: Bool): SearchInput",
+      "file": "port/src/search_input.cj",
+      "line": 113
+    },
+    {
+      "owner": "SearchInput",
+      "name": "selectPattern",
+      "kind": "method",
+      "signature": "public func selectPattern(id: Int64): SearchInput",
+      "file": "port/src/search_input.cj",
+      "line": 120
+    },
+    {
+      "owner": "SearchInput",
+      "name": "withEarliest",
+      "kind": "method",
+      "signature": "public func withEarliest(yes: Bool): SearchInput",
+      "file": "port/src/search_input.cj",
+      "line": 123
+    },
+    {
+      "owner": "SearchInput",
+      "name": "isAnchored",
+      "kind": "method",
+      "signature": "public func isAnchored(): Bool",
+      "file": "port/src/search_input.cj",
+      "line": 126
+    },
+    {
+      "owner": "SearchInput",
+      "name": "selectedPattern",
+      "kind": "method",
+      "signature": "public func selectedPattern(): Int64",
+      "file": "port/src/search_input.cj",
+      "line": 129
     },
     {
       "owner": "AstSpan",
@@ -3531,6 +4547,14 @@
       "line": 9
     },
     {
+      "owner": "LiteralPiece",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(exact: Bool, bytes: Array<UInt8>)",
+      "file": "port/src/syntax_literal.cj",
+      "line": 10
+    },
+    {
       "owner": "LiteralSeq",
       "name": "LiteralSeq",
       "kind": "class",
@@ -3555,12 +4579,268 @@
       "line": 18
     },
     {
+      "owner": "LiteralSeq",
+      "name": "infinite",
+      "kind": "method",
+      "signature": "public static func infinite(): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 23
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "of",
+      "kind": "method",
+      "signature": "public static func of(pieces: Array<LiteralPiece>): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 26
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "isEmpty",
+      "kind": "method",
+      "signature": "public func isEmpty(): Bool",
+      "file": "port/src/syntax_literal.cj",
+      "line": 29
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "isExact",
+      "kind": "method",
+      "signature": "public func isExact(): Bool",
+      "file": "port/src/syntax_literal.cj",
+      "line": 32
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "isInexact",
+      "kind": "method",
+      "signature": "public func isInexact(): Bool",
+      "file": "port/src/syntax_literal.cj",
+      "line": 43
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "literalCount",
+      "kind": "method",
+      "signature": "public func literalCount(): Option<Int64>",
+      "file": "port/src/syntax_literal.cj",
+      "line": 54
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "minLiteralLen",
+      "kind": "method",
+      "signature": "public func minLiteralLen(): Option<Int64>",
+      "file": "port/src/syntax_literal.cj",
+      "line": 61
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "maxUnionLen",
+      "kind": "method",
+      "signature": "public func maxUnionLen(other: LiteralSeq): Option<Int64>",
+      "file": "port/src/syntax_literal.cj",
+      "line": 73
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "maxCrossLen",
+      "kind": "method",
+      "signature": "public func maxCrossLen(other: LiteralSeq): Option<Int64>",
+      "file": "port/src/syntax_literal.cj",
+      "line": 82
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "maxLiteralLen",
+      "kind": "method",
+      "signature": "public func maxLiteralLen(): Option<Int64>",
+      "file": "port/src/syntax_literal.cj",
+      "line": 91
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "crossForward",
+      "kind": "method",
+      "signature": "public func crossForward(other: LiteralSeq): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 103
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "crossReverse",
+      "kind": "method",
+      "signature": "public func crossReverse(other: LiteralSeq): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 109
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "union",
+      "kind": "method",
+      "signature": "public func union(other: LiteralSeq): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 115
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "unionIntoEmpty",
+      "kind": "method",
+      "signature": "public func unionIntoEmpty(other: LiteralSeq): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 121
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "keepFirst",
+      "kind": "method",
+      "signature": "public func keepFirst(len: Int64): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 127
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "keepLast",
+      "kind": "method",
+      "signature": "public func keepLast(len: Int64): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 135
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "minimize",
+      "kind": "method",
+      "signature": "public func minimize(): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 143
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "optimizePrefix",
+      "kind": "method",
+      "signature": "public func optimizePrefix(): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 148
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "optimizeSuffix",
+      "kind": "method",
+      "signature": "public func optimizeSuffix(): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 153
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "reversed",
+      "kind": "method",
+      "signature": "public func reversed(): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 158
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "sorted",
+      "kind": "method",
+      "signature": "public func sorted(): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 163
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "makeInexact",
+      "kind": "method",
+      "signature": "public func makeInexact(): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 168
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "deduped",
+      "kind": "method",
+      "signature": "public func deduped(): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 173
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "commonPrefix",
+      "kind": "method",
+      "signature": "public func commonPrefix(): Option<Array<UInt8>>",
+      "file": "port/src/syntax_literal.cj",
+      "line": 178
+    },
+    {
+      "owner": "LiteralSeq",
+      "name": "commonSuffix",
+      "kind": "method",
+      "signature": "public func commonSuffix(): Option<Array<UInt8>>",
+      "file": "port/src/syntax_literal.cj",
+      "line": 181
+    },
+    {
+      "owner": "LiteralLimits",
+      "name": "LiteralLimits",
+      "kind": "class",
+      "signature": "public class LiteralLimits",
+      "file": "port/src/syntax_literal.cj",
+      "line": 186
+    },
+    {
+      "owner": "LiteralLimits",
+      "name": "classLimit",
+      "kind": "field",
+      "signature": "public let classLimit: Int64",
+      "file": "port/src/syntax_literal.cj",
+      "line": 187
+    },
+    {
+      "owner": "LiteralLimits",
+      "name": "repeatLimit",
+      "kind": "field",
+      "signature": "public let repeatLimit: Int64",
+      "file": "port/src/syntax_literal.cj",
+      "line": 188
+    },
+    {
+      "owner": "LiteralLimits",
+      "name": "literalLen",
+      "kind": "field",
+      "signature": "public let literalLen: Int64",
+      "file": "port/src/syntax_literal.cj",
+      "line": 189
+    },
+    {
+      "owner": "LiteralLimits",
+      "name": "totalLimit",
+      "kind": "field",
+      "signature": "public let totalLimit: Int64",
+      "file": "port/src/syntax_literal.cj",
+      "line": 190
+    },
+    {
+      "owner": "LiteralLimits",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init()",
+      "file": "port/src/syntax_literal.cj",
+      "line": 191
+    },
+    {
+      "owner": "LiteralLimits",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(classLimit: Int64, repeatLimit: Int64, literalLen: Int64, totalLimit: Int64)",
+      "file": "port/src/syntax_literal.cj",
+      "line": 194
+    },
+    {
       "owner": "顶层函数",
       "name": "extractLiterals",
       "kind": "function",
       "signature": "public func extractLiterals(hir: Hir): LiteralSeq",
       "file": "port/src/syntax_literal.cj",
-      "line": 25
+      "line": 205
     },
     {
       "owner": "顶层函数",
@@ -3568,7 +4848,15 @@
       "kind": "function",
       "signature": "public func extractLiterals(hir: Hir, suffix: Bool): LiteralSeq",
       "file": "port/src/syntax_literal.cj",
-      "line": 29
+      "line": 209
+    },
+    {
+      "owner": "顶层函数",
+      "name": "extractLiterals",
+      "kind": "function",
+      "signature": "public func extractLiterals(hir: Hir, suffix: Bool, limits: LiteralLimits): LiteralSeq",
+      "file": "port/src/syntax_literal.cj",
+      "line": 213
     },
     {
       "owner": "顶层函数",
@@ -3576,7 +4864,175 @@
       "kind": "function",
       "signature": "public func formatLiterals(hir: Hir, suffix: Bool): String",
       "file": "port/src/syntax_literal.cj",
-      "line": 34
+      "line": 218
+    },
+    {
+      "owner": "顶层函数",
+      "name": "formatLiterals",
+      "kind": "function",
+      "signature": "public func formatLiterals(hir: Hir, suffix: Bool, limits: LiteralLimits): String",
+      "file": "port/src/syntax_literal.cj",
+      "line": 222
+    },
+    {
+      "owner": "顶层函数",
+      "name": "formatLiteralSeq",
+      "kind": "function",
+      "signature": "public func formatLiteralSeq(seq: LiteralSeq): String",
+      "file": "port/src/syntax_literal.cj",
+      "line": 243
+    },
+    {
+      "owner": "顶层函数",
+      "name": "formatCommon",
+      "kind": "function",
+      "signature": "public func formatCommon(bytes: Option<Array<UInt8>>): String",
+      "file": "port/src/syntax_literal.cj",
+      "line": 261
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "ThompsonNfa",
+      "kind": "class",
+      "signature": "public class ThompsonNfa",
+      "file": "port/src/thompson.cj",
+      "line": 223
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>)",
+      "file": "port/src/thompson.cj",
+      "line": 226
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, whichCaptures: Int64)",
+      "file": "port/src/thompson.cj",
+      "line": 229
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(hirs: Array<Hir>)",
+      "file": "port/src/thompson.cj",
+      "line": 233
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(patterns: Array<String>, whichCaptures: Int64, unicode: Bool)",
+      "file": "port/src/thompson.cj",
+      "line": 236
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "init",
+      "kind": "constructor",
+      "signature": "public init(hirs: Array<Hir>, sizeLimit: Int64)",
+      "file": "port/src/thompson.cj",
+      "line": 240
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "stateCount",
+      "kind": "method",
+      "signature": "public func stateCount(): Int64",
+      "file": "port/src/thompson.cj",
+      "line": 265
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "memoryUsage",
+      "kind": "method",
+      "signature": "public func memoryUsage(): Int64",
+      "file": "port/src/thompson.cj",
+      "line": 268
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "patternCount",
+      "kind": "method",
+      "signature": "public func patternCount(): Int64",
+      "file": "port/src/thompson.cj",
+      "line": 278
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "patternStateCount",
+      "kind": "method",
+      "signature": "public func patternStateCount(pattern: Int64): Int64",
+      "file": "port/src/thompson.cj",
+      "line": 281
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "startState",
+      "kind": "method",
+      "signature": "public func startState(pattern: Int64): Int64",
+      "file": "port/src/thompson.cj",
+      "line": 284
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "opName",
+      "kind": "method",
+      "signature": "public func opName(pattern: Int64, state: Int64): String",
+      "file": "port/src/thompson.cj",
+      "line": 288
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "opNext",
+      "kind": "method",
+      "signature": "public func opNext(pattern: Int64, state: Int64): Int64",
+      "file": "port/src/thompson.cj",
+      "line": 299
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "opAlternate",
+      "kind": "method",
+      "signature": "public func opAlternate(pattern: Int64, state: Int64): Int64",
+      "file": "port/src/thompson.cj",
+      "line": 302
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "whichOverlapping",
+      "kind": "method",
+      "signature": "public func whichOverlapping(text: String): Array<Int64>",
+      "file": "port/src/thompson.cj",
+      "line": 305
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "whichOverlapping",
+      "kind": "method",
+      "signature": "public func whichOverlapping(input: SearchInput): Array<Int64>",
+      "file": "port/src/thompson.cj",
+      "line": 311
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "search",
+      "kind": "method",
+      "signature": "public func search(input: SearchInput, cache: PikeCache): Option<PikeMatch>",
+      "file": "port/src/thompson.cj",
+      "line": 398
+    },
+    {
+      "owner": "ThompsonNfa",
+      "name": "isMatch",
+      "kind": "method",
+      "signature": "public func isMatch(input: SearchInput, cache: PikeCache): Bool",
+      "file": "port/src/thompson.cj",
+      "line": 440
     },
     {
       "owner": "Utf8Sequence",

@@ -146,48 +146,40 @@ public class BytesRegex {
         }
     }
     // Iterators snapshot mutable input once; matching itself happens only in next().
-    private func matchPull(haystack: Array<UInt8>, capture: Bool): () -> Option<SearchMatch> {
-        let cursor = [0]
-        let previousEnd = [-1]
-        let done = [false]
-        return {
-            =>
-                while (!done[0] && cursor[0] <= haystack.size) {
-                    match (search(haystack, cursor[0], false, capture)) {
-                        case None => done[0] = true
-                        case Some(hit) =>
-                            if (hit.start == hit.end && hit.end == previousEnd[0]) {
-                                cursor[0] = hit.end + 1
-                                continue
-                            }
-                            previousEnd[0] = hit.end
-                            cursor[0] = hit.end
-                            return Some(hit)
+    private func advanceBytes(haystack: Array<UInt8>, cursor: Array<Int64>, capture: Bool): Option<SearchMatch> {
+        while (cursor[2] == 0 && cursor[0] <= haystack.size) {
+            match (search(haystack, cursor[0], false, capture)) {
+                case None => cursor[2] = 1
+                case Some(hit) =>
+                    if (hit.start == hit.end && hit.end == cursor[1]) {
+                        cursor[0] = hit.end + 1
+                        continue
                     }
-                }
-                done[0] = true
-                return None
+                    cursor[1] = hit.end
+                    cursor[0] = hit.end
+                    return Some(hit)
+            }
         }
+        cursor[2] = 1
+        None
     }
     public func findIter(haystack: Array<UInt8>): BytesMatchIter {
         let snapshot = haystack.clone()
-        let pull = matchPull(snapshot, false)
         BytesMatchIter({
-            => match (pull()) {
+            cursor => match (advanceBytes(snapshot, cursor, false)) {
                 case Some(hit) => Some(matched(snapshot, hit))
                 case None => None
             }
-        })
+        }, [0, -1, 0])
     }
     public func capturesIter(haystack: Array<UInt8>): BytesCaptureIter {
         let snapshot = haystack.clone()
-        let pull = matchPull(snapshot, true)
         BytesCaptureIter({
-            => match (pull()) {
+            cursor => match (advanceBytes(snapshot, cursor, true)) {
                 case Some(hit) => Some(captureResult(snapshot, hit))
                 case None => None
             }
-        })
+        }, [0, -1, 0])
     }
     public func splitIter(haystack: Array<UInt8>): BytesSplitIter {
         splitIterator(haystack, 0, false)
@@ -198,31 +190,33 @@ public class BytesRegex {
         }
         splitIterator(haystack, limit, true)
     }
+    // State is cursor, previous end, exhausted, last byte, count, split phase.
     private func splitIterator(haystack: Array<UInt8>, limit: Int64, bounded: Bool): BytesSplitIter {
         let snapshot = haystack.clone()
-        let pull = matchPull(snapshot, false)
-        let last = [0]
-        let count = [0]
-        let done = [bounded && limit == 0]
         BytesSplitIter(
             {
-                =>
-                    if (done[0]) {
+                state =>
+                    if (state[5] != 0) {
                         return None
                     }
-                    if (!bounded || count[0] < limit - 1) {
-                        match (pull()) {
+                    if (!bounded || state[4] < limit - 1) {
+                        match (advanceBytes(snapshot, state, false)) {
                             case Some(hit) =>
-                                let part = Array<UInt8>(hit.start - last[0], {i => snapshot[last[0] + i]})
-                                last[0] = hit.end
-                                count[0]++
+                                let part = Array<UInt8>(hit.start - state[3], {i => snapshot[state[3] + i]})
+                                state[3] = hit.end
+                                state[4]++
                                 return Some(part)
                             case None => ()
                         }
                     }
-                    done[0] = true
-                    return Some(Array<UInt8>(snapshot.size - last[0], {i => snapshot[last[0] + i]}))
-            }
+                    state[5] = 1
+                    Some(Array<UInt8>(snapshot.size - state[3], {i => snapshot[state[3] + i]}))
+            },
+            [0, -1, 0, 0, 0, if (bounded && limit == 0) {
+                1
+            } else {
+                0
+            }]
         )
     }
     public func capturesRead(locations: CaptureLocations, haystack: Array<UInt8>): Option<BytesMatch> {
@@ -949,31 +943,46 @@ public class BytesRegexSet {
 }
 
 public class BytesMatchIter {
-    private let pull: () -> Option<BytesMatch>
-    public init(pull: () -> Option<BytesMatch>) {
-        this.pull = pull
+    private let step: (Array<Int64>) -> Option<BytesMatch>
+    private let state: Array<Int64>
+    public init(step: (Array<Int64>) -> Option<BytesMatch>, state: Array<Int64>) {
+        this.step = step
+        this.state = state
     }
     public func next(): Option<BytesMatch> {
-        pull()
+        step(state)
+    }
+    public func clone(): BytesMatchIter {
+        BytesMatchIter(step, copyInts(state))
     }
 }
 
 public class BytesCaptureIter {
-    private let pull: () -> Option<BytesCaptures>
-    public init(pull: () -> Option<BytesCaptures>) {
-        this.pull = pull
+    private let step: (Array<Int64>) -> Option<BytesCaptures>
+    private let state: Array<Int64>
+    public init(step: (Array<Int64>) -> Option<BytesCaptures>, state: Array<Int64>) {
+        this.step = step
+        this.state = state
     }
     public func next(): Option<BytesCaptures> {
-        pull()
+        step(state)
+    }
+    public func clone(): BytesCaptureIter {
+        BytesCaptureIter(step, copyInts(state))
     }
 }
 
 public class BytesSplitIter {
-    private let pull: () -> Option<Array<UInt8>>
-    public init(pull: () -> Option<Array<UInt8>>) {
-        this.pull = pull
+    private let step: (Array<Int64>) -> Option<Array<UInt8>>
+    private let state: Array<Int64>
+    public init(step: (Array<Int64>) -> Option<Array<UInt8>>, state: Array<Int64>) {
+        this.step = step
+        this.state = state
     }
     public func next(): Option<Array<UInt8>> {
-        pull()
+        step(state)
+    }
+    public func clone(): BytesSplitIter {
+        BytesSplitIter(step, copyInts(state))
     }
 }

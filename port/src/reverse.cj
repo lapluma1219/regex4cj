@@ -2,26 +2,80 @@ package cjregex
 
 import std.collection.*
 
-// Reverse Thompson search. Concatenation and UTF-8 byte sequences run backwards.
-// The reported offset is the start of the match, matching a reverse DFA search.
-// Captures are omitted, matching WhichCaptures::None. This is not a reversed string.
+// Reverse Thompson search. The graph comes from the shared byte compiler in
+// backward mode, the same compiler the forward DFA uses. Captures are omitted.
+// This is not a reversed string and not a reversal of the scalar Pike graph.
+public class ReverseMatch {
+    public let pattern: Int64
+    public let offset: Int64
+    public init(pattern: Int64, offset: Int64) {
+        this.pattern = pattern
+        this.offset = offset
+    }
+}
+
 public class ReverseNfa {
     let states: Array<State>
     let startState: Int64
+    let patternEntries: Array<Int64>
+    let patternStartsEnabled: Bool
     let anchored: Bool
     let unicodeWords: CharSet
     let asciiWords: CharSet
+    var matchedPattern: Int64
     public init(pattern: String) {
+        this([pattern], false)
+    }
+    public init(patterns: Array<String>) {
+        this(patterns, false)
+    }
+    public init(patterns: Array<String>, patternStarts: Bool) {
+        this(patterns, patternStarts, 10485760)
+    }
+    public init(patterns: Array<String>, patternStarts: Bool, sizeLimit: Int64) {
+        if (sizeLimit < 0) {
+            throw Exception("size limit must be nonnegative")
+        }
+        if (patterns.size == 0) {
+            states = Array<State>()
+            startState = -1
+            patternEntries = Array<Int64>()
+            patternStartsEnabled = patternStarts
+            anchored = false
+            unicodeWords = CharSet()
+            asciiWords = CharSet()
+            matchedPattern = 0
+            return
+        }
         let options = PatternOptions()
-        let parser = Parser(pattern, options)
-        let tree = parser.parse()
-        ensureWithinSizeLimit([tree], options.sizeLimit, false)
-        let compiler = ReverseCompiler()
-        let accept = compiler.add(Op.Accept, -1, -1)
-        let start = compiler.compile(tree, accept)
+        let trees = ArrayList<Expr>()
+        for (pattern in patterns) {
+            let parser = Parser(pattern, options)
+            trees.add(parser.parse())
+        }
+        let parsed = trees.toArray()
+        ensureWithinSizeLimit(parsed, sizeLimit, false)
+        let compiler = ByteCompiler(true)
+        let starts = ArrayList<Int64>()
+        for (i in 0..parsed.size) {
+            let accept = compiler.add(Op.Accept, -1, -1)
+            compiler.states[accept].patternId = i
+            starts.add(compiler.compile(parsed[i], accept))
+        }
+        var union = starts[starts.size - 1]
+        if (starts.size > 1) {
+            var index = starts.size - 1
+            while (index > 0) {
+                index--
+                union = compiler.split(starts[index], union, true)
+            }
+        }
         states = compiler.states.toArray()
-        startState = start
-        anchored = allAnchored([tree], true)
+        startState = union
+        patternEntries = starts.toArray()
+        patternStartsEnabled = patternStarts
+        anchored = allAnchored(parsed, true)
+        matchedPattern = 0
         var needUnicode = false
         var needAscii = false
         for (state in states) {
@@ -52,24 +106,61 @@ public class ReverseNfa {
         }
     }
     public func search(text: String): Option<Int64> {
-        searchImpl(text, text.size, false)
+        match (searchImpl(text.toArray(), text.size, false, 0, false, startState)) {
+            case Some(offset) => Some(offset)
+            case None => None
+        }
+    }
+    public func search(input: SearchInput): Option<Int64> {
+        match (find(input)) {
+            case Some(hit) => Some(hit.offset)
+            case None => None
+        }
+    }
+    public func find(input: SearchInput): Option<ReverseMatch> {
+        let entry = entryFor(input)
+        if (entry < 0) {
+            return None
+        }
+        match (searchImpl(input.bytes, input.end, false, input.start, input.anchor != 0, entry)) {
+            case Some(offset) => Some(ReverseMatch(matchedPattern, offset))
+            case None => None
+        }
     }
     // Recover the leftmost start for a known forward end. Retain all context
     // for assertions and explore all reverse alternatives, regardless of greed.
-    func searchEndingAt(text: String, end: Int64): Option<Int64> {
-        searchImpl(text, end, true)
+    func searchEndingAt(bytes: Array<UInt8>, end: Int64, floor: Int64): Option<Int64> {
+        searchImpl(bytes, end, true, floor, false, startState)
     }
-    func searchImpl(text: String, limit: Int64, longest: Bool): Option<Int64> {
-        let bytes = text.toArray()
+    func entryFor(input: SearchInput): Int64 {
+        if (input.anchor != 2) {
+            return startState
+        }
+        if (!patternStartsEnabled) {
+            throw Exception("anchored searches for a specific pattern (${input.pattern}) are not supported or enabled")
+        }
+        if (input.pattern < 0 || input.pattern >= patternEntries.size) {
+            return -1
+        }
+        patternEntries[input.pattern]
+    }
+    func searchImpl(bytes: Array<UInt8>, limit: Int64, longest: Bool, floor: Int64, inputAnchored: Bool, entry: Int64): Option<Int64> {
+        if (entry < 0) {
+            return None
+        }
+        if (limit < 0 || floor < 0 || floor > limit || limit > bytes.size) {
+            throw Exception("invalid search range")
+        }
         var pos = limit
         var current = ArrayList<Thread>()
         var best = -1
         var found = false
         var reading = true
+        let tieEnd = anchored || inputAnchored || longest
         while (reading) {
-            if (!found && ((!anchored && !longest) || pos == limit)) {
+            if (!found && (!tieEnd || pos == limit)) {
                 let seen = Array<Bool>(states.size, repeat: false)
-                closure(current, seen, startState, pos, bytes)
+                closure(current, seen, entry, pos, bytes)
             }
             let next = ArrayList<Thread>()
             let nextSeen = Array<Bool>(states.size, repeat: false)
@@ -83,6 +174,7 @@ public class ReverseNfa {
                     case Op.Accept =>
                         best = pos
                         found = true
+                        matchedPattern = state.patternId
                         halt = !longest
                     case Op.Literal(_) =>
                         if (byteMatches(state, bytes, pos)) {
@@ -98,7 +190,7 @@ public class ReverseNfa {
             if (found && next.size == 0) {
                 return Some(best)
             }
-            if (pos == 0) {
+            if (pos == floor) {
                 reading = false
             } else {
                 current = next
@@ -145,144 +237,5 @@ public class ReverseNfa {
                 case _ => out.add(frame)
             }
         }
-    }
-}
-
-class ReverseCompiler {
-    let states = ArrayList<State>()
-    func add(op: Op, first: Int64, second: Int64): Int64 {
-        states.add(State(op, first, second))
-        return states.size - 1
-    }
-    func split(first: Int64, second: Int64, greedy: Bool): Int64 {
-        if (greedy) {
-            return add(Op.Split, first, second)
-        }
-        return add(Op.Split, second, first)
-    }
-    func compile(expr: Expr, next: Int64): Int64 {
-        match (expr.kind) {
-            case ExprKind.Capture => compile(expr.children[0], next)
-            case ExprKind.WordBoundary | ExprKind.Begin | ExprKind.End => add(
-                Op.Look(AtomMode(expr.modeKind, expr.modeTerm, expr.modeUnicode, expr.modePositive)), next, -1)
-            case ExprKind.Empty => next
-            case ExprKind.Literal => compileLiteral(expr, next)
-            case ExprKind.CharacterClass => compileClass(expr.charset, expr.byteAtom, next)
-            case ExprKind.Any => compileClass(dotSet(expr), expr.byteAtom, next)
-            case ExprKind.Concat =>
-                var start = next
-                for (child in expr.children) {
-                    start = compile(child, start)
-                }
-                start
-            case ExprKind.Alternate =>
-                if (expr.children.size == 0) {
-                    next
-                } else {
-                    var index = expr.children.size - 1
-                    var start = compile(expr.children[index], next)
-                    while (index > 0) {
-                        index--
-                        start = split(compile(expr.children[index], next), start, true)
-                    }
-                    start
-                }
-            case ExprKind.Repeat => compileRepeat(expr, next)
-        }
-    }
-    func compileRepeat(expr: Expr, next: Int64): Int64 {
-        if (expr.maximum < 0) {
-            let loop = add(Op.Split, -1, -1)
-            let body = compile(expr.children[0], loop)
-            states[loop].first = if (expr.greedy) {
-                body
-            } else {
-                next
-            }
-            states[loop].second = if (expr.greedy) {
-                next
-            } else {
-                body
-            }
-            if (expr.minimum == 0) {
-                return split(body, next, expr.greedy)
-            }
-            var start = body
-            var count: Int64 = 1
-            while (count < expr.minimum) {
-                start = compile(expr.children[0], start)
-                count++
-            }
-            return start
-        }
-        var start = next
-        var optional = expr.maximum - expr.minimum
-        while (optional > 0) {
-            start = split(compile(expr.children[0], start), next, expr.greedy)
-            optional--
-        }
-        var required = expr.minimum
-        while (required > 0) {
-            start = compile(expr.children[0], start)
-            required--
-        }
-        start
-    }
-    func compileLiteral(expr: Expr, next: Int64): Int64 {
-        if (expr.byteAtom) {
-            return byteLiteral(Int64(UInt32(expr.ch)), next)
-        }
-        let bytes = utf8Of(Int64(UInt32(expr.ch)))
-        var start = next
-        for (byte in bytes) {
-            start = byteLiteral(Int64(byte), start)
-        }
-        start
-    }
-    func compileClass(set: CharSet, bytes: Bool, next: Int64): Int64 {
-        if (bytes || !set.exceedsAscii()) {
-            return byteClass(set, next)
-        }
-        let starts = ArrayList<Int64>()
-        for (i in 0..set.rangeCount()) {
-            let sequences = utf8Sequences(set.rangeLow(i), set.rangeHigh(i))
-            for (seq in sequences) {
-                var end = next
-                for (range in seq) {
-                    end = byteSpan(range.start, range.end, end)
-                }
-                starts.add(end)
-            }
-        }
-        unionAll(starts, next)
-    }
-    func unionAll(starts: ArrayList<Int64>, next: Int64): Int64 {
-        if (starts.size == 0) {
-            return byteSpan(1, 0, next)
-        }
-        var index = starts.size - 1
-        var start = starts[index]
-        while (index > 0) {
-            index--
-            start = split(starts[index], start, true)
-        }
-        start
-    }
-    func byteLiteral(byte: Int64, next: Int64): Int64 {
-        let id = add(Op.Literal(Rune(UInt32(byte))), next, -1)
-        states[id].byteAtom = true
-        id
-    }
-    func byteSpan(low: Int64, high: Int64, next: Int64): Int64 {
-        let set = CharSet()
-        if (low <= high) {
-            set.addRange(low, high)
-        }
-        byteClass(set, next)
-    }
-    func byteClass(set: CharSet, next: Int64): Int64 {
-        let id = add(Op.CharacterClass(set), next, -1)
-        states[id].byteAtom = true
-        id
     }
 }

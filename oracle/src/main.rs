@@ -3,13 +3,44 @@ mod hir_audit;
 mod api_audit;
 mod lazy_audit;
 mod pike;
+mod products;
 mod ast_audit;
 mod literal_audit;
 mod reverse_audit;
 mod backtrack_audit;
 mod dfa_audit;
+mod cli_find;
+mod cli_more;
 
 use regex::Regex;
+fn group_info(pattern: &str, bytes: bool) {
+    if bytes {
+        match regex::bytes::Regex::new(pattern) {
+            Err(err) => println!("error\t{err}"),
+            Ok(re) => print_group_info(re.captures_len(), re.static_captures_len(), re.capture_names()),
+        }
+    } else {
+        match regex::Regex::new(pattern) {
+            Err(err) => println!("error\t{err}"),
+            Ok(re) => print_group_info(re.captures_len(), re.static_captures_len(), re.capture_names()),
+        }
+    }
+}
+
+fn print_group_info<'a>(len: usize, static_len: Option<usize>, names: impl Iterator<Item = Option<&'a str>>) {
+    println!("len\t{len}");
+    match static_len {
+        Some(count) => println!("static\tsome\t{count}"),
+        None => println!("static\tnone"),
+    }
+    for (index, name) in names.enumerate() {
+        match name {
+            Some(text) => println!("name\t{index}\t{}", hex_text(text)),
+            None => println!("name\t{index}\t-"),
+        }
+    }
+}
+
 fn hex_text(text: &str) -> String {
     text.as_bytes().iter().map(|b| format!("{b:02x}")).collect()
 }
@@ -65,17 +96,138 @@ fn main() {
         Some("ast-print") if a.len()==2 => ast_audit::ast_print(&a[1]),
         Some("syntax-error") if a.len()==2 => ast_audit::syntax_error(&a[1]),
         Some("literals") if a.len()==3 => literal_audit::literals(&a[1], &a[2]),
+        Some("literals-config") if a.len()==7 => {
+            literal_audit::literals_config(&a[1], &a[2], &a[3], &a[4], &a[5], &a[6]);
+        }
+        Some("literal-op") if a.len()>=3 => literal_audit::literal_op(&a[1..]),
         Some("utf8") if a.len()==3 => {
             let start: u32 = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
             let end: u32 = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
             literal_audit::utf8(start, end);
         },
+        Some("group-info") if a.len()==2 => group_info(&a[1], false),
+        Some("bytes-group-info") if a.len()==2 => group_info(&a[1], true),
+        Some("cli-find") if a.len()>=2 => cli_find::run(&a[1..]),
+        Some("cli-half") if a.len()>=2 => cli_more::half(&a[1..]),
+        Some("cli-capture") if a.len()>=2 => cli_more::capture(&a[1..]),
+        Some("cli-which") if a.len()>=2 => cli_more::which(&a[1..]),
+        Some("memory") if a.len()==3 => cli_more::memory(&a[1], &a[2]),
+        Some("dfa-budget") if a.len()==3 => cli_more::dfa_budget(&a[1], &a[2]),
+        Some("onepass") if a.len()==3 => products::onepass(&a[1], &a[2]),
+        Some("meta") if a.len()==3 => products::meta(&a[1], &a[2]),
+        Some("lite") if a.len()==3 => products::lite(&a[1], &a[2]),
+        Some("rure") if a.len()==3 => products::rure(&a[1], &a[2]),
+        Some("dfa-image") if a.len()==3 => products::dfa_image(&a[1], &a[2]),
         Some("nfa-rev") if a.len()==3 => reverse_audit::search(&a[1], &a[2]),
+        Some("nfa-rev-empty") if a.len()==1 => reverse_audit::empty(),
+        Some("nfa-rev-limit") if a.len()==3 => {
+            let limit: usize = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            reverse_audit::limited(limit, &a[2]);
+        },
+        Some("nfa-build") if a.len()==3 => {
+            let limit: usize = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            pike::nfa_build(limit, &a[2]);
+        },
+        Some("nfa-rev-many") if a.len()>=6 => {
+            let start: usize = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            reverse_audit::many(start, end, &a[3], &a[4], &a[5..]);
+        },
+        Some("nfa-rev-query") if a.len()==6 => {
+            let start: usize = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            reverse_audit::query(start, end, &a[3], &a[4], &a[5]);
+        },
         Some("backtrack-info") if a.len()==3 => backtrack_audit::info(&a[1], &a[2]),
         Some("backtrack") if a.len()==4 => backtrack_audit::search(&a[1], &a[2], &a[3]),
+        Some("backtrack-iter") if a.len()>=4 => backtrack_audit::iter(&a[1], &a[2], &a[3..]),
+        Some("backtrack-iter-span") if a.len()>=6 => {
+            let start: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[3].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            backtrack_audit::iter_range(&a[1], start, end, &a[4], &a[5..]);
+        },
+        Some("backtrack-bytes") if a.len()>=7 => {
+            let start: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[3].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            backtrack_audit::bytes_search(&a[1], start, end, &a[4], &a[5], &a[6..]);
+        },
+        Some("backtrack-query") if a.len()==8 => {
+            let start: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[3].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            backtrack_audit::query(&a[1], start, end, &a[4], a[5]=="true", &a[6], &a[7]);
+        },
+        Some("backtrack-many") if a.len()>=8 => {
+            let start: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[3].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            backtrack_audit::many(&a[1], start, end, &a[4], a[5]=="true", &a[6], &a[7..]);
+        },
+        Some("hybrid") if a.len()==8 => {
+            let start: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[3].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            dfa_audit::hybrid(&a[1], start, end, &a[4], a[5]=="true", &a[6], &a[7]);
+        },
+        Some("hybrid-reset") if a.len()==3 => dfa_audit::hybrid_reset(&a[1], &a[2]),
+        Some("hybrid-small") if a.len()==3 => dfa_audit::hybrid_small(&a[1], &a[2]),
+        Some("dfa-overlap") if a.len()>=7 => {
+            let start: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[3].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            dfa_audit::overlap(&a[1], start, end, &a[4], &a[5], &a[6..]);
+        },
+        Some("dfa-pattern") if a.len()>=8 => {
+            let start: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[3].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            dfa_audit::pattern_search(&a[1], start, end, &a[4], a[5]=="true", &a[6], &a[7..]);
+        },
+        Some("dfa-pattern-overlap") if a.len()>=7 => {
+            let start: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[3].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            dfa_audit::pattern_overlap(&a[1], start, end, &a[4], &a[5], &a[6..]);
+        },
+        Some("dfa-bytes-pattern") if a.len()>=5 => dfa_audit::bytes_pattern(&a[1], &a[2], &a[3], &a[4..]),
+        Some("dfa-many") if a.len()>=8 => {
+            let start: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[3].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            dfa_audit::many(&a[1], start, end, &a[4], a[5]=="true", &a[6], &a[7..]);
+        },
         Some("dfa") if a.len()==4 => dfa_audit::search(&a[1], &a[2], &a[3]),
+        Some("dfa-bytes") if a.len()==4 => dfa_audit::bytes_search(&a[1], &a[2], &a[3]),
+        Some("dfa-bytes-quit") if a.len()==5 => dfa_audit::bytes_quit(&a[1], &a[2], &a[3], &a[4]),
+        Some("dfa-bytes-many") if a.len()>=4 => dfa_audit::bytes_many(&a[1], &a[2], &a[3..]),
+        Some("dfa-bytes-overlap") if a.len()>=4 => dfa_audit::bytes_overlap(&a[1], &a[2], &a[3..]),
+        Some("dfa-query") if a.len()==9 => {
+            let start: usize = a[3].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[4].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            dfa_audit::query(&a[1], &a[2], start, end, &a[5], a[6]=="true", &a[7], &a[8]);
+        },
         Some("pike-overlap") if a.len()>=3 => pike::overlapping(&a[1], &a[2..]),
+        Some("pike-captures") if a.len()>=4 => pike::captures(&a[1], &a[2], &a[3..]),
+        Some("backtrack-captures") if a.len()>=5 => backtrack_audit::captures(&a[1], &a[2], &a[3], &a[4..]),
+        Some("pike-overlap-query") if a.len()>=7 => {
+            let start: usize = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            pike::overlapping_query(start, end, &a[3], a[4]=="true", &a[5], &a[6..]);
+        },
+        Some("hybrid-many") if a.len()>=7 => {
+            let start: usize = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            dfa_audit::hybrid_many(start, end, &a[3], a[4]=="true", &a[5], &a[6..]);
+        },
+        Some("hybrid-pattern") if a.len()>=7 => {
+            let start: usize = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            dfa_audit::hybrid_pattern(start, end, &a[3], a[4]=="true", &a[5], &a[6..]);
+        },
         Some("pike-earliest") if a.len()>=3 => pike::earliest(&a[1], &a[2..]),
+        Some("pike-bytes") if a.len()>=6 => {
+            let start: usize = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            pike::bytes_search(start, end, &a[3], &a[4], &a[5..]);
+        },
+        Some("pike-config") if a.len()>=6 => {
+            let start: usize = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            let end: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
+            pike::configured(start, end, &a[3], a[4]=="true", &a[5], &a[6..]);
+        },
         Some("pike") if a.len()>=5 => {
             let start: usize = a[1].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });
             let end: usize = a[2].parse().unwrap_or_else(|e| { eprintln!("{e}"); std::process::exit(2); });

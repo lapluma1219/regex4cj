@@ -68,6 +68,19 @@ for args in [
     cj = subprocess.run([str(CJ), *args], env=ENV, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=15)
     assert rust.returncode == 0 and cj.returncode == 0 and rust.stdout == cj.stdout, (args, rust.stdout, cj.stdout, rust.stderr, cj.stderr)
     count += 1
+nest_patterns = [
+    ("", "0"), ("a", "0"), ("a+", "0"), ("a+", "1"), ("(a)+", "1"), ("a+*", "1"), ("a+*", "2"),
+    ("ab", "0"), ("ab", "1"), ("abc", "1"), ("a|b", "0"), ("a|b", "1"), ("a|b|c", "1"),
+    ("[a]", "0"), ("[a]", "1"), ("[ab]", "1"), ("[ab[cd]]", "2"), ("[ab[cd]]", "3"),
+    ("[a--b]", "1"), ("[a--bc]", "2"), ("(a)", "0"), ("(a)", "1"), ("(?:a)", "0"), ("(?:a)", "1"),
+    ("((a))", "1"), ("(a(b))", "1"), ("(a(b))", "2"), ("[[a]]", "0"), ("[[a]]", "1"), ("((?:a))", "1"),
+]
+for pattern, limit in nest_patterns:
+    rust = subprocess.run([str(RUST), "nest-find", limit, pattern, "a"], env=ENV, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=15)
+    cj = subprocess.run([str(CJ), "nest-find", limit, pattern, "a"], env=ENV, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=15)
+    assert rust.returncode == cj.returncode and rust.stdout == cj.stdout and rust.stderr == cj.stderr, (
+        pattern, limit, rust.returncode, cj.returncode, rust.stderr, cj.stderr)
+    count += 1
 for args in [['nest-find', '0', 'ab', 'ab'], ['term-find', '228', '.', 'a']]:
     rust = subprocess.run([str(RUST), *args], env=ENV, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=15)
     cj = subprocess.run([str(CJ), *args], env=ENV, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=15)

@@ -18,7 +18,7 @@
       "evidence": [
         "tests/verify_captures.py"
       ],
-      "note": "Captures are tested. Independent iterator copies are not fully audited."
+      "note": "Captures are tested. MatchIter and CaptureIter clone copies the cursor; one consumer test advances the original and the copy independently. The older capture differential was not re-run for this change, and byte capture iteration is only covered by that consumer test."
     },
     {
       "id": "A3",
@@ -27,7 +27,7 @@
       "evidence": [
         "tests/verify_text_ops.py"
       ],
-      "note": "Replace and split are tested. Mid-iteration state copies are not fully audited."
+      "note": "Replace and split are tested. SplitIter and the bytes split iterator clone their own cursors, including splitN. One consumer test checks the copy. The older text-op differential was not re-run for this change."
     },
     {
       "id": "A4",
@@ -40,10 +40,23 @@
     },
     {
       "id": "A5",
-      "weight": 3,
-      "status": "未开始",
-      "evidence": [],
-      "note": "Only the locked 1-point subset may be accepted later. The other 2 points stay open."
+      "weight": 2,
+      "status": "有差异",
+      "evidence": [
+        "tests/verify_limits.py",
+        "tests/verify_syntax.py"
+      ],
+      "note": "The size-limit and nest-limit leaf is A5a and is already accepted. These remaining 2 points are the rest of the resource and language-integration contract."
+    },
+    {
+      "id": "A5a",
+      "weight": 1,
+      "status": "验收通过",
+      "evidence": [
+        "tests/verify_limits.py",
+        "tests/verify_syntax.py"
+      ],
+      "note": "Locked 1-point leaf: size-limit pass/fail, including a limit of 0, matches on the limit corpus, and nest-limit acceptance plus the underlined span match on 30 patterns. Re-run this turn: 60 limit checks and the syntax differential."
     },
     {
       "id": "B1",
@@ -91,7 +104,7 @@
         "tests/verify_literals.py",
         "tests/verify_utf8.py"
       ],
-      "note": "Default prefix and suffix extraction matches regex-syntax on the corpus, including class, repeat, and total limits. Public UTF-8 sequences match Utf8Sequences debug text. memory_usage is not part of this item. Corpus evidence only; public configuration, cache and remaining auxiliary contracts have not been fully audited."
+      "note": "Default prefix and suffix extraction matches regex-syntax on 32 patterns. LiteralLimits configures class, repeat, literal length, and total; seven non-default settings match Extractor. Public UTF-8 sequences match Utf8Sequences debug text. LiteralSeq cross, union, union-into-empty, keep, minimize-by-preference, reverse, sort, dedup, and longest common prefix/suffix, and prefix/suffix optimization match Seq on 66 operations. Sixteen patterns were checked so extracted prefixes and suffixes still explain every real match (38 spans). optimize_for_prefix_by_preference and optimize_for_suffix_by_preference match Seq, including the samantha/sam example, an empty literal becoming infinite, and a rare leading byte collapsed to one byte. A limited corpus does not close the item."
     },
     {
       "id": "C1",
@@ -100,14 +113,16 @@
       "evidence": [
         "tests/verify_pike.py"
       ],
-      "note": "String ranges, anchoring, and pattern ids exist. There is no independent Input type or byte PikeVM."
+      "note": "SearchInput carries a string or bytes, a span, an anchor, a selected pattern, and earliest. PikeVM searches UTF-8 text and rejects non-UTF-8 bytes. There is no separate byte-level PikeVM."
     },
     {
       "id": "C2a",
       "weight": 3,
       "status": "有差异",
-      "evidence": [],
-      "note": "Forward NFA construction is inside Regex. It is not yet a public object with a checked state graph."
+      "evidence": [
+        "tests/verify_pike.py"
+      ],
+      "note": "ThompsonNfa is a public one-graph NFA: each pattern has its own Accept, and PikeVM searches the priority union. State ids are local. There is no Rust graph-equality oracle and no separate configuration-error matrix, so the 3 points stay open."
     },
     {
       "id": "C2b",
@@ -116,7 +131,7 @@
       "evidence": [
         "tests/verify_reverse.py"
       ],
-      "note": "Reverse search walks bytes backward and reports the match start. Offsets match dense DFA try_search_rev, including anchors and multi-byte scalars. Captures are omitted. Unicode word boundaries are outside this oracle because that DFA refuses them. Corpus evidence only; public configuration, cache and remaining auxiliary contracts have not been fully audited."
+      "note": "Reverse search walks bytes backward and reports the match start. search(SearchInput) limits the byte span and can require the match to end at the span end. 45 full searches and 24 ranged queries match dense DFA try_search_rev, including empty spans and multi-byte scalars. Selecting a pattern id is rejected. Captures are omitted, and the reverse graph is still compiled separately from ThompsonNfa. Unicode word boundaries are outside this oracle because that DFA refuses them. Corpus evidence only; the coarse item stays open."
     },
     {
       "id": "C3a",
@@ -134,14 +149,16 @@
       "evidence": [
         "tests/verify_pike.py"
       ],
-      "note": "Multiple patterns are searched one Regex at a time, then ordered. That is not one multi-pattern PikeVM."
+      "note": "Multiple patterns share one ThompsonNfa. SearchInput can anchor the search to one pattern id. The corpus matches, including unknown pattern ids as misses. A byte-level PikeVM is still absent."
     },
     {
       "id": "C3c",
       "weight": 1,
       "status": "有差异",
-      "evidence": [],
-      "note": "PikeCache stores the previous capture slots. It is not the search thread queue."
+      "evidence": [
+        "examples/consumer/src/pike_test.cj"
+      ],
+      "note": "PikeCache stores the previous capture slots, the active thread state ids, and reuses the visited-state buffers. During search the capture slots live in a cache-owned pool: Save copies a row before writing, and reset keeps that capacity. 503 Pike searches still match. quit is absent, so this point stays open."
     },
     {
       "id": "C3d",
@@ -150,7 +167,7 @@
       "evidence": [
         "tests/verify_pike.py"
       ],
-      "note": "whichOverlapping returns the same pattern-id set as PikeVM which_overlapping_matches on the corpus. Each pattern is still searched separately, so this point stays open."
+      "note": "whichOverlapping returns the same pattern-id set as PikeVM which_overlapping_matches on the corpus. Each pattern starts at its own state in the shared NFA. quit is absent, and the search is still existence of a match rather than every overlapping span."
     },
     {
       "id": "C3e",
@@ -163,10 +180,23 @@
     },
     {
       "id": "C4",
-      "weight": 5,
-      "status": "未开始",
-      "evidence": [],
-      "note": "Only the locked 2-point subset may be accepted later."
+      "weight": 3,
+      "status": "有差异",
+      "evidence": [
+        "tests/verify_group_info.py",
+        "tests/verify_api_contracts.py"
+      ],
+      "note": "The locked capture-metadata and SetMatches leaf is C4a and is already accepted. These remaining 3 points are the rest of the shared result-type contract."
+    },
+    {
+      "id": "C4a",
+      "weight": 2,
+      "status": "验收通过",
+      "evidence": [
+        "tests/verify_group_info.py",
+        "tests/verify_api_contracts.py"
+      ],
+      "note": "Locked 2-point leaf: capturesLen, staticCapturesLen, and captureNames match string and bytes regexes on 21 patterns, and SetMatches next/nextBack/clone/sizeHint match inside the 2414 API contracts. Re-run this turn."
     },
     {
       "id": "D1",
@@ -175,14 +205,16 @@
       "evidence": [
         "tests/verify_dfa.py"
       ],
-      "note": "DenseDfa and SparseDfa match dfa::regex::Regex spans for one pattern on the corpus, including anchors and ASCII word boundaries. Unicode word boundaries fail during construction. The match start is the reverse NFA on the forward end. Quit bytes, multiple patterns, overlapping search, CRLF anchors, and the upstream byte size limit are absent, so these 6 points stay open."
+      "note": "DenseDfa and SparseDfa match dfa::regex::Regex on 39 full-haystack cases, 12 SearchInput queries, and 12 multi-pattern queries. overlap() uses MatchKind::All and searchOverlapping matches 10 half-match queries (pattern id and end offset, no start). Unicode word boundaries fail during construction. Anchored::Pattern is rejected. The leftmost match start is that pattern's reverse NFA. SparseDfa drops the dense tables after compression; that memory effect was not measured. The upstream byte size limit is absent, so these 6 points stay open."
     },
     {
       "id": "D2",
       "weight": 4,
-      "status": "未开始",
-      "evidence": [],
-      "note": "Hybrid DFA is absent. dfaSizeLimit remains a string step-cache budget."
+      "status": "有差异",
+      "evidence": [
+        "tests/verify_dfa.py"
+      ],
+      "note": "HybridDfa builds transitions while searching. Eight searches and two reset-and-search pairs match hybrid::regex::Regex spans, including quit bytes and the lazy Unicode-word-boundary build error. A cache smaller than the seeded states is rejected. clearLimit 0 gives up with gave up searching at offset. The capacity is a state count, not upstream's byte cache, and the give-up offset is not the upstream offset. dfaSizeLimit is still the string step cache. These 4 points stay open."
     },
     {
       "id": "D3",
@@ -193,12 +225,22 @@
     },
     {
       "id": "D4",
-      "weight": 2,
+      "weight": 1,
       "status": "有差异",
       "evidence": [
         "tests/verify_backtrack.py"
       ],
-      "note": "Visited-set backtracking matches BoundedBacktracker spans and captures on the corpus. A haystack that does not fit in the visited table returns haystack-too-long instead of a miss. maxHaystackLen uses this NFA's state count, so the numeric limit is not the upstream number. Corpus evidence only; public configuration, cache and remaining auxiliary contracts have not been fully audited."
+      "note": "Non-overlapping iteration is D4a and is already accepted. This remaining point is the prefilter, memory_usage, and layout contract, which is not implemented."
+    },
+    {
+      "id": "D4a",
+      "weight": 1,
+      "status": "验收通过",
+      "evidence": [
+        "tests/verify_backtrack_iter.py",
+        "tests/verify_backtrack.py"
+      ],
+      "note": "Non-overlapping BoundedBacktracker matches use the same Searcher advance as regex-automata, including empty matches, multiple patterns, and a haystack that is too long for the visited budget. 18 iteration commands and the existing 42 searches plus 9 input queries matched this turn."
     },
     {
       "id": "D5",
@@ -216,15 +258,24 @@
     },
     {
       "id": "E",
-      "weight": 10,
+      "weight": 9,
       "status": "未开始",
       "evidence": [],
-      "note": "Only the locked 1-point regex-cli find match subset may be accepted later."
+      "note": "The find-match pikevm leaf is E1 and is already accepted. regex-lite, the C API, generate/serialize, and the rest of the upstream CLI stay here."
+    },
+    {
+      "id": "E1",
+      "weight": 1,
+      "status": "验收通过",
+      "evidence": [
+        "tests/verify_cli_find.py"
+      ],
+      "note": "Locked 1-point leaf: find match pikevm prints pattern:start:end:escaped-text and uses exit status 0 or 1. Twenty commands match, including multiple patterns, empty matches, and syntax errors. Timing tables stay outside this point."
     }
   ],
   "selected_subsets": {
-    "A5": "Candidate: actual size/nest-limit rejection contracts. Describing a different dfaSizeLimit meaning does not earn equivalence credit.",
-    "C4": "The 2 points are capture metadata (names, length, static length) and SetMatches bidirectional iteration as shared result types. Input and PikeVM captures already listed under C1/C3 are not scored again here.",
-    "E": "The 1 point is upstream regex-cli find match for the NFA/PikeVM command: span text and exit status. This repository's demo CLI does not count, and generate/serialize commands stay outside this point."
+    "A5": "Accepted as A5a (1 point): size-limit and nest-limit rejection, including caret spans. The other 2 points stay on A5.",
+    "C4": "Accepted as C4a (2 points): capture metadata and SetMatches bidirectional iteration. The other 3 points stay on C4. Input and Pike captures under C1/C3 are not scored again.",
+    "E": "Accepted as E1 (1 point): find match pikevm span text and exit status. The demo CLI does not count. The other 9 points stay on E."
   }
 }

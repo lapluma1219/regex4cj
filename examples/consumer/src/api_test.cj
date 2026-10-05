@@ -524,25 +524,74 @@ func byteIteratorsSnapshotAndKeepIndependentCursors(): Unit {
         case None => throw Exception("missing remainder")
     }
     for (_ in 0..3) {
-        match (first.next()) { case None => (); case Some(_) => throw Exception("iterator not exhausted") }
-        match (parts.next()) { case None => (); case Some(_) => throw Exception("split iterator not exhausted") }
+        match (first.next()) {
+            case None => ();
+            case Some(_) => throw Exception("iterator not exhausted")
+        }
+        match (parts.next()) {
+            case None => ();
+            case Some(_) => throw Exception("split iterator not exhausted")
+        }
     }
+}
+
+@Test
+func clonedIteratorsKeepIndependentCursors(): Unit {
+    let found = Regex("a").findIter("abaca")
+    @Expect(requiredMatch(found.next()).start, 0)
+    let copy = found.clone()
+    @Expect(requiredMatch(found.next()).start, 2)
+    @Expect(requiredMatch(copy.next()).start, 2)
+    @Expect(requiredMatch(found.next()).start, 4)
+    @Expect(requiredMatch(copy.next()).start, 4)
+    let parts = Regex("a").splitNIter("abaca", 3)
+    match (parts.next()) {
+        case Some(part) => @Expect(part, "")
+        case None => throw Exception("missing split part")
+    }
+    let splitCopy = parts.clone()
+    match (parts.next()) {
+        case Some(part) => @Expect(part, "b")
+        case None => throw Exception("missing original split part")
+    }
+    match (splitCopy.next()) {
+        case Some(part) => @Expect(part, "b")
+        case None => throw Exception("missing cloned split part")
+    }
+    let bytes = [UInt8(97), UInt8(98), UInt8(97)]
+    let byteIter = BytesRegex("a").findIter(bytes)
+    @Expect(requiredBytes(byteIter.next()).start, 0)
+    let byteCopy = byteIter.clone()
+    @Expect(requiredBytes(byteIter.next()).start, 2)
+    @Expect(requiredBytes(byteCopy.next()).start, 2)
 }
 
 @Test
 func lazySplitLimitsAndByteCaptureMetadata(): Unit {
     var rejected = false
-    try { Regex(",").splitNIter("a,b", -1) } catch (_: Exception) { rejected = true }
+    try {
+        Regex(",").splitNIter("a,b", -1)
+    } catch (_: Exception) {
+        rejected = true
+    }
     @Expect(rejected, true)
     rejected = false
-    try { BytesRegex(",").splitNIter("a,b".toArray(), -1) } catch (_: Exception) { rejected = true }
+    try {
+        BytesRegex(",").splitNIter("a,b".toArray(), -1)
+    } catch (_: Exception) {
+        rejected = true
+    }
     @Expect(rejected, true)
     match (Regex(",").splitNIter("a,b", 0).next()) {
-        case None => (); case Some(_) => throw Exception("zero limit yielded a part")
+        case None => ();
+        case Some(_) => throw Exception("zero limit yielded a part")
     }
     @Expect(requiredText(Regex(",").splitNIter("a,b", 1).next()), "a,b")
     let re = BytesRegex("(a)?")
-    match (re.staticCapturesLen()) {case None => (); case Some(_) => throw Exception("optional group is not static")}
+    match (re.staticCapturesLen()) {
+        case None => ();
+        case Some(_) => throw Exception("optional group is not static")
+    }
     match (re.captures("".toArray())) {
         case Some(c) =>
             @Expect(c.getMatch().isEmpty(), true)
@@ -551,11 +600,18 @@ func lazySplitLimitsAndByteCaptureMetadata(): Unit {
             @Expect(groups.next().done, false)
             let missing = groups.next()
             @Expect(missing.done, false)
-            match (missing.value) {case None => (); case Some(_) => throw Exception("optional group participated")}
+            match (missing.value) {
+                case None => ();
+                case Some(_) => throw Exception("optional group participated")
+            }
             @Expect(groups.next().done, true)
             @Expect(groups.next().done, true)
             rejected = false
-            try { c.extract(1) } catch (_: Exception) { rejected = true }
+            try {
+                c.extract(1)
+            } catch (_: Exception) {
+                rejected = true
+            }
             @Expect(rejected, true)
         case None => throw Exception("expected empty match")
     }

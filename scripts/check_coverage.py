@@ -31,7 +31,8 @@ def main():
     for key in ('A5', 'C4', 'E'):
         if key not in locked or not locked[key].strip():
             raise SystemExit(f'{key} selection is missing')
-    print('Coverage scope validated: weights total 100; no measured completion percentage.')
+    print(f'Coverage scope validated: weights total 100; accepted weight {accepted}.')
+    print('Accepted weight counts only leaves marked 验收通过. It is not a percentage of the upstream repository.')
 
 
 if __name__ == '__main__':

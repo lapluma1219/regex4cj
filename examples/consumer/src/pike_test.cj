@@ -59,6 +59,7 @@ func pikeAnchoredSearchSeesTextOutsideTheRange(): Unit {
         case None => ()
     }
     @Expect(vm.stateCount(0) > 0, true)
+    @Expect(vm.graph().stateCount() >= vm.stateCount(0), true)
     var sawAccept = false
     for (i in 0..vm.stateCount(0)) {
         if (vm.opName(0, i) == "accept") {
@@ -86,4 +87,68 @@ func anchoredSearchIsNotTheSameAsACaret(): Unit {
         case Some(_) => throw Exception("anchored search starts only at the range start")
         case None => ()
     }
+}
+
+@Test
+func oneGraphPikeKeepsThreadsInTheCache(): Unit {
+    let vm = PikeVM(["a+", "a"])
+    @Expect(vm.graph().patternCount(), 2)
+    @Expect(vm.graph().stateCount() >= vm.stateCount(0) + vm.stateCount(1), true)
+    match (vm.search("aaa")) {
+        case Some(hit) =>
+            @Expect(hit.pattern, 0)
+            @Expect(hit.start(), 0)
+            @Expect(hit.end(), 3)
+        case None => throw Exception("a+ must match")
+    }
+    @Expect(vm.cache.hasMatch(), true)
+    @Expect(vm.cache.activeThreads() > 0, true)
+    @Expect(vm.cache.captureWorkspace() > 0, true)
+    vm.reset()
+    @Expect(vm.cache.hasMatch(), false)
+    @Expect(vm.cache.activeThreads(), 0)
+    @Expect(vm.cache.captureWorkspace() > 0, true)
+    match (vm.search("aaa")) {
+        case Some(hit) => @Expect(hit.end(), 3)
+        case None => throw Exception("reset cache must still search")
+    }
+    match (vm.search(SearchInput("aaa").selectPattern(1))) {
+        case Some(hit) =>
+            @Expect(hit.pattern, 1)
+            @Expect(hit.end(), 1)
+        case None => throw Exception("pattern 1 must match the first a")
+    }
+    match (vm.search(SearchInput("aaa").selectPattern(9))) {
+        case Some(_) => throw Exception("an unknown pattern id is a miss")
+        case None => ()
+    }
+}
+
+@Test
+func backtrackerReusesItsVisitedCache(): Unit {
+    let engine = BoundedBacktracker(["a+", "a"])
+    let cache = engine.createCache()
+    match (engine.search(cache, SearchInput("aaa"))) {
+        case Some(hit) =>
+            @Expect(hit.pattern, 0)
+            @Expect(hit.end(), 3)
+        case None => throw Exception("a+ must match")
+    }
+    match (engine.search(cache, SearchInput("b"))) {
+        case Some(_) => throw Exception("the reused cache must not keep the previous match")
+        case None => ()
+    }
+    match (engine.search(cache, SearchInput("aaa").selectPattern(1))) {
+        case Some(hit) =>
+            @Expect(hit.pattern, 1)
+            @Expect(hit.end(), 1)
+        case None => throw Exception("the selected pattern must match")
+    }
+    var rejected = false
+    try {
+        engine.search(cache, SearchInput([UInt8(255)]))
+    } catch (e: Exception) {
+        rejected = e.toString().contains("UTF-8")
+    }
+    @Expect(rejected, true)
 }

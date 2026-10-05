@@ -74,8 +74,50 @@ cases = [
 for pattern, text in cases:
     compare(pattern, text)
 
+
+def compare_query(start, end, mode, pattern, text):
+    args = ("nfa-rev-query", str(start), str(end), mode, pattern, text)
+    rust, cj = run(RUST, *args), run(CJ, *args)
+    if rust.returncode or cj.returncode or rust.stdout != cj.stdout:
+        failure = dict(args=args, rust=rust.stdout, cangjie=cj.stdout,
+                       rust_error=rust.stderr, cangjie_error=cj.stderr,
+                       rust_code=rust.returncode, cangjie_code=cj.returncode)
+        REPORT.with_name("reverse-failure.json").write_text(json.dumps(failure, ensure_ascii=False, indent=2))
+        raise AssertionError(failure)
+
+
+queries = [
+    (0, 2, "no", "a", "xa"),
+    (0, 1, "no", "a", "xa"),
+    (1, 2, "no", "a", "xa"),
+    (0, 14, "no", "baz[0-9]+", "foobaz12345bar"),
+    (0, 9, "no", "baz[0-9]+", "foobaz12345bar"),
+    (3, 9, "no", "baz[0-9]+", "foobaz12345bar"),
+    (0, 2, "yes", "a", "xa"),
+    (0, 2, "yes", "a$", "ba"),
+    (0, 2, "no", "a$", "ba"),
+    (0, 1, "yes", "^a", "ab"),
+    (1, 2, "yes", "^a", "ab"),
+    (0, 0, "no", "a*", "ab"),
+    (1, 1, "no", "a*", "ab"),
+    (0, 5, "no", "中", "a中b"),
+    (1, 4, "no", "中", "a中b"),
+    (0, 1, "no", "中", "a中b"),
+    (0, 3, "no", "(?m)^a", "b\na"),
+    (2, 3, "no", "(?m)^a", "b\na"),
+    (0, 3, "yes", "a+", "aaa"),
+    (0, 2, "yes", "a+", "aaa"),
+    (1, 3, "no", "a+", "aaa"),
+    (0, 2, "no", "", "ab"),
+    (2, 2, "yes", "", "ab"),
+    (0, 2, "0", "a", "xa"),
+]
+
+for start, end, mode, pattern, text in queries:
+    compare_query(start, end, mode, pattern, text)
+
 rejected = run(RUST, "nfa-rev", r"\bfoo", " foo")
 if not rejected.stdout.startswith("error"):
     raise AssertionError(rejected.stdout)
 
-print(f"reverse NFA: {len(cases)} searches matched")
+print(f"reverse NFA: {len(cases)} searches and {len(queries)} ranged queries matched")

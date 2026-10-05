@@ -86,6 +86,12 @@ public class Captures {
     public func iter(): GroupIter {
         GroupIter(groups)
     }
+    public func groupName(index: Int64): String {
+        if (index < 0 || index >= names.size) {
+            return ""
+        }
+        names[index]
+    }
     public func get(index: Int64): Option<RegexMatch> {
         if (index < 0 || index >= size) {
             return None
@@ -211,7 +217,9 @@ public class GroupIter {
         this.groups = groups
     }
     // Remaining slots include groups that did not participate in the match.
-    public func len(): Int64 { groups.size - index }
+    public func len(): Int64 {
+        groups.size - index
+    }
     public func sizeHint(): (Int64, Option<Int64>) {
         (len(), Some(len()))
     }
