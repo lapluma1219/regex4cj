@@ -86,6 +86,20 @@ R表示重复，U表示Unicode字符类，花括号是该节点的最短/最长�
 
 `extractLiterals` 按 `regex-syntax` 默认限额提取前缀或后缀字面量。`utf8SequencesOf` 把标量区间展开成与 `Utf8Sequences` 相同的字节区间。`memory_usage` 仍没有。`[:digit:]` 和 `[:^alpha:]` 已经是 AST 里的具名类节点，降级时走现有的 ASCII 类表。字符类子项带有字节跨度和字面量来源。`Ast.parse` 只做语法分析；`(?-u:\xFF)` 和未知 Unicode 属性先得到语法树，翻译时才按 `utf8` 和属性表拒绝。`Hir.subs()` 放在 Hir 对象上，是对原仓库 `HirKind::subs` 的显式适配。
 
+## 八进制转义（显式开启）
+
+`Ast.parse`默认拒绝八进制转义。需要时使用配置对象：
+
+```cangjie
+let parser = SyntaxParser()
+parser.octal = true
+let ast = parser.parseAst(#"[\123]"#)
+println(ast.toPattern()) // [\123]
+println(parser.translate(ast).toPattern()) // S
+```
+
+最多读取三个八进制数字；字符类及范围端点保留Octal来源和源码跨度。忽略大小写时，先完成字符类，再做折叠。AST打印遵循原仓库格式（会规范化前导零），不保证保留每个输入字符的原始拼写。
+
 ## 如何验证
 
 ```sh

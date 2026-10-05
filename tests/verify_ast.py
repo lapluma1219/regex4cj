@@ -64,12 +64,29 @@ for pattern, utf8 in [(r'(?-u:\xFF)', 'true'), (r'\p{NotAProperty}', 'true'), (r
                       (r'(?-u:\D)', 'true'), (r'(?-u:\pL)', 'true'), (r'(?-u:\xFF)', 'false'),
                       (r'(?-u:\w)', 'false'), (r'\p{sc=Nope}', 'true')]:
     compare('ast-translate', pattern, utf8)
+# The three-digit octal domain, independently parsed, printed and lowered.
+# Include class and range endpoints: printing alone once hid a wrong class.
+octal_patterns = ["\\" + format(code, "03o") for code in range(512)]
+octal_patterns += ["[" + pattern + "]" for pattern in octal_patterns]
+octal_patterns += [r'[\0-\7]', r'[\77-\100]', r'[\177-\200]', r'[\377-\777]',
+                   r'\0', r'\00', r'\0001', r'\1234', r'\78', r'[\78]',
+                   r'(?i:[\141])', r'(?-u:[\377])', r'(?-u:\377)',
+                   r'(?x:[\1 23])', r'(?x:\1 23)']
+for pattern in octal_patterns:
+    compare('ast-octal', pattern)
+# Octal remains opt-in; enabling it must not change default rejection behavior.
+for pattern in [r'(?i:[\141])', r'(?i:[\141-\172])', r'(?i:\141)', r'(?i:[^\141])']:
+    for text in ['AazZ', 'bB', 'ſK', '中', '']:
+        compare('octal-find', pattern, text)
+for pattern in [r'\1', r'[\1]', r'[\0-\7]']:
+    r, c = run(RUST, 'ast', pattern), run(CJ, 'ast', pattern)
+    assert r.returncode == c.returncode == 2 and r.stderr == c.stderr, (pattern, r, c)
 printed = run(CJ, 'ast-print', '(?<id>[0-9]{6})')
 assert printed.returncode == 0 and printed.stdout.strip() == '(?<id>[0-9]{6})', printed
 again = run(CJ, 'hir', printed.stdout.strip(), 'true')
 original = run(CJ, 'hir', '(?<id>[0-9]{6})', 'true')
 assert again.stdout == original.stdout
 report = json.loads(REPORT.read_text()) if REPORT.exists() else {}
-report.update(ast_review_regressions_passed=len(review_patterns), ast_cases_passed=len(patterns), ast_hir_cases_passed=lowered)
+report.update(ast_octal_cases_passed=len(octal_patterns), ast_review_regressions_passed=len(review_patterns), ast_cases_passed=len(patterns), ast_hir_cases_passed=lowered)
 REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 print(f'AST: {len(patterns)} shapes matched, {lowered} lowered to the same HIR', flush=True)

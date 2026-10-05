@@ -700,21 +700,21 @@
 
 | 声明 | 种类 | 实现 |
 |---|---|---|
-| `public class SyntaxParser` | class | [port/src/syntax_ast.cj:1846](../port/src/syntax_ast.cj#L1846) |
-| `public var caseInsensitive: Bool = false` | field | [port/src/syntax_ast.cj:1847](../port/src/syntax_ast.cj#L1847) |
-| `public var multiLine: Bool = false` | field | [port/src/syntax_ast.cj:1848](../port/src/syntax_ast.cj#L1848) |
-| `public var dotAll: Bool = false` | field | [port/src/syntax_ast.cj:1849](../port/src/syntax_ast.cj#L1849) |
-| `public var swapGreed: Bool = false` | field | [port/src/syntax_ast.cj:1850](../port/src/syntax_ast.cj#L1850) |
-| `public var ignoreWhitespace: Bool = false` | field | [port/src/syntax_ast.cj:1851](../port/src/syntax_ast.cj#L1851) |
-| `public var crlf: Bool = false` | field | [port/src/syntax_ast.cj:1852](../port/src/syntax_ast.cj#L1852) |
-| `public var unicode: Bool = true` | field | [port/src/syntax_ast.cj:1853](../port/src/syntax_ast.cj#L1853) |
-| `public var utf8: Bool = true` | field | [port/src/syntax_ast.cj:1854](../port/src/syntax_ast.cj#L1854) |
-| `public var octal: Bool = false` | field | [port/src/syntax_ast.cj:1855](../port/src/syntax_ast.cj#L1855) |
-| `public var nestLimit: Int64 = 250` | field | [port/src/syntax_ast.cj:1856](../port/src/syntax_ast.cj#L1856) |
-| `public init()` | constructor | [port/src/syntax_ast.cj:1857](../port/src/syntax_ast.cj#L1857) |
-| `public func parseAst(pattern: String): Ast` | method | [port/src/syntax_ast.cj:1858](../port/src/syntax_ast.cj#L1858) |
-| `public func parseHir(pattern: String): Hir` | method | [port/src/syntax_ast.cj:1875](../port/src/syntax_ast.cj#L1875) |
-| `public func translate(ast: Ast): Hir` | method | [port/src/syntax_ast.cj:1880](../port/src/syntax_ast.cj#L1880) |
+| `public class SyntaxParser` | class | [port/src/syntax_ast.cj:1866](../port/src/syntax_ast.cj#L1866) |
+| `public var caseInsensitive: Bool = false` | field | [port/src/syntax_ast.cj:1867](../port/src/syntax_ast.cj#L1867) |
+| `public var multiLine: Bool = false` | field | [port/src/syntax_ast.cj:1868](../port/src/syntax_ast.cj#L1868) |
+| `public var dotAll: Bool = false` | field | [port/src/syntax_ast.cj:1869](../port/src/syntax_ast.cj#L1869) |
+| `public var swapGreed: Bool = false` | field | [port/src/syntax_ast.cj:1870](../port/src/syntax_ast.cj#L1870) |
+| `public var ignoreWhitespace: Bool = false` | field | [port/src/syntax_ast.cj:1871](../port/src/syntax_ast.cj#L1871) |
+| `public var crlf: Bool = false` | field | [port/src/syntax_ast.cj:1872](../port/src/syntax_ast.cj#L1872) |
+| `public var unicode: Bool = true` | field | [port/src/syntax_ast.cj:1873](../port/src/syntax_ast.cj#L1873) |
+| `public var utf8: Bool = true` | field | [port/src/syntax_ast.cj:1874](../port/src/syntax_ast.cj#L1874) |
+| `public var octal: Bool = false` | field | [port/src/syntax_ast.cj:1875](../port/src/syntax_ast.cj#L1875) |
+| `public var nestLimit: Int64 = 250` | field | [port/src/syntax_ast.cj:1876](../port/src/syntax_ast.cj#L1876) |
+| `public init()` | constructor | [port/src/syntax_ast.cj:1877](../port/src/syntax_ast.cj#L1877) |
+| `public func parseAst(pattern: String): Ast` | method | [port/src/syntax_ast.cj:1878](../port/src/syntax_ast.cj#L1878) |
+| `public func parseHir(pattern: String): Hir` | method | [port/src/syntax_ast.cj:1895](../port/src/syntax_ast.cj#L1895) |
+| `public func translate(ast: Ast): Hir` | method | [port/src/syntax_ast.cj:1900](../port/src/syntax_ast.cj#L1900) |
 
 ## Utf8Sequence
 

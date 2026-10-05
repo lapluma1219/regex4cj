@@ -696,6 +696,9 @@ class AstReader {
             case r'x' | r'u' | r'U' =>
                 let node = hexLiteral(start, ch)
                 classLit(node.span, node.quantifier, node.code)
+            case r'0' | r'1' | r'2' | r'3' | r'4' | r'5' | r'6' | r'7' =>
+                let node = octalLiteral(start, ch)
+                classLit(node.span, node.quantifier, node.code)
             case _ =>
                 let origin = if (astMeta(ch)) {
                     "Meta"
@@ -809,18 +812,7 @@ class AstReader {
             case r'v' => literalKind(start, Rune(UInt32(11)), "Special(VerticalTab)")
             case r'x' | r'u' | r'U' => hexLiteral(start, ch)
             case r'p' | r'P' => unicodePropertyNode(start, ch == r'P')
-            case r'0' | r'1' | r'2' | r'3' | r'4' | r'5' | r'6' | r'7' =>
-                if (!octal) {
-                    throw Exception("backreferences are not supported")
-                }
-                var value = Int64(UInt32(ch) - UInt32(r'0'))
-                var digits: Int64 = 1
-                while (digits < 3 && pos < chars.size && chars[pos] >= r'0' && chars[pos] <= r'7') {
-                    value = value * 8 + Int64(UInt32(chars[pos]) - UInt32(r'0'))
-                    bump()
-                    digits++
-                }
-                literalKind(start, Rune(UInt32(value)), "Octal")
+            case r'0' | r'1' | r'2' | r'3' | r'4' | r'5' | r'6' | r'7' => octalLiteral(start, ch)
             case _ =>
                 let kind = if (astMeta(ch)) {
                     "Meta"
@@ -829,6 +821,21 @@ class AstReader {
                 }
                 literalKind(start, ch, kind)
         }
+    }
+    // A backslash has already consumed the first digit. Share the same
+    // three-digit limit inside and outside bracketed classes.
+    func octalLiteral(start: AstMark, first: Rune): Ast {
+        if (!octal) {
+            throw Exception("backreferences are not supported")
+        }
+        var value = Int64(UInt32(first) - UInt32(r'0'))
+        var digits: Int64 = 1
+        while (digits < 3 && pos < chars.size && chars[pos] >= r'0' && chars[pos] <= r'7') {
+            value = value * 8 + Int64(UInt32(chars[pos]) - UInt32(r'0'))
+            bump()
+            digits++
+        }
+        literalKind(start, Rune(UInt32(value)), "Octal")
     }
     func perlClass(start: AstMark, negated: Bool, name: String): Ast {
         let result = leaf("perl", span(start), 0)
@@ -1771,6 +1778,19 @@ func astFlagText(ast: Ast): String {
 
 func astPrintLiteral(out: StringBuilder, ast: Ast): Unit {
     match (ast.quantifier) {
+        case "Octal" =>
+            var value = ast.code
+            var digits = ""
+            while (value > 0) {
+                digits = (value % 8).toString() + digits
+                value /= 8
+            }
+            out.append("\\")
+            out.append(if (digits.isEmpty()) {
+                "0"
+            } else {
+                digits
+            })
         case "Special(LineFeed)" => out.append("\\n")
         case "Special(CarriageReturn)" => out.append("\\r")
         case "Special(Tab)" => out.append("\\t")

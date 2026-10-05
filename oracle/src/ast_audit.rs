@@ -183,3 +183,16 @@ pub fn parse(pattern: &str) {
         }
     }
 }
+
+pub fn octal(pattern: &str) {
+    let tree = match ast::parse::ParserBuilder::new().octal(true).build().parse(pattern) {
+        Ok(tree) => tree,
+        Err(err) => { eprintln!("{err}"); std::process::exit(2); }
+    };
+    println!("{}", shape(&tree));
+    println!("{tree}");
+    match regex_syntax::hir::translate::TranslatorBuilder::new().build().translate(pattern, &tree) {
+        Ok(hir) => println!("{}", crate::hir_audit::shape(&hir)),
+        Err(err) => { println!("translate\t{}", hir_kind(err.kind())); println!("span\t{}", sp(err.span())); println!("aux\t-"); }
+    }
+}

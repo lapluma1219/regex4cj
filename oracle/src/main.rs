@@ -61,6 +61,7 @@ fn main() {
         Some("hir-props") if a.len()==3 => hir_audit::properties(&a[1], a[2]=="true"),
         Some("ast") if a.len()==2 => ast_audit::parse(&a[1]),
         Some("ast-translate") if a.len()==3 => ast_audit::ast_translate(&a[1], a[2]=="true"),
+        Some("ast-octal") if a.len()==2 => ast_audit::octal(&a[1]),
         Some("ast-print") if a.len()==2 => ast_audit::ast_print(&a[1]),
         Some("syntax-error") if a.len()==2 => ast_audit::syntax_error(&a[1]),
         Some("literals") if a.len()==3 => literal_audit::literals(&a[1], &a[2]),

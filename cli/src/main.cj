@@ -335,6 +335,16 @@ main(args: Array<String>): Int64 {
             }
             return 0
         }
+        if (args.size == 2 && args[0] == "ast-octal") {
+            let parser = SyntaxParser()
+            parser.octal = true
+            let ast = parser.parseAst(args[1])
+            println(ast.shape())
+            println(ast.toPattern())
+            try { println(hirShape(parser.translate(ast))) }
+            catch (e: RegexError) { println(e.structure()) }
+            return 0
+        }
         if (args.size == 2 && args[0] == "ast") {
             println(Ast.parse(args[1]).shape())
             return 0

@@ -1142,7 +1142,9 @@ class Parser {
             pos++
             digits++
         }
-        return finishLiteral(Rune(UInt32(value)))
+        // Folding belongs to the enclosing literal or completed class. Returning
+        // a folded class here makes classLiteral reject a valid octal endpoint.
+        return leaf(ExprKind.Literal, Rune(UInt32(value)))
     }
     func wordNameChar(c: Rune): Bool {
         (c >= r'A' && c <= r'Z') || (c >= r'a' && c <= r'z') || c == r'-'

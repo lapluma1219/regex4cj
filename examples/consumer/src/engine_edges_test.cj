@@ -44,3 +44,19 @@ func dfaReverseRecoveryRetainsPriorityAndContext(): Unit {
         case None => throw Exception("DFA missed consecutive assertions")
     }
 }
+
+@Test
+func octalAstClassesKeepTheirValueAndSpelling(): Unit {
+    let parser = SyntaxParser()
+    parser.octal = true
+    for (pattern in [#"\123"#, #"[\123]"#, #"[\0-\7]"#, #"[\377-\777]"#]) {
+        let ast = parser.parseAst(pattern)
+        @Expect(ast.toPattern(), pattern)
+        @Expect(parser.translate(ast).toPattern(), parser.parseHir(pattern).toPattern())
+    }
+    @Expect(parser.translate(parser.parseAst(#"[\123]"#)).toPattern(), "S")
+    @Expect(RegexBuilder(#"(?i:[\141-\172])"#).octal(true).build().isMatch("Z"), true)
+    var rejected = false
+    try { Ast.parse(#"[\123]"#) } catch (_: RegexError) { rejected = true }
+    @Expect(rejected, true)
+}

@@ -1,6 +1,6 @@
 {
   "tool": "Cangjie SDK 1.1.3 cjlint",
-  "command": "cjlint -f port/src -o .build/cjlint-final -r json",
+  "command": "cjlint -f port/src -o .build/cjlint-octal-final -r json",
   "scope": "port/src; default SDK rules; no suppressed rules",
   "counts": {
     "SUGGESTIONS": 837
@@ -35,12 +35,12 @@
     "port/src/look.cj": "fb61a65b867d71fc6fe63f757f4f8cb59100058cced1d016abae30ef133511c9",
     "port/src/nfa.cj": "c99333254f0c81c05580af230903a88b04b1d66e102da2660ab799b440c855bd",
     "port/src/normalize.cj": "1f537ce39d27be81d8ed84972077bb2e612ce8841e393fc4ac117d4af289db6b",
-    "port/src/parser.cj": "f4730a8ad9da887c1e0c2ef15acaa04b9b7aad09bf9df6a42363a24a97763026",
+    "port/src/parser.cj": "adf2a11dae3809925c7fa545cb08a674b45868f3cb2635e9af79978891de115d",
     "port/src/pikevm.cj": "3bdff0e01cbd4e288febaa7035081fa2730e8705b7164bcaed35aa3e8de6b020",
     "port/src/properties.cj": "40f5bcd93c0d1e9a2fb72fbbb5fa9499dd03a3f7798778178ae41471c7dd7ed0",
     "port/src/regex_set.cj": "a3412f1bfce0d04ce664f2818027cbf78cd7192cafd3615d5c76ab106270a695",
     "port/src/reverse.cj": "db00f28e1381f3c988cb3f0183bb91e5b8ed2e742e02ab7292d41d15ec6c9936",
-    "port/src/syntax_ast.cj": "ce4a4a2ace06644cd70c96846945cbcb2dc008c60dbd90c80af97ecd41280281",
+    "port/src/syntax_ast.cj": "8572154f93d502beefa7f45af5cc453f01fcda8299050943989633c7958852ec",
     "port/src/syntax_hir.cj": "df9c01d02736e25161281417a3b3a819dac20b48173e47575154f790dfb6c00a",
     "port/src/syntax_literal.cj": "3c9deb5176701d631a1cfeb1f1428003c7c9983905b79a0d644461295e98c50c",
     "port/src/unicode_age_break.cj": "0e57bfbbab9069f0e9b88f5f5a5353e6a0aa02b10de29209624b823335ef9841",

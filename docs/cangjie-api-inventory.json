@@ -2888,7 +2888,7 @@
       "kind": "class",
       "signature": "public class SyntaxParser",
       "file": "port/src/syntax_ast.cj",
-      "line": 1846
+      "line": 1866
     },
     {
       "owner": "SyntaxParser",
@@ -2896,7 +2896,7 @@
       "kind": "field",
       "signature": "public var caseInsensitive: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1847
+      "line": 1867
     },
     {
       "owner": "SyntaxParser",
@@ -2904,7 +2904,7 @@
       "kind": "field",
       "signature": "public var multiLine: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1848
+      "line": 1868
     },
     {
       "owner": "SyntaxParser",
@@ -2912,7 +2912,7 @@
       "kind": "field",
       "signature": "public var dotAll: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1849
+      "line": 1869
     },
     {
       "owner": "SyntaxParser",
@@ -2920,7 +2920,7 @@
       "kind": "field",
       "signature": "public var swapGreed: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1850
+      "line": 1870
     },
     {
       "owner": "SyntaxParser",
@@ -2928,7 +2928,7 @@
       "kind": "field",
       "signature": "public var ignoreWhitespace: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1851
+      "line": 1871
     },
     {
       "owner": "SyntaxParser",
@@ -2936,7 +2936,7 @@
       "kind": "field",
       "signature": "public var crlf: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1852
+      "line": 1872
     },
     {
       "owner": "SyntaxParser",
@@ -2944,7 +2944,7 @@
       "kind": "field",
       "signature": "public var unicode: Bool = true",
       "file": "port/src/syntax_ast.cj",
-      "line": 1853
+      "line": 1873
     },
     {
       "owner": "SyntaxParser",
@@ -2952,7 +2952,7 @@
       "kind": "field",
       "signature": "public var utf8: Bool = true",
       "file": "port/src/syntax_ast.cj",
-      "line": 1854
+      "line": 1874
     },
     {
       "owner": "SyntaxParser",
@@ -2960,7 +2960,7 @@
       "kind": "field",
       "signature": "public var octal: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1855
+      "line": 1875
     },
     {
       "owner": "SyntaxParser",
@@ -2968,7 +2968,7 @@
       "kind": "field",
       "signature": "public var nestLimit: Int64 = 250",
       "file": "port/src/syntax_ast.cj",
-      "line": 1856
+      "line": 1876
     },
     {
       "owner": "SyntaxParser",
@@ -2976,7 +2976,7 @@
       "kind": "constructor",
       "signature": "public init()",
       "file": "port/src/syntax_ast.cj",
-      "line": 1857
+      "line": 1877
     },
     {
       "owner": "SyntaxParser",
@@ -2984,7 +2984,7 @@
       "kind": "method",
       "signature": "public func parseAst(pattern: String): Ast",
       "file": "port/src/syntax_ast.cj",
-      "line": 1858
+      "line": 1878
     },
     {
       "owner": "SyntaxParser",
@@ -2992,7 +2992,7 @@
       "kind": "method",
       "signature": "public func parseHir(pattern: String): Hir",
       "file": "port/src/syntax_ast.cj",
-      "line": 1875
+      "line": 1895
     },
     {
       "owner": "SyntaxParser",
@@ -3000,7 +3000,7 @@
       "kind": "method",
       "signature": "public func translate(ast: Ast): Hir",
       "file": "port/src/syntax_ast.cj",
-      "line": 1880
+      "line": 1900
     },
     {
       "owner": "HirUnsupportedError",
