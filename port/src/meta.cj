@@ -91,7 +91,9 @@ public class MetaRegex {
                 case Some(hit) =>
                     var report = hit
                     var emit = true
-                    if (hit.start() == hit.end() && hit.end() == lastEnd) {
+                    let emptyHit = hit.start() == hit.end()
+                    let repeatedEnd = hit.end() == lastEnd
+                    if (emptyHit && repeatedEnd) {
                         let next = nextOffset(text, hit.end())
                         if (next > text.size) {
                             reading = false
@@ -131,19 +133,16 @@ public class MetaRegex {
                 None<PikeMatch>
             case None => match (hybrid) {
                 case Some(engine) => match (engine.search(SearchInput(text).span(at, text.size))) {
-                    case Some(hit) => Some(pikeFromDfa(hit))
+                    case Some(hit) =>
+                        // The public result contains captures, regardless of the
+                        // engine used to locate the winning pattern and start.
+                        vm.search(SearchInput(text).span(hit.start, text.size).selectPattern(hit.pattern))
                     case None => None<PikeMatch>
                 }
                 case None => vm.search(SearchInput(text).span(at, text.size))
             }
         }
     }
-}
-
-func pikeFromDfa(hit: DfaMatch): PikeMatch {
-    let names = Array<String>(1, repeat: "")
-    let groups = [Some(RegexMatch(hit.start, hit.end, hit.text))]
-    PikeMatch(hit.pattern, Captures(groups, names, 1))
 }
 
 func earliestPrefix(text: String, start: Int64, pieces: Array<Array<UInt8>>): Int64 {

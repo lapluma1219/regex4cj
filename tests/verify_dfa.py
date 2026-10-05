@@ -90,6 +90,10 @@ queries = [
     ("sparse", "-", "0", "3", "1", "false", "a", "aaa"),
     ("dense", "-", "0", "2", "0", "false", "a|b", "ab"),
 ]
+for kind in ("dense", "sparse"):
+    for pattern, text in [(r"(?m:a$)", "a\nb"), (r"a(?-u:\b)", "a b"),
+                          (r"(?mR:a$)", "a\r\nb"), (r"a\z", "ab")]:
+        queries.append((kind, "-", "0", "1", "no", "false", pattern, text))
 for kind, quit, start, end, mode, earliest, pattern, text in queries:
     args = ("dfa-query", kind, quit, start, end, mode, earliest, pattern, text)
     rust, cj = run(RUST, *args), run(CJ, *args)

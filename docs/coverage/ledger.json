@@ -9,7 +9,7 @@
       "evidence": [
         "tests/verify_matching.py"
       ],
-      "note": "String and bytes search has a large differential. Iterator copy contracts are still incomplete."
+      "note": "String and bytes search have differential regressions. Library-produced match/capture/split iterators clone independently; language integrations and resource behavior remain partial."
     },
     {
       "id": "A2",
@@ -18,7 +18,7 @@
       "evidence": [
         "tests/verify_captures.py"
       ],
-      "note": "Captures are tested. MatchIter and CaptureIter clone copies the cursor; one consumer test advances the original and the copy independently. The older capture differential was not re-run for this change, and byte capture iteration is only covered by that consumer test."
+      "note": "The original capture differential is restored and runs alongside capture configuration checks. Native tests cover independent iterator cursors and retained results."
     },
     {
       "id": "A3",
@@ -27,7 +27,7 @@
       "evidence": [
         "tests/verify_text_ops.py"
       ],
-      "note": "Replace and split are tested. SplitIter and the bytes split iterator clone their own cursors, including splitN. One consumer test checks the copy. The older text-op differential was not re-run for this change."
+      "note": "Replacement, split and splitN run in the full suite; cloned iterators have independent cursors. No claim of all language integrations or allocation equivalence."
     },
     {
       "id": "A4",
@@ -111,9 +111,10 @@
       "weight": 4,
       "status": "有差异",
       "evidence": [
-        "tests/verify_pike.py"
+        "tests/verify_pike.py",
+        "tests/verify_bytes_nfa.py"
       ],
-      "note": "SearchInput carries a string or bytes, a span, an anchor, a selected pattern, and earliest. PikeVM searches UTF-8 text and rejects non-UTF-8 bytes. There is no separate byte-level PikeVM."
+      "note": "SearchInput carries string or bytes, a span, anchoring, selected pattern and earliest. Valid UTF-8 uses the scalar graph; invalid UTF-8 uses the shared byte compiler. Original UTF-8 pattern restrictions remain."
     },
     {
       "id": "C2a",
@@ -129,9 +130,10 @@
       "weight": 2,
       "status": "有差异",
       "evidence": [
-        "tests/verify_reverse.py"
+        "tests/verify_reverse.py",
+        "tests/verify_reverse_many.py"
       ],
-      "note": "Reverse search walks bytes backward and reports the match start. search(SearchInput) limits the byte span and can require the match to end at the span end. 45 full searches and 24 ranged queries match dense DFA try_search_rev, including empty spans and multi-byte scalars. Selecting a pattern id is rejected. Captures are omitted, and the reverse graph is still compiled separately from ThompsonNfa. Unicode word boundaries are outside this oracle because that DFA refuses them. Corpus evidence only; the coarse item stays open."
+      "note": "Reverse search walks bytes backward and returns a pattern id and start. Span and end anchoring are supported; selecting a pattern requires explicit pattern-start configuration. Captures are omitted; this byte graph is separate from the scalar ThompsonNfa."
     },
     {
       "id": "C3a",
@@ -149,7 +151,7 @@
       "evidence": [
         "tests/verify_pike.py"
       ],
-      "note": "Multiple patterns share one ThompsonNfa. SearchInput can anchor the search to one pattern id. The corpus matches, including unknown pattern ids as misses. A byte-level PikeVM is still absent."
+      "note": "Multiple patterns share a ThompsonNfa priority union. SearchInput supports selected-pattern anchoring and unknown ids as misses. Invalid UTF-8 haystacks use a byte graph, with separate byte differential cases."
     },
     {
       "id": "C3c",
@@ -158,7 +160,7 @@
       "evidence": [
         "examples/consumer/src/pike_test.cj"
       ],
-      "note": "PikeCache stores the previous capture slots, the active thread state ids, and reuses the visited-state buffers. During search the capture slots live in a cache-owned pool: Save copies a row before writing, and reset keeps that capacity. 503 Pike searches still match. quit is absent, so this point stays open."
+      "note": "PikeCache reuses visited arrays and capture slot rows and records active state ids. This is not the original memory layout or bounded-workspace guarantee; byte search currently uses a different workspace path."
     },
     {
       "id": "C3d",
@@ -167,7 +169,7 @@
       "evidence": [
         "tests/verify_pike.py"
       ],
-      "note": "whichOverlapping returns the same pattern-id set as PikeVM which_overlapping_matches on the corpus. Each pattern starts at its own state in the shared NFA. quit is absent, and the search is still existence of a match rather than every overlapping span."
+      "note": "whichOverlapping reports matching pattern ids under MatchKind::All, not all spans. Range, anchor and earliest have direct Pike oracle cases. Pike has no quit-byte contract."
     },
     {
       "id": "C3e",
@@ -176,7 +178,7 @@
       "evidence": [
         "tests/verify_pike.py"
       ],
-      "note": "searchEarliest matches regex-automata earliest spans on the corpus. quit is still absent, so this point stays open."
+      "note": "Earliest has direct original PikeVM differential cases. Broader configuration equivalence remains partial; quit bytes are not part of the original PikeVM contract."
     },
     {
       "id": "C4",
@@ -205,23 +207,27 @@
       "evidence": [
         "tests/verify_dfa.py"
       ],
-      "note": "DenseDfa and SparseDfa match dfa::regex::Regex on 39 full-haystack cases, 12 SearchInput queries, and 12 multi-pattern queries. overlap() uses MatchKind::All and searchOverlapping matches 10 half-match queries (pattern id and end offset, no start). Unicode word boundaries fail during construction. Anchored::Pattern is rejected. The leftmost match start is that pattern's reverse NFA. SparseDfa drops the dense tables after compression; that memory effect was not measured. The upstream byte size limit is absent, so these 6 points stay open."
+      "note": "Multi-pattern dense/sparse search, byte input, optional pattern starts, quit and overlapping half-matches are tested. Span-end assertions inspect outside context. Sparse drops dense transitions; budgets count local slots, not original byte-layout limits."
     },
     {
       "id": "D2",
       "weight": 4,
       "status": "有差异",
       "evidence": [
-        "tests/verify_dfa.py"
+        "tests/verify_dfa.py",
+        "examples/consumer/src/delivery_test.cj"
       ],
       "note": "HybridDfa builds transitions while searching. Eight searches and two reset-and-search pairs match hybrid::regex::Regex spans, including quit bytes and the lazy Unicode-word-boundary build error. A cache smaller than the seeded states is rejected. clearLimit 0 gives up with gave up searching at offset. The capacity is a state count, not upstream's byte cache, and the give-up offset is not the upstream offset. dfaSizeLimit is still the string step cache. These 4 points stay open."
     },
     {
       "id": "D3",
       "weight": 2,
-      "status": "未开始",
-      "evidence": [],
-      "note": "One-pass search is absent."
+      "status": "有差异",
+      "evidence": [
+        "tests/verify_products.py",
+        "examples/consumer/src/delivery_test.cj"
+      ],
+      "note": "OnePass is a conservative eligibility adapter executing anchored PikeVM, not a one-pass engine. Some valid original patterns are rejected by the local byte-graph check. No engine parity or performance credit."
     },
     {
       "id": "D4",
@@ -230,7 +236,7 @@
       "evidence": [
         "tests/verify_backtrack.py"
       ],
-      "note": "Non-overlapping iteration is D4a and is already accepted. This remaining point is the prefilter, memory_usage, and layout contract, which is not implemented."
+      "note": "Local memoryUsage and prefix optimizations exist; original layout, prefilter and budget contracts are not fully equivalent. Non-overlapping iteration is tracked separately under D4a."
     },
     {
       "id": "D4a",
@@ -245,23 +251,32 @@
     {
       "id": "D5",
       "weight": 4,
-      "status": "未开始",
-      "evidence": [],
-      "note": "Meta engine and the optimization passes around it are absent. Regex.find is still the existing matcher."
+      "status": "有差异",
+      "evidence": [
+        "tests/verify_products.py",
+        "examples/consumer/src/delivery_test.cj"
+      ],
+      "note": "MetaRegex selects anchored Pike adaptation, HybridDfa or PikeVM and retains captures. This is not the complete original meta optimizer or strategy set."
     },
     {
       "id": "D6",
       "weight": 2,
-      "status": "未开始",
-      "evidence": [],
-      "note": "Serialization is absent."
+      "status": "有差异",
+      "evidence": [
+        "tests/verify_products.py",
+        "examples/consumer/src/delivery_test.cj"
+      ],
+      "note": "CJD1 replays patterns and checks state count for default search configurations. Nondefault semantic configurations reject export. Not the original automata wire format."
     },
     {
       "id": "E",
       "weight": 9,
-      "status": "未开始",
-      "evidence": [],
-      "note": "The find-match pikevm leaf is E1 and is already accepted. regex-lite, the C API, generate/serialize, and the rest of the upstream CLI stay here."
+      "status": "有差异",
+      "evidence": [
+        "tests/verify_products.py",
+        "examples/consumer/src/delivery_test.cj"
+      ],
+      "note": "Partial LiteRegex and CLI protocols exist. Rure is a Cangjie wrapper only; no C ABI. File input, CLI options, syntax/error parity and remaining product contracts are incomplete."
     },
     {
       "id": "E1",

@@ -4,13 +4,13 @@ import std.collection.*
 
 // regex-lite: ASCII Perl classes and ASCII word boundaries, no Unicode
 // properties. Search is the same leftmost-first Pike loop, built with Unicode
-// mode off. Haystacks are strings.
+// scalar mode on. ASCII classes and folding are selected independently.
 public class LiteRegex {
     let nfa: ThompsonNfa
     let cache: PikeCache
     public init(pattern: String) {
         rejectUnicodeClass(pattern)
-        nfa = ThompsonNfa([pattern], 0, false)
+        nfa = ThompsonNfa(buildLitePattern(pattern))
         cache = PikeCache()
     }
     public func search(text: String): Option<PikeMatch> {
@@ -30,7 +30,9 @@ public class LiteRegex {
                 case Some(hit) =>
                     var report = hit
                     var emit = true
-                    if (hit.start() == hit.end() && hit.end() == lastEnd) {
+                    let emptyHit = hit.start() == hit.end()
+                    let repeatedEnd = hit.end() == lastEnd
+                    if (emptyHit && repeatedEnd) {
                         let next = hit.end() + 1
                         if (next > text.size) {
                             reading = false

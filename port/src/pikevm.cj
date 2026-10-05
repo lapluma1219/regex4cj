@@ -252,7 +252,9 @@ public class PikeVM {
                 case Some(hit) =>
                     var report = hit
                     var emit = true
-                    if (hit.start() == hit.end() && hit.end() == lastEnd) {
+                    let emptyHit = hit.start() == hit.end()
+                    let repeatedEnd = hit.end() == lastEnd
+                    if (emptyHit && repeatedEnd) {
                         let next = hit.end() + 1
                         if (next > text.size) {
                             reading = false

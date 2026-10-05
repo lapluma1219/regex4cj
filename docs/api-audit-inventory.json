@@ -302,7 +302,7 @@
       "cangjie": "Regex.init",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 517
+        "line": 528
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -318,7 +318,7 @@
       "cangjie": "Regex.isMatch",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 814
+        "line": 825
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -334,7 +334,7 @@
       "cangjie": "Regex.find",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 802
+        "line": 813
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -350,7 +350,7 @@
       "cangjie": "Regex.findIter",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 858
+        "line": 886
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -365,7 +365,7 @@
       "cangjie": "Regex.captures",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 1059
+        "line": 1044
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -381,7 +381,7 @@
       "cangjie": "Regex.capturesIter",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 882
+        "line": 895
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -396,7 +396,7 @@
       "cangjie": "Regex.splitIter",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 906
+        "line": 904
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -411,7 +411,7 @@
       "cangjie": "Regex.splitNIter",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 946
+        "line": 907
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -426,7 +426,7 @@
       "cangjie": "Regex.replace",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 1086
+        "line": 1071
       },
       "status": "有样例验证",
       "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
@@ -442,7 +442,7 @@
       "cangjie": "Regex.replaceAll",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 1089
+        "line": 1074
       },
       "status": "有样例验证",
       "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
@@ -458,7 +458,7 @@
       "cangjie": "Regex.replaceN",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 1093
+        "line": 1078
       },
       "status": "有样例验证",
       "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
@@ -474,7 +474,7 @@
       "cangjie": "Regex.shortestMatch",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 839
+        "line": 850
       },
       "status": "有明确差异",
       "note": "早停终点允许依赖内部引擎；不承诺逐输入与 Rust meta 的终点相等，也不承诺数学最短。",
@@ -489,7 +489,7 @@
       "cangjie": "Regex.shortestMatchAt",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 842
+        "line": 853
       },
       "status": "有明确差异",
       "note": "早停终点允许依赖内部引擎；不承诺逐输入与 Rust meta 的终点相等，也不承诺数学最短。",
@@ -504,7 +504,7 @@
       "cangjie": "Regex.isMatchAt",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 833
+        "line": 844
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -519,7 +519,7 @@
       "cangjie": "Regex.findAt",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 825
+        "line": 836
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -534,7 +534,7 @@
       "cangjie": "Regex.capturesAt",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 850
+        "line": 861
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -549,7 +549,7 @@
       "cangjie": "Regex.capturesRead",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 978
+        "line": 963
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -564,7 +564,7 @@
       "cangjie": "Regex.capturesReadAt",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 981
+        "line": 966
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -579,7 +579,7 @@
       "cangjie": "Regex.capturesReadAt",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 981
+        "line": 966
       },
       "status": "有明确差异",
       "note": "上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。",
@@ -594,7 +594,7 @@
       "cangjie": "Regex.asStr",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 652
+        "line": 663
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -610,7 +610,7 @@
       "cangjie": "Regex.captureNames",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 1034
+        "line": 1019
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -626,7 +626,7 @@
       "cangjie": "Regex.capturesLen",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 1031
+        "line": 1016
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -642,7 +642,7 @@
       "cangjie": "Regex.staticCapturesLen",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 655
+        "line": 666
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -658,7 +658,7 @@
       "cangjie": "Regex.captureLocations",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 975
+        "line": 960
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -674,7 +674,7 @@
       "cangjie": "Regex.captureLocations",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 975
+        "line": 960
       },
       "status": "有明确差异",
       "note": "上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。",
@@ -689,7 +689,7 @@
       "cangjie": "RegexMatch.start",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 239
+        "line": 250
       },
       "status": "有明确差异",
       "note": "使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。",
@@ -704,7 +704,7 @@
       "cangjie": "RegexMatch.end",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 240
+        "line": 251
       },
       "status": "有明确差异",
       "note": "使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。",
@@ -719,7 +719,7 @@
       "cangjie": "RegexMatch.isEmpty",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 247
+        "line": 258
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -734,7 +734,7 @@
       "cangjie": "RegexMatch.len",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 250
+        "line": 261
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -749,7 +749,7 @@
       "cangjie": "RegexMatch.start",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 239
+        "line": 250
       },
       "status": "有明确差异",
       "note": "使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。",
@@ -764,7 +764,7 @@
       "cangjie": "RegexMatch.asStr",
       "implementation": {
         "file": "port/src/nfa.cj",
-        "line": 253
+        "line": 264
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -779,7 +779,7 @@
       "cangjie": "Captures.get",
       "implementation": {
         "file": "port/src/captures.cj",
-        "line": 89
+        "line": 95
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -811,7 +811,7 @@
       "cangjie": "Captures.name",
       "implementation": {
         "file": "port/src/captures.cj",
-        "line": 95
+        "line": 101
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -843,7 +843,7 @@
       "cangjie": "Captures.expandInto",
       "implementation": {
         "file": "port/src/captures.cj",
-        "line": 112
+        "line": 118
       },
       "status": "有样例验证",
       "note": "向已有StringBuilder或ArrayList追加展开结果，保留前缀；原expand便捷接口仍返回新结果。",
@@ -984,7 +984,7 @@
       "cangjie": "BytesRegex.findIter",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 172
+        "line": 166
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -999,7 +999,7 @@
       "cangjie": "BytesRegex.captures",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 356
+        "line": 350
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1015,7 +1015,7 @@
       "cangjie": "BytesRegex.capturesIter",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 182
+        "line": 175
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1030,7 +1030,7 @@
       "cangjie": "BytesRegex.splitIter",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 192
+        "line": 184
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1045,7 +1045,7 @@
       "cangjie": "BytesRegex.splitNIter",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 195
+        "line": 187
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1060,7 +1060,7 @@
       "cangjie": "BytesRegex.replace",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 408
+        "line": 402
       },
       "status": "有样例验证",
       "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
@@ -1076,7 +1076,7 @@
       "cangjie": "BytesRegex.replaceAll",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 411
+        "line": 405
       },
       "status": "有样例验证",
       "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
@@ -1092,7 +1092,7 @@
       "cangjie": "BytesRegex.replaceN",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 414
+        "line": 408
       },
       "status": "有样例验证",
       "note": "模板走此方法；NoExpand 用 replaceLiteral，闭包用 replaceWith；无通用 Replacer trait 或 Cow 借用优化。",
@@ -1164,7 +1164,7 @@
       "cangjie": "BytesRegex.capturesAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 359
+        "line": 353
       },
       "status": "有样例验证",
       "note": "覆盖原始字节、NUL、非法 UTF-8 和逐字节非零起点。",
@@ -1179,7 +1179,7 @@
       "cangjie": "BytesRegex.capturesRead",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 228
+        "line": 222
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1194,7 +1194,7 @@
       "cangjie": "BytesRegex.capturesReadAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 384
+        "line": 378
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1209,7 +1209,7 @@
       "cangjie": "BytesRegex.capturesReadAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 384
+        "line": 378
       },
       "status": "有明确差异",
       "note": "上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。",
@@ -1408,7 +1408,7 @@
       "cangjie": "BytesCaptures.get",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 612
+        "line": 606
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1424,7 +1424,7 @@
       "cangjie": "BytesCaptures.getMatch",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 606
+        "line": 600
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1440,7 +1440,7 @@
       "cangjie": "BytesCaptures.name",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 647
+        "line": 641
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1456,7 +1456,7 @@
       "cangjie": "BytesCaptures.extract",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 621
+        "line": 615
       },
       "status": "有样例验证",
       "note": "有 bytes 固定组提取和组迭代差分，及缺席组/结束/变长拒绝的原生测试。",
@@ -1472,7 +1472,7 @@
       "cangjie": "BytesCaptures.expandInto",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 664
+        "line": 658
       },
       "status": "有样例验证",
       "note": "向已有StringBuilder或ArrayList追加展开结果，保留前缀；原expand便捷接口仍返回新结果。",
@@ -1488,7 +1488,7 @@
       "cangjie": "BytesCaptures.iter",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 618
+        "line": 612
       },
       "status": "有样例验证",
       "note": "有 bytes 固定组提取和组迭代差分，及缺席组/结束/变长拒绝的原生测试。",
@@ -1504,7 +1504,7 @@
       "cangjie": "BytesCaptures.size",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 599
+        "line": 593
       },
       "status": "有明确差异",
       "note": "extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。",
@@ -1832,7 +1832,7 @@
       "cangjie": "BytesRegexSet.init",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 794
+        "line": 788
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1849,7 +1849,7 @@
       "cangjie": "BytesRegexSet.init",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 794
+        "line": 788
       },
       "status": "有明确差异",
       "note": "empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。",
@@ -1866,7 +1866,7 @@
       "cangjie": "BytesRegexSet.isMatch",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 853
+        "line": 847
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1883,7 +1883,7 @@
       "cangjie": "BytesRegexSet.isMatchAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 856
+        "line": 850
       },
       "status": "有样例验证",
       "note": "bytes Set 非零起点和原始字节组合已专项对照。",
@@ -1898,7 +1898,7 @@
       "cangjie": "BytesRegexSet.matches",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 859
+        "line": 853
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1915,7 +1915,7 @@
       "cangjie": "BytesRegexSet.matchesAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 862
+        "line": 856
       },
       "status": "有样例验证",
       "note": "bytes Set 非零起点和原始字节组合已专项对照。",
@@ -1930,7 +1930,7 @@
       "cangjie": "BytesRegexSet.matchesReadAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 865
+        "line": 859
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1947,7 +1947,7 @@
       "cangjie": "BytesRegexSet.matchesReadAt",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 865
+        "line": 859
       },
       "status": "有明确差异",
       "note": "empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。",
@@ -1964,7 +1964,7 @@
       "cangjie": "BytesRegexSet.len",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 844
+        "line": 838
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1981,7 +1981,7 @@
       "cangjie": "BytesRegexSet.isEmpty",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 847
+        "line": 841
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",
@@ -1998,7 +1998,7 @@
       "cangjie": "BytesRegexSet.patterns",
       "implementation": {
         "file": "port/src/bytes.cj",
-        "line": 850
+        "line": 844
       },
       "status": "有样例验证",
       "note": "证据仅覆盖所列测试的输入，不代表任意输入的等价证明。",

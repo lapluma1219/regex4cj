@@ -703,10 +703,22 @@ class HeldSeq {
             }
             attempt++
         }
-        if (finite && poisonous()) {
+        if (if (finite) {
+            poisonous()
+        } else {
+            false
+        }) {
             makeInfinite()
         }
-        if (haveExact && (!finite || shortLiterals() || countTooBig())) {
+        if (if (!haveExact) {
+            false
+        } else if (!finite) {
+            true
+        } else if (shortLiterals()) {
+            true
+        } else {
+            countTooBig()
+        }) {
             adopt(exactCopy)
         }
     }

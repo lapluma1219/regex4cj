@@ -4,6 +4,8 @@
 
 固定参照：Rust regex `72d650cb0a880a01ab6dc2137c0888e8f89740f7`，Unicode16；仓颉STS1.1.3。当前可用入口与限制只在[当前能力](status.md)维护，避免多个文档各报不同完成度。
 
+本次提交前进入冻结审核：不再为百分比扩张功能。当前实现、修复和限制以 [status.md](status.md) 为准；以下未完成条目留作未来迭代，不作为本次提交的全部承诺。
+
 ## 1. 最终交付定义
 
 使用方只需获取一个代码仓，按说明安装工具链，便可：
@@ -57,7 +59,7 @@
 
 ### 验收
 
-所有已知错误都有最小回归用例；固定种子差分可复跑；针对发现的问题扩展测试，不靠海量重复测试堆数字。接受一种输入就必须给出正确结果；未支持能力应在明确边界拒绝并写入能力说明。严重错误未关闭前不得扩张范围。保持1.1.3默认cjlint规则的强制项为零；目前仍有837条建议，应优先处理公共API异常说明和人工编写长函数，生成Unicode表的命名建议单独说明，不为了清零而改坏数据生成流程。
+所有已知错误都有最小回归用例；固定种子差分可复跑；针对发现的问题扩展测试，不靠海量重复测试堆数字。接受一种输入就必须给出正确结果；未支持能力应在明确边界拒绝并写入能力说明。严重错误未关闭前不得扩张范围。保持1.1.3默认cjlint规则的强制项为零；建议项数量见最新lint证据，应优先处理公共API异常说明和人工编写长函数，生成Unicode表的命名建议单独说明，不为了清零而改坏数据生成流程。
 
 ### 已完成的子项
 
@@ -87,9 +89,9 @@
 - `ThompsonNfa` 把多个模式编进一张图，每个模式有自己的 Accept，并起点按模式编号优先。`PikeVM.search` 和 `searchEarliest` 走这张图。`whichOverlapping` 从每个模式自己的起点搜索。494 次 Pike 对照通过。
 - `PikeCache` 记录活动线程的状态编号，复用访问标记，并持有捕获槽工作区。Save 写入前从池里复制一行；`reset` 清掉命中和线程编号，但保留槽容量。503 次 Pike 对照通过。C3c 仍是“有差异”。
 - 字符串和 bytes 的 match/capture/split 迭代器 `clone` 后游标独立。`splitN` 使用自己的游标，不再包住另一个共享迭代器。
-- `SearchInput` 同时描述字符串和字节。UTF-8 字节会还原成文本；非法 UTF-8 会拒绝进入 Pike 和回溯。范围、锚定、指定模式和 earliest 已接到 Pike，也接到 `whichOverlapping`。未知模式编号是未命中。earliest 的重叠查询只保留范围起点上的空匹配。Pike 和有界回溯可以按 `WhichCaptures` 选择全部分组、只保留整段匹配或不记录捕获。PikeCache 在同一次搜索里复用访问标记。503 次 Pike 对照通过。
+- `SearchInput` 同时描述字符串和字节。UTF-8 字节会还原成文本；非法 UTF-8 走前向字节自动机。范围、锚定、指定模式和 earliest 已接到 Pike，也接到 `whichOverlapping`。未知模式编号是未命中。earliest 的重叠查询只保留范围起点上的空匹配。Pike 和有界回溯可以按 `WhichCaptures` 选择全部分组、只保留整段匹配或不记录捕获。PikeCache 在同一次搜索里复用访问标记。503 次 Pike 对照通过。
 - 反向 NFA 与前向 DFA 共用 `ByteCompiler`。反向模式把连接和 UTF-8 字节从末尾编起。它仍不反转 Pike 使用的标量 `ThompsonNfa`，因为起点恢复依赖这张字节图。多模式构造可以打开每个模式的起点，`find` 返回模式编号和起点；默认单模式仍拒绝指定模式编号。状态编号不与 Rust 对齐。C2a、C2b 和 C3 仍是“有差异”。
-- `BoundedBacktracker.searchAll` 可以只扫 `SearchInput` 的一段范围。锚定输入最多返回一条。非法 UTF-8 与 Pike 一样走前向字节自动机。prefilter 不改变最左优先的命中位置，`memory_usage` 仍缺。
+- `BoundedBacktracker.searchAll` 可以只扫 `SearchInput` 的一段范围。锚定输入最多返回一条。非法 UTF-8 与 Pike 一样走前向字节自动机。prefilter 不改变最左优先的命中位置；memoryUsage 仅是本地布局估算。
 - `ThompsonNfa` 可以从 HIR 构建。解析失败留在 `parse` 阶段，大小上限失败是 `CompiledTooBig`。反向 NFA 接受空模式列表，搜索结果为未命中。
 
 ## 6. 阶段三：完善现有扩展模块（先补已有，再加新引擎）
@@ -134,11 +136,11 @@
 
 这些产品现在有可对照的行为，台账状态没有改成验收通过：
 
-- `OnePass` 做锚定搜索。25 条产品命令里覆盖了命中、未命中和构造拒绝。`cli-find onepass` 保持原命令的未锚定输入，因此报 `unanchored searches are not supported or enabled`。
+- `OnePass` 是保守资格检查加 PikeVM 锚定搜索，尚非独立 one-pass 引擎。25 条产品命令里覆盖了命中、未命中和构造拒绝。`cli-find onepass` 保持原命令的未锚定输入，因此报 `unanchored searches are not supported or enabled`。
 - `MetaRegex` 先试 one-pass，再试惰性 DFA（起点来自反向 NFA），最后用 PikeVM。必选字面前缀会跳过不可能的起点。抽样区间与 `meta::Regex::find` 一致。这还不是原仓库 meta 的全部策略。
-- `LiteRegex` 是关闭 Unicode 的字符串搜索，并拒绝 Unicode 字符类。没有 bytes 版和 `RegexSet`。
+- `LiteRegex` 使用 Unicode 标量匹配与 ASCII 字符类别/折叠，并拒绝 Unicode 字符类。没有 bytes 版和 `RegexSet`。
 - `DenseDfa` 镜像是 `CJD1` 模式重放加状态数核对。搜索结果与重新编译一致。它不是 regex-automata 的线格式。
-- `Rure` 转发 `Regex`。仓颉 1.1.3 静态库没有 C 符号导出，所以没有可链接的 C 程序。`capi/rure.h` 只保留名字对应。
+- `Rure` 转发 `Regex`。仓颉 1.1.3 静态库没有 C 符号导出，所以没有可链接的 C 程序。不再保留占位 C 头文件。
 - `cli-find` 对照了 `pikevm`、`backtrack`、`onepass`、`meta`、`lite`、`dense`、`sparse`、`hybrid`、`regex` 共 39 条命令。`--table` 打印搜索耗时和命中条数，只要求条数一致。`cli-half`、`cli-capture`、`cli-which` 另有 16 条命令。原 CLI 的文件输入、重复次数和 which 以外的计数模式还没有逐条移植。
 
 `memoryUsage` 按本地状态、字符类区间和转移槽计数。DFA 字节上限按 `状态数 * 1024` 检查，1 字节失败、50000000 字节成功，两边一致；中间阈值不承诺与原仓库等价类表相同。`dfaSizeLimit` 仍是字符串步进缓存。可选构建和打包按当前仓库结构保留，不另做。

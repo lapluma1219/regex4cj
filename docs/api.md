@@ -94,7 +94,7 @@ for (m in re.findAll("AB-123 CD-456")) {
 | `lineTerminator` | 一个字节，`0`–`255`。非 ASCII 时，含 `.` 的字符串模式会失败 |
 | `nestLimit` | 默认 250。`0` 允许 `a`，拒绝 `ab` |
 | `sizeLimit` | 按 Thompson 构造字节数检查，正向与反向取较大值。默认约 10 MiB。`\w` 在 `45000` 失败，在 `50044` 成功。单条有限字面量可以在限额为 0 时编译 |
-| `dfaSizeLimit` | 字符串搜索的缓存预算。小于 128 时仍用原来的 NFA。匹配文本不变。没有 lazy DFA，字节搜索不读取它 |
+| `dfaSizeLimit` | 字符串搜索的缓存预算。小于 128 时仍用原来的 NFA。匹配文本不变。此选项不控制独立的 HybridDfa，字节搜索不读取它 |
 
 `RegexSetBuilder` 使用同一组选项。RegexSet 不会把有限字面量绕过 `sizeLimit`。Set 搜索不提供原仓库 DFA 缓存；`dfaSizeLimit` 在 Set 和 bytes 上没有对应的缓存效果，不能据此声称资源行为与 Rust 相同。
 
@@ -161,7 +161,11 @@ bash scripts/run.sh set-matches '订单 AB-123 退款' '退款' '发票' '[A-Z]{
 - 前后查找和反向引用。原仓库的字符串接口也会拒绝它们。
 - Break 属性只判断字符属于哪个集合，不把文本切成词或句。
 - 没有 `regex!` 宏，也没有 Rust 的 `Iterator`、`Replacer`、`FromStr`、`Debug` 这些 trait。对应行为是上面的方法、数组和回调。
-- 顶层 `Regex` 不是完整的 regex-syntax、regex-automata、regex-lite 或 regex-capi。`PikeVM` 在公开的 `ThompsonNfa` 上搜索，`ReverseNfa`、`BoundedBacktracker`、`DenseDfa` 和 `SparseDfa` 仍是单独的搜索类型，见 [现状](status.md)。`SearchInput` 描述字节或字符串、搜索范围、锚定、指定模式和 earliest。`ReverseNfa.search` 也接收它：范围外的字节仍可供断言查看，锚定要求匹配结束在范围终点。多模式构造可打开每个模式的起点，`find` 返回模式编号和起点；默认单模式构造仍拒绝指定模式编号。空模式列表得到永不命中的反向图。`ThompsonNfa` 可以从 HIR 构建，大小上限失败的种类是 `CompiledTooBig`，和语法解析的 `parse` 阶段分开。Pike 和有界回溯遇到非法 UTF-8 时走前向字节自动机。`PikeCache.captureWorkspace()` 是搜索期间捕获槽池的行数；`reset` 清掉命中，但保留这些行。`BoundedBacktracker.searchAll` 和 `PikeVM.searchAll` 都返回非重叠匹配，空匹配的推进与原仓库 `Searcher` 相同。回溯的 `searchAll` 也可以只扫 `SearchInput` 的一段范围；锚定输入最多一条。`PikeVM.whichOverlapping` 也接收 `SearchInput`。Pike 和有界回溯都可以按 `WhichCaptures` 保留全部分组、只保留整段匹配，或不记录捕获；不记录时匹配仍成立，但报不出区间。反向 NFA 与前向 DFA 共用字节编译器。`DenseDfa` 和 `SparseDfa` 可以一次接收多个模式，也可以搜索无法构成 UTF-8 的原始字节，`DfaMatch.pattern` 是命中的模式编号。多一个 `patternStarts` 参数时，会为每个模式准备锚定起点，`SearchInput` 的指定模式编号才会生效；不传这个参数时，指定模式仍会拒绝。`DenseDfa.overlap` 与 `SparseDfa.overlap` 做重叠搜索，原始字节同样可以，`DfaHalf` 只包含模式编号和终点。`HybridDfa` 按需生成状态，可以一次接收多个模式，也可以打开每个模式的锚定起点；`reset` 清空缓存；它不替换 `dfaSizeLimit`。`OnePass` 只做锚定搜索，非 one-pass 模式在构造时拒绝。`MetaRegex` 依次尝试 one-pass、惰性 DFA 和 `PikeVM`，必选字面前缀只跳过起点，不替换 `Regex.find`。`memoryUsage` 按本地表计数。`DenseDfa` 另接受字节上限。`LiteRegex` 关闭 Unicode，并拒绝 `\p` / `\P`。`Rure` 转发 `Regex` 的匹配；`capi/rure.h` 只记录名字对应，没有 C ABI。`DenseDfa.toImage` / `fromImage` 用 `CJD1` 重放模式并核对状态数，不是原仓库的转移表线格式。`LiteralLimits` 配置字面量提取的四项上限。`LiteralSeq` 返回新序列，可以交叉、合并、截断、按偏好最小化和优化，并查询最长公共前后缀以及合并或交叉后的最大条数。嵌套超限的错误会标出和原仓库相同的区间。`SparseDfa.retainsDenseTable()` 在区间生成后为 false。
+- 顶层 `Regex` 不代表完整的 regex-syntax、regex-automata、regex-lite 或 regex-capi。扩展类型的支持范围见[当前能力](status.md)，声明见[接口目录](api-catalog.md)。
+- `SearchInput` 描述字节或字符串、范围、锚定、指定模式和 earliest。范围外文本仍供断言查看；非法 UTF-8 输入使用字节自动机。
+- `OnePass` 是资格检查加 PikeVM 锚定搜索的适配层。`MetaRegex` 选择部分搜索策略并保留捕获。`LiteRegex` 匹配 Unicode 标量，字符类别、词边界和折叠使用 ASCII 规则；未完全复刻 regex-lite 的语法和错误文本。
+- `Rure` 仅为仓颉包装类型，没有 C ABI。CJD1 镜像仅重放默认搜索配置，非默认语义配置拒绝导出；不是原仓库的转移表格式。
+- 内存和缓存预算按本地结构计算。稀疏 DFA 会释放密集转移数组，但没有实测进程内存优化比例。
 
 ### 捕获组迭代器的剩余数量与复制
 

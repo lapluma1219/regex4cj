@@ -43,6 +43,8 @@ def main():
                      'error-span-failure.json', 'engine-edges-failure.json', 'dfa-failure.json',
                      'backtrack-failure.json', 'reverse-failure.json', 'literal-failure.json', 'utf8-failure.json']:
             (WORK / name).unlink(missing_ok=True)
+        for failure in WORK.glob('*-failure*.json'):
+            failure.unlink()
         state['commit'] = output(['git', 'rev-parse', 'HEAD']) if (ROOT / '.git').exists() else None
         state['dirty'] = bool(output(['git', 'status', '--porcelain'])) if state['commit'] else None
         state['environment'] = {'platform': platform.platform(), 'python': sys.version,
@@ -70,8 +72,15 @@ def main():
                      'verify_errors', 'verify_limits', 'verify_bytes', 'verify_upstream_sample',
                      'verify_upstream_suite', 'verify_sets', 'verify_api_contracts', 'verify_hir',
                      'verify_ast', 'verify_pike', 'verify_props', 'verify_error_spans',
-                     'verify_literals', 'verify_utf8', 'verify_reverse', 'verify_backtrack', 'verify_dfa', 'verify_engine_edges']:
+                     'verify_literals', 'verify_utf8', 'verify_reverse', 'verify_backtrack', 'verify_dfa', 'verify_engine_edges',
+                     'verify_capture_modes', 'verify_backtrack_iter', 'verify_backtrack_span', 'verify_bytes_nfa', 'verify_cli_find',
+                     'verify_dfa_bytes', 'verify_dfa_pattern', 'verify_group_info', 'verify_hybrid_many',
+                     'verify_nfa_build', 'verify_pike_overlap', 'verify_products', 'verify_rest', 'verify_reverse_many']:
             stages.append((name, [sys.executable, f'tests/{name}.py'], ROOT))
+        registered = {name for name, _, _ in stages if name.startswith('verify')}
+        discovered = {p.stem for p in (ROOT / 'tests').glob('verify*.py')}
+        if registered != discovered:
+            raise RuntimeError(f'Unregistered or missing verification suites: {registered ^ discovered}')
         stages.append(('coverage-ledger', [sys.executable, 'scripts/check_coverage.py'], ROOT))
         stages += [('showcase', [sys.executable, 'scripts/showcase.py'], ROOT),
                    ('classification', [sys.executable, 'scripts/classify.py', '--demo'], ROOT)]

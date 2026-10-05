@@ -63,6 +63,20 @@ bash scripts/run.sh verify
 
 `verify` 用于严格验收，按锁文件构建固定 Rust 参照，运行数据检查、原生测试和差分用例。首次 Cargo 依赖下载需要网络；后续会利用缓存，整个套件可能持续数分钟。任何一步失败都会返回非零退出码。验收范围见 [现状](status.md)。本次跑过的条数以 `verification.json` 为准。
 
+新增差分文件必须接入 `scripts/verify_runner.py`；入口会检查是否遗漏 `tests/verify*.py`。`verification-run.json` 的最终 `status` 才表示整次验收是否通过，不能把中途留下的计数当成全量通过。
+
+### 可选：检查仓颉制品包
+
+在已配置 SDK 的 bash 中运行 `source scripts/env.sh`，再执行 `(cd port && cjpm bundle)`，产物是 `port/target/cjregex-0.3.0.cjp`。本机 macOS 的 cjpm 需要 OpenSSL 3；若出现加载系统 libcrypto 后崩溃，在该 shell 内将已安装的 OpenSSL 库目录放在前面，再运行 bundle：
+
+```sh
+export DYLD_LIBRARY_PATH="/你的OpenSSL3安装目录/lib:${DYLD_LIBRARY_PATH:-}"
+```
+
+这只是本机环境设置，不应把绝对路径写进项目配置。包是可解压的归档，顶层目录为 `cjregex-0.3.0`。本轮把它解压到独立目录，复制消费者示例并将其 `cjpm.toml` 依赖改指向该解压目录，再执行 `cjpm test` 和 `cjpm run`，全部通过；没有使用原来的 `port` 路径代替包内容。
+
+包内提供库源码、说明和许可证；完整差分测试及消费者示例仍在源码仓库。此检查不是中心仓上传或安装认证，也不证明其他操作系统已经通过。
+
 默认报告在仓库内 `.build/work/`（已被 Git 忽略）：
 
 - `showcase.json`：单模式场景的预期、实际与是否通过。

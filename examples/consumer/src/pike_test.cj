@@ -144,11 +144,6 @@ func backtrackerReusesItsVisitedCache(): Unit {
             @Expect(hit.end(), 1)
         case None => throw Exception("the selected pattern must match")
     }
-    var rejected = false
-    try {
-        engine.search(cache, SearchInput([UInt8(255)]))
-    } catch (e: Exception) {
-        rejected = e.toString().contains("UTF-8")
-    }
-    @Expect(rejected, true)
+    // Invalid UTF-8 haystacks are supported; these ASCII patterns simply miss.
+    @Expect(engine.search(cache, SearchInput([UInt8(255)])).isNone(), true)
 }

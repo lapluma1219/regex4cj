@@ -89,8 +89,8 @@
 
 | 声明 | 种类 | 实现 |
 |---|---|---|
-| `public class BacktrackCache` | class | [port/src/backtrack.cj:514](../port/src/backtrack.cj#L514) |
-| `public init()` | constructor | [port/src/backtrack.cj:517](../port/src/backtrack.cj#L517) |
+| `public class BacktrackCache` | class | [port/src/backtrack.cj:516](../port/src/backtrack.cj#L516) |
+| `public init()` | constructor | [port/src/backtrack.cj:519](../port/src/backtrack.cj#L519) |
 
 ## BoundedBacktracker
 
@@ -109,9 +109,9 @@
 | `public func createCache(): BacktrackCache` | method | [port/src/backtrack.cj:222](../port/src/backtrack.cj#L222) |
 | `public func searchAll(text: String): Array<PikeMatch>` | method | [port/src/backtrack.cj:225](../port/src/backtrack.cj#L225) |
 | `public func searchAll(input: SearchInput): Array<PikeMatch>` | method | [port/src/backtrack.cj:231](../port/src/backtrack.cj#L231) |
-| `public func search(text: String): Option<Captures>` | method | [port/src/backtrack.cj:273](../port/src/backtrack.cj#L273) |
-| `public func isMatch(input: SearchInput): Bool` | method | [port/src/backtrack.cj:279](../port/src/backtrack.cj#L279) |
-| `public func search(cache: BacktrackCache, input: SearchInput): Option<PikeMatch>` | method | [port/src/backtrack.cj:307](../port/src/backtrack.cj#L307) |
+| `public func search(text: String): Option<Captures>` | method | [port/src/backtrack.cj:275](../port/src/backtrack.cj#L275) |
+| `public func isMatch(input: SearchInput): Bool` | method | [port/src/backtrack.cj:281](../port/src/backtrack.cj#L281) |
+| `public func search(cache: BacktrackCache, input: SearchInput): Option<PikeMatch>` | method | [port/src/backtrack.cj:309](../port/src/backtrack.cj#L309) |
 
 ## BytesCaptureIter
 
@@ -320,44 +320,44 @@
 
 | 声明 | 种类 | 实现 |
 |---|---|---|
-| `public class DenseDfa` | class | [port/src/dfa.cj:1033](../port/src/dfa.cj#L1033) |
-| `public init(pattern: String)` | constructor | [port/src/dfa.cj:1035](../port/src/dfa.cj#L1035) |
-| `public init(pattern: String, quit: Array<UInt8>)` | constructor | [port/src/dfa.cj:1038](../port/src/dfa.cj#L1038) |
-| `public init(patterns: Array<String>)` | constructor | [port/src/dfa.cj:1041](../port/src/dfa.cj#L1041) |
-| `public init(patterns: Array<String>, quit: Array<UInt8>)` | constructor | [port/src/dfa.cj:1044](../port/src/dfa.cj#L1044) |
-| `public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool)` | constructor | [port/src/dfa.cj:1047](../port/src/dfa.cj#L1047) |
-| `public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool, patternStarts: Bool)` | constructor | [port/src/dfa.cj:1050](../port/src/dfa.cj#L1050) |
-| `public init(patterns: Array<String>, byteLimit: Int64)` | constructor | [port/src/dfa.cj:1053](../port/src/dfa.cj#L1053) |
-| `public static func overlap(patterns: Array<String>): DenseDfa` | method | [port/src/dfa.cj:1056](../port/src/dfa.cj#L1056) |
-| `public func stateCount(): Int64` | method | [port/src/dfa.cj:1059](../port/src/dfa.cj#L1059) |
-| `public func memoryUsage(): Int64` | method | [port/src/dfa.cj:1062](../port/src/dfa.cj#L1062) |
-| `public func retainsDenseTable(): Bool` | method | [port/src/dfa.cj:1065](../port/src/dfa.cj#L1065) |
-| `public func search(text: String): Option<DfaMatch>` | method | [port/src/dfa.cj:1068](../port/src/dfa.cj#L1068) |
-| `public func search(input: SearchInput): Option<DfaMatch>` | method | [port/src/dfa.cj:1071](../port/src/dfa.cj#L1071) |
-| `public func searchOverlapping(text: String): Array<DfaHalf>` | method | [port/src/dfa.cj:1074](../port/src/dfa.cj#L1074) |
-| `public func searchOverlapping(input: SearchInput): Array<DfaHalf>` | method | [port/src/dfa.cj:1077](../port/src/dfa.cj#L1077) |
-| `public func toImage(): Array<UInt8>` | method | [port/src/dfa.cj:1083](../port/src/dfa.cj#L1083) |
-| `public static func fromImage(bytes: Array<UInt8>): DenseDfa` | method | [port/src/dfa.cj:1100](../port/src/dfa.cj#L1100) |
+| `public class DenseDfa` | class | [port/src/dfa.cj:1068](../port/src/dfa.cj#L1068) |
+| `public init(pattern: String)` | constructor | [port/src/dfa.cj:1070](../port/src/dfa.cj#L1070) |
+| `public init(pattern: String, quit: Array<UInt8>)` | constructor | [port/src/dfa.cj:1073](../port/src/dfa.cj#L1073) |
+| `public init(patterns: Array<String>)` | constructor | [port/src/dfa.cj:1076](../port/src/dfa.cj#L1076) |
+| `public init(patterns: Array<String>, quit: Array<UInt8>)` | constructor | [port/src/dfa.cj:1079](../port/src/dfa.cj#L1079) |
+| `public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool)` | constructor | [port/src/dfa.cj:1082](../port/src/dfa.cj#L1082) |
+| `public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool, patternStarts: Bool)` | constructor | [port/src/dfa.cj:1085](../port/src/dfa.cj#L1085) |
+| `public init(patterns: Array<String>, byteLimit: Int64)` | constructor | [port/src/dfa.cj:1088](../port/src/dfa.cj#L1088) |
+| `public static func overlap(patterns: Array<String>): DenseDfa` | method | [port/src/dfa.cj:1091](../port/src/dfa.cj#L1091) |
+| `public func stateCount(): Int64` | method | [port/src/dfa.cj:1094](../port/src/dfa.cj#L1094) |
+| `public func memoryUsage(): Int64` | method | [port/src/dfa.cj:1097](../port/src/dfa.cj#L1097) |
+| `public func retainsDenseTable(): Bool` | method | [port/src/dfa.cj:1100](../port/src/dfa.cj#L1100) |
+| `public func search(text: String): Option<DfaMatch>` | method | [port/src/dfa.cj:1103](../port/src/dfa.cj#L1103) |
+| `public func search(input: SearchInput): Option<DfaMatch>` | method | [port/src/dfa.cj:1106](../port/src/dfa.cj#L1106) |
+| `public func searchOverlapping(text: String): Array<DfaHalf>` | method | [port/src/dfa.cj:1109](../port/src/dfa.cj#L1109) |
+| `public func searchOverlapping(input: SearchInput): Array<DfaHalf>` | method | [port/src/dfa.cj:1112](../port/src/dfa.cj#L1112) |
+| `public func toImage(): Array<UInt8>` | method | [port/src/dfa.cj:1118](../port/src/dfa.cj#L1118) |
+| `public static func fromImage(bytes: Array<UInt8>): DenseDfa` | method | [port/src/dfa.cj:1144](../port/src/dfa.cj#L1144) |
 
 ## DfaHalf
 
 | 声明 | 种类 | 实现 |
 |---|---|---|
-| `public class DfaHalf` | class | [port/src/dfa.cj:1011](../port/src/dfa.cj#L1011) |
-| `public let pattern: Int64` | field | [port/src/dfa.cj:1012](../port/src/dfa.cj#L1012) |
-| `public let end: Int64` | field | [port/src/dfa.cj:1013](../port/src/dfa.cj#L1013) |
-| `public init(pattern: Int64, end: Int64)` | constructor | [port/src/dfa.cj:1014](../port/src/dfa.cj#L1014) |
+| `public class DfaHalf` | class | [port/src/dfa.cj:1046](../port/src/dfa.cj#L1046) |
+| `public let pattern: Int64` | field | [port/src/dfa.cj:1047](../port/src/dfa.cj#L1047) |
+| `public let end: Int64` | field | [port/src/dfa.cj:1048](../port/src/dfa.cj#L1048) |
+| `public init(pattern: Int64, end: Int64)` | constructor | [port/src/dfa.cj:1049](../port/src/dfa.cj#L1049) |
 
 ## DfaMatch
 
 | 声明 | 种类 | 实现 |
 |---|---|---|
-| `public class DfaMatch` | class | [port/src/dfa.cj:1020](../port/src/dfa.cj#L1020) |
-| `public let pattern: Int64` | field | [port/src/dfa.cj:1021](../port/src/dfa.cj#L1021) |
-| `public let start: Int64` | field | [port/src/dfa.cj:1022](../port/src/dfa.cj#L1022) |
-| `public let end: Int64` | field | [port/src/dfa.cj:1023](../port/src/dfa.cj#L1023) |
-| `public let text: String` | field | [port/src/dfa.cj:1024](../port/src/dfa.cj#L1024) |
-| `public init(pattern: Int64, start: Int64, end: Int64, text: String)` | constructor | [port/src/dfa.cj:1025](../port/src/dfa.cj#L1025) |
+| `public class DfaMatch` | class | [port/src/dfa.cj:1055](../port/src/dfa.cj#L1055) |
+| `public let pattern: Int64` | field | [port/src/dfa.cj:1056](../port/src/dfa.cj#L1056) |
+| `public let start: Int64` | field | [port/src/dfa.cj:1057](../port/src/dfa.cj#L1057) |
+| `public let end: Int64` | field | [port/src/dfa.cj:1058](../port/src/dfa.cj#L1058) |
+| `public let text: String` | field | [port/src/dfa.cj:1059](../port/src/dfa.cj#L1059) |
+| `public init(pattern: Int64, start: Int64, end: Int64, text: String)` | constructor | [port/src/dfa.cj:1060](../port/src/dfa.cj#L1060) |
 
 ## GroupItem
 
@@ -493,19 +493,19 @@
 
 | 声明 | 种类 | 实现 |
 |---|---|---|
-| `public class HybridDfa` | class | [port/src/dfa.cj:1197](../port/src/dfa.cj#L1197) |
-| `public init(pattern: String)` | constructor | [port/src/dfa.cj:1199](../port/src/dfa.cj#L1199) |
-| `public init(pattern: String, quit: Array<UInt8>)` | constructor | [port/src/dfa.cj:1202](../port/src/dfa.cj#L1202) |
-| `public init(patterns: Array<String>, cacheLimit: Int64, clearLimit: Int64)` | constructor | [port/src/dfa.cj:1205](../port/src/dfa.cj#L1205) |
-| `public init(patterns: Array<String>, cacheLimit: Int64, clearLimit: Int64, patternStarts: Bool)` | constructor | [port/src/dfa.cj:1208](../port/src/dfa.cj#L1208) |
-| `public init(patterns: Array<String>, cacheLimit: Int64, clearLimit: Int64, patternStarts: Bool, matchAll: Bool)` | constructor | [port/src/dfa.cj:1211](../port/src/dfa.cj#L1211) |
-| `public static func overlap(patterns: Array<String>): HybridDfa` | method | [port/src/dfa.cj:1214](../port/src/dfa.cj#L1214) |
-| `public func stateCount(): Int64` | method | [port/src/dfa.cj:1217](../port/src/dfa.cj#L1217) |
-| `public func memoryUsage(): Int64` | method | [port/src/dfa.cj:1220](../port/src/dfa.cj#L1220) |
-| `public func reset(): Unit` | method | [port/src/dfa.cj:1223](../port/src/dfa.cj#L1223) |
-| `public func search(text: String): Option<DfaMatch>` | method | [port/src/dfa.cj:1226](../port/src/dfa.cj#L1226) |
-| `public func searchOverlapping(text: String): Array<DfaHalf>` | method | [port/src/dfa.cj:1229](../port/src/dfa.cj#L1229) |
-| `public func search(input: SearchInput): Option<DfaMatch>` | method | [port/src/dfa.cj:1232](../port/src/dfa.cj#L1232) |
+| `public class HybridDfa` | class | [port/src/dfa.cj:1241](../port/src/dfa.cj#L1241) |
+| `public init(pattern: String)` | constructor | [port/src/dfa.cj:1243](../port/src/dfa.cj#L1243) |
+| `public init(pattern: String, quit: Array<UInt8>)` | constructor | [port/src/dfa.cj:1246](../port/src/dfa.cj#L1246) |
+| `public init(patterns: Array<String>, cacheLimit: Int64, clearLimit: Int64)` | constructor | [port/src/dfa.cj:1249](../port/src/dfa.cj#L1249) |
+| `public init(patterns: Array<String>, cacheLimit: Int64, clearLimit: Int64, patternStarts: Bool)` | constructor | [port/src/dfa.cj:1252](../port/src/dfa.cj#L1252) |
+| `public init(patterns: Array<String>, cacheLimit: Int64, clearLimit: Int64, patternStarts: Bool, matchAll: Bool)` | constructor | [port/src/dfa.cj:1255](../port/src/dfa.cj#L1255) |
+| `public static func overlap(patterns: Array<String>): HybridDfa` | method | [port/src/dfa.cj:1258](../port/src/dfa.cj#L1258) |
+| `public func stateCount(): Int64` | method | [port/src/dfa.cj:1261](../port/src/dfa.cj#L1261) |
+| `public func memoryUsage(): Int64` | method | [port/src/dfa.cj:1264](../port/src/dfa.cj#L1264) |
+| `public func reset(): Unit` | method | [port/src/dfa.cj:1267](../port/src/dfa.cj#L1267) |
+| `public func search(text: String): Option<DfaMatch>` | method | [port/src/dfa.cj:1270](../port/src/dfa.cj#L1270) |
+| `public func searchOverlapping(text: String): Array<DfaHalf>` | method | [port/src/dfa.cj:1273](../port/src/dfa.cj#L1273) |
+| `public func search(input: SearchInput): Option<DfaMatch>` | method | [port/src/dfa.cj:1276](../port/src/dfa.cj#L1276) |
 
 ## LiteRegex
 
@@ -885,21 +885,21 @@
 
 | 声明 | 种类 | 实现 |
 |---|---|---|
-| `public class SparseDfa` | class | [port/src/dfa.cj:1151](../port/src/dfa.cj#L1151) |
-| `public init(pattern: String)` | constructor | [port/src/dfa.cj:1153](../port/src/dfa.cj#L1153) |
-| `public init(pattern: String, quit: Array<UInt8>)` | constructor | [port/src/dfa.cj:1156](../port/src/dfa.cj#L1156) |
-| `public init(patterns: Array<String>)` | constructor | [port/src/dfa.cj:1159](../port/src/dfa.cj#L1159) |
-| `public init(patterns: Array<String>, quit: Array<UInt8>)` | constructor | [port/src/dfa.cj:1162](../port/src/dfa.cj#L1162) |
-| `public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool)` | constructor | [port/src/dfa.cj:1165](../port/src/dfa.cj#L1165) |
-| `public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool, patternStarts: Bool)` | constructor | [port/src/dfa.cj:1168](../port/src/dfa.cj#L1168) |
-| `public static func overlap(patterns: Array<String>): SparseDfa` | method | [port/src/dfa.cj:1171](../port/src/dfa.cj#L1171) |
-| `public func stateCount(): Int64` | method | [port/src/dfa.cj:1174](../port/src/dfa.cj#L1174) |
-| `public func memoryUsage(): Int64` | method | [port/src/dfa.cj:1177](../port/src/dfa.cj#L1177) |
-| `public func retainsDenseTable(): Bool` | method | [port/src/dfa.cj:1180](../port/src/dfa.cj#L1180) |
-| `public func search(text: String): Option<DfaMatch>` | method | [port/src/dfa.cj:1183](../port/src/dfa.cj#L1183) |
-| `public func search(input: SearchInput): Option<DfaMatch>` | method | [port/src/dfa.cj:1186](../port/src/dfa.cj#L1186) |
-| `public func searchOverlapping(text: String): Array<DfaHalf>` | method | [port/src/dfa.cj:1189](../port/src/dfa.cj#L1189) |
-| `public func searchOverlapping(input: SearchInput): Array<DfaHalf>` | method | [port/src/dfa.cj:1192](../port/src/dfa.cj#L1192) |
+| `public class SparseDfa` | class | [port/src/dfa.cj:1195](../port/src/dfa.cj#L1195) |
+| `public init(pattern: String)` | constructor | [port/src/dfa.cj:1197](../port/src/dfa.cj#L1197) |
+| `public init(pattern: String, quit: Array<UInt8>)` | constructor | [port/src/dfa.cj:1200](../port/src/dfa.cj#L1200) |
+| `public init(patterns: Array<String>)` | constructor | [port/src/dfa.cj:1203](../port/src/dfa.cj#L1203) |
+| `public init(patterns: Array<String>, quit: Array<UInt8>)` | constructor | [port/src/dfa.cj:1206](../port/src/dfa.cj#L1206) |
+| `public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool)` | constructor | [port/src/dfa.cj:1209](../port/src/dfa.cj#L1209) |
+| `public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool, patternStarts: Bool)` | constructor | [port/src/dfa.cj:1212](../port/src/dfa.cj#L1212) |
+| `public static func overlap(patterns: Array<String>): SparseDfa` | method | [port/src/dfa.cj:1215](../port/src/dfa.cj#L1215) |
+| `public func stateCount(): Int64` | method | [port/src/dfa.cj:1218](../port/src/dfa.cj#L1218) |
+| `public func memoryUsage(): Int64` | method | [port/src/dfa.cj:1221](../port/src/dfa.cj#L1221) |
+| `public func retainsDenseTable(): Bool` | method | [port/src/dfa.cj:1224](../port/src/dfa.cj#L1224) |
+| `public func search(text: String): Option<DfaMatch>` | method | [port/src/dfa.cj:1227](../port/src/dfa.cj#L1227) |
+| `public func search(input: SearchInput): Option<DfaMatch>` | method | [port/src/dfa.cj:1230](../port/src/dfa.cj#L1230) |
+| `public func searchOverlapping(text: String): Array<DfaHalf>` | method | [port/src/dfa.cj:1233](../port/src/dfa.cj#L1233) |
+| `public func searchOverlapping(input: SearchInput): Array<DfaHalf>` | method | [port/src/dfa.cj:1236](../port/src/dfa.cj#L1236) |
 
 ## SplitIter
 
@@ -934,24 +934,24 @@
 
 | 声明 | 种类 | 实现 |
 |---|---|---|
-| `public class ThompsonNfa` | class | [port/src/thompson.cj:223](../port/src/thompson.cj#L223) |
-| `public init(patterns: Array<String>)` | constructor | [port/src/thompson.cj:226](../port/src/thompson.cj#L226) |
-| `public init(patterns: Array<String>, whichCaptures: Int64)` | constructor | [port/src/thompson.cj:229](../port/src/thompson.cj#L229) |
-| `public init(hirs: Array<Hir>)` | constructor | [port/src/thompson.cj:233](../port/src/thompson.cj#L233) |
-| `public init(patterns: Array<String>, whichCaptures: Int64, unicode: Bool)` | constructor | [port/src/thompson.cj:236](../port/src/thompson.cj#L236) |
-| `public init(hirs: Array<Hir>, sizeLimit: Int64)` | constructor | [port/src/thompson.cj:240](../port/src/thompson.cj#L240) |
-| `public func stateCount(): Int64` | method | [port/src/thompson.cj:265](../port/src/thompson.cj#L265) |
-| `public func memoryUsage(): Int64` | method | [port/src/thompson.cj:268](../port/src/thompson.cj#L268) |
-| `public func patternCount(): Int64` | method | [port/src/thompson.cj:278](../port/src/thompson.cj#L278) |
-| `public func patternStateCount(pattern: Int64): Int64` | method | [port/src/thompson.cj:281](../port/src/thompson.cj#L281) |
-| `public func startState(pattern: Int64): Int64` | method | [port/src/thompson.cj:284](../port/src/thompson.cj#L284) |
-| `public func opName(pattern: Int64, state: Int64): String` | method | [port/src/thompson.cj:288](../port/src/thompson.cj#L288) |
-| `public func opNext(pattern: Int64, state: Int64): Int64` | method | [port/src/thompson.cj:299](../port/src/thompson.cj#L299) |
-| `public func opAlternate(pattern: Int64, state: Int64): Int64` | method | [port/src/thompson.cj:302](../port/src/thompson.cj#L302) |
-| `public func whichOverlapping(text: String): Array<Int64>` | method | [port/src/thompson.cj:305](../port/src/thompson.cj#L305) |
-| `public func whichOverlapping(input: SearchInput): Array<Int64>` | method | [port/src/thompson.cj:311](../port/src/thompson.cj#L311) |
-| `public func search(input: SearchInput, cache: PikeCache): Option<PikeMatch>` | method | [port/src/thompson.cj:398](../port/src/thompson.cj#L398) |
-| `public func isMatch(input: SearchInput, cache: PikeCache): Bool` | method | [port/src/thompson.cj:440](../port/src/thompson.cj#L440) |
+| `public class ThompsonNfa` | class | [port/src/thompson.cj:234](../port/src/thompson.cj#L234) |
+| `public init(patterns: Array<String>)` | constructor | [port/src/thompson.cj:237](../port/src/thompson.cj#L237) |
+| `public init(patterns: Array<String>, whichCaptures: Int64)` | constructor | [port/src/thompson.cj:240](../port/src/thompson.cj#L240) |
+| `public init(hirs: Array<Hir>)` | constructor | [port/src/thompson.cj:244](../port/src/thompson.cj#L244) |
+| `public init(patterns: Array<String>, whichCaptures: Int64, unicode: Bool)` | constructor | [port/src/thompson.cj:247](../port/src/thompson.cj#L247) |
+| `public init(hirs: Array<Hir>, sizeLimit: Int64)` | constructor | [port/src/thompson.cj:251](../port/src/thompson.cj#L251) |
+| `public func stateCount(): Int64` | method | [port/src/thompson.cj:279](../port/src/thompson.cj#L279) |
+| `public func memoryUsage(): Int64` | method | [port/src/thompson.cj:282](../port/src/thompson.cj#L282) |
+| `public func patternCount(): Int64` | method | [port/src/thompson.cj:292](../port/src/thompson.cj#L292) |
+| `public func patternStateCount(pattern: Int64): Int64` | method | [port/src/thompson.cj:295](../port/src/thompson.cj#L295) |
+| `public func startState(pattern: Int64): Int64` | method | [port/src/thompson.cj:298](../port/src/thompson.cj#L298) |
+| `public func opName(pattern: Int64, state: Int64): String` | method | [port/src/thompson.cj:302](../port/src/thompson.cj#L302) |
+| `public func opNext(pattern: Int64, state: Int64): Int64` | method | [port/src/thompson.cj:313](../port/src/thompson.cj#L313) |
+| `public func opAlternate(pattern: Int64, state: Int64): Int64` | method | [port/src/thompson.cj:316](../port/src/thompson.cj#L316) |
+| `public func whichOverlapping(text: String): Array<Int64>` | method | [port/src/thompson.cj:319](../port/src/thompson.cj#L319) |
+| `public func whichOverlapping(input: SearchInput): Array<Int64>` | method | [port/src/thompson.cj:325](../port/src/thompson.cj#L325) |
+| `public func search(input: SearchInput, cache: PikeCache): Option<PikeMatch>` | method | [port/src/thompson.cj:416](../port/src/thompson.cj#L416) |
+| `public func isMatch(input: SearchInput, cache: PikeCache): Bool` | method | [port/src/thompson.cj:458](../port/src/thompson.cj#L458) |
 
 ## Utf8Sequence
 

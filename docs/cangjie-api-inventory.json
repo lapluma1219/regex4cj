@@ -120,7 +120,7 @@
       "kind": "method",
       "signature": "public func search(text: String): Option<Captures>",
       "file": "port/src/backtrack.cj",
-      "line": 273
+      "line": 275
     },
     {
       "owner": "BoundedBacktracker",
@@ -128,7 +128,7 @@
       "kind": "method",
       "signature": "public func isMatch(input: SearchInput): Bool",
       "file": "port/src/backtrack.cj",
-      "line": 279
+      "line": 281
     },
     {
       "owner": "BoundedBacktracker",
@@ -136,7 +136,7 @@
       "kind": "method",
       "signature": "public func search(cache: BacktrackCache, input: SearchInput): Option<PikeMatch>",
       "file": "port/src/backtrack.cj",
-      "line": 307
+      "line": 309
     },
     {
       "owner": "BacktrackCache",
@@ -144,7 +144,7 @@
       "kind": "class",
       "signature": "public class BacktrackCache",
       "file": "port/src/backtrack.cj",
-      "line": 514
+      "line": 516
     },
     {
       "owner": "BacktrackCache",
@@ -152,7 +152,7 @@
       "kind": "constructor",
       "signature": "public init()",
       "file": "port/src/backtrack.cj",
-      "line": 517
+      "line": 519
     },
     {
       "owner": "RegexBuilder",
@@ -1472,7 +1472,7 @@
       "kind": "class",
       "signature": "public class DfaHalf",
       "file": "port/src/dfa.cj",
-      "line": 1011
+      "line": 1046
     },
     {
       "owner": "DfaHalf",
@@ -1480,7 +1480,7 @@
       "kind": "field",
       "signature": "public let pattern: Int64",
       "file": "port/src/dfa.cj",
-      "line": 1012
+      "line": 1047
     },
     {
       "owner": "DfaHalf",
@@ -1488,7 +1488,7 @@
       "kind": "field",
       "signature": "public let end: Int64",
       "file": "port/src/dfa.cj",
-      "line": 1013
+      "line": 1048
     },
     {
       "owner": "DfaHalf",
@@ -1496,7 +1496,7 @@
       "kind": "constructor",
       "signature": "public init(pattern: Int64, end: Int64)",
       "file": "port/src/dfa.cj",
-      "line": 1014
+      "line": 1049
     },
     {
       "owner": "DfaMatch",
@@ -1504,7 +1504,7 @@
       "kind": "class",
       "signature": "public class DfaMatch",
       "file": "port/src/dfa.cj",
-      "line": 1020
+      "line": 1055
     },
     {
       "owner": "DfaMatch",
@@ -1512,7 +1512,7 @@
       "kind": "field",
       "signature": "public let pattern: Int64",
       "file": "port/src/dfa.cj",
-      "line": 1021
+      "line": 1056
     },
     {
       "owner": "DfaMatch",
@@ -1520,7 +1520,7 @@
       "kind": "field",
       "signature": "public let start: Int64",
       "file": "port/src/dfa.cj",
-      "line": 1022
+      "line": 1057
     },
     {
       "owner": "DfaMatch",
@@ -1528,7 +1528,7 @@
       "kind": "field",
       "signature": "public let end: Int64",
       "file": "port/src/dfa.cj",
-      "line": 1023
+      "line": 1058
     },
     {
       "owner": "DfaMatch",
@@ -1536,7 +1536,7 @@
       "kind": "field",
       "signature": "public let text: String",
       "file": "port/src/dfa.cj",
-      "line": 1024
+      "line": 1059
     },
     {
       "owner": "DfaMatch",
@@ -1544,7 +1544,7 @@
       "kind": "constructor",
       "signature": "public init(pattern: Int64, start: Int64, end: Int64, text: String)",
       "file": "port/src/dfa.cj",
-      "line": 1025
+      "line": 1060
     },
     {
       "owner": "DenseDfa",
@@ -1552,7 +1552,7 @@
       "kind": "class",
       "signature": "public class DenseDfa",
       "file": "port/src/dfa.cj",
-      "line": 1033
+      "line": 1068
     },
     {
       "owner": "DenseDfa",
@@ -1560,7 +1560,7 @@
       "kind": "constructor",
       "signature": "public init(pattern: String)",
       "file": "port/src/dfa.cj",
-      "line": 1035
+      "line": 1070
     },
     {
       "owner": "DenseDfa",
@@ -1568,7 +1568,7 @@
       "kind": "constructor",
       "signature": "public init(pattern: String, quit: Array<UInt8>)",
       "file": "port/src/dfa.cj",
-      "line": 1038
+      "line": 1073
     },
     {
       "owner": "DenseDfa",
@@ -1576,7 +1576,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>)",
       "file": "port/src/dfa.cj",
-      "line": 1041
+      "line": 1076
     },
     {
       "owner": "DenseDfa",
@@ -1584,7 +1584,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, quit: Array<UInt8>)",
       "file": "port/src/dfa.cj",
-      "line": 1044
+      "line": 1079
     },
     {
       "owner": "DenseDfa",
@@ -1592,7 +1592,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool)",
       "file": "port/src/dfa.cj",
-      "line": 1047
+      "line": 1082
     },
     {
       "owner": "DenseDfa",
@@ -1600,7 +1600,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool, patternStarts: Bool)",
       "file": "port/src/dfa.cj",
-      "line": 1050
+      "line": 1085
     },
     {
       "owner": "DenseDfa",
@@ -1608,7 +1608,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, byteLimit: Int64)",
       "file": "port/src/dfa.cj",
-      "line": 1053
+      "line": 1088
     },
     {
       "owner": "DenseDfa",
@@ -1616,7 +1616,7 @@
       "kind": "method",
       "signature": "public static func overlap(patterns: Array<String>): DenseDfa",
       "file": "port/src/dfa.cj",
-      "line": 1056
+      "line": 1091
     },
     {
       "owner": "DenseDfa",
@@ -1624,7 +1624,7 @@
       "kind": "method",
       "signature": "public func stateCount(): Int64",
       "file": "port/src/dfa.cj",
-      "line": 1059
+      "line": 1094
     },
     {
       "owner": "DenseDfa",
@@ -1632,7 +1632,7 @@
       "kind": "method",
       "signature": "public func memoryUsage(): Int64",
       "file": "port/src/dfa.cj",
-      "line": 1062
+      "line": 1097
     },
     {
       "owner": "DenseDfa",
@@ -1640,7 +1640,7 @@
       "kind": "method",
       "signature": "public func retainsDenseTable(): Bool",
       "file": "port/src/dfa.cj",
-      "line": 1065
+      "line": 1100
     },
     {
       "owner": "DenseDfa",
@@ -1648,7 +1648,7 @@
       "kind": "method",
       "signature": "public func search(text: String): Option<DfaMatch>",
       "file": "port/src/dfa.cj",
-      "line": 1068
+      "line": 1103
     },
     {
       "owner": "DenseDfa",
@@ -1656,7 +1656,7 @@
       "kind": "method",
       "signature": "public func search(input: SearchInput): Option<DfaMatch>",
       "file": "port/src/dfa.cj",
-      "line": 1071
+      "line": 1106
     },
     {
       "owner": "DenseDfa",
@@ -1664,7 +1664,7 @@
       "kind": "method",
       "signature": "public func searchOverlapping(text: String): Array<DfaHalf>",
       "file": "port/src/dfa.cj",
-      "line": 1074
+      "line": 1109
     },
     {
       "owner": "DenseDfa",
@@ -1672,7 +1672,7 @@
       "kind": "method",
       "signature": "public func searchOverlapping(input: SearchInput): Array<DfaHalf>",
       "file": "port/src/dfa.cj",
-      "line": 1077
+      "line": 1112
     },
     {
       "owner": "DenseDfa",
@@ -1680,7 +1680,7 @@
       "kind": "method",
       "signature": "public func toImage(): Array<UInt8>",
       "file": "port/src/dfa.cj",
-      "line": 1083
+      "line": 1118
     },
     {
       "owner": "DenseDfa",
@@ -1688,7 +1688,7 @@
       "kind": "method",
       "signature": "public static func fromImage(bytes: Array<UInt8>): DenseDfa",
       "file": "port/src/dfa.cj",
-      "line": 1100
+      "line": 1144
     },
     {
       "owner": "SparseDfa",
@@ -1696,7 +1696,7 @@
       "kind": "class",
       "signature": "public class SparseDfa",
       "file": "port/src/dfa.cj",
-      "line": 1151
+      "line": 1195
     },
     {
       "owner": "SparseDfa",
@@ -1704,7 +1704,7 @@
       "kind": "constructor",
       "signature": "public init(pattern: String)",
       "file": "port/src/dfa.cj",
-      "line": 1153
+      "line": 1197
     },
     {
       "owner": "SparseDfa",
@@ -1712,7 +1712,7 @@
       "kind": "constructor",
       "signature": "public init(pattern: String, quit: Array<UInt8>)",
       "file": "port/src/dfa.cj",
-      "line": 1156
+      "line": 1200
     },
     {
       "owner": "SparseDfa",
@@ -1720,7 +1720,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>)",
       "file": "port/src/dfa.cj",
-      "line": 1159
+      "line": 1203
     },
     {
       "owner": "SparseDfa",
@@ -1728,7 +1728,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, quit: Array<UInt8>)",
       "file": "port/src/dfa.cj",
-      "line": 1162
+      "line": 1206
     },
     {
       "owner": "SparseDfa",
@@ -1736,7 +1736,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool)",
       "file": "port/src/dfa.cj",
-      "line": 1165
+      "line": 1209
     },
     {
       "owner": "SparseDfa",
@@ -1744,7 +1744,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, quit: Array<UInt8>, matchAll: Bool, patternStarts: Bool)",
       "file": "port/src/dfa.cj",
-      "line": 1168
+      "line": 1212
     },
     {
       "owner": "SparseDfa",
@@ -1752,7 +1752,7 @@
       "kind": "method",
       "signature": "public static func overlap(patterns: Array<String>): SparseDfa",
       "file": "port/src/dfa.cj",
-      "line": 1171
+      "line": 1215
     },
     {
       "owner": "SparseDfa",
@@ -1760,7 +1760,7 @@
       "kind": "method",
       "signature": "public func stateCount(): Int64",
       "file": "port/src/dfa.cj",
-      "line": 1174
+      "line": 1218
     },
     {
       "owner": "SparseDfa",
@@ -1768,7 +1768,7 @@
       "kind": "method",
       "signature": "public func memoryUsage(): Int64",
       "file": "port/src/dfa.cj",
-      "line": 1177
+      "line": 1221
     },
     {
       "owner": "SparseDfa",
@@ -1776,7 +1776,7 @@
       "kind": "method",
       "signature": "public func retainsDenseTable(): Bool",
       "file": "port/src/dfa.cj",
-      "line": 1180
+      "line": 1224
     },
     {
       "owner": "SparseDfa",
@@ -1784,7 +1784,7 @@
       "kind": "method",
       "signature": "public func search(text: String): Option<DfaMatch>",
       "file": "port/src/dfa.cj",
-      "line": 1183
+      "line": 1227
     },
     {
       "owner": "SparseDfa",
@@ -1792,7 +1792,7 @@
       "kind": "method",
       "signature": "public func search(input: SearchInput): Option<DfaMatch>",
       "file": "port/src/dfa.cj",
-      "line": 1186
+      "line": 1230
     },
     {
       "owner": "SparseDfa",
@@ -1800,7 +1800,7 @@
       "kind": "method",
       "signature": "public func searchOverlapping(text: String): Array<DfaHalf>",
       "file": "port/src/dfa.cj",
-      "line": 1189
+      "line": 1233
     },
     {
       "owner": "SparseDfa",
@@ -1808,7 +1808,7 @@
       "kind": "method",
       "signature": "public func searchOverlapping(input: SearchInput): Array<DfaHalf>",
       "file": "port/src/dfa.cj",
-      "line": 1192
+      "line": 1236
     },
     {
       "owner": "HybridDfa",
@@ -1816,7 +1816,7 @@
       "kind": "class",
       "signature": "public class HybridDfa",
       "file": "port/src/dfa.cj",
-      "line": 1197
+      "line": 1241
     },
     {
       "owner": "HybridDfa",
@@ -1824,7 +1824,7 @@
       "kind": "constructor",
       "signature": "public init(pattern: String)",
       "file": "port/src/dfa.cj",
-      "line": 1199
+      "line": 1243
     },
     {
       "owner": "HybridDfa",
@@ -1832,7 +1832,7 @@
       "kind": "constructor",
       "signature": "public init(pattern: String, quit: Array<UInt8>)",
       "file": "port/src/dfa.cj",
-      "line": 1202
+      "line": 1246
     },
     {
       "owner": "HybridDfa",
@@ -1840,7 +1840,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, cacheLimit: Int64, clearLimit: Int64)",
       "file": "port/src/dfa.cj",
-      "line": 1205
+      "line": 1249
     },
     {
       "owner": "HybridDfa",
@@ -1848,7 +1848,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, cacheLimit: Int64, clearLimit: Int64, patternStarts: Bool)",
       "file": "port/src/dfa.cj",
-      "line": 1208
+      "line": 1252
     },
     {
       "owner": "HybridDfa",
@@ -1856,7 +1856,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, cacheLimit: Int64, clearLimit: Int64, patternStarts: Bool, matchAll: Bool)",
       "file": "port/src/dfa.cj",
-      "line": 1211
+      "line": 1255
     },
     {
       "owner": "HybridDfa",
@@ -1864,7 +1864,7 @@
       "kind": "method",
       "signature": "public static func overlap(patterns: Array<String>): HybridDfa",
       "file": "port/src/dfa.cj",
-      "line": 1214
+      "line": 1258
     },
     {
       "owner": "HybridDfa",
@@ -1872,7 +1872,7 @@
       "kind": "method",
       "signature": "public func stateCount(): Int64",
       "file": "port/src/dfa.cj",
-      "line": 1217
+      "line": 1261
     },
     {
       "owner": "HybridDfa",
@@ -1880,7 +1880,7 @@
       "kind": "method",
       "signature": "public func memoryUsage(): Int64",
       "file": "port/src/dfa.cj",
-      "line": 1220
+      "line": 1264
     },
     {
       "owner": "HybridDfa",
@@ -1888,7 +1888,7 @@
       "kind": "method",
       "signature": "public func reset(): Unit",
       "file": "port/src/dfa.cj",
-      "line": 1223
+      "line": 1267
     },
     {
       "owner": "HybridDfa",
@@ -1896,7 +1896,7 @@
       "kind": "method",
       "signature": "public func search(text: String): Option<DfaMatch>",
       "file": "port/src/dfa.cj",
-      "line": 1226
+      "line": 1270
     },
     {
       "owner": "HybridDfa",
@@ -1904,7 +1904,7 @@
       "kind": "method",
       "signature": "public func searchOverlapping(text: String): Array<DfaHalf>",
       "file": "port/src/dfa.cj",
-      "line": 1229
+      "line": 1273
     },
     {
       "owner": "HybridDfa",
@@ -1912,7 +1912,7 @@
       "kind": "method",
       "signature": "public func search(input: SearchInput): Option<DfaMatch>",
       "file": "port/src/dfa.cj",
-      "line": 1232
+      "line": 1276
     },
     {
       "owner": "RegexErrorKind",
@@ -4896,7 +4896,7 @@
       "kind": "class",
       "signature": "public class ThompsonNfa",
       "file": "port/src/thompson.cj",
-      "line": 223
+      "line": 234
     },
     {
       "owner": "ThompsonNfa",
@@ -4904,7 +4904,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>)",
       "file": "port/src/thompson.cj",
-      "line": 226
+      "line": 237
     },
     {
       "owner": "ThompsonNfa",
@@ -4912,7 +4912,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, whichCaptures: Int64)",
       "file": "port/src/thompson.cj",
-      "line": 229
+      "line": 240
     },
     {
       "owner": "ThompsonNfa",
@@ -4920,7 +4920,7 @@
       "kind": "constructor",
       "signature": "public init(hirs: Array<Hir>)",
       "file": "port/src/thompson.cj",
-      "line": 233
+      "line": 244
     },
     {
       "owner": "ThompsonNfa",
@@ -4928,7 +4928,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, whichCaptures: Int64, unicode: Bool)",
       "file": "port/src/thompson.cj",
-      "line": 236
+      "line": 247
     },
     {
       "owner": "ThompsonNfa",
@@ -4936,7 +4936,7 @@
       "kind": "constructor",
       "signature": "public init(hirs: Array<Hir>, sizeLimit: Int64)",
       "file": "port/src/thompson.cj",
-      "line": 240
+      "line": 251
     },
     {
       "owner": "ThompsonNfa",
@@ -4944,7 +4944,7 @@
       "kind": "method",
       "signature": "public func stateCount(): Int64",
       "file": "port/src/thompson.cj",
-      "line": 265
+      "line": 279
     },
     {
       "owner": "ThompsonNfa",
@@ -4952,7 +4952,7 @@
       "kind": "method",
       "signature": "public func memoryUsage(): Int64",
       "file": "port/src/thompson.cj",
-      "line": 268
+      "line": 282
     },
     {
       "owner": "ThompsonNfa",
@@ -4960,7 +4960,7 @@
       "kind": "method",
       "signature": "public func patternCount(): Int64",
       "file": "port/src/thompson.cj",
-      "line": 278
+      "line": 292
     },
     {
       "owner": "ThompsonNfa",
@@ -4968,7 +4968,7 @@
       "kind": "method",
       "signature": "public func patternStateCount(pattern: Int64): Int64",
       "file": "port/src/thompson.cj",
-      "line": 281
+      "line": 295
     },
     {
       "owner": "ThompsonNfa",
@@ -4976,7 +4976,7 @@
       "kind": "method",
       "signature": "public func startState(pattern: Int64): Int64",
       "file": "port/src/thompson.cj",
-      "line": 284
+      "line": 298
     },
     {
       "owner": "ThompsonNfa",
@@ -4984,7 +4984,7 @@
       "kind": "method",
       "signature": "public func opName(pattern: Int64, state: Int64): String",
       "file": "port/src/thompson.cj",
-      "line": 288
+      "line": 302
     },
     {
       "owner": "ThompsonNfa",
@@ -4992,7 +4992,7 @@
       "kind": "method",
       "signature": "public func opNext(pattern: Int64, state: Int64): Int64",
       "file": "port/src/thompson.cj",
-      "line": 299
+      "line": 313
     },
     {
       "owner": "ThompsonNfa",
@@ -5000,7 +5000,7 @@
       "kind": "method",
       "signature": "public func opAlternate(pattern: Int64, state: Int64): Int64",
       "file": "port/src/thompson.cj",
-      "line": 302
+      "line": 316
     },
     {
       "owner": "ThompsonNfa",
@@ -5008,7 +5008,7 @@
       "kind": "method",
       "signature": "public func whichOverlapping(text: String): Array<Int64>",
       "file": "port/src/thompson.cj",
-      "line": 305
+      "line": 319
     },
     {
       "owner": "ThompsonNfa",
@@ -5016,7 +5016,7 @@
       "kind": "method",
       "signature": "public func whichOverlapping(input: SearchInput): Array<Int64>",
       "file": "port/src/thompson.cj",
-      "line": 311
+      "line": 325
     },
     {
       "owner": "ThompsonNfa",
@@ -5024,7 +5024,7 @@
       "kind": "method",
       "signature": "public func search(input: SearchInput, cache: PikeCache): Option<PikeMatch>",
       "file": "port/src/thompson.cj",
-      "line": 398
+      "line": 416
     },
     {
       "owner": "ThompsonNfa",
@@ -5032,7 +5032,7 @@
       "kind": "method",
       "signature": "public func isMatch(input: SearchInput, cache: PikeCache): Bool",
       "file": "port/src/thompson.cj",
-      "line": 440
+      "line": 458
     },
     {
       "owner": "Utf8Sequence",

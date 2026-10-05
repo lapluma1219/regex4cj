@@ -41,6 +41,7 @@ class Expr {
 // Shared by Regex and RegexSet. Defaults match Regex::new: Unicode on,
 // octal off, LF line terminator, nest limit 250, NFA budget 10 MiB.
 class PatternOptions {
+    var lite: Bool = false
     var caseInsensitive = false
     var multiLine = false
     var dotAll = false
@@ -57,6 +58,7 @@ class PatternOptions {
 }
 
 class Parser {
+    let lite: Bool
     let source: String
     let chars = ArrayList<Rune>()
     let captureNames = ArrayList<String>()
@@ -100,6 +102,7 @@ class Parser {
     }
     init(pattern: String, options: PatternOptions) {
         source = pattern
+        lite = options.lite
         captureNames.add("") // group 0 denotes the entire match
         captureStarts.add(0)
         captureEnds.add(0)
@@ -640,7 +643,10 @@ class Parser {
                 case r'U' => swapGreed = enabled
                 case r'x' => ignoreWhitespace = enabled
                 case r'R' => crlf = enabled
-                case r'u' => unicode = enabled
+                case r'u' =>
+                    if (!lite) {
+                        unicode = enabled
+                    }
                 case _ => failAt(here, here + 1, "unrecognized flag")
             }
         }
@@ -868,7 +874,7 @@ class Parser {
         if (!caseInsensitive) {
             return
         }
-        if (unicode) {
+        if (unicode && !lite) {
             set.caseFoldSimple()
         } else {
             set.caseFoldAscii()
@@ -897,7 +903,7 @@ class Parser {
         let code = Int64(UInt32(c))
         let set = CharSet()
         set.addRange(code, code)
-        if (unicode) {
+        if (unicode && !lite) {
             set.caseFoldSimple()
         } else {
             set.caseFoldAscii()
@@ -1224,7 +1230,7 @@ class Parser {
         } else {
             c
         }
-        let set = if (unicode) {
+        let set = if (unicode && !lite) {
             unicodeClass(lower)
         } else {
             let name = if (lower == r'd') {
@@ -1274,6 +1280,9 @@ class Parser {
             r'B'
         }), 6)
         expr.modePositive = positive
+        if (lite) {
+            expr.modeUnicode = false
+        }
         if ((if (!positive) {
             true
         } else {
@@ -1294,7 +1303,10 @@ class Parser {
         }
         let nameStart = pos
         let name = StringBuilder()
-        while (pos < chars.size && wordNameChar(chars[pos])) {
+        while (pos < chars.size) {
+            if (!wordNameChar(chars[pos])) {
+                break
+            }
             name.append(chars[pos])
             pos++
             skipSpace()

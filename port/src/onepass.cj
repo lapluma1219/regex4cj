@@ -2,9 +2,9 @@ package cjregex
 
 import std.collection.*
 
-// One-pass DFA. A pattern qualifies when each byte has at most one move out of
-// an epsilon closure, and no closure reaches the same state twice. Search then
-// uses the Pike VM, which agrees with one-pass on those patterns.
+// Experimental one-pass eligibility adapter, with a conservative local byte
+// graph check. This is NOT a one-pass execution engine: accepted patterns use
+// anchored PikeVM search. The accepted set can differ from regex-automata's.
 public class OnePass {
     let vm: PikeVM
     public let engineName: String = "onepass"

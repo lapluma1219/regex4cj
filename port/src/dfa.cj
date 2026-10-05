@@ -319,7 +319,7 @@ class DfaEngine {
         if (patterns.size == 0) {
             throw Exception("no patterns")
         }
-        sourcePatterns = patterns
+        sourcePatterns = Array<String>(patterns.size, {i => patterns[i]})
         this.byteLimit = byteLimit
         this.retainDense = retainDense
         this.matchAll = matchAll
@@ -571,6 +571,18 @@ class DfaEngine {
                         last = at
                         lastPattern = states[state].eoiPattern
                     }
+                } else {
+                    // A span end is not end-of-input. Assertions still inspect
+                    // the following byte, without consuming outside the span.
+                    let byte = Int64(bytes[at])
+                    if (quit[byte]) {
+                        throw Exception("quit search after observing byte ${debugByte(byte)} at offset ${at}")
+                    }
+                    let boundary = activate(current, byte, false)
+                    if (boundary.accept) {
+                        last = at
+                        lastPattern = boundary.pattern
+                    }
                 }
                 running = false
             } else {
@@ -661,6 +673,25 @@ class DfaEngine {
         startState = seedAll()
     }
     func searchOverlapping(query: SearchInput, sparse: Bool): Array<DfaHalf> {
+        if (!lazy) {
+            return overlapOnce(query, sparse)
+        }
+        var tries: Int64 = 0
+        while (tries < 8) {
+            tries++
+            restarting = false
+            try {
+                return overlapOnce(query, false)
+            } catch (e: Exception) {
+                if (!restarting) {
+                    throw e
+                }
+                rebuildLazy()
+            }
+        }
+        throw Exception("gave up searching at offset ${lazyAt}")
+    }
+    func overlapOnce(query: SearchInput, sparse: Bool): Array<DfaHalf> {
         if (!matchAll) {
             throw Exception("overlapping search requires match kind All")
         }
@@ -682,6 +713,10 @@ class DfaEngine {
             let byte = Int64(bytes[at])
             if (quit[byte]) {
                 throw Exception("quit search after observing byte ${debugByte(byte)} at offset ${at}")
+            }
+            if (lazy) {
+                lazyAt = at
+                ensure(state, byte)
             }
             for (id in activate(current, byte, false).patterns) {
                 found.add(DfaHalf(id, at))
@@ -1081,6 +1116,15 @@ public class DenseDfa {
     // same automaton and checks the state count. This is not regex-automata's
     // transition-table wire format; state numbers are local.
     public func toImage(): Array<UInt8> {
+        // CJD1 has no configuration fields. Never silently discard them.
+        if (engine.matchAll || engine.patternStartsEnabled) {
+            throw Exception("DFA image supports default search configuration only")
+        }
+        for (enabled in engine.quit) {
+            if (enabled) {
+                throw Exception("DFA image supports default search configuration only")
+            }
+        }
         let out = ArrayList<UInt8>()
         out.add(UInt8(0x43))
         out.add(UInt8(0x4A))

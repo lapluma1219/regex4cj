@@ -52,6 +52,12 @@ cases = [
     ("dfa-image", "(?m)^a", "b\na"),
 ]
 
+# Lite uses scalar dot/complements but ASCII classes and case folding.
+for pattern in [".", ".+", "[^a]", r"\D", r"\W", r"\S", "(?i:é)",
+                "(?i:[a-z])", "(?-u:.)", "[é]", r"\b", ""]:
+    for text in ["é中", "AazZ", "ſK", "", "b\na"]:
+        cases.append(("lite", pattern, text))
+
 for args in cases:
     compare(args)
 

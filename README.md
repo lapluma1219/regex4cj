@@ -62,7 +62,7 @@ bash scripts/run.sh classify '订单 AB-123 需要退款，也需要开发票'
 - `RegexBuilder` / `RegexSetBuilder`。八进制和自定义行终止符只在 Builder 上打开。嵌套默认 250，`sizeLimit` 默认约 10 MiB，按 Thompson 构造字节数检查。语法错误和编译超限的文本与固定原仓库 Display 相同。`dfaSizeLimit` 只影响字符串搜索缓存，不改变匹配文本。
 - Unicode 16.0.0 的 d/s/w、通用类别、Script/Script_Extensions、二元属性，以及 Age 与三种 Break 的集合查询。
 
-字符串接口只接受合法 UTF-8。字节接口是 `BytesRegex` 和 `BytesRegexSet`。没有 lazy DFA。前后查找和反向引用会报错，原仓库也会拒绝它们。现已提供部分 AST/HIR、PikeVM、反向NFA、有界回溯及单模式DFA入口，仍有重要缺口。接口见 [当前接口](docs/api.md)。
+字符串接口只接受合法 UTF-8。字节接口是 `BytesRegex` 和 `BytesRegexSet`。另有独立的实验性 HybridDfa（惰性 DFA）。前后查找和反向引用会报错，原仓库也会拒绝它们。现已提供部分 AST/HIR、PikeVM、反向NFA、有界回溯及多模式DFA入口，仍有重要缺口。接口见 [当前接口](docs/api.md)。
 
 ## 作为库依赖
 

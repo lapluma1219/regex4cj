@@ -220,6 +220,17 @@ func buildHirs(hirs: Array<Hir>, sizeLimit: Int64): NfaParts {
     assemble(trees, raws, true, sizeLimit, 0)
 }
 
+func buildLitePattern(pattern: String): NfaParts {
+    let options = PatternOptions()
+    options.lite = true
+    let parser = Parser(pattern, options)
+    let trees = ArrayList<Expr>()
+    trees.add(parser.parse())
+    let names = ArrayList<Array<String>>()
+    names.add(Array<String>(parser.captureNames.size, {i => parser.captureNames[i]}))
+    assemble(trees, names, false, options.sizeLimit, 0)
+}
+
 public class ThompsonNfa {
     let parts: NfaParts
     var compiledBytes: Option<ByteEngine> = None<ByteEngine>
@@ -243,6 +254,9 @@ public class ThompsonNfa {
         }
         parts = buildHirs(hirs, sizeLimit)
         compiledBytes = None<ByteEngine>
+    }
+    init(parts: NfaParts) {
+        this.parts = parts
     }
     func ensureByte(): ByteEngine {
         match (compiledBytes) {
@@ -367,7 +381,11 @@ public class ThompsonNfa {
                                     unused)
                             }
                         case Op.CharacterClass(set) =>
-                            if (pos < until && set.contains(decoded.chars[pos])) {
+                            if (if (pos < until) {
+                                set.contains(decoded.chars[pos])
+                            } else {
+                                false
+                            }) {
                                 closure(next, unused.nextSeen, state.first, thread.start, thread.slots, pos + 1, decoded,
                                     unused)
                             }
@@ -601,7 +619,11 @@ public class ThompsonNfa {
                         found = true
                         break
                     case Op.Literal(c) => consume = pos < until && input.chars[pos] == c
-                    case Op.CharacterClass(set) => consume = pos < until && set.contains(input.chars[pos])
+                    case Op.CharacterClass(set) => consume = if (pos < until) {
+                        set.contains(input.chars[pos])
+                    } else {
+                        false
+                    }
                     case Op.Any(mode) => consume = pos < until && passesDot(mode, input.chars[pos])
                     case _ => ()
                 }
