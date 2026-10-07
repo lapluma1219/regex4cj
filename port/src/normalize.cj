@@ -1,4 +1,4 @@
-package cjregex
+package regex4cj
 
 // Mirrors HIR repetition's empty-only simplification. Width categories are
 // -1: cannot match, 0: can only match empty, 1: can consume input (not a length).

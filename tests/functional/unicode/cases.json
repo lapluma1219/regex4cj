@@ -1,0 +1,87 @@
+[
+  {
+    "id": "unicode-han",
+    "group": "unicode",
+    "feature": "汉字属性及字节偏移",
+    "operation": "find",
+    "pattern": "\\p{Han}+",
+    "text": "a中文b",
+    "extra": [],
+    "args": [
+      "find",
+      "\\p{Han}+",
+      "a中文b"
+    ],
+    "expected_stdout": "1\t7\t中文\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "unicode-digit",
+    "group": "unicode",
+    "feature": "Unicode 阿拉伯数字",
+    "operation": "find",
+    "pattern": "\\d",
+    "text": "٣",
+    "extra": [],
+    "args": [
+      "find",
+      "\\d",
+      "٣"
+    ],
+    "expected_stdout": "0\t2\t٣\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "unicode-ascii",
+    "group": "unicode",
+    "feature": "关闭 Unicode 后仅匹配 ASCII 数字",
+    "operation": "find",
+    "pattern": "(?-u:\\d)",
+    "text": "٣",
+    "extra": [],
+    "args": [
+      "find",
+      "(?-u:\\d)",
+      "٣"
+    ],
+    "expected_stdout": "",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "unicode-fold",
+    "group": "unicode",
+    "feature": "Kelvin 字符大小写折叠",
+    "operation": "find",
+    "pattern": "(?i:k)",
+    "text": "K",
+    "extra": [],
+    "args": [
+      "find",
+      "(?i:k)",
+      "K"
+    ],
+    "expected_stdout": "0\t3\tK\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "unicode-absent",
+    "group": "unicode",
+    "feature": "不同文字属性不匹配",
+    "operation": "find",
+    "pattern": "\\p{Greek}",
+    "text": "中文",
+    "extra": [],
+    "args": [
+      "find",
+      "\\p{Greek}",
+      "中文"
+    ],
+    "expected_stdout": "",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  }
+]

@@ -1,6 +1,6 @@
 package regex_cli
 
-import cjregex.*
+import regex4cj.*
 
 func groupCursorValue(item: GroupItem): String {
     if (item.done) { return "None" }

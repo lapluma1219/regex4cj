@@ -1,6 +1,6 @@
 package regex_cli
 
-import cjregex.*
+import regex4cj.*
 
 func lazyByteSpan(value: Option<BytesMatch>): String {
     match (value) {

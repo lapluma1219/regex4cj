@@ -1,0 +1,146 @@
+[
+  {
+    "id": "capture-absent-empty",
+    "group": "capture",
+    "feature": "未参与分组与匹配到空字符串不同",
+    "operation": "captures",
+    "pattern": "(a)?(b*)",
+    "text": "",
+    "extra": [],
+    "expected_stdout": "groups\t3\nmatch\ngroup\t0\t0\t0\t\ngroup\t1\t-\ngroup\t2\t0\t0\t\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.capturesAll",
+      "Regex.capturesLen",
+      "Regex.captureNames",
+      "Captures.get"
+    ]
+  },
+  {
+    "id": "capture-unicode",
+    "group": "capture",
+    "feature": "捕获内容完整且位置为字节偏移",
+    "operation": "captures",
+    "pattern": "(中)(🙂)",
+    "text": "a中🙂b",
+    "extra": [],
+    "expected_stdout": "groups\t3\nmatch\ngroup\t0\t1\t8\te4b8adf09f9982\ngroup\t1\t1\t4\te4b8ad\ngroup\t2\t4\t8\tf09f9982\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.capturesAll",
+      "Regex.capturesLen",
+      "Regex.captureNames",
+      "Captures.get"
+    ]
+  },
+  {
+    "id": "capture-no-match",
+    "group": "capture",
+    "feature": "无匹配时仍有分组元数据但无捕获结果",
+    "operation": "captures",
+    "pattern": "(a)",
+    "text": "b",
+    "extra": [],
+    "expected_stdout": "groups\t2\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.capturesAll",
+      "Regex.capturesLen",
+      "Regex.captureNames",
+      "Captures.get"
+    ]
+  },
+  {
+    "id": "capture-name-present",
+    "group": "capture",
+    "feature": "命名分组：存在",
+    "operation": "capture-name",
+    "pattern": "(?<n>a)",
+    "text": "ba",
+    "extra": [
+      "n"
+    ],
+    "expected_stdout": "value\t1\t2\t61\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.captures",
+      "Captures.name"
+    ]
+  },
+  {
+    "id": "capture-name-absent",
+    "group": "capture",
+    "feature": "命名分组：未参与",
+    "operation": "capture-name",
+    "pattern": "(?<n>a)?b",
+    "text": "b",
+    "extra": [
+      "n"
+    ],
+    "expected_stdout": "value\t-\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.captures",
+      "Captures.name"
+    ]
+  },
+  {
+    "id": "capture-name-empty",
+    "group": "capture",
+    "feature": "命名分组：空内容",
+    "operation": "capture-name",
+    "pattern": "(?<n>a*)",
+    "text": "",
+    "extra": [
+      "n"
+    ],
+    "expected_stdout": "value\t0\t0\t\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.captures",
+      "Captures.name"
+    ]
+  },
+  {
+    "id": "capture-name-unknown",
+    "group": "capture",
+    "feature": "命名分组：名称不存在",
+    "operation": "capture-name",
+    "pattern": "(?<n>a)",
+    "text": "a",
+    "extra": [
+      "missing"
+    ],
+    "expected_stdout": "value\t-\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.captures",
+      "Captures.name"
+    ]
+  },
+  {
+    "id": "capture-repeat",
+    "group": "capture",
+    "feature": "重复分组保留最后一次捕获",
+    "operation": "capture-first",
+    "pattern": "(a)+",
+    "text": "aaa",
+    "extra": [],
+    "expected_stdout": "groups\t2\nmatch\ngroup\t0\t0\t3\t616161\ngroup\t1\t2\t3\t61\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.captures",
+      "Regex.capturesLen",
+      "Regex.captureNames",
+      "Captures.get"
+    ]
+  }
+]

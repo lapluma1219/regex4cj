@@ -2,7 +2,7 @@
 
 完整的公开入口数量、参数签名和逐项中文行为说明见[接口数量与行为清单](api-catalog.md)。该清单区分仓颉实际公开入口与原仓库方法审计条目，不将两者混作完成率。
 
-使用 `import cjregex.*`。可运行的调用在 `examples/consumer/src/main.cj`。这里写的是 v0.3.0 的仓颉接口。固定原仓库是 `regex` 提交 `72d650cb`，记在 [baseline.json](baseline.json)。它不是 regex-syntax、regex-automata 或 regex-lite 的公开类型。
+使用 `import regex4cj.*`。可运行的调用在 `examples/consumer/src/main.cj`。这里写的是 v0.3.0 的仓颉接口。固定原仓库是 `regex` 提交 `72d650cb`，记在 [baseline.json](baseline.json)。它不是 regex-syntax、regex-automata 或 regex-lite 的公开类型。
 
 查找返回的区间是原输入的 UTF-8 字节偏移，半开区间 `[start, end)`。未找到匹配时返回 `None`、空数组或 `false`，不抛异常。
 
@@ -180,3 +180,7 @@ bash scripts/run.sh set-matches '订单 AB-123 退款' '退款' '发票' '[A-Z]{
 ## 公开语法结构（HIR切片）
 
 新增Hir及相关不可变模型，支持读取和构造空、字面量、字符类、断言、重复、捕获、连接、分支八类结构，并查询最短/最长匹配字节数。详见[HIR使用与范围](hir.md)。这是regex-syntax的部分公开能力，不等于完整解析结构库；未支持的节点会明确报错。
+
+### 捕获模式参数范围
+
+`ThompsonNfa` 和 `BoundedBacktracker` 的 `whichCaptures` 参数只接受 `0`（全部）、`1`（仅整体匹配）、`2`（不记录捕获）。负数和大于 `2` 的值会抛出异常，避免将错误配置默认为完整捕获。

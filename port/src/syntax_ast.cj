@@ -1,4 +1,4 @@
-package cjregex
+package regex4cj
 
 import std.collection.*
 
@@ -175,7 +175,6 @@ public class Ast {
             }
         }
         leave(this)
-        true
     }
     public func shape(): String {
         match (label) {

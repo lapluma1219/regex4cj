@@ -1,4 +1,7 @@
 
+Acceptance stage: feature-catalog
+Functional catalog: 15 groups; 91 named cases; 47 preserved suites. No coverage percentage inferred.
+
 Acceptance stage: upstream-data
 Pinned upstream data verified: 25 test files
 
@@ -26,44 +29,18 @@ Unicode 16.0.0 simple case folding verified: 2938 scalars
 Acceptance stage: data-age_break
 
 Acceptance stage: python-tests
-....
+...............
 ----------------------------------------------------------------------
-Ran 4 tests in 0.000s
+Ran 15 tests in 0.044s
 
 OK
 
 Acceptance stage: rust-build
-   Compiling proc-macro2 v1.0.107
-   Compiling unicode-ident v1.0.26
-   Compiling quote v1.0.47
-   Compiling serde_core v1.0.229
-   Compiling serde v1.0.229
-   Compiling memchr v2.8.3
-   Compiling hashbrown v0.17.1
-   Compiling equivalent v1.0.2
-   Compiling winnow v0.7.15
-   Compiling anyhow v1.0.104
-   Compiling regex-syntax v0.8.11 (https://github.com/rust-lang/regex.git?rev=72d650cb0a880a01ab6dc2137c0888e8f89740f7#72d650cb)
-   Compiling regex-lite v0.1.9 (https://github.com/rust-lang/regex.git?rev=72d650cb0a880a01ab6dc2137c0888e8f89740f7#72d650cb)
-   Compiling aho-corasick v1.1.5
-   Compiling indexmap v2.14.2
-   Compiling regex-automata v0.4.18 (https://github.com/rust-lang/regex.git?rev=72d650cb0a880a01ab6dc2137c0888e8f89740f7#72d650cb)
-   Compiling regex v1.13.1 (https://github.com/rust-lang/regex.git?rev=72d650cb0a880a01ab6dc2137c0888e8f89740f7#72d650cb)
-   Compiling syn v3.0.6
-   Compiling bstr v1.13.1
-   Compiling serde_derive v1.0.229
-   Compiling serde_spanned v0.6.9
-   Compiling toml_datetime v0.6.11
-   Compiling toml_edit v0.22.27
-   Compiling toml v0.8.23
-   Compiling regex-test v0.1.1 (https://github.com/rust-lang/regex.git?rev=72d650cb0a880a01ab6dc2137c0888e8f89740f7#72d650cb)
-   Compiling regex-oracle v0.1.0 (/Users/jalonyan/Desktop/regex4cj/.build/delivery-review/oracle)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.93s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.10s
 
 Acceptance stage: rust-test
-   Compiling regex-oracle v0.1.0 (/Users/jalonyan/Desktop/regex4cj/.build/delivery-review/oracle)
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.51s
-     Running unittests src/main.rs (.build/work/rust-target/debug/deps/regex_oracle-f3bb5e2598d6a026)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/main.rs (/Users/jalonyan/Desktop/regex4cj/.build/work/rust-target/debug/deps/regex_oracle-f3bb5e2598d6a026)
 
 running 3 tests
 test native_tests::nul_replacement_split_and_expand ... ok
@@ -74,171 +51,784 @@ test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 
 Acceptance stage: port-build
+[33mwarning[0m: unused variable:'e'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/port/src/meta.cj:8:14:
+  [36m| [0m
+[36m8[0m [36m| [0m    } catch (e: Exception) {[0m
+  [36m| [0m             [33m^ unused variable[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused variable:'e'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/port/src/meta.cj:16:14:
+   [36m| [0m
+[36m16[0m [36m| [0m    } catch (e: Exception) {[0m
+   [36m| [0m             [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused variable:'e'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/port/src/meta.cj:38:14:
+   [36m| [0m
+[36m38[0m [36m| [0m    } catch (e: Exception) {[0m
+   [36m| [0m             [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+3 warnings generated, 3 warnings printed.
 cjpm build success
 
 Acceptance stage: cli-build
+[33mwarning[0m: unused variable:'e'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/port/src/meta.cj:8:14:
+  [36m| [0m
+[36m8[0m [36m| [0m    } catch (e: Exception) {[0m
+  [36m| [0m             [33m^ unused variable[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused variable:'e'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/port/src/meta.cj:16:14:
+   [36m| [0m
+[36m16[0m [36m| [0m    } catch (e: Exception) {[0m
+   [36m| [0m             [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused variable:'e'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/port/src/meta.cj:38:14:
+   [36m| [0m
+[36m38[0m [36m| [0m    } catch (e: Exception) {[0m
+   [36m| [0m             [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+3 warnings generated, 3 warnings printed.
 cjpm build success
 
 Acceptance stage: examples/consumer-build
+[33mwarning[0m: unused variable:'e'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/port/src/meta.cj:8:14:
+  [36m| [0m
+[36m8[0m [36m| [0m    } catch (e: Exception) {[0m
+  [36m| [0m             [33m^ unused variable[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused variable:'e'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/port/src/meta.cj:16:14:
+   [36m| [0m
+[36m16[0m [36m| [0m    } catch (e: Exception) {[0m
+   [36m| [0m             [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused variable:'e'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/port/src/meta.cj:38:14:
+   [36m| [0m
+[36m38[0m [36m| [0m    } catch (e: Exception) {[0m
+   [36m| [0m             [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+3 warnings generated, 3 warnings printed.
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/test_support.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused function:'requiredMatch'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/test_support.cj:6:1:
+   [36m| [0m
+[36m6[0m  [36m| [0m  func requiredMatch(value: Option<RegexMatch>): RegexMatch {[0m
+   [36m| [0m [33m_[0m[33m^[0m
+[36m7[0m  [36m| [0m[33m|[0m     match (value) {[0m
+   [36m| [0m[33m|[0m ...[0m
+[36m11[0m [36m| [0m[33m|[0m }[0m
+   [36m| [0m[33m|[0m[33m_[0m[33m^ unused function[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused function:'requiredText'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/test_support.cj:13:1:
+   [36m| [0m
+[36m13[0m [36m| [0m  func requiredText(value: Option<String>): String {[0m
+   [36m| [0m [33m_[0m[33m^[0m
+[36m14[0m [36m| [0m[33m|[0m     match (value) {[0m
+   [36m| [0m[33m|[0m ...[0m
+[36m18[0m [36m| [0m[33m|[0m }[0m
+   [36m| [0m[33m|[0m[33m_[0m[33m^ unused function[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused function:'requiredCaptures'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/test_support.cj:20:1:
+   [36m| [0m
+[36m20[0m [36m| [0m  func requiredCaptures(value: Option<Captures>): Captures {[0m
+   [36m| [0m [33m_[0m[33m^[0m
+[36m21[0m [36m| [0m[33m|[0m     match (value) {[0m
+   [36m| [0m[33m|[0m ...[0m
+[36m25[0m [36m| [0m[33m|[0m }[0m
+   [36m| [0m[33m|[0m[33m_[0m[33m^ unused function[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused function:'requiredBytes'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/test_support.cj:27:1:
+   [36m| [0m
+[36m27[0m [36m| [0m  func requiredBytes(value: Option<BytesMatch>): BytesMatch {[0m
+   [36m| [0m [33m_[0m[33m^[0m
+[36m28[0m [36m| [0m[33m|[0m     match (value) {[0m
+   [36m| [0m[33m|[0m ...[0m
+[36m32[0m [36m| [0m[33m|[0m }[0m
+   [36m| [0m[33m|[0m[33m_[0m[33m^ unused function[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+5 warnings generated, 5 warnings printed.
 cjpm build success
 
 Acceptance stage: consumer-test
+[33mwarning[0m: unused variable:'e'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/port/src/meta.cj:8:14:
+  [36m| [0m
+[36m8[0m [36m| [0m    } catch (e: Exception) {[0m
+  [36m| [0m             [33m^ unused variable[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused variable:'e'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/port/src/meta.cj:16:14:
+   [36m| [0m
+[36m16[0m [36m| [0m    } catch (e: Exception) {[0m
+   [36m| [0m             [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused variable:'e'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/port/src/meta.cj:38:14:
+   [36m| [0m
+[36m38[0m [36m| [0m    } catch (e: Exception) {[0m
+   [36m| [0m             [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+3 warnings generated, 3 warnings printed.
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/test_support.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+1 warning generated, 1 warning printed.
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/backtrack_test.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/bytes_test.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/capture_test.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/dfa_test.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/nfa_test.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/products_test.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/reverse_test.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/search_test.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/set_test.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/syntax_test.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/tools_coverage_test.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/tools_test.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/unicode_test.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused variable:'h'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:53:29:
+   [36m| [0m
+[36m53[0m [36m| [0m    @Expect(tree.walkUntil({h => count[0]++; false}, {h => true}), false)[0m
+   [36m| [0m                            [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+[34mnote[0m: the warning occurs after the macro is expanded
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:44:1:
+   [36m| [0m
+[36m44[0m [36m| [0m  @Test[0m
+   [36m| [0m [34m_[0m[34m^[0m
+[36m45[0m [36m| [0m[34m|[0m func hirTraversalVisitsEnterLeaveAndHonorsBothStops(): Unit {[0m
+   [36m| [0m[34m|[0m ...[0m
+[36m64[0m [36m| [0m[34m|[0m }[0m
+   [36m| [0m[34m|[0m[34m_[0m[34m^[0m
+   [36m| [0m
+[34mnote[0m: the code after the macro is expanded as follows
+    [36m| [0m
+    [36m| [0m  /* 44.1 */@Attribute[TEST_GENERATED] class TestCase_hirTraversalVisitsEnterLeaveAndHonorsBothStops <: TestClass {[0m
+    [36m| [0m [34m_[0m[34m^[0m
+    [36m| [0m[34m|[0m /* 44.2 */    init() {[0m
+    [36m| [0m[34m|[0m /* 44.3 */    }[0m
+    [36m| [0m[34m|[0m /* 44.4 */    private func classConfiguration(): Configuration {[0m
+    [36m| [0m[34m|[0m /* 44.5 */        let configuration = Configuration()[0m
+    [36m| [0m[34m|[0m /* 44.6 */        configuration.set(KeyFromTopLevel.fromTopLevel, true)[0m
+    [36m| [0m[34m|[0m /* 44.7 */        [0m
+    [36m| [0m[34m|[0m /* 44.8 */        return configuration[0m
+    [36m| [0m[34m|[0m /* 44.9 */    }[0m
+    [36m| [0m[34m|[0m /* 44.10 */    public override func asTestSuite(): TestSuite {[0m
+    [36m| [0m[34m|[0m /* 44.11 */        [0m
+    [36m| [0m[34m|[0m /* 44.12 */        let suiteConfiguration = classConfiguration()[0m
+    [36m| [0m[34m|[0m /* 44.13 */        let suiteBuilder = TestSuite.builder("TestCase_hirTraversalVisitsEnterLeaveAndHonorsBothStops").configure(suiteConfiguration)[0m
+    [36m| [0m[34m|[0m /* 44.14 */        [0m
+    [36m| [0m[34m|[0m /* 44.15 */        { => let caseConfig = Configuration()[0m
+    [36m| [0m[34m|[0m /* 44.16 */            caseConfig.set(KeyFromTopLevel.fromTopLevel, true)[0m
+    [36m| [0m[34m|[0m /* 44.17 */            [0m
+    [36m| [0m[34m|[0m /* 44.18 */            let hirTraversalVisitsEnterLeaveAndHonorsBothStopsTestFunc = { => hirTraversalVisitsEnterLeaveAndHonorsBothStops();() }[0m
+    [36m| [0m[34m|[0m /* 44.19 */            suiteBuilder.add([0m
+    [36m| [0m[34m|[0m /* 44.20 */            UnitTestCase.create([0m
+    [36m| [0m[34m|[0m /* 44.21 */            "hirTraversalVisitsEnterLeaveAndHonorsBothStops",[0m
+    [36m| [0m[34m|[0m /* 44.22 */            configuration: caseConfig,[0m
+    [36m| [0m[34m|[0m /* 44.23 */            body: hirTraversalVisitsEnterLeaveAndHonorsBothStopsTestFunc[0m
+    [36m| [0m[34m|[0m /* 44.24 */            )[0m
+    [36m| [0m[34m|[0m /* 44.25 */            )[0m
+    [36m| [0m[34m|[0m /* 44.26 */            [0m
+    [36m| [0m[34m|[0m /* 44.27 */        }()[0m
+    [36m| [0m[34m|[0m /* 44.28 */        [0m
+    [36m| [0m[34m|[0m /* 44.29 */        return suiteBuilder.build()[0m
+    [36m| [0m[34m|[0m /* 44.30 */    }[0m
+    [36m| [0m[34m|[0m /* 44.31 */    private func inheritedFromClassAnnotatedByTestTemplate < T >(): TestSuite where T <: TestClass {[0m
+    [36m| [0m[34m|[0m /* 44.32 */        throw Exception("Unreachable code")[0m
+    [36m| [0m[34m|[0m /* 44.33 */    }[0m
+    [36m| [0m[34m|[0m /* 44.34 */}[0m
+    [36m| [0m[34m|[0m /* 44.35 */func hirTraversalVisitsEnterLeaveAndHonorsBothStops(): Unit {[0m
+    [36m| [0m[34m|[0m /* 44.36 */    let tree = Hir.parse("(a|b)c")[0m
+    [36m| [0m[34m|[0m /* 44.37 */    let enter = ArrayList < String >()[0m
+    [36m| [0m[34m|[0m /* 44.38 */    let leave = ArrayList < String >()[0m
+    [36m| [0m[34m|[0m /* 44.39 */    tree.walk({ h => enter.add(h.toPattern()) }, { h => leave.add(h.toPattern()) })[0m
+    [36m| [0m[34m|[0m /* 44.40 */    expectEqual("enter.size", "leave.size", enter.size, leave.size, isDelta: false,)[0m
+    [36m| [0m[34m|[0m /* 44.41 */    expectEqual("enter[0]", "leave[leave.size - 1]", enter[0], leave[leave.size - 1], isDelta: false,)[0m
+    [36m| [0m[34m|[0m /* 44.42 */    let count =[0][0m
+    [36m| [0m[34m|[0m /* 44.43 */    expectEqual("tree.walkUntil({ h =>\n    count[0] ++\n    false\n}, { h =>\n    true\n})", "false", tree.walkUntil({ h => count[0] ++; false }, { h => true }), false, isDelta: false,)[0m
+    [36m| [0m[34m|[0m /* 44.44 */    expectEqual("count[0]", "1", count[0], 1, isDelta: false,)[0m
+    [36m| [0m[34m|[0m /* 44.45 */    count[0] = 0[0m
+    [36m| [0m[34m|[0m /* 44.46 */    expectEqual("tree.walkUntil({ h =>\n    true\n}, { h =>\n    count[0] ++\n    false\n})", "false", tree.walkUntil({ h => true }, { h => count[0] ++; false }), false, isDelta: false,)[0m
+    [36m| [0m[34m|[0m /* 44.47 */    expectEqual("count[0]", "1", count[0], 1, isDelta: false,)[0m
+    [36m| [0m[34m|[0m /* 44.48 */    expectEqual("tree.walkUntil({ h =>\n    true\n}, { h =>\n    true\n})", "true", tree.walkUntil({ h => true }, { h => true }), true, isDelta: false,)[0m
+    [36m| [0m[34m|[0m /* 44.49 */    let ast = Ast.parse("[a-c]")[0m
+    [36m| [0m[34m|[0m /* 44.50 */    expectEqual("ast.shape().contains(\"Range\")", "true", ast.shape().contains("Range"), true, isDelta: false,)[0m
+    [36m| [0m[34m|[0m /* 44.51 */    let leaves =[0][0m
+    [36m| [0m[34m|[0m /* 44.52 */    expectEqual("ast.walkUntil({ h =>\n    true\n}, { h =>\n    leaves[0] ++\n    false\n})", "false", ast.walkUntil({ h => true }, { h => leaves[0] ++; false }), false, isDelta: false,)[0m
+    [36m| [0m[34m|[0m /* 44.53 */    expectEqual("leaves[0]", "1", leaves[0], 1, isDelta: false,)[0m
+    [36m| [0m[34m|[0m /* 44.54 */}[0m
+    [36m| [0m[34m|[0m /* 44.55 */[0m
+    [36m| [0m[34m|[0m /* 44.56 */[0m
+    [36m| [0m[34m|[0m /* 44.57 */interface TestPackageExtension_TestCase_hirTraversalVisitsEnterLeaveAndHonorsBothStops {[0m
+    [36m| [0m[34m|[0m /* 44.58 */    func registerTestCase_hirTraversalVisitsEnterLeaveAndHonorsBothStops(): Unit[0m
+    [36m| [0m[34m|[0m /* 44.59 */}[0m
+    [36m| [0m[34m|[0m /* 44.60 */extend TestPackage <: TestPackageExtension_TestCase_hirTraversalVisitsEnterLeaveAndHonorsBothStops {[0m
+    [36m| [0m[34m|[0m /* 44.61 */    @Attribute[TEST_REGISTER][0m
+    [36m| [0m[34m|[0m /* 44.62 */    public func registerTestCase_hirTraversalVisitsEnterLeaveAndHonorsBothStops() {[0m
+    [36m| [0m[34m|[0m /* 44.63 */        registerSuite({ => TestCase_hirTraversalVisitsEnterLeaveAndHonorsBothStops().asTestSuite() })[0m
+    [36m| [0m[34m|[0m /* 44.64 */    }[0m
+    [36m| [0m[34m|[0m /* 44.65 */}[0m
+    [36m| [0m[34m|[0m /* 44.66 */[0m
+    [36m| [0m[34m|[0m[34m_[0m[34m__________^[0m
+    [36m| [0m
+[34mnote[0m: which is expanded as follows
+    [36m| [0m
+    [36m| [0m/* 44.43 */    expectEqual("tree.walkUntil({ h =>\n    count[0] ++\n    false\n}, { h =>\n    true\n})", "false", tree.walkUntil({ h => count[0] ++; false }, { h => true }), false, isDelta: false,)[0m
+    [36m| [0m                                                                                                                                   [34m^ [0m
+    [36m| [0m
+
+[33mwarning[0m: unused variable:'h'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:53:55:
+   [36m| [0m
+[36m53[0m [36m| [0m    @Expect(tree.walkUntil({h => count[0]++; false}, {h => true}), false)[0m
+   [36m| [0m                                                      [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+[34mnote[0m: the warning occurs after the macro is expanded
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:44:1:
+   [36m| [0m
+[36m44[0m [36m| [0m  @Test[0m
+   [36m| [0m [34m_[0m[34m^[0m
+[36m45[0m [36m| [0m[34m|[0m func hirTraversalVisitsEnterLeaveAndHonorsBothStops(): Unit {[0m
+   [36m| [0m[34m|[0m ...[0m
+[36m64[0m [36m| [0m[34m|[0m }[0m
+   [36m| [0m[34m|[0m[34m_[0m[34m^[0m
+   [36m| [0m
+[34mnote[0m: which is expanded as follows
+    [36m| [0m
+    [36m| [0m/* 44.43 */    expectEqual("tree.walkUntil({ h =>\n    count[0] ++\n    false\n}, { h =>\n    true\n})", "false", tree.walkUntil({ h => count[0] ++; false }, { h => true }), false, isDelta: false,)[0m
+    [36m| [0m                                                                                                                                                                [34m^ [0m
+    [36m| [0m
+
+[33mwarning[0m: unused variable:'h'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:56:29:
+   [36m| [0m
+[36m56[0m [36m| [0m    @Expect(tree.walkUntil({h => true}, {h => count[0]++; false}), false)[0m
+   [36m| [0m                            [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+[34mnote[0m: the warning occurs after the macro is expanded
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:44:1:
+   [36m| [0m
+[36m44[0m [36m| [0m  @Test[0m
+   [36m| [0m [34m_[0m[34m^[0m
+[36m45[0m [36m| [0m[34m|[0m func hirTraversalVisitsEnterLeaveAndHonorsBothStops(): Unit {[0m
+   [36m| [0m[34m|[0m ...[0m
+[36m64[0m [36m| [0m[34m|[0m }[0m
+   [36m| [0m[34m|[0m[34m_[0m[34m^[0m
+   [36m| [0m
+[34mnote[0m: which is expanded as follows
+    [36m| [0m
+    [36m| [0m/* 44.46 */    expectEqual("tree.walkUntil({ h =>\n    true\n}, { h =>\n    count[0] ++\n    false\n})", "false", tree.walkUntil({ h => true }, { h => count[0] ++; false }), false, isDelta: false,)[0m
+    [36m| [0m                                                                                                                                   [34m^ [0m
+    [36m| [0m
+
+[33mwarning[0m: unused variable:'h'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:56:42:
+   [36m| [0m
+[36m56[0m [36m| [0m    @Expect(tree.walkUntil({h => true}, {h => count[0]++; false}), false)[0m
+   [36m| [0m                                         [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+[34mnote[0m: the warning occurs after the macro is expanded
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:44:1:
+   [36m| [0m
+[36m44[0m [36m| [0m  @Test[0m
+   [36m| [0m [34m_[0m[34m^[0m
+[36m45[0m [36m| [0m[34m|[0m func hirTraversalVisitsEnterLeaveAndHonorsBothStops(): Unit {[0m
+   [36m| [0m[34m|[0m ...[0m
+[36m64[0m [36m| [0m[34m|[0m }[0m
+   [36m| [0m[34m|[0m[34m_[0m[34m^[0m
+   [36m| [0m
+[34mnote[0m: which is expanded as follows
+    [36m| [0m
+    [36m| [0m/* 44.46 */    expectEqual("tree.walkUntil({ h =>\n    true\n}, { h =>\n    count[0] ++\n    false\n})", "false", tree.walkUntil({ h => true }, { h => count[0] ++; false }), false, isDelta: false,)[0m
+    [36m| [0m                                                                                                                                                  [34m^ [0m
+    [36m| [0m
+
+[33mwarning[0m: unused variable:'h'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:58:29:
+   [36m| [0m
+[36m58[0m [36m| [0m    @Expect(tree.walkUntil({h => true}, {h => true}), true)[0m
+   [36m| [0m                            [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+[34mnote[0m: the warning occurs after the macro is expanded
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:44:1:
+   [36m| [0m
+[36m44[0m [36m| [0m  @Test[0m
+   [36m| [0m [34m_[0m[34m^[0m
+[36m45[0m [36m| [0m[34m|[0m func hirTraversalVisitsEnterLeaveAndHonorsBothStops(): Unit {[0m
+   [36m| [0m[34m|[0m ...[0m
+[36m64[0m [36m| [0m[34m|[0m }[0m
+   [36m| [0m[34m|[0m[34m_[0m[34m^[0m
+   [36m| [0m
+[34mnote[0m: which is expanded as follows
+    [36m| [0m
+    [36m| [0m/* 44.48 */    expectEqual("tree.walkUntil({ h =>\n    true\n}, { h =>\n    true\n})", "true", tree.walkUntil({ h => true }, { h => true }), true, isDelta: false,)[0m
+    [36m| [0m                                                                                                                [34m^ [0m
+    [36m| [0m
+
+[33mwarning[0m: unused variable:'h'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:58:42:
+   [36m| [0m
+[36m58[0m [36m| [0m    @Expect(tree.walkUntil({h => true}, {h => true}), true)[0m
+   [36m| [0m                                         [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+[34mnote[0m: the warning occurs after the macro is expanded
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:44:1:
+   [36m| [0m
+[36m44[0m [36m| [0m  @Test[0m
+   [36m| [0m [34m_[0m[34m^[0m
+[36m45[0m [36m| [0m[34m|[0m func hirTraversalVisitsEnterLeaveAndHonorsBothStops(): Unit {[0m
+   [36m| [0m[34m|[0m ...[0m
+[36m64[0m [36m| [0m[34m|[0m }[0m
+   [36m| [0m[34m|[0m[34m_[0m[34m^[0m
+   [36m| [0m
+[34mnote[0m: which is expanded as follows
+    [36m| [0m
+    [36m| [0m/* 44.48 */    expectEqual("tree.walkUntil({ h =>\n    true\n}, { h =>\n    true\n})", "true", tree.walkUntil({ h => true }, { h => true }), true, isDelta: false,)[0m
+    [36m| [0m                                                                                                                               [34m^ [0m
+    [36m| [0m
+
+[33mwarning[0m: unused variable:'h'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:62:28:
+   [36m| [0m
+[36m62[0m [36m| [0m    @Expect(ast.walkUntil({h => true}, {h => leaves[0]++; false}), false)[0m
+   [36m| [0m                           [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+[34mnote[0m: the warning occurs after the macro is expanded
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:44:1:
+   [36m| [0m
+[36m44[0m [36m| [0m  @Test[0m
+   [36m| [0m [34m_[0m[34m^[0m
+[36m45[0m [36m| [0m[34m|[0m func hirTraversalVisitsEnterLeaveAndHonorsBothStops(): Unit {[0m
+   [36m| [0m[34m|[0m ...[0m
+[36m64[0m [36m| [0m[34m|[0m }[0m
+   [36m| [0m[34m|[0m[34m_[0m[34m^[0m
+   [36m| [0m
+[34mnote[0m: which is expanded as follows
+    [36m| [0m
+    [36m| [0m/* 44.52 */    expectEqual("ast.walkUntil({ h =>\n    true\n}, { h =>\n    leaves[0] ++\n    false\n})", "false", ast.walkUntil({ h => true }, { h => leaves[0] ++; false }), false, isDelta: false,)[0m
+    [36m| [0m                                                                                                                                  [34m^ [0m
+    [36m| [0m
+
+[33mwarning[0m: unused variable:'h'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:62:41:
+   [36m| [0m
+[36m62[0m [36m| [0m    @Expect(ast.walkUntil({h => true}, {h => leaves[0]++; false}), false)[0m
+   [36m| [0m                                        [33m^ unused variable[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+[34mnote[0m: the warning occurs after the macro is expanded
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/structure_coverage_test.cj:44:1:
+   [36m| [0m
+[36m44[0m [36m| [0m  @Test[0m
+   [36m| [0m [34m_[0m[34m^[0m
+[36m45[0m [36m| [0m[34m|[0m func hirTraversalVisitsEnterLeaveAndHonorsBothStops(): Unit {[0m
+   [36m| [0m[34m|[0m ...[0m
+[36m64[0m [36m| [0m[34m|[0m }[0m
+   [36m| [0m[34m|[0m[34m_[0m[34m^[0m
+   [36m| [0m
+[34mnote[0m: which is expanded as follows
+    [36m| [0m
+    [36m| [0m/* 44.52 */    expectEqual("ast.walkUntil({ h =>\n    true\n}, { h =>\n    leaves[0] ++\n    false\n})", "false", ast.walkUntil({ h => true }, { h => leaves[0] ++; false }), false, isDelta: false,)[0m
+    [36m| [0m                                                                                                                                                 [34m^ [0m
+    [36m| [0m
+
+21 warnings generated, 21 warnings printed.
+[?25l[0J7[;r8
+[1F7[9999E8[0J7[;r8
+[1F7[9999E8[0J7[;r8
+[1F7[9999E8[0J7[;r8
 
 
 
-
-
-
-
-📦 group regex_consumer               26% [|||||---------------]      (00:00:00)
-🧪 test TestCase_unicodeShorthandsAndNul.unicodeShorthandsAndNul      (00:00:00)
-
-passed: 16, failed: 0                26% [|||||---------------] 16/61 (00:00:01)
-
-
-
-📦 group regex_consumer               60% [||||||||||||--------]      (00:00:00)
+[4F7[9999E[3F📦 group regex_consumer               22% [90m[[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[90m----------------[0m[90m][0m [32m    [0m (00:00:00)
 🧪 test TestCase_dfaReverseRecoveryRetainsPriorityAndContext....      (00:00:00)
 
-passed: 37, failed: 0                60% [||||||||||||--------] 37/61 (00:00:01) --------------------------------------------------------------------------------------------------
-TP: regex_consumer, time elapsed: 579258000 ns, RESULT:
-    TCS: TestCase_simpleCaseFoldingKeepsOriginalText, time elapsed: 15410000 ns, RESULT:
-    [ PASSED ] CASE: simpleCaseFoldingKeepsOriginalText (14509000 ns)
-    TCS: TestCase_nulMatchingAndEscape, time elapsed: 2780000 ns, RESULT:
-    [ PASSED ] CASE: nulMatchingAndEscape (2610000 ns)
-    TCS: TestCase_nulReplacementAndSplit, time elapsed: 3275000 ns, RESULT:
-    [ PASSED ] CASE: nulReplacementAndSplit (3127000 ns)
-    TCS: TestCase_captureAbsenceAndBounds, time elapsed: 737000 ns, RESULT:
-    [ PASSED ] CASE: captureAbsenceAndBounds (569000 ns)
-    TCS: TestCase_captureResultsAndMetadataAreIndependent, time elapsed: 765000 ns, RESULT:
-    [ PASSED ] CASE: captureResultsAndMetadataAreIndependent (598000 ns)
-    TCS: TestCase_retainedCaptureAndTemplateExpansion, time elapsed: 164000 ns, RESULT:
-    [ PASSED ] CASE: retainedCaptureAndTemplateExpansion (37000 ns)
-    TCS: TestCase_callbackLimitAndNoMatch, time elapsed: 160000 ns, RESULT:
-    [ PASSED ] CASE: callbackLimitAndNoMatch (35000 ns)
-    TCS: TestCase_callbackExceptionAndReuse, time elapsed: 1488000 ns, RESULT:
-    [ PASSED ] CASE: callbackExceptionAndReuse (1357000 ns)
-    TCS: TestCase_callbackCanReuseSameRegex, time elapsed: 962000 ns, RESULT:
-    [ PASSED ] CASE: callbackCanReuseSameRegex (835000 ns)
-    TCS: TestCase_zeroWidthUnicodeAndLimits, time elapsed: 5226000 ns, RESULT:
-    [ PASSED ] CASE: zeroWidthUnicodeAndLimits (5054000 ns)
-    TCS: TestCase_invalidPatternAndNegativeLimit, time elapsed: 412000 ns, RESULT:
-    [ PASSED ] CASE: invalidPatternAndNegativeLimit (232000 ns)
-    TCS: TestCase_multilineAndDotAllFlags, time elapsed: 4735000 ns, RESULT:
-    [ PASSED ] CASE: multilineAndDotAllFlags (4572000 ns)
-    TCS: TestCase_scopedGreedAndAbsoluteAnchors, time elapsed: 4251000 ns, RESULT:
-    [ PASSED ] CASE: scopedGreedAndAbsoluteAnchors (4033000 ns)
-    TCS: TestCase_escapedNulAndUnicodeScalars, time elapsed: 2848000 ns, RESULT:
-    [ PASSED ] CASE: escapedNulAndUnicodeScalars (2704000 ns)
-    TCS: TestCase_posixClassesWithNul, time elapsed: 3233000 ns, RESULT:
-    [ PASSED ] CASE: posixClassesWithNul (3070000 ns)
-    TCS: TestCase_posixClassesAreAsciiAndNamesCanFallBack, time elapsed: 3217000 ns, RESULT:
-    [ PASSED ] CASE: posixClassesAreAsciiAndNamesCanFallBack (3056000 ns)
-    TCS: TestCase_unicodeShorthandsAndNul, time elapsed: 58159000 ns, RESULT:
-    [ PASSED ] CASE: unicodeShorthandsAndNul (57969000 ns)
-    TCS: TestCase_unicodeWordBoundaries, time elapsed: 17296000 ns, RESULT:
-    [ PASSED ] CASE: unicodeWordBoundaries (17132000 ns)
-    TCS: TestCase_unicodeGeneralCategories, time elapsed: 49791000 ns, RESULT:
-    [ PASSED ] CASE: unicodeGeneralCategories (49582000 ns)
-    TCS: TestCase_unicodeScripts, time elapsed: 8207000 ns, RESULT:
-    [ PASSED ] CASE: unicodeScripts (7966000 ns)
-    TCS: TestCase_unicodeBinaryProperties, time elapsed: 33048000 ns, RESULT:
-    [ PASSED ] CASE: unicodeBinaryProperties (32815000 ns)
-    TCS: TestCase_searchFromOffsetAndConfiguredSyntax, time elapsed: 19016000 ns, RESULT:
-    [ PASSED ] CASE: searchFromOffsetAndConfiguredSyntax (18830000 ns)
-    TCS: TestCase_bytesRegexMatchesRawBytes, time elapsed: 824000 ns, RESULT:
-    [ PASSED ] CASE: bytesRegexMatchesRawBytes (709000 ns)
-    TCS: TestCase_byteIteratorsSnapshotAndKeepIndependentCursors, time elapsed: 155000 ns, RESULT:
-    [ PASSED ] CASE: byteIteratorsSnapshotAndKeepIndependentCursors (36000 ns)
-    TCS: TestCase_clonedIteratorsKeepIndependentCursors, time elapsed: 3267000 ns, RESULT:
-    [ PASSED ] CASE: clonedIteratorsKeepIndependentCursors (2991000 ns)
-    TCS: TestCase_lazySplitLimitsAndByteCaptureMetadata, time elapsed: 221000 ns, RESULT:
-    [ PASSED ] CASE: lazySplitLimitsAndByteCaptureMetadata (73000 ns)
-    TCS: TestCase_appendExpansionPreservesBuffers, time elapsed: 639000 ns, RESULT:
-    [ PASSED ] CASE: appendExpansionPreservesBuffers (519000 ns)
-    TCS: TestCase_setBuilderArrayConstructionAndErrors, time elapsed: 201000 ns, RESULT:
-    [ PASSED ] CASE: setBuilderArrayConstructionAndErrors (93000 ns)
-    TCS: TestCase_astKeepsTheGroupThatHirCollapses, time elapsed: 15116000 ns, RESULT:
-    [ PASSED ] CASE: astKeepsTheGroupThatHirCollapses (14944000 ns)
-    TCS: TestCase_boundedBacktrackerReportsCapturesAndBudgetErrors, time elapsed: 209000 ns, RESULT:
-    [ PASSED ] CASE: boundedBacktrackerReportsCapturesAndBudgetErrors (95000 ns)
-    TCS: TestCase_liteMatchesScalarsWithAsciiClasses, time elapsed: 1845000 ns, RESULT:
-    [ PASSED ] CASE: liteMatchesScalarsWithAsciiClasses (1725000 ns)
-    TCS: TestCase_hybridOverlapBuildsTransitionsAndCanBeReused, time elapsed: 1131000 ns, RESULT:
-    [ PASSED ] CASE: hybridOverlapBuildsTransitionsAndCanBeReused (1030000 ns)
-    TCS: TestCase_metaKeepsCapturesWhenUsingHybrid, time elapsed: 2696000 ns, RESULT:
-    [ PASSED ] CASE: metaKeepsCapturesWhenUsingHybrid (2580000 ns)
-    TCS: TestCase_dfaImagesNeverSilentlyDropConfiguration, time elapsed: 54469000 ns, RESULT:
-    [ PASSED ] CASE: dfaImagesNeverSilentlyDropConfiguration (54260000 ns)
-    TCS: TestCase_denseAndSparseDfaReportTheSameSpan, time elapsed: 66388000 ns, RESULT:
-    [ PASSED ] CASE: denseAndSparseDfaReportTheSameSpan (66170000 ns)
-    TCS: TestCase_multiPatternDfaPrefersTheEarlierRule, time elapsed: 42833000 ns, RESULT:
-    [ PASSED ] CASE: multiPatternDfaPrefersTheEarlierRule (42633000 ns)
-    TCS: TestCase_syntaxValidationKeepsTranslationSeparate, time elapsed: 575000 ns, RESULT:
-    [ PASSED ] CASE: syntaxValidationKeepsTranslationSeparate (470000 ns)
-    TCS: TestCase_dfaReverseRecoveryRetainsPriorityAndContext, time elapsed: 37685000 ns, RESULT:
-    [ PASSED ] CASE: dfaReverseRecoveryRetainsPriorityAndContext (37540000 ns)
-    TCS: TestCase_octalAstClassesKeepTheirValueAndSpelling, time elapsed: 1000000 ns, RESULT:
-    [ PASSED ] CASE: octalAstClassesKeepTheirValueAndSpelling (890000 ns)
-    TCS: TestCase_groupCursorCopiesHaveIndependentPositions, time elapsed: 186000 ns, RESULT:
-    [ PASSED ] CASE: groupCursorCopiesHaveIndependentPositions (61000 ns)
-    TCS: TestCase_setSizeHintTracksSlotsNotHits, time elapsed: 192000 ns, RESULT:
-    [ PASSED ] CASE: setSizeHintTracksSlotsNotHits (36000 ns)
-    TCS: TestCase_hirExposesSixDigitStructure, time elapsed: 166000 ns, RESULT:
-    [ PASSED ] CASE: hirExposesSixDigitStructure (65000 ns)
-    TCS: TestCase_hirSmartConstructorsPreserveSnapshots, time elapsed: 127000 ns, RESULT:
-    [ PASSED ] CASE: hirSmartConstructorsPreserveSnapshots (13000 ns)
-    TCS: TestCase_hirLengthOverflowAndEmptyAreDistinctFromFailure, time elapsed: 130000 ns, RESULT:
-    [ PASSED ] CASE: hirLengthOverflowAndEmptyAreDistinctFromFailure (14000 ns)
-    TCS: TestCase_hirRejectsUnimplementedStructuresExplicitly, time elapsed: 147000 ns, RESULT:
-    [ PASSED ] CASE: hirRejectsUnimplementedStructuresExplicitly (49000 ns)
-    TCS: TestCase_literalsUtf8AndEarliestMatchThePinnedCorpus, time elapsed: 5501000 ns, RESULT:
-    [ PASSED ] CASE: literalsUtf8AndEarliestMatchThePinnedCorpus (5390000 ns)
-    TCS: TestCase_pikeReportsPatternSpanAndCaptures, time elapsed: 1415000 ns, RESULT:
-    [ PASSED ] CASE: pikeReportsPatternSpanAndCaptures (1315000 ns)
-    TCS: TestCase_pikeAnchoredSearchSeesTextOutsideTheRange, time elapsed: 175000 ns, RESULT:
-    [ PASSED ] CASE: pikeAnchoredSearchSeesTextOutsideTheRange (72000 ns)
-    TCS: TestCase_anchoredSearchIsNotTheSameAsACaret, time elapsed: 161000 ns, RESULT:
-    [ PASSED ] CASE: anchoredSearchIsNotTheSameAsACaret (27000 ns)
-    TCS: TestCase_oneGraphPikeKeepsThreadsInTheCache, time elapsed: 142000 ns, RESULT:
-    [ PASSED ] CASE: oneGraphPikeKeepsThreadsInTheCache (39000 ns)
-    TCS: TestCase_backtrackerReusesItsVisitedCache, time elapsed: 139000 ns, RESULT:
-    [ PASSED ] CASE: backtrackerReusesItsVisitedCache (42000 ns)
-    TCS: TestCase_reverseSearchReportsTheMatchStart, time elapsed: 153000 ns, RESULT:
-    [ PASSED ] CASE: reverseSearchReportsTheMatchStart (57000 ns)
-    TCS: TestCase_reviewedAstUnicodeAndBoundaryRoundTrips, time elapsed: 182000 ns, RESULT:
-    [ PASSED ] CASE: reviewedAstUnicodeAndBoundaryRoundTrips (79000 ns)
-    TCS: TestCase_reviewedPikeByteRangesAndEmptyPatternSet, time elapsed: 560000 ns, RESULT:
-    [ PASSED ] CASE: reviewedPikeByteRangesAndEmptyPatternSet (467000 ns)
-    TCS: TestCase_emptySetAndEmptyMatches, time elapsed: 151000 ns, RESULT:
-    [ PASSED ] CASE: emptySetAndEmptyMatches (30000 ns)
-    TCS: TestCase_setOverlapDuplicatesAndOrdering, time elapsed: 163000 ns, RESULT:
-    [ PASSED ] CASE: setOverlapDuplicatesAndOrdering (70000 ns)
-    TCS: TestCase_setResultsAndPatternsAreIndependent, time elapsed: 135000 ns, RESULT:
-    [ PASSED ] CASE: setResultsAndPatternsAreIndependent (26000 ns)
-    TCS: TestCase_setNulAndUnicode, time elapsed: 1400000 ns, RESULT:
-    [ PASSED ] CASE: setNulAndUnicode (1292000 ns)
-    TCS: TestCase_setAgreesWithIndependentRegexes, time elapsed: 98599000 ns, RESULT:
-    [ PASSED ] CASE: setAgreesWithIndependentRegexes (98435000 ns)
-    TCS: TestCase_setInvalidIndexAndConstruction, time elapsed: 1141000 ns, RESULT:
-    [ PASSED ] CASE: setInvalidIndexAndConstruction (1032000 ns)
-    TCS: TestCase_setIteratorDirectionsCloneAndLifetime, time elapsed: 179000 ns, RESULT:
-    [ PASSED ] CASE: setIteratorDirectionsCloneAndLifetime (73000 ns)
-Summary: TOTAL: 61
-    PASSED: 61, SKIPPED: 0, ERROR: 0
-    FAILED: 0
+passed: [32m17[0m, failed: 0                22% [90m[[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[90m----------------[0m[90m][0m 17/77 (00:00:01) 8[0J7[;r8
+
+
+[3F7[9999E[2F📦 group regex_consumer              100% [90m[[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m|[0m[90m[0m[90m][0m [32m✓   [0m (00:00:00)
+
+passed: [32m77[0m, failed: 0               100% [90m[[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m[0m[32m|[0m[32m[0m[32m[0m[32m|[0m[90m[0m[90m][0m 77/77 (00:00:01) 8--------------------------------------------------------------------------------------------------
+TP: [33mregex_consumer[0m, time elapsed: 668873000 ns, RESULT:
+    TCS: [33mTestCase_boundedBacktrackerReportsCapturesAndBudgetErrors[0m, time elapsed: 1562000 ns, RESULT:
+    [[32m PASSED [0m] CASE: boundedBacktrackerReportsCapturesAndBudgetErrors (929000 ns)
+    TCS: [33mTestCase_backtrackerReusesItsVisitedCache[0m, time elapsed: 327000 ns, RESULT:
+    [[32m PASSED [0m] CASE: backtrackerReusesItsVisitedCache (188000 ns)
+    TCS: [33mTestCase_byteConvenienceMethodsRetainOffsetsAndNames[0m, time elapsed: 1317000 ns, RESULT:
+    [[32m PASSED [0m] CASE: byteConvenienceMethodsRetainOffsetsAndNames (1169000 ns)
+    TCS: [33mTestCase_clonedByteIteratorsKeepIndependentCursors[0m, time elapsed: 193000 ns, RESULT:
+    [[32m PASSED [0m] CASE: clonedByteIteratorsKeepIndependentCursors (80000 ns)
+    TCS: [33mTestCase_bytesRegexMatchesRawBytes[0m, time elapsed: 1270000 ns, RESULT:
+    [[32m PASSED [0m] CASE: bytesRegexMatchesRawBytes (1142000 ns)
+    TCS: [33mTestCase_byteIteratorsSnapshotAndKeepIndependentCursors[0m, time elapsed: 166000 ns, RESULT:
+    [[32m PASSED [0m] CASE: byteIteratorsSnapshotAndKeepIndependentCursors (47000 ns)
+    TCS: [33mTestCase_captureAbsenceAndBounds[0m, time elapsed: 836000 ns, RESULT:
+    [[32m PASSED [0m] CASE: captureAbsenceAndBounds (720000 ns)
+    TCS: [33mTestCase_captureResultsAndMetadataAreIndependent[0m, time elapsed: 796000 ns, RESULT:
+    [[32m PASSED [0m] CASE: captureResultsAndMetadataAreIndependent (683000 ns)
+    TCS: [33mTestCase_retainedCaptureAndTemplateExpansion[0m, time elapsed: 283000 ns, RESULT:
+    [[32m PASSED [0m] CASE: retainedCaptureAndTemplateExpansion (84000 ns)
+    TCS: [33mTestCase_groupCursorCopiesHaveIndependentPositions[0m, time elapsed: 239000 ns, RESULT:
+    [[32m PASSED [0m] CASE: groupCursorCopiesHaveIndependentPositions (113000 ns)
+    TCS: [33mTestCase_dfaImagesRejectEveryTruncationAndCorruptHeader[0m, time elapsed: 57516000 ns, RESULT:
+    [[32m PASSED [0m] CASE: dfaImagesRejectEveryTruncationAndCorruptHeader (57357000 ns)
+    TCS: [33mTestCase_dfaQuitBytesAbortAndCacheResetPreservesResults[0m, time elapsed: 63947000 ns, RESULT:
+    [[32m PASSED [0m] CASE: dfaQuitBytesAbortAndCacheResetPreservesResults (63794000 ns)
+    TCS: [33mTestCase_captureModesRejectUnknownValuesAcrossEngines[0m, time elapsed: 176000 ns, RESULT:
+    [[32m PASSED [0m] CASE: captureModesRejectUnknownValuesAcrossEngines (41000 ns)
+    TCS: [33mTestCase_hybridOverlapBuildsTransitionsAndCanBeReused[0m, time elapsed: 993000 ns, RESULT:
+    [[32m PASSED [0m] CASE: hybridOverlapBuildsTransitionsAndCanBeReused (905000 ns)
+    TCS: [33mTestCase_dfaImagesNeverSilentlyDropConfiguration[0m, time elapsed: 54409000 ns, RESULT:
+    [[32m PASSED [0m] CASE: dfaImagesNeverSilentlyDropConfiguration (54266000 ns)
+    TCS: [33mTestCase_denseAndSparseDfaReportTheSameSpan[0m, time elapsed: 62119000 ns, RESULT:
+    [[32m PASSED [0m] CASE: denseAndSparseDfaReportTheSameSpan (61975000 ns)
+    TCS: [33mTestCase_multiPatternDfaPrefersTheEarlierRule[0m, time elapsed: 43272000 ns, RESULT:
+    [[32m PASSED [0m] CASE: multiPatternDfaPrefersTheEarlierRule (43145000 ns)
+    TCS: [33mTestCase_dfaReverseRecoveryRetainsPriorityAndContext[0m, time elapsed: 40573000 ns, RESULT:
+    [[32m PASSED [0m] CASE: dfaReverseRecoveryRetainsPriorityAndContext (40445000 ns)
+    TCS: [33mTestCase_searchInputConfigurationPreservesSourceAndRejectsRanges[0m, time elapsed: 607000 ns, RESULT:
+    [[32m PASSED [0m] CASE: searchInputConfigurationPreservesSourceAndRejectsRanges (477000 ns)
+    TCS: [33mTestCase_pikeCacheResetsCapturedStateAfterMiss[0m, time elapsed: 561000 ns, RESULT:
+    [[32m PASSED [0m] CASE: pikeCacheResetsCapturedStateAfterMiss (445000 ns)
+    TCS: [33mTestCase_graphInspectionChecksIndicesAndReachableAccept[0m, time elapsed: 202000 ns, RESULT:
+    [[32m PASSED [0m] CASE: graphInspectionChecksIndicesAndReachableAccept (129000 ns)
+    TCS: [33mTestCase_pikeReportsPatternSpanAndCaptures[0m, time elapsed: 1465000 ns, RESULT:
+    [[32m PASSED [0m] CASE: pikeReportsPatternSpanAndCaptures (1382000 ns)
+    TCS: [33mTestCase_pikeAnchoredSearchSeesTextOutsideTheRange[0m, time elapsed: 143000 ns, RESULT:
+    [[32m PASSED [0m] CASE: pikeAnchoredSearchSeesTextOutsideTheRange (61000 ns)
+    TCS: [33mTestCase_anchoredSearchIsNotTheSameAsACaret[0m, time elapsed: 101000 ns, RESULT:
+    [[32m PASSED [0m] CASE: anchoredSearchIsNotTheSameAsACaret (24000 ns)
+    TCS: [33mTestCase_oneGraphPikeKeepsThreadsInTheCache[0m, time elapsed: 127000 ns, RESULT:
+    [[32m PASSED [0m] CASE: oneGraphPikeKeepsThreadsInTheCache (35000 ns)
+    TCS: [33mTestCase_reviewedPikeByteRangesAndEmptyPatternSet[0m, time elapsed: 486000 ns, RESULT:
+    [[32m PASSED [0m] CASE: reviewedPikeByteRangesAndEmptyPatternSet (415000 ns)
+    TCS: [33mTestCase_adaptersRespectAnchorsAndIterationResults[0m, time elapsed: 1005000 ns, RESULT:
+    [[32m PASSED [0m] CASE: adaptersRespectAnchorsAndIterationResults (923000 ns)
+    TCS: [33mTestCase_backtrackerEmptyMatchesAndCacheArguments[0m, time elapsed: 168000 ns, RESULT:
+    [[32m PASSED [0m] CASE: backtrackerEmptyMatchesAndCacheArguments (64000 ns)
+    TCS: [33mTestCase_liteMatchesScalarsWithAsciiClasses[0m, time elapsed: 1264000 ns, RESULT:
+    [[32m PASSED [0m] CASE: liteMatchesScalarsWithAsciiClasses (1192000 ns)
+    TCS: [33mTestCase_metaKeepsCapturesWhenUsingHybrid[0m, time elapsed: 2508000 ns, RESULT:
+    [[32m PASSED [0m] CASE: metaKeepsCapturesWhenUsingHybrid (2431000 ns)
+    TCS: [33mTestCase_reverseSearchReportsTheMatchStart[0m, time elapsed: 147000 ns, RESULT:
+    [[32m PASSED [0m] CASE: reverseSearchReportsTheMatchStart (59000 ns)
+    TCS: [33mTestCase_textConvenienceMethodsAndClonedCapturesPreserveContract[0m, time elapsed: 640000 ns, RESULT:
+    [[32m PASSED [0m] CASE: textConvenienceMethodsAndClonedCapturesPreserveContract (564000 ns)
+    TCS: [33mTestCase_zeroWidthUnicodeAndLimits[0m, time elapsed: 3424000 ns, RESULT:
+    [[32m PASSED [0m] CASE: zeroWidthUnicodeAndLimits (3336000 ns)
+    TCS: [33mTestCase_searchFromOffsetAndConfiguredSyntax[0m, time elapsed: 14293000 ns, RESULT:
+    [[32m PASSED [0m] CASE: searchFromOffsetAndConfiguredSyntax (14200000 ns)
+    TCS: [33mTestCase_clonedIteratorsKeepIndependentCursors[0m, time elapsed: 2190000 ns, RESULT:
+    [[32m PASSED [0m] CASE: clonedIteratorsKeepIndependentCursors (2114000 ns)
+    TCS: [33mTestCase_setBuilderArrayConstructionAndErrors[0m, time elapsed: 156000 ns, RESULT:
+    [[32m PASSED [0m] CASE: setBuilderArrayConstructionAndErrors (75000 ns)
+    TCS: [33mTestCase_setSizeHintTracksSlotsNotHits[0m, time elapsed: 119000 ns, RESULT:
+    [[32m PASSED [0m] CASE: setSizeHintTracksSlotsNotHits (33000 ns)
+    TCS: [33mTestCase_emptySetAndEmptyMatches[0m, time elapsed: 134000 ns, RESULT:
+    [[32m PASSED [0m] CASE: emptySetAndEmptyMatches (32000 ns)
+    TCS: [33mTestCase_setOverlapDuplicatesAndOrdering[0m, time elapsed: 184000 ns, RESULT:
+    [[32m PASSED [0m] CASE: setOverlapDuplicatesAndOrdering (66000 ns)
+    TCS: [33mTestCase_setResultsAndPatternsAreIndependent[0m, time elapsed: 108000 ns, RESULT:
+    [[32m PASSED [0m] CASE: setResultsAndPatternsAreIndependent (23000 ns)
+    TCS: [33mTestCase_setNulAndUnicode[0m, time elapsed: 1350000 ns, RESULT:
+    [[32m PASSED [0m] CASE: setNulAndUnicode (1262000 ns)
+    TCS: [33mTestCase_setAgreesWithIndependentRegexes[0m, time elapsed: 93729000 ns, RESULT:
+    [[32m PASSED [0m] CASE: setAgreesWithIndependentRegexes (93572000 ns)
+    TCS: [33mTestCase_setInvalidIndexAndConstruction[0m, time elapsed: 1147000 ns, RESULT:
+    [[32m PASSED [0m] CASE: setInvalidIndexAndConstruction (1042000 ns)
+    TCS: [33mTestCase_setIteratorDirectionsCloneAndLifetime[0m, time elapsed: 167000 ns, RESULT:
+    [[32m PASSED [0m] CASE: setIteratorDirectionsCloneAndLifetime (78000 ns)
+    TCS: [33mTestCase_syntaxSpansAndErrorsRetainCoordinates[0m, time elapsed: 124000 ns, RESULT:
+    [[32m PASSED [0m] CASE: syntaxSpansAndErrorsRetainCoordinates (33000 ns)
+    TCS: [33mTestCase_hirClassAlgebraChecksMembershipAndEmptyResults[0m, time elapsed: 12742000 ns, RESULT:
+    [[32m PASSED [0m] CASE: hirClassAlgebraChecksMembershipAndEmptyResults (12577000 ns)
+    TCS: [33mTestCase_hirTraversalVisitsEnterLeaveAndHonorsBothStops[0m, time elapsed: 234000 ns, RESULT:
+    [[32m PASSED [0m] CASE: hirTraversalVisitsEnterLeaveAndHonorsBothStops (119000 ns)
+    TCS: [33mTestCase_astKeepsTheGroupThatHirCollapses[0m, time elapsed: 1418000 ns, RESULT:
+    [[32m PASSED [0m] CASE: astKeepsTheGroupThatHirCollapses (1331000 ns)
+    TCS: [33mTestCase_syntaxValidationKeepsTranslationSeparate[0m, time elapsed: 572000 ns, RESULT:
+    [[32m PASSED [0m] CASE: syntaxValidationKeepsTranslationSeparate (491000 ns)
+    TCS: [33mTestCase_octalAstClassesKeepTheirValueAndSpelling[0m, time elapsed: 1041000 ns, RESULT:
+    [[32m PASSED [0m] CASE: octalAstClassesKeepTheirValueAndSpelling (967000 ns)
+    TCS: [33mTestCase_hirExposesSixDigitStructure[0m, time elapsed: 154000 ns, RESULT:
+    [[32m PASSED [0m] CASE: hirExposesSixDigitStructure (58000 ns)
+    TCS: [33mTestCase_hirSmartConstructorsPreserveSnapshots[0m, time elapsed: 99000 ns, RESULT:
+    [[32m PASSED [0m] CASE: hirSmartConstructorsPreserveSnapshots (16000 ns)
+    TCS: [33mTestCase_hirLengthOverflowAndEmptyAreDistinctFromFailure[0m, time elapsed: 127000 ns, RESULT:
+    [[32m PASSED [0m] CASE: hirLengthOverflowAndEmptyAreDistinctFromFailure (14000 ns)
+    TCS: [33mTestCase_hirRejectsUnimplementedStructuresExplicitly[0m, time elapsed: 148000 ns, RESULT:
+    [[32m PASSED [0m] CASE: hirRejectsUnimplementedStructuresExplicitly (46000 ns)
+    TCS: [33mTestCase_reviewedAstUnicodeAndBoundaryRoundTrips[0m, time elapsed: 179000 ns, RESULT:
+    [[32m PASSED [0m] CASE: reviewedAstUnicodeAndBoundaryRoundTrips (86000 ns)
+    TCS: [33mTestCase_invalidPatternAndNegativeLimit[0m, time elapsed: 118000 ns, RESULT:
+    [[32m PASSED [0m] CASE: invalidPatternAndNegativeLimit (26000 ns)
+    TCS: [33mTestCase_multilineAndDotAllFlags[0m, time elapsed: 4018000 ns, RESULT:
+    [[32m PASSED [0m] CASE: multilineAndDotAllFlags (3923000 ns)
+    TCS: [33mTestCase_scopedGreedAndAbsoluteAnchors[0m, time elapsed: 3488000 ns, RESULT:
+    [[32m PASSED [0m] CASE: scopedGreedAndAbsoluteAnchors (3384000 ns)
+    TCS: [33mTestCase_escapedNulAndUnicodeScalars[0m, time elapsed: 2393000 ns, RESULT:
+    [[32m PASSED [0m] CASE: escapedNulAndUnicodeScalars (2302000 ns)
+    TCS: [33mTestCase_nulReplacementAndSplit[0m, time elapsed: 2398000 ns, RESULT:
+    [[32m PASSED [0m] CASE: nulReplacementAndSplit (2315000 ns)
+    TCS: [33mTestCase_callbackLimitAndNoMatch[0m, time elapsed: 114000 ns, RESULT:
+    [[32m PASSED [0m] CASE: callbackLimitAndNoMatch (32000 ns)
+    TCS: [33mTestCase_callbackExceptionAndReuse[0m, time elapsed: 1162000 ns, RESULT:
+    [[32m PASSED [0m] CASE: callbackExceptionAndReuse (1065000 ns)
+    TCS: [33mTestCase_callbackCanReuseSameRegex[0m, time elapsed: 783000 ns, RESULT:
+    [[32m PASSED [0m] CASE: callbackCanReuseSameRegex (706000 ns)
+    TCS: [33mTestCase_lazySplitLimitsAndByteCaptureMetadata[0m, time elapsed: 138000 ns, RESULT:
+    [[32m PASSED [0m] CASE: lazySplitLimitsAndByteCaptureMetadata (60000 ns)
+    TCS: [33mTestCase_appendExpansionPreservesBuffers[0m, time elapsed: 544000 ns, RESULT:
+    [[32m PASSED [0m] CASE: appendExpansionPreservesBuffers (468000 ns)
+    TCS: [33mTestCase_literalSequenceEmptyInfiniteAndFiniteContracts[0m, time elapsed: 189000 ns, RESULT:
+    [[32m PASSED [0m] CASE: literalSequenceEmptyInfiniteAndFiniteContracts (107000 ns)
+    TCS: [33mTestCase_utf8RangesRejectInvalidScalarsAndKeepBoundaries[0m, time elapsed: 109000 ns, RESULT:
+    [[32m PASSED [0m] CASE: utf8RangesRejectInvalidScalarsAndKeepBoundaries (24000 ns)
+    TCS: [33mTestCase_nulMatchingAndEscape[0m, time elapsed: 2182000 ns, RESULT:
+    [[32m PASSED [0m] CASE: nulMatchingAndEscape (2094000 ns)
+    TCS: [33mTestCase_literalsUtf8AndEarliestMatchThePinnedCorpus[0m, time elapsed: 5685000 ns, RESULT:
+    [[32m PASSED [0m] CASE: literalsUtf8AndEarliestMatchThePinnedCorpus (5602000 ns)
+    TCS: [33mTestCase_simpleCaseFoldingKeepsOriginalText[0m, time elapsed: 8236000 ns, RESULT:
+    [[32m PASSED [0m] CASE: simpleCaseFoldingKeepsOriginalText (8139000 ns)
+    TCS: [33mTestCase_posixClassesWithNul[0m, time elapsed: 2710000 ns, RESULT:
+    [[32m PASSED [0m] CASE: posixClassesWithNul (2622000 ns)
+    TCS: [33mTestCase_posixClassesAreAsciiAndNamesCanFallBack[0m, time elapsed: 2648000 ns, RESULT:
+    [[32m PASSED [0m] CASE: posixClassesAreAsciiAndNamesCanFallBack (2572000 ns)
+    TCS: [33mTestCase_unicodeShorthandsAndNul[0m, time elapsed: 65764000 ns, RESULT:
+    [[32m PASSED [0m] CASE: unicodeShorthandsAndNul (65629000 ns)
+    TCS: [33mTestCase_unicodeWordBoundaries[0m, time elapsed: 4831000 ns, RESULT:
+    [[32m PASSED [0m] CASE: unicodeWordBoundaries (4712000 ns)
+    TCS: [33mTestCase_unicodeGeneralCategories[0m, time elapsed: 48691000 ns, RESULT:
+    [[32m PASSED [0m] CASE: unicodeGeneralCategories (48549000 ns)
+    TCS: [33mTestCase_unicodeScripts[0m, time elapsed: 7126000 ns, RESULT:
+    [[32m PASSED [0m] CASE: unicodeScripts (6975000 ns)
+    TCS: [33mTestCase_unicodeBinaryProperties[0m, time elapsed: 29050000 ns, RESULT:
+    [[32m PASSED [0m] CASE: unicodeBinaryProperties (28764000 ns)
+Summary: TOTAL: 77
+    [32mPASSED[0m: 77, [32mSKIPPED[0m: 0, ERROR: 0
+    [31mFAILED[0m: 0
 --------------------------------------------------------------------------------------------------
-Project tests finished, time elapsed: 580419000 ns, RESULT:
-TP: regex_consumer.*, time elapsed: 580368000 ns, RESULT:
+Project tests finished, time elapsed: 669896000 ns, RESULT:
+TP: [33mregex_consumer[0m.*, time elapsed: 669859000 ns, RESULT:
     PASSED:
-    TP: regex_consumer, time elapsed: 579258000 ns
-Summary: TOTAL: 61
-    PASSED: 61, SKIPPED: 0, ERROR: 0
-    FAILED: 0
+    TP: [33mregex_consumer[0m, time elapsed: 668873000 ns
+Summary: TOTAL: 77
+    [32mPASSED[0m: 77, [32mSKIPPED[0m: 0, ERROR: 0
+    [31mFAILED[0m: 0
 --------------------------------------------------------------------------------------------------
-cjpm test success
+[0J7[;r8[?25hcjpm test success
 
 Acceptance stage: consumer-run
+[33mwarning[0m: unused import 'std.collection.*'
+ [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/test_support.cj:4:1:
+  [36m| [0m
+[36m4[0m [36m| [0mimport std.collection.*[0m
+  [36m| [0m[33m^^^^^^^^^^^^^^^^^^^^^^^ unused import[0m
+  [36m| [0m
+  [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused function:'requiredMatch'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/test_support.cj:6:1:
+   [36m| [0m
+[36m6[0m  [36m| [0m  func requiredMatch(value: Option<RegexMatch>): RegexMatch {[0m
+   [36m| [0m [33m_[0m[33m^[0m
+[36m7[0m  [36m| [0m[33m|[0m     match (value) {[0m
+   [36m| [0m[33m|[0m ...[0m
+[36m11[0m [36m| [0m[33m|[0m }[0m
+   [36m| [0m[33m|[0m[33m_[0m[33m^ unused function[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused function:'requiredText'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/test_support.cj:13:1:
+   [36m| [0m
+[36m13[0m [36m| [0m  func requiredText(value: Option<String>): String {[0m
+   [36m| [0m [33m_[0m[33m^[0m
+[36m14[0m [36m| [0m[33m|[0m     match (value) {[0m
+   [36m| [0m[33m|[0m ...[0m
+[36m18[0m [36m| [0m[33m|[0m }[0m
+   [36m| [0m[33m|[0m[33m_[0m[33m^ unused function[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused function:'requiredCaptures'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/test_support.cj:20:1:
+   [36m| [0m
+[36m20[0m [36m| [0m  func requiredCaptures(value: Option<Captures>): Captures {[0m
+   [36m| [0m [33m_[0m[33m^[0m
+[36m21[0m [36m| [0m[33m|[0m     match (value) {[0m
+   [36m| [0m[33m|[0m ...[0m
+[36m25[0m [36m| [0m[33m|[0m }[0m
+   [36m| [0m[33m|[0m[33m_[0m[33m^ unused function[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+[33mwarning[0m: unused function:'requiredBytes'
+  [36m==>[0m /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/examples/consumer/src/test_support.cj:27:1:
+   [36m| [0m
+[36m27[0m [36m| [0m  func requiredBytes(value: Option<BytesMatch>): BytesMatch {[0m
+   [36m| [0m [33m_[0m[33m^[0m
+[36m28[0m [36m| [0m[33m|[0m     match (value) {[0m
+   [36m| [0m[33m|[0m ...[0m
+[36m32[0m [36m| [0m[33m|[0m }[0m
+   [36m| [0m[33m|[0m[33m_[0m[33m^ unused function[0m
+   [36m| [0m
+   [36m#[0m [0mnote[0m: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+5 warnings generated, 5 warnings printed.
 1. 查找订单号：
   AB-123 [6, 12)
   CD-456 [20, 26)
@@ -287,31 +877,46 @@ matching fixed cases passed: 400
   "cangjie_matching_engine_implemented": true
 }
 
-Acceptance stage: verify_classes
-class/repetition fixed cases passed: 100
-class/repetition fixed cases passed: 200
-class/repetition fixed cases passed: 300
-class/repetition fixed cases passed: 400
-class/repetition fixed cases passed: 500
-class/repetition fixed cases passed: 600
-{
-  "escape_differential_passed": 336,
-  "literal_roundtrip_passed": 4,
-  "rust_only_matching_fixtures_passed": 6,
-  "matching_differential_passed": 594,
-  "find_and_is_match_checks_passed": 16,
-  "matching_golden_passed": 4,
-  "unsupported_patterns_rejected": 0,
-  "invalid_patterns_rejected": 8,
-  "resource_limits_checked": 0,
-  "cangjie_matching_engine_implemented": true,
-  "class_repetition_differential_passed": 881,
-  "class_repetition_golden_passed": 5,
-  "class_repetition_api_checks_passed": 10,
-  "class_repetition_invalid_rejected": 16,
-  "class_repetition_unsupported_rejected": 0,
-  "class_repetition_resource_limits_checked": 1
-}
+Acceptance stage: verify_upstream_sample
+upstream sample passed: 198 skipped: 141
+
+Acceptance stage: verify_upstream_suite
+handwritten upstream checks passed
+upstream suite cases: 3213
+suite 100/3213 failures 0
+suite 200/3213 failures 0
+suite 300/3213 failures 0
+suite 400/3213 failures 0
+suite 500/3213 failures 0
+suite 600/3213 failures 0
+suite 700/3213 failures 0
+suite 800/3213 failures 0
+suite 900/3213 failures 0
+suite 1000/3213 failures 0
+suite 1100/3213 failures 0
+suite 1200/3213 failures 0
+suite 1300/3213 failures 0
+suite 1400/3213 failures 0
+suite 1500/3213 failures 0
+suite 1600/3213 failures 0
+suite 1700/3213 failures 0
+suite 1800/3213 failures 0
+suite 1900/3213 failures 0
+suite 2000/3213 failures 0
+suite 2100/3213 failures 0
+suite 2200/3213 failures 0
+suite 2300/3213 failures 0
+suite 2400/3213 failures 0
+suite 2500/3213 failures 0
+suite 2600/3213 failures 0
+suite 2700/3213 failures 0
+suite 2800/3213 failures 0
+suite 2900/3213 failures 0
+suite 3000/3213 failures 0
+suite 3100/3213 failures 0
+suite 3200/3213 failures 0
+suite 3213/3213 failures 0
+upstream suite passed: 3213
 
 Acceptance stage: verify_captures
 capture fixed cases passed: 110
@@ -330,12 +935,9 @@ capture fixed cases passed: 550
   "invalid_patterns_rejected": 8,
   "resource_limits_checked": 0,
   "cangjie_matching_engine_implemented": true,
-  "class_repetition_differential_passed": 881,
-  "class_repetition_golden_passed": 5,
-  "class_repetition_api_checks_passed": 10,
-  "class_repetition_invalid_rejected": 16,
-  "class_repetition_unsupported_rejected": 0,
-  "class_repetition_resource_limits_checked": 1,
+  "upstream_sample_passed": 198,
+  "upstream_sample_skipped": 141,
+  "upstream_suite_passed": 3213,
   "capture_differential_passed": 880,
   "capture_golden_passed": 2,
   "capture_name_checks_passed": 35,
@@ -343,6 +945,12 @@ capture fixed cases passed: 550
   "capture_unicode_names_passed": 2,
   "capture_resource_limits_checked": 0
 }
+
+Acceptance stage: verify_group_info
+group info: 42 patterns matched
+
+Acceptance stage: verify_api_contracts
+API contract cases passed: 2414; offset differential checks passed: 513
 
 Acceptance stage: verify_text_ops
 text operation cases passed: 50
@@ -369,22 +977,87 @@ text operation cases passed: 650
   "invalid_patterns_rejected": 8,
   "resource_limits_checked": 0,
   "cangjie_matching_engine_implemented": true,
-  "class_repetition_differential_passed": 881,
-  "class_repetition_golden_passed": 5,
-  "class_repetition_api_checks_passed": 10,
-  "class_repetition_invalid_rejected": 16,
-  "class_repetition_unsupported_rejected": 0,
-  "class_repetition_resource_limits_checked": 1,
+  "upstream_sample_passed": 198,
+  "upstream_sample_skipped": 141,
+  "upstream_suite_passed": 3213,
   "capture_differential_passed": 880,
   "capture_golden_passed": 2,
   "capture_name_checks_passed": 35,
   "capture_invalid_rejected": 8,
   "capture_unicode_names_passed": 2,
   "capture_resource_limits_checked": 0,
+  "group_cursor_cases_passed": 54,
+  "api_contract_cases_passed": 2414,
+  "api_offset_differential_passed": 513,
+  "append_expansion_cases_passed": 80,
+  "builder_array_cases_passed": 4,
+  "set_iterator_contract_cases_passed": 128,
+  "builder_combination_cases_passed": 384,
+  "lazy_iterator_cases_passed": 1400,
+  "bytes_offset_contract_cases_passed": 260,
   "text_operations_differential_passed": 1037,
   "text_operations_golden_passed": 7,
   "text_operations_negative_limits_rejected": 4,
   "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN"
+}
+
+Acceptance stage: verify_sets
+RegexSet differential passed: 577
+
+Acceptance stage: verify_bytes
+bytes differential passed: 48
+
+Acceptance stage: verify_classes
+class/repetition fixed cases passed: 100
+class/repetition fixed cases passed: 200
+class/repetition fixed cases passed: 300
+class/repetition fixed cases passed: 400
+class/repetition fixed cases passed: 500
+class/repetition fixed cases passed: 600
+{
+  "escape_differential_passed": 336,
+  "literal_roundtrip_passed": 4,
+  "rust_only_matching_fixtures_passed": 6,
+  "matching_differential_passed": 594,
+  "find_and_is_match_checks_passed": 16,
+  "matching_golden_passed": 4,
+  "unsupported_patterns_rejected": 0,
+  "invalid_patterns_rejected": 8,
+  "resource_limits_checked": 0,
+  "cangjie_matching_engine_implemented": true,
+  "upstream_sample_passed": 198,
+  "upstream_sample_skipped": 141,
+  "upstream_suite_passed": 3213,
+  "capture_differential_passed": 880,
+  "capture_golden_passed": 2,
+  "capture_name_checks_passed": 35,
+  "capture_invalid_rejected": 8,
+  "capture_unicode_names_passed": 2,
+  "capture_resource_limits_checked": 0,
+  "group_cursor_cases_passed": 54,
+  "api_contract_cases_passed": 2414,
+  "api_offset_differential_passed": 513,
+  "append_expansion_cases_passed": 80,
+  "builder_array_cases_passed": 4,
+  "set_iterator_contract_cases_passed": 128,
+  "builder_combination_cases_passed": 384,
+  "lazy_iterator_cases_passed": 1400,
+  "bytes_offset_contract_cases_passed": 260,
+  "text_operations_differential_passed": 1037,
+  "text_operations_golden_passed": 7,
+  "text_operations_negative_limits_rejected": 4,
+  "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+  "regex_set_differential_passed": 577,
+  "regex_set_golden_passed": 4,
+  "regex_set_error_checks_passed": 3,
+  "regex_set_single_regex_baseline_cases": 120,
+  "bytes_differential_passed": 48,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1
 }
 
 Acceptance stage: verify_flags
@@ -407,31 +1080,45 @@ flag fixed cases passed: 800
   "invalid_patterns_rejected": 8,
   "resource_limits_checked": 0,
   "cangjie_matching_engine_implemented": true,
-  "class_repetition_differential_passed": 881,
-  "class_repetition_golden_passed": 5,
-  "class_repetition_api_checks_passed": 10,
-  "class_repetition_invalid_rejected": 16,
-  "class_repetition_unsupported_rejected": 0,
-  "class_repetition_resource_limits_checked": 1,
+  "upstream_sample_passed": 198,
+  "upstream_sample_skipped": 141,
+  "upstream_suite_passed": 3213,
   "capture_differential_passed": 880,
   "capture_golden_passed": 2,
   "capture_name_checks_passed": 35,
   "capture_invalid_rejected": 8,
   "capture_unicode_names_passed": 2,
   "capture_resource_limits_checked": 0,
+  "group_cursor_cases_passed": 54,
+  "api_contract_cases_passed": 2414,
+  "api_offset_differential_passed": 513,
+  "append_expansion_cases_passed": 80,
+  "builder_array_cases_passed": 4,
+  "set_iterator_contract_cases_passed": 128,
+  "builder_combination_cases_passed": 384,
+  "lazy_iterator_cases_passed": 1400,
+  "bytes_offset_contract_cases_passed": 260,
   "text_operations_differential_passed": 1037,
   "text_operations_golden_passed": 7,
   "text_operations_negative_limits_rejected": 4,
   "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+  "regex_set_differential_passed": 577,
+  "regex_set_golden_passed": 4,
+  "regex_set_error_checks_passed": 3,
+  "regex_set_single_regex_baseline_cases": 120,
+  "bytes_differential_passed": 48,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
   "flags_differential_passed": 960,
   "flags_api_checks_passed": 12,
   "flags_golden_passed": 4,
   "flags_invalid_rejected": 14,
   "flags_unsupported_rejected": 0
 }
-
-Acceptance stage: verify_case
-{"case_fold_differential_passed": 721, "case_fold_golden_passed": 7, "case_fold_invalid_rejected": 2, "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off"}
 
 Acceptance stage: verify_escapes
 {
@@ -445,37 +1132,65 @@ Acceptance stage: verify_escapes
   "invalid_patterns_rejected": 8,
   "resource_limits_checked": 0,
   "cangjie_matching_engine_implemented": true,
-  "class_repetition_differential_passed": 881,
-  "class_repetition_golden_passed": 5,
-  "class_repetition_api_checks_passed": 10,
-  "class_repetition_invalid_rejected": 16,
-  "class_repetition_unsupported_rejected": 0,
-  "class_repetition_resource_limits_checked": 1,
+  "upstream_sample_passed": 198,
+  "upstream_sample_skipped": 141,
+  "upstream_suite_passed": 3213,
   "capture_differential_passed": 880,
   "capture_golden_passed": 2,
   "capture_name_checks_passed": 35,
   "capture_invalid_rejected": 8,
   "capture_unicode_names_passed": 2,
   "capture_resource_limits_checked": 0,
+  "group_cursor_cases_passed": 54,
+  "api_contract_cases_passed": 2414,
+  "api_offset_differential_passed": 513,
+  "append_expansion_cases_passed": 80,
+  "builder_array_cases_passed": 4,
+  "set_iterator_contract_cases_passed": 128,
+  "builder_combination_cases_passed": 384,
+  "lazy_iterator_cases_passed": 1400,
+  "bytes_offset_contract_cases_passed": 260,
   "text_operations_differential_passed": 1037,
   "text_operations_golden_passed": 7,
   "text_operations_negative_limits_rejected": 4,
   "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+  "regex_set_differential_passed": 577,
+  "regex_set_golden_passed": 4,
+  "regex_set_error_checks_passed": 3,
+  "regex_set_single_regex_baseline_cases": 120,
+  "bytes_differential_passed": 48,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
   "flags_differential_passed": 960,
   "flags_api_checks_passed": 12,
   "flags_golden_passed": 4,
   "flags_invalid_rejected": 14,
   "flags_unsupported_rejected": 0,
-  "case_fold_differential_passed": 721,
-  "case_fold_golden_passed": 7,
-  "case_fold_invalid_rejected": 2,
-  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
   "scalar_escape_differential_passed": 366,
   "scalar_escape_invalid_rejected": 22,
   "scalar_escape_golden_passed": 3,
   "scalar_escape_api_checks_passed": 4,
   "scalar_escape_scope": "x/u/U fixed and braced scalar escapes plus a/f/v"
 }
+
+Acceptance stage: verify_syntax
+syntax differential passed: 118
+
+Acceptance stage: verify_errors
+error display checks passed: 52
+
+Acceptance stage: verify_limits
+limit checks passed: 60
+
+Acceptance stage: verify_error_spans
+syntax error spans matched: 37
+
+Acceptance stage: verify_case
+{"case_fold_differential_passed": 721, "case_fold_golden_passed": 7, "case_fold_invalid_rejected": 2, "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off"}
 
 Acceptance stage: verify_ascii_classes
 POSIX class cases passed: 24
@@ -503,36 +1218,56 @@ POSIX class cases passed: 336
   "invalid_patterns_rejected": 8,
   "resource_limits_checked": 0,
   "cangjie_matching_engine_implemented": true,
-  "class_repetition_differential_passed": 881,
-  "class_repetition_golden_passed": 5,
-  "class_repetition_api_checks_passed": 10,
-  "class_repetition_invalid_rejected": 16,
-  "class_repetition_unsupported_rejected": 0,
-  "class_repetition_resource_limits_checked": 1,
+  "upstream_sample_passed": 198,
+  "upstream_sample_skipped": 141,
+  "upstream_suite_passed": 3213,
   "capture_differential_passed": 880,
   "capture_golden_passed": 2,
   "capture_name_checks_passed": 35,
   "capture_invalid_rejected": 8,
   "capture_unicode_names_passed": 2,
   "capture_resource_limits_checked": 0,
+  "group_cursor_cases_passed": 54,
+  "api_contract_cases_passed": 2414,
+  "api_offset_differential_passed": 513,
+  "append_expansion_cases_passed": 80,
+  "builder_array_cases_passed": 4,
+  "set_iterator_contract_cases_passed": 128,
+  "builder_combination_cases_passed": 384,
+  "lazy_iterator_cases_passed": 1400,
+  "bytes_offset_contract_cases_passed": 260,
   "text_operations_differential_passed": 1037,
   "text_operations_golden_passed": 7,
   "text_operations_negative_limits_rejected": 4,
   "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+  "regex_set_differential_passed": 577,
+  "regex_set_golden_passed": 4,
+  "regex_set_error_checks_passed": 3,
+  "regex_set_single_regex_baseline_cases": 120,
+  "bytes_differential_passed": 48,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
   "flags_differential_passed": 960,
   "flags_api_checks_passed": 12,
   "flags_golden_passed": 4,
   "flags_invalid_rejected": 14,
   "flags_unsupported_rejected": 0,
-  "case_fold_differential_passed": 721,
-  "case_fold_golden_passed": 7,
-  "case_fold_invalid_rejected": 2,
-  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
   "scalar_escape_differential_passed": 366,
   "scalar_escape_invalid_rejected": 22,
   "scalar_escape_golden_passed": 3,
   "scalar_escape_api_checks_passed": 4,
   "scalar_escape_scope": "x/u/U fixed and braced scalar escapes plus a/f/v",
+  "syntax_differential_passed": 118,
+  "syntax_invalid_rejected": 9,
+  "error_span_cases_passed": 37,
+  "case_fold_differential_passed": 721,
+  "case_fold_golden_passed": 7,
+  "case_fold_invalid_rejected": 2,
+  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
   "ascii_classes_differential_passed": 496,
   "ascii_classes_golden_passed": 5,
   "ascii_classes_invalid_rejected": 4,
@@ -555,36 +1290,56 @@ Unicode boundary class passed: w
   "invalid_patterns_rejected": 8,
   "resource_limits_checked": 0,
   "cangjie_matching_engine_implemented": true,
-  "class_repetition_differential_passed": 881,
-  "class_repetition_golden_passed": 5,
-  "class_repetition_api_checks_passed": 10,
-  "class_repetition_invalid_rejected": 16,
-  "class_repetition_unsupported_rejected": 0,
-  "class_repetition_resource_limits_checked": 1,
+  "upstream_sample_passed": 198,
+  "upstream_sample_skipped": 141,
+  "upstream_suite_passed": 3213,
   "capture_differential_passed": 880,
   "capture_golden_passed": 2,
   "capture_name_checks_passed": 35,
   "capture_invalid_rejected": 8,
   "capture_unicode_names_passed": 2,
   "capture_resource_limits_checked": 0,
+  "group_cursor_cases_passed": 54,
+  "api_contract_cases_passed": 2414,
+  "api_offset_differential_passed": 513,
+  "append_expansion_cases_passed": 80,
+  "builder_array_cases_passed": 4,
+  "set_iterator_contract_cases_passed": 128,
+  "builder_combination_cases_passed": 384,
+  "lazy_iterator_cases_passed": 1400,
+  "bytes_offset_contract_cases_passed": 260,
   "text_operations_differential_passed": 1037,
   "text_operations_golden_passed": 7,
   "text_operations_negative_limits_rejected": 4,
   "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+  "regex_set_differential_passed": 577,
+  "regex_set_golden_passed": 4,
+  "regex_set_error_checks_passed": 3,
+  "regex_set_single_regex_baseline_cases": 120,
+  "bytes_differential_passed": 48,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
   "flags_differential_passed": 960,
   "flags_api_checks_passed": 12,
   "flags_golden_passed": 4,
   "flags_invalid_rejected": 14,
   "flags_unsupported_rejected": 0,
-  "case_fold_differential_passed": 721,
-  "case_fold_golden_passed": 7,
-  "case_fold_invalid_rejected": 2,
-  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
   "scalar_escape_differential_passed": 366,
   "scalar_escape_invalid_rejected": 22,
   "scalar_escape_golden_passed": 3,
   "scalar_escape_api_checks_passed": 4,
   "scalar_escape_scope": "x/u/U fixed and braced scalar escapes plus a/f/v",
+  "syntax_differential_passed": 118,
+  "syntax_invalid_rejected": 9,
+  "error_span_cases_passed": 37,
+  "case_fold_differential_passed": 721,
+  "case_fold_golden_passed": 7,
+  "case_fold_invalid_rejected": 2,
+  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
   "ascii_classes_differential_passed": 496,
   "ascii_classes_golden_passed": 5,
   "ascii_classes_invalid_rejected": 4,
@@ -615,36 +1370,56 @@ Acceptance stage: verify_boundaries
   "invalid_patterns_rejected": 8,
   "resource_limits_checked": 0,
   "cangjie_matching_engine_implemented": true,
-  "class_repetition_differential_passed": 881,
-  "class_repetition_golden_passed": 5,
-  "class_repetition_api_checks_passed": 10,
-  "class_repetition_invalid_rejected": 16,
-  "class_repetition_unsupported_rejected": 0,
-  "class_repetition_resource_limits_checked": 1,
+  "upstream_sample_passed": 198,
+  "upstream_sample_skipped": 141,
+  "upstream_suite_passed": 3213,
   "capture_differential_passed": 880,
   "capture_golden_passed": 2,
   "capture_name_checks_passed": 35,
   "capture_invalid_rejected": 8,
   "capture_unicode_names_passed": 2,
   "capture_resource_limits_checked": 0,
+  "group_cursor_cases_passed": 54,
+  "api_contract_cases_passed": 2414,
+  "api_offset_differential_passed": 513,
+  "append_expansion_cases_passed": 80,
+  "builder_array_cases_passed": 4,
+  "set_iterator_contract_cases_passed": 128,
+  "builder_combination_cases_passed": 384,
+  "lazy_iterator_cases_passed": 1400,
+  "bytes_offset_contract_cases_passed": 260,
   "text_operations_differential_passed": 1037,
   "text_operations_golden_passed": 7,
   "text_operations_negative_limits_rejected": 4,
   "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+  "regex_set_differential_passed": 577,
+  "regex_set_golden_passed": 4,
+  "regex_set_error_checks_passed": 3,
+  "regex_set_single_regex_baseline_cases": 120,
+  "bytes_differential_passed": 48,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
   "flags_differential_passed": 960,
   "flags_api_checks_passed": 12,
   "flags_golden_passed": 4,
   "flags_invalid_rejected": 14,
   "flags_unsupported_rejected": 0,
-  "case_fold_differential_passed": 721,
-  "case_fold_golden_passed": 7,
-  "case_fold_invalid_rejected": 2,
-  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
   "scalar_escape_differential_passed": 366,
   "scalar_escape_invalid_rejected": 22,
   "scalar_escape_golden_passed": 3,
   "scalar_escape_api_checks_passed": 4,
   "scalar_escape_scope": "x/u/U fixed and braced scalar escapes plus a/f/v",
+  "syntax_differential_passed": 118,
+  "syntax_invalid_rejected": 9,
+  "error_span_cases_passed": 37,
+  "case_fold_differential_passed": 721,
+  "case_fold_golden_passed": 7,
+  "case_fold_invalid_rejected": 2,
+  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
   "ascii_classes_differential_passed": 496,
   "ascii_classes_golden_passed": 5,
   "ascii_classes_invalid_rejected": 4,
@@ -718,36 +1493,56 @@ general category passed: Uppercase_Letter
   "invalid_patterns_rejected": 8,
   "resource_limits_checked": 0,
   "cangjie_matching_engine_implemented": true,
-  "class_repetition_differential_passed": 881,
-  "class_repetition_golden_passed": 5,
-  "class_repetition_api_checks_passed": 10,
-  "class_repetition_invalid_rejected": 16,
-  "class_repetition_unsupported_rejected": 0,
-  "class_repetition_resource_limits_checked": 1,
+  "upstream_sample_passed": 198,
+  "upstream_sample_skipped": 141,
+  "upstream_suite_passed": 3213,
   "capture_differential_passed": 880,
   "capture_golden_passed": 2,
   "capture_name_checks_passed": 35,
   "capture_invalid_rejected": 8,
   "capture_unicode_names_passed": 2,
   "capture_resource_limits_checked": 0,
+  "group_cursor_cases_passed": 54,
+  "api_contract_cases_passed": 2414,
+  "api_offset_differential_passed": 513,
+  "append_expansion_cases_passed": 80,
+  "builder_array_cases_passed": 4,
+  "set_iterator_contract_cases_passed": 128,
+  "builder_combination_cases_passed": 384,
+  "lazy_iterator_cases_passed": 1400,
+  "bytes_offset_contract_cases_passed": 260,
   "text_operations_differential_passed": 1037,
   "text_operations_golden_passed": 7,
   "text_operations_negative_limits_rejected": 4,
   "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+  "regex_set_differential_passed": 577,
+  "regex_set_golden_passed": 4,
+  "regex_set_error_checks_passed": 3,
+  "regex_set_single_regex_baseline_cases": 120,
+  "bytes_differential_passed": 48,
+  "class_repetition_differential_passed": 881,
+  "class_repetition_golden_passed": 5,
+  "class_repetition_api_checks_passed": 10,
+  "class_repetition_invalid_rejected": 16,
+  "class_repetition_unsupported_rejected": 0,
+  "class_repetition_resource_limits_checked": 1,
   "flags_differential_passed": 960,
   "flags_api_checks_passed": 12,
   "flags_golden_passed": 4,
   "flags_invalid_rejected": 14,
   "flags_unsupported_rejected": 0,
-  "case_fold_differential_passed": 721,
-  "case_fold_golden_passed": 7,
-  "case_fold_invalid_rejected": 2,
-  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
   "scalar_escape_differential_passed": 366,
   "scalar_escape_invalid_rejected": 22,
   "scalar_escape_golden_passed": 3,
   "scalar_escape_api_checks_passed": 4,
   "scalar_escape_scope": "x/u/U fixed and braced scalar escapes plus a/f/v",
+  "syntax_differential_passed": 118,
+  "syntax_invalid_rejected": 9,
+  "error_span_cases_passed": 37,
+  "case_fold_differential_passed": 721,
+  "case_fold_golden_passed": 7,
+  "case_fold_invalid_rejected": 2,
+  "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
   "ascii_classes_differential_passed": 496,
   "ascii_classes_golden_passed": 5,
   "ascii_classes_invalid_rejected": 4,
@@ -786,79 +1581,14 @@ Script differential passed: 2148
 Acceptance stage: verify_binary
 Binary property differential passed: 417
 
-Acceptance stage: verify_syntax
-syntax differential passed: 118
-
-Acceptance stage: verify_errors
-error display checks passed: 52
-
-Acceptance stage: verify_limits
-limit checks passed: 60
-
-Acceptance stage: verify_bytes
-bytes differential passed: 48
-
-Acceptance stage: verify_upstream_sample
-upstream sample passed: 198 skipped: 141
-
-Acceptance stage: verify_upstream_suite
-handwritten upstream checks passed
-upstream suite cases: 3213
-suite 100/3213 failures 0
-suite 200/3213 failures 0
-suite 300/3213 failures 0
-suite 400/3213 failures 0
-suite 500/3213 failures 0
-suite 600/3213 failures 0
-suite 700/3213 failures 0
-suite 800/3213 failures 0
-suite 900/3213 failures 0
-suite 1000/3213 failures 0
-suite 1100/3213 failures 0
-suite 1200/3213 failures 0
-suite 1300/3213 failures 0
-suite 1400/3213 failures 0
-suite 1500/3213 failures 0
-suite 1600/3213 failures 0
-suite 1700/3213 failures 0
-suite 1800/3213 failures 0
-suite 1900/3213 failures 0
-suite 2000/3213 failures 0
-suite 2100/3213 failures 0
-suite 2200/3213 failures 0
-suite 2300/3213 failures 0
-suite 2400/3213 failures 0
-suite 2500/3213 failures 0
-suite 2600/3213 failures 0
-suite 2700/3213 failures 0
-suite 2800/3213 failures 0
-suite 2900/3213 failures 0
-suite 3000/3213 failures 0
-suite 3100/3213 failures 0
-suite 3200/3213 failures 0
-suite 3213/3213 failures 0
-upstream suite passed: 3213
-
-Acceptance stage: verify_sets
-RegexSet differential passed: 577
-
-Acceptance stage: verify_api_contracts
-API contract cases passed: 2414; offset differential checks passed: 513
+Acceptance stage: verify_ast
+AST: 88 shapes matched, 50 lowered to the same HIR
 
 Acceptance stage: verify_hir
 HIR: 367 parse cases, 235 constructors, 41 print cases, 4 invalid rejected
 
-Acceptance stage: verify_ast
-AST: 88 shapes matched, 50 lowered to the same HIR
-
-Acceptance stage: verify_pike
-PikeVM: 503 searches matched, 1 invalid range rejected
-
 Acceptance stage: verify_props
 HIR properties: 32 matched; HIR PikeVM: 6
-
-Acceptance stage: verify_error_spans
-syntax error spans matched: 37
 
 Acceptance stage: verify_literals
 literal extraction: 32 patterns, prefix and suffix, 7 configured, 74 sequence operations, 38 filter spans
@@ -866,44 +1596,8 @@ literal extraction: 32 patterns, prefix and suffix, 7 configured, 74 sequence op
 Acceptance stage: verify_utf8
 utf8 sequences: 12 ranges
 
-Acceptance stage: verify_reverse
-reverse NFA: 45 searches and 24 ranged queries matched
-
-Acceptance stage: verify_backtrack
-backtrack: 42 searches matched, 9 input queries
-
-Acceptance stage: verify_dfa
-dfa: 39 patterns matched on dense and sparse, 20 input queries, 12 multi-pattern queries, 10 overlapping queries, 8 hybrid searches
-
-Acceptance stage: verify_engine_edges
-Engine and syntax edge differential: 401 passed
-
-Acceptance stage: verify_capture_modes
-capture modes: 32 searches matched
-
-Acceptance stage: verify_backtrack_iter
-backtrack iter: 18 commands matched
-
-Acceptance stage: verify_backtrack_span
-backtrack span: 16 iterations matched
-
-Acceptance stage: verify_bytes_nfa
-byte nfa: 25 searches matched
-
-Acceptance stage: verify_cli_find
-cli find pikevm: 39 commands matched
-
-Acceptance stage: verify_dfa_bytes
-dfa bytes: 78 searches matched
-
-Acceptance stage: verify_dfa_pattern
-dfa pattern starts: 28 searches matched
-
-Acceptance stage: verify_group_info
-group info: 42 patterns matched
-
-Acceptance stage: verify_hybrid_many
-hybrid many: 17 searches matched
+Acceptance stage: verify_pike
+PikeVM: 503 searches matched, 1 invalid range rejected
 
 Acceptance stage: verify_nfa_build
 nfa build: construction and reverse configuration matched
@@ -911,14 +1605,53 @@ nfa build: construction and reverse configuration matched
 Acceptance stage: verify_pike_overlap
 pike overlap queries: 20 searches matched
 
+Acceptance stage: verify_capture_modes
+capture modes: 32 searches matched
+
+Acceptance stage: verify_bytes_nfa
+byte nfa: 25 searches matched
+
+Acceptance stage: verify_backtrack
+backtrack: 42 searches matched, 9 input queries
+
+Acceptance stage: verify_backtrack_iter
+backtrack iter: 18 commands matched
+
+Acceptance stage: verify_backtrack_span
+backtrack span: 16 iterations matched
+
+Acceptance stage: verify_reverse
+reverse NFA: 45 searches and 24 ranged queries matched
+
+Acceptance stage: verify_reverse_many
+reverse many: 24 searches matched
+
+Acceptance stage: verify_dfa
+dfa: 39 patterns matched on dense and sparse, 20 input queries, 12 multi-pattern queries, 10 overlapping queries, 8 hybrid searches
+
+Acceptance stage: verify_dfa_bytes
+dfa bytes: 78 searches matched
+
+Acceptance stage: verify_dfa_pattern
+dfa pattern starts: 28 searches matched
+
+Acceptance stage: verify_hybrid_many
+hybrid many: 17 searches matched
+
 Acceptance stage: verify_products
 products: 85 commands matched, bad image rejected
+
+Acceptance stage: verify_engine_edges
+Engine and syntax edge differential: 401 passed
+
+Acceptance stage: verify_cli_find
+cli find pikevm: 39 commands matched
 
 Acceptance stage: verify_rest
 rest: 16 commands, timing rows, byte budget, and memory ordering matched
 
-Acceptance stage: verify_reverse_many
-reverse many: 24 searches matched
+Acceptance stage: named-functional-cases
+91 named functional cases passed
 
 Acceptance stage: coverage-ledger
 Coverage scope validated: weights total 100; accepted weight 5.
@@ -1021,7 +1754,7 @@ Acceptance stage: showcase
    实际：[]
    PASS — 4 落在 password 的 w 上。w 前面还是字母，所以这里没有词边界，也不会另起一段文本再搜。
 
-场景验收：13/13 通过；报告：/Users/jalonyan/Desktop/regex4cj/.build/delivery-review/.build/work/showcase.json
+场景验收：13/13 通过；报告：/Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/.build/work/showcase.json
 
 Acceptance stage: classification
 文本："订单 AB-123 需要退款"
@@ -1060,4 +1793,5 @@ Acceptance stage: classification
 预期编号：[3]；PASS
 
 多规则分类验收：7/7 通过
-Complete acceptance passed. Report: /Users/jalonyan/Desktop/regex4cj/.build/delivery-review/.build/work/verification-run.json
+Complete acceptance passed. Report: /Users/jalonyan/Desktop/regex4cj/.build/coverage/run-d3navft_/.build/work/verification-run.json
+generate html success.

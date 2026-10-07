@@ -1,6 +1,6 @@
 package regex_cli
 
-import cjregex.*
+import regex4cj.*
 
 func hirPropertyLine(h: Hir): String {
     let props = h.properties()

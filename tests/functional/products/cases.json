@@ -1,0 +1,87 @@
+[
+  {
+    "id": "onepass-anchored",
+    "group": "products",
+    "feature": "扩展入口 onepass anchored",
+    "operation": "onepass",
+    "pattern": "a+",
+    "text": "aa",
+    "extra": [],
+    "args": [
+      "onepass",
+      "a+",
+      "aa"
+    ],
+    "expected_stdout": "span\t0\t2\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "onepass-unanchored-miss",
+    "group": "products",
+    "feature": "扩展入口 onepass unanchored-miss",
+    "operation": "onepass",
+    "pattern": "a+",
+    "text": "zaa",
+    "extra": [],
+    "args": [
+      "onepass",
+      "a+",
+      "zaa"
+    ],
+    "expected_stdout": "none\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "meta-search",
+    "group": "products",
+    "feature": "扩展入口 meta search",
+    "operation": "meta",
+    "pattern": "a+",
+    "text": "zaa",
+    "extra": [],
+    "args": [
+      "meta",
+      "a+",
+      "zaa"
+    ],
+    "expected_stdout": "span\t1\t3\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "lite-ascii-class",
+    "group": "products",
+    "feature": "扩展入口 lite ascii-class",
+    "operation": "lite",
+    "pattern": "\\w",
+    "text": "é",
+    "extra": [],
+    "args": [
+      "lite",
+      "\\w",
+      "é"
+    ],
+    "expected_stdout": "none\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "rure-absent",
+    "group": "products",
+    "feature": "扩展入口 rure absent",
+    "operation": "rure",
+    "pattern": "z",
+    "text": "aa",
+    "extra": [],
+    "args": [
+      "rure",
+      "z",
+      "aa"
+    ],
+    "expected_stdout": "is-match\tfalse\nnone\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "cli-find-match",
+    "group": "cli",
+    "feature": "命令行匹配协议 match",
+    "operation": "cli-find",
+    "pattern": "pikevm",
+    "text": "-p",
+    "extra": [
+      "a",
+      "-y",
+      "za"
+    ],
+    "args": [
+      "cli-find",
+      "pikevm",
+      "-p",
+      "a",
+      "-y",
+      "za"
+    ],
+    "expected_stdout": "0:1:2:a\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "cli-find-absent",
+    "group": "cli",
+    "feature": "命令行匹配协议 absent",
+    "operation": "cli-find",
+    "pattern": "pikevm",
+    "text": "-p",
+    "extra": [
+      "z",
+      "-y",
+      "aa"
+    ],
+    "args": [
+      "cli-find",
+      "pikevm",
+      "-p",
+      "z",
+      "-y",
+      "aa"
+    ],
+    "expected_stdout": "",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "cli-find-unicode",
+    "group": "cli",
+    "feature": "命令行匹配协议 unicode",
+    "operation": "cli-find",
+    "pattern": "pikevm",
+    "text": "-p",
+    "extra": [
+      "中",
+      "-y",
+      "a中"
+    ],
+    "args": [
+      "cli-find",
+      "pikevm",
+      "-p",
+      "中",
+      "-y",
+      "a中"
+    ],
+    "expected_stdout": "0:1:4:中\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  }
+]

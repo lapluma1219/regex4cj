@@ -1,0 +1,167 @@
+[
+  {
+    "id": "find-normal",
+    "group": "search",
+    "feature": "普通输入返回首次匹配",
+    "operation": "first",
+    "pattern": "[0-9]+",
+    "text": "订单123已完成",
+    "extra": [],
+    "expected_stdout": "6\t9\t123\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  },
+  {
+    "id": "find-first",
+    "group": "search",
+    "feature": "多个匹配返回第一个",
+    "operation": "first",
+    "pattern": "[0-9]+",
+    "text": "12和34",
+    "extra": [],
+    "expected_stdout": "0\t2\t12\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  },
+  {
+    "id": "find-absent",
+    "group": "search",
+    "feature": "没有匹配返回空结果",
+    "operation": "first",
+    "pattern": "[0-9]+",
+    "text": "没有数字",
+    "extra": [],
+    "expected_stdout": "",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  },
+  {
+    "id": "find-start",
+    "group": "search",
+    "feature": "匹配位于开头",
+    "operation": "first",
+    "pattern": "[0-9]+",
+    "text": "12abc",
+    "extra": [],
+    "expected_stdout": "0\t2\t12\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  },
+  {
+    "id": "find-end",
+    "group": "search",
+    "feature": "匹配位于结尾",
+    "operation": "first",
+    "pattern": "[0-9]+",
+    "text": "abc12",
+    "extra": [],
+    "expected_stdout": "3\t5\t12\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  },
+  {
+    "id": "find-empty-input",
+    "group": "search",
+    "feature": "非空规则在空文本中不命中",
+    "operation": "find",
+    "pattern": "a",
+    "text": "",
+    "extra": [],
+    "expected_stdout": "",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.findAll"
+    ]
+  },
+  {
+    "id": "find-utf8",
+    "group": "search",
+    "feature": "位置使用 UTF-8 字节偏移",
+    "operation": "find",
+    "pattern": "中",
+    "text": "a中b",
+    "extra": [],
+    "expected_stdout": "1\t4\t中\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.findAll"
+    ]
+  },
+  {
+    "id": "find-empty-progress",
+    "group": "search",
+    "feature": "空匹配按字符边界推进并结束",
+    "operation": "find",
+    "pattern": "",
+    "text": "中",
+    "extra": [],
+    "expected_stdout": "0\t0\t\n3\t3\t\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.findAll"
+    ]
+  },
+  {
+    "id": "find-priority",
+    "group": "search",
+    "feature": "分支按先后优先",
+    "operation": "first",
+    "pattern": "a|ab",
+    "text": "ab",
+    "extra": [],
+    "expected_stdout": "0\t1\ta\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  },
+  {
+    "id": "find-greedy",
+    "group": "search",
+    "feature": "贪婪重复优先长匹配",
+    "operation": "first",
+    "pattern": "a+",
+    "text": "aaa",
+    "extra": [],
+    "expected_stdout": "0\t3\taaa\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  },
+  {
+    "id": "find-lazy",
+    "group": "search",
+    "feature": "非贪婪重复优先短匹配",
+    "operation": "first",
+    "pattern": "a+?",
+    "text": "aaa",
+    "extra": [],
+    "expected_stdout": "0\t1\ta\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  }
+]

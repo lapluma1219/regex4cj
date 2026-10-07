@@ -4,7 +4,7 @@
 
 - [170条固有方法对应表](api-audit-methods.md)：字符串、bytes、Set、Builder和结果辅助类型的源码与测试。
 - [机器清单](api-audit-inventory.json)：固定来源、方法位置及映射。
-- [接口契约差分](../tests/verify_api_contracts.py)：捕获、迭代、Builder、替换和字节偏移等。
+- [接口契约差分](../tests/functional/capture/verify_api_contracts.py)：捕获、迭代、Builder、替换和字节偏移等。
 - [当前仓颉声明目录](api-catalog.md)：包含后来新增的语法层和引擎。
 
 “有样例验证”只表示已有实现和对应输入证据；“有明确差异”不能算成完全等价。方法数量、源码行数和测试次数都不是覆盖百分比。宏、trait、配置组合和状态协议也不在170这个数字里。

@@ -24,7 +24,7 @@ Rust regex 原项目是一套成熟的正则库及语法/自动机基础设施�
 
 读 `examples/consumer/src/main.cj`，运行 `bash scripts/run.sh example`。关注三处：
 
-1. `import cjregex.*` 引入库。
+1. `import regex4cj.*` 引入库。
 2. `Regex(pattern)` 解析并编译模式；同一个对象可多次用于文本。
 3. `findAll` / `capturesAll` / `replaceAll` 调用不同操作。
 

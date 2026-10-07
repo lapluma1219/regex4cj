@@ -48,7 +48,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>)",
       "file": "port/src/backtrack.cj",
-      "line": 127
+      "line": 128
     },
     {
       "owner": "BoundedBacktracker",
@@ -56,7 +56,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, visitedCapacity: Int64)",
       "file": "port/src/backtrack.cj",
-      "line": 130
+      "line": 131
     },
     {
       "owner": "BoundedBacktracker",
@@ -64,7 +64,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, visitedCapacity: Int64, whichCaptures: Int64)",
       "file": "port/src/backtrack.cj",
-      "line": 133
+      "line": 134
     },
     {
       "owner": "BoundedBacktracker",
@@ -72,7 +72,7 @@
       "kind": "method",
       "signature": "public func stateCount(): Int64",
       "file": "port/src/backtrack.cj",
-      "line": 194
+      "line": 196
     },
     {
       "owner": "BoundedBacktracker",
@@ -80,7 +80,7 @@
       "kind": "method",
       "signature": "public func memoryUsage(): Int64",
       "file": "port/src/backtrack.cj",
-      "line": 197
+      "line": 199
     },
     {
       "owner": "BoundedBacktracker",
@@ -88,7 +88,7 @@
       "kind": "method",
       "signature": "public func maxHaystackLen(): Int64",
       "file": "port/src/backtrack.cj",
-      "line": 209
+      "line": 211
     },
     {
       "owner": "BoundedBacktracker",
@@ -96,7 +96,7 @@
       "kind": "method",
       "signature": "public func createCache(): BacktrackCache",
       "file": "port/src/backtrack.cj",
-      "line": 222
+      "line": 224
     },
     {
       "owner": "BoundedBacktracker",
@@ -104,7 +104,7 @@
       "kind": "method",
       "signature": "public func searchAll(text: String): Array<PikeMatch>",
       "file": "port/src/backtrack.cj",
-      "line": 225
+      "line": 227
     },
     {
       "owner": "BoundedBacktracker",
@@ -112,7 +112,7 @@
       "kind": "method",
       "signature": "public func searchAll(input: SearchInput): Array<PikeMatch>",
       "file": "port/src/backtrack.cj",
-      "line": 231
+      "line": 233
     },
     {
       "owner": "BoundedBacktracker",
@@ -120,7 +120,7 @@
       "kind": "method",
       "signature": "public func search(text: String): Option<Captures>",
       "file": "port/src/backtrack.cj",
-      "line": 275
+      "line": 277
     },
     {
       "owner": "BoundedBacktracker",
@@ -128,7 +128,7 @@
       "kind": "method",
       "signature": "public func isMatch(input: SearchInput): Bool",
       "file": "port/src/backtrack.cj",
-      "line": 281
+      "line": 283
     },
     {
       "owner": "BoundedBacktracker",
@@ -136,7 +136,7 @@
       "kind": "method",
       "signature": "public func search(cache: BacktrackCache, input: SearchInput): Option<PikeMatch>",
       "file": "port/src/backtrack.cj",
-      "line": 309
+      "line": 311
     },
     {
       "owner": "BacktrackCache",
@@ -144,7 +144,7 @@
       "kind": "class",
       "signature": "public class BacktrackCache",
       "file": "port/src/backtrack.cj",
-      "line": 516
+      "line": 518
     },
     {
       "owner": "BacktrackCache",
@@ -152,7 +152,7 @@
       "kind": "constructor",
       "signature": "public init()",
       "file": "port/src/backtrack.cj",
-      "line": 519
+      "line": 521
     },
     {
       "owner": "RegexBuilder",
@@ -3872,7 +3872,7 @@
       "kind": "method",
       "signature": "public func shape(): String",
       "file": "port/src/syntax_ast.cj",
-      "line": 180
+      "line": 179
     },
     {
       "owner": "Ast",
@@ -3880,7 +3880,7 @@
       "kind": "method",
       "signature": "public func toPattern(): String",
       "file": "port/src/syntax_ast.cj",
-      "line": 197
+      "line": 196
     },
     {
       "owner": "Ast",
@@ -3888,7 +3888,7 @@
       "kind": "method",
       "signature": "public func toHir(): Hir",
       "file": "port/src/syntax_ast.cj",
-      "line": 202
+      "line": 201
     },
     {
       "owner": "Ast",
@@ -3896,7 +3896,7 @@
       "kind": "method",
       "signature": "public static func parse(pattern: String): Ast",
       "file": "port/src/syntax_ast.cj",
-      "line": 205
+      "line": 204
     },
     {
       "owner": "SyntaxParser",
@@ -3904,7 +3904,7 @@
       "kind": "class",
       "signature": "public class SyntaxParser",
       "file": "port/src/syntax_ast.cj",
-      "line": 1866
+      "line": 1865
     },
     {
       "owner": "SyntaxParser",
@@ -3912,7 +3912,7 @@
       "kind": "field",
       "signature": "public var caseInsensitive: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1867
+      "line": 1866
     },
     {
       "owner": "SyntaxParser",
@@ -3920,7 +3920,7 @@
       "kind": "field",
       "signature": "public var multiLine: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1868
+      "line": 1867
     },
     {
       "owner": "SyntaxParser",
@@ -3928,7 +3928,7 @@
       "kind": "field",
       "signature": "public var dotAll: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1869
+      "line": 1868
     },
     {
       "owner": "SyntaxParser",
@@ -3936,7 +3936,7 @@
       "kind": "field",
       "signature": "public var swapGreed: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1870
+      "line": 1869
     },
     {
       "owner": "SyntaxParser",
@@ -3944,7 +3944,7 @@
       "kind": "field",
       "signature": "public var ignoreWhitespace: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1871
+      "line": 1870
     },
     {
       "owner": "SyntaxParser",
@@ -3952,7 +3952,7 @@
       "kind": "field",
       "signature": "public var crlf: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1872
+      "line": 1871
     },
     {
       "owner": "SyntaxParser",
@@ -3960,7 +3960,7 @@
       "kind": "field",
       "signature": "public var unicode: Bool = true",
       "file": "port/src/syntax_ast.cj",
-      "line": 1873
+      "line": 1872
     },
     {
       "owner": "SyntaxParser",
@@ -3968,7 +3968,7 @@
       "kind": "field",
       "signature": "public var utf8: Bool = true",
       "file": "port/src/syntax_ast.cj",
-      "line": 1874
+      "line": 1873
     },
     {
       "owner": "SyntaxParser",
@@ -3976,7 +3976,7 @@
       "kind": "field",
       "signature": "public var octal: Bool = false",
       "file": "port/src/syntax_ast.cj",
-      "line": 1875
+      "line": 1874
     },
     {
       "owner": "SyntaxParser",
@@ -3984,7 +3984,7 @@
       "kind": "field",
       "signature": "public var nestLimit: Int64 = 250",
       "file": "port/src/syntax_ast.cj",
-      "line": 1876
+      "line": 1875
     },
     {
       "owner": "SyntaxParser",
@@ -3992,7 +3992,7 @@
       "kind": "constructor",
       "signature": "public init()",
       "file": "port/src/syntax_ast.cj",
-      "line": 1877
+      "line": 1876
     },
     {
       "owner": "SyntaxParser",
@@ -4000,7 +4000,7 @@
       "kind": "method",
       "signature": "public func parseAst(pattern: String): Ast",
       "file": "port/src/syntax_ast.cj",
-      "line": 1878
+      "line": 1877
     },
     {
       "owner": "SyntaxParser",
@@ -4008,7 +4008,7 @@
       "kind": "method",
       "signature": "public func parseHir(pattern: String): Hir",
       "file": "port/src/syntax_ast.cj",
-      "line": 1895
+      "line": 1894
     },
     {
       "owner": "SyntaxParser",
@@ -4016,7 +4016,7 @@
       "kind": "method",
       "signature": "public func translate(ast: Ast): Hir",
       "file": "port/src/syntax_ast.cj",
-      "line": 1900
+      "line": 1899
     },
     {
       "owner": "HirUnsupportedError",
@@ -4400,7 +4400,7 @@
       "kind": "method",
       "signature": "public func toPattern(): String",
       "file": "port/src/syntax_hir.cj",
-      "line": 285
+      "line": 284
     },
     {
       "owner": "Hir",
@@ -4408,7 +4408,7 @@
       "kind": "method",
       "signature": "public static func empty(): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 290
+      "line": 289
     },
     {
       "owner": "Hir",
@@ -4416,7 +4416,7 @@
       "kind": "method",
       "signature": "public static func fail(): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 293
+      "line": 292
     },
     {
       "owner": "Hir",
@@ -4424,7 +4424,7 @@
       "kind": "method",
       "signature": "public static func literal(bytes: Array<UInt8>): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 296
+      "line": 295
     },
     {
       "owner": "Hir",
@@ -4432,7 +4432,7 @@
       "kind": "method",
       "signature": "public static func unicodeClass(ranges: Array<HirRange>): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 303
+      "line": 302
     },
     {
       "owner": "Hir",
@@ -4440,7 +4440,7 @@
       "kind": "method",
       "signature": "public static func byteClass(ranges: Array<HirRange>): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 306
+      "line": 305
     },
     {
       "owner": "Hir",
@@ -4448,7 +4448,7 @@
       "kind": "method",
       "signature": "public static func capture(index: UInt32, name: Option<String>, sub: Hir): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 358
+      "line": 357
     },
     {
       "owner": "Hir",
@@ -4456,7 +4456,7 @@
       "kind": "method",
       "signature": "public static func repetition(min: UInt32, max: Option<UInt32>, greedy: Bool, sub: Hir): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 361
+      "line": 360
     },
     {
       "owner": "Hir",
@@ -4464,7 +4464,7 @@
       "kind": "method",
       "signature": "public static func concat(children: Array<Hir>): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 392
+      "line": 391
     },
     {
       "owner": "Hir",
@@ -4472,7 +4472,7 @@
       "kind": "method",
       "signature": "public static func look(look: HirLook): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 435
+      "line": 434
     },
     {
       "owner": "Hir",
@@ -4480,7 +4480,7 @@
       "kind": "method",
       "signature": "public static func dot(dot: HirDot): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 438
+      "line": 437
     },
     {
       "owner": "Hir",
@@ -4488,7 +4488,7 @@
       "kind": "method",
       "signature": "public static func dotExcept(bytes: Bool, excluded: Int64): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 448
+      "line": 447
     },
     {
       "owner": "Hir",
@@ -4496,7 +4496,7 @@
       "kind": "method",
       "signature": "public static func alternation(subs: Array<Hir>): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 451
+      "line": 450
     },
     {
       "owner": "Hir",
@@ -4504,7 +4504,7 @@
       "kind": "method",
       "signature": "public static func parse(pattern: String): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 528
+      "line": 527
     },
     {
       "owner": "Hir",
@@ -4512,7 +4512,7 @@
       "kind": "method",
       "signature": "public static func parse(pattern: String, utf8: Bool): Hir",
       "file": "port/src/syntax_hir.cj",
-      "line": 531
+      "line": 530
     },
     {
       "owner": "顶层函数",
@@ -4520,7 +4520,7 @@
       "kind": "function",
       "signature": "public func hirLookName(look: HirLook): String",
       "file": "port/src/syntax_hir.cj",
-      "line": 1495
+      "line": 1494
     },
     {
       "owner": "LiteralPiece",
@@ -4896,7 +4896,7 @@
       "kind": "class",
       "signature": "public class ThompsonNfa",
       "file": "port/src/thompson.cj",
-      "line": 234
+      "line": 242
     },
     {
       "owner": "ThompsonNfa",
@@ -4904,7 +4904,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>)",
       "file": "port/src/thompson.cj",
-      "line": 237
+      "line": 245
     },
     {
       "owner": "ThompsonNfa",
@@ -4912,7 +4912,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, whichCaptures: Int64)",
       "file": "port/src/thompson.cj",
-      "line": 240
+      "line": 248
     },
     {
       "owner": "ThompsonNfa",
@@ -4920,7 +4920,7 @@
       "kind": "constructor",
       "signature": "public init(hirs: Array<Hir>)",
       "file": "port/src/thompson.cj",
-      "line": 244
+      "line": 252
     },
     {
       "owner": "ThompsonNfa",
@@ -4928,7 +4928,7 @@
       "kind": "constructor",
       "signature": "public init(patterns: Array<String>, whichCaptures: Int64, unicode: Bool)",
       "file": "port/src/thompson.cj",
-      "line": 247
+      "line": 255
     },
     {
       "owner": "ThompsonNfa",
@@ -4936,7 +4936,7 @@
       "kind": "constructor",
       "signature": "public init(hirs: Array<Hir>, sizeLimit: Int64)",
       "file": "port/src/thompson.cj",
-      "line": 251
+      "line": 259
     },
     {
       "owner": "ThompsonNfa",
@@ -4944,7 +4944,7 @@
       "kind": "method",
       "signature": "public func stateCount(): Int64",
       "file": "port/src/thompson.cj",
-      "line": 279
+      "line": 287
     },
     {
       "owner": "ThompsonNfa",
@@ -4952,7 +4952,7 @@
       "kind": "method",
       "signature": "public func memoryUsage(): Int64",
       "file": "port/src/thompson.cj",
-      "line": 282
+      "line": 290
     },
     {
       "owner": "ThompsonNfa",
@@ -4960,7 +4960,7 @@
       "kind": "method",
       "signature": "public func patternCount(): Int64",
       "file": "port/src/thompson.cj",
-      "line": 292
+      "line": 300
     },
     {
       "owner": "ThompsonNfa",
@@ -4968,7 +4968,7 @@
       "kind": "method",
       "signature": "public func patternStateCount(pattern: Int64): Int64",
       "file": "port/src/thompson.cj",
-      "line": 295
+      "line": 303
     },
     {
       "owner": "ThompsonNfa",
@@ -4976,7 +4976,7 @@
       "kind": "method",
       "signature": "public func startState(pattern: Int64): Int64",
       "file": "port/src/thompson.cj",
-      "line": 298
+      "line": 306
     },
     {
       "owner": "ThompsonNfa",
@@ -4984,7 +4984,7 @@
       "kind": "method",
       "signature": "public func opName(pattern: Int64, state: Int64): String",
       "file": "port/src/thompson.cj",
-      "line": 302
+      "line": 310
     },
     {
       "owner": "ThompsonNfa",
@@ -4992,7 +4992,7 @@
       "kind": "method",
       "signature": "public func opNext(pattern: Int64, state: Int64): Int64",
       "file": "port/src/thompson.cj",
-      "line": 313
+      "line": 321
     },
     {
       "owner": "ThompsonNfa",
@@ -5000,7 +5000,7 @@
       "kind": "method",
       "signature": "public func opAlternate(pattern: Int64, state: Int64): Int64",
       "file": "port/src/thompson.cj",
-      "line": 316
+      "line": 324
     },
     {
       "owner": "ThompsonNfa",
@@ -5008,7 +5008,7 @@
       "kind": "method",
       "signature": "public func whichOverlapping(text: String): Array<Int64>",
       "file": "port/src/thompson.cj",
-      "line": 319
+      "line": 327
     },
     {
       "owner": "ThompsonNfa",
@@ -5016,7 +5016,7 @@
       "kind": "method",
       "signature": "public func whichOverlapping(input: SearchInput): Array<Int64>",
       "file": "port/src/thompson.cj",
-      "line": 325
+      "line": 333
     },
     {
       "owner": "ThompsonNfa",
@@ -5024,7 +5024,7 @@
       "kind": "method",
       "signature": "public func search(input: SearchInput, cache: PikeCache): Option<PikeMatch>",
       "file": "port/src/thompson.cj",
-      "line": 416
+      "line": 424
     },
     {
       "owner": "ThompsonNfa",
@@ -5032,7 +5032,7 @@
       "kind": "method",
       "signature": "public func isMatch(input: SearchInput, cache: PikeCache): Bool",
       "file": "port/src/thompson.cj",
-      "line": 458
+      "line": 466
     },
     {
       "owner": "Utf8Sequence",

@@ -1,0 +1,198 @@
+[
+  {
+    "id": "set-empty",
+    "group": "set",
+    "feature": "空规则集不命中且全部命中条件为真",
+    "operation": "set-matches",
+    "pattern": [],
+    "text": "a",
+    "extra": [],
+    "expected_stdout": "patterns\t0\nany\tfalse\nall\ttrue\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "RegexSet.matches",
+      "SetMatches.len",
+      "SetMatches.matchedAny",
+      "SetMatches.matchedAll",
+      "SetMatches.indices"
+    ]
+  },
+  {
+    "id": "set-no-hit",
+    "group": "set",
+    "feature": "没有规则命中",
+    "operation": "set-matches",
+    "pattern": [
+      "x",
+      "y"
+    ],
+    "text": "ab",
+    "extra": [],
+    "expected_stdout": "patterns\t2\nany\tfalse\nall\tfalse\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "RegexSet.matches",
+      "SetMatches.len",
+      "SetMatches.matchedAny",
+      "SetMatches.matchedAll",
+      "SetMatches.indices"
+    ]
+  },
+  {
+    "id": "set-some",
+    "group": "set",
+    "feature": "部分命中仍返回原规则数",
+    "operation": "set-matches",
+    "pattern": [
+      "a",
+      "z"
+    ],
+    "text": "ab",
+    "extra": [],
+    "expected_stdout": "patterns\t2\nany\ttrue\nall\tfalse\nhit\t0\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "RegexSet.matches",
+      "SetMatches.len",
+      "SetMatches.matchedAny",
+      "SetMatches.matchedAll",
+      "SetMatches.indices"
+    ]
+  },
+  {
+    "id": "set-all",
+    "group": "set",
+    "feature": "全部规则命中",
+    "operation": "set-matches",
+    "pattern": [
+      "a",
+      "b"
+    ],
+    "text": "ab",
+    "extra": [],
+    "expected_stdout": "patterns\t2\nany\ttrue\nall\ttrue\nhit\t0\nhit\t1\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "RegexSet.matches",
+      "SetMatches.len",
+      "SetMatches.matchedAny",
+      "SetMatches.matchedAll",
+      "SetMatches.indices"
+    ]
+  },
+  {
+    "id": "set-duplicates",
+    "group": "set",
+    "feature": "重复规则各有编号",
+    "operation": "set-matches",
+    "pattern": [
+      "a",
+      "a"
+    ],
+    "text": "a",
+    "extra": [],
+    "expected_stdout": "patterns\t2\nany\ttrue\nall\ttrue\nhit\t0\nhit\t1\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "RegexSet.matches",
+      "SetMatches.len",
+      "SetMatches.matchedAny",
+      "SetMatches.matchedAll",
+      "SetMatches.indices"
+    ]
+  },
+  {
+    "id": "set-overlap",
+    "group": "set",
+    "feature": "重叠规则都被报告",
+    "operation": "set-matches",
+    "pattern": [
+      "ab",
+      "b"
+    ],
+    "text": "ab",
+    "extra": [],
+    "expected_stdout": "patterns\t2\nany\ttrue\nall\ttrue\nhit\t0\nhit\t1\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "RegexSet.matches",
+      "SetMatches.len",
+      "SetMatches.matchedAny",
+      "SetMatches.matchedAll",
+      "SetMatches.indices"
+    ]
+  },
+  {
+    "id": "set-order",
+    "group": "set",
+    "feature": "编号按规则顺序而非出现位置",
+    "operation": "set-matches",
+    "pattern": [
+      "b",
+      "a"
+    ],
+    "text": "ab",
+    "extra": [],
+    "expected_stdout": "patterns\t2\nany\ttrue\nall\ttrue\nhit\t0\nhit\t1\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "RegexSet.matches",
+      "SetMatches.len",
+      "SetMatches.matchedAny",
+      "SetMatches.matchedAll",
+      "SetMatches.indices"
+    ]
+  },
+  {
+    "id": "set-empty-pattern",
+    "group": "set",
+    "feature": "空规则命中空文本",
+    "operation": "set-matches",
+    "pattern": [
+      "",
+      "a"
+    ],
+    "text": "",
+    "extra": [],
+    "expected_stdout": "patterns\t2\nany\ttrue\nall\tfalse\nhit\t0\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "RegexSet.matches",
+      "SetMatches.len",
+      "SetMatches.matchedAny",
+      "SetMatches.matchedAll",
+      "SetMatches.indices"
+    ]
+  },
+  {
+    "id": "set-unicode",
+    "group": "set",
+    "feature": "Unicode 多规则匹配",
+    "operation": "set-matches",
+    "pattern": [
+      "中",
+      "🙂",
+      "x"
+    ],
+    "text": "中🙂",
+    "extra": [],
+    "expected_stdout": "patterns\t3\nany\ttrue\nall\tfalse\nhit\t0\nhit\t1\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "RegexSet.matches",
+      "SetMatches.len",
+      "SetMatches.matchedAny",
+      "SetMatches.matchedAll",
+      "SetMatches.indices"
+    ]
+  }
+]

@@ -18,6 +18,8 @@ regex4cj 0.3.0 — 字符串语法与起点搜索版
   example                  运行可修改的仓颉调用示例
   build                    构建仓颉库、CLI 和调用示例
   check                    仓颉原生测试 + 场景验收（无需 Rust）
+  test-catalog             检查功能、特性与案例目录（无需 SDK）
+  coverage                 仪器化执行完整验收，生成代码执行覆盖报告（需 cjcov 和 Cargo）
   verify                   完整 Rust/仓颉差分验收（需 Cargo）
   find PATTERN TEXT        查找全部匹配；输出 UTF-8 起止字节和文本
   first PATTERN TEXT       只查找第一条匹配
@@ -55,6 +57,8 @@ case "$command_name" in
     py scripts/showcase.py
     py scripts/classify.py --demo
     ;;
+  test-catalog) py scripts/feature_catalog.py --check ;;
+  coverage) need cargo; need cjc; need cjpm; need cjcov; py scripts/measure_test_coverage.py ;;
   verify) need cargo; need cjc; need cjpm; need "${PYTHON:-python3}"; exec bash scripts/verify.sh ;;
   captures|capture-first)
     cli_build

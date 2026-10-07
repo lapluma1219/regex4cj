@@ -7,7 +7,7 @@
       "weight": 8,
       "status": "有差异",
       "evidence": [
-        "tests/verify_matching.py"
+        "tests/functional/search/verify_matching.py"
       ],
       "note": "String and bytes search have differential regressions. Library-produced match/capture/split iterators clone independently; language integrations and resource behavior remain partial."
     },
@@ -16,7 +16,7 @@
       "weight": 5,
       "status": "有差异",
       "evidence": [
-        "tests/verify_captures.py"
+        "tests/functional/capture/verify_captures.py"
       ],
       "note": "The original capture differential is restored and runs alongside capture configuration checks. Native tests cover independent iterator cursors and retained results."
     },
@@ -25,7 +25,7 @@
       "weight": 5,
       "status": "有差异",
       "evidence": [
-        "tests/verify_text_ops.py"
+        "tests/functional/text/verify_text_ops.py"
       ],
       "note": "Replacement, split and splitN run in the full suite; cloned iterators have independent cursors. No claim of all language integrations or allocation equivalence."
     },
@@ -34,7 +34,7 @@
       "weight": 4,
       "status": "有差异",
       "evidence": [
-        "tests/verify_sets.py"
+        "tests/functional/set/verify_sets.py"
       ],
       "note": "RegexSet matching and SetMatches iteration exist. The full builder matrix is not closed."
     },
@@ -43,8 +43,8 @@
       "weight": 2,
       "status": "有差异",
       "evidence": [
-        "tests/verify_limits.py",
-        "tests/verify_syntax.py"
+        "tests/functional/syntax/verify_limits.py",
+        "tests/functional/syntax/verify_syntax.py"
       ],
       "note": "The size-limit and nest-limit leaf is A5a and is already accepted. These remaining 2 points are the rest of the resource and language-integration contract."
     },
@@ -53,8 +53,8 @@
       "weight": 1,
       "status": "验收通过",
       "evidence": [
-        "tests/verify_limits.py",
-        "tests/verify_syntax.py"
+        "tests/functional/syntax/verify_limits.py",
+        "tests/functional/syntax/verify_syntax.py"
       ],
       "note": "Locked 1-point leaf: size-limit pass/fail, including a limit of 0, matches on the limit corpus, and nest-limit acceptance plus the underlined span match on 30 patterns. Re-run this turn: 60 limit checks and the syntax differential."
     },
@@ -63,8 +63,8 @@
       "weight": 8,
       "status": "有差异",
       "evidence": [
-        "tests/verify_hir.py",
-        "tests/verify_props.py"
+        "tests/functional/structure/verify_hir.py",
+        "tests/functional/structure/verify_props.py"
       ],
       "note": "HIR nodes, class operations, and the tested properties exist. memory_usage is not claimed."
     },
@@ -73,7 +73,7 @@
       "weight": 8,
       "status": "有差异",
       "evidence": [
-        "tests/verify_ast.py"
+        "tests/functional/structure/verify_ast.py"
       ],
       "note": "AST parse no longer runs the matcher first. Class items carry spans and literal kinds for the differential corpus. The corpus is not every AST field."
     },
@@ -82,7 +82,7 @@
       "weight": 4,
       "status": "有差异",
       "evidence": [
-        "tests/verify_ast.py"
+        "tests/functional/structure/verify_ast.py"
       ],
       "note": "translate honors utf8. (?-u:\\xFF), (?-u:.), (?-u:\\D), and unknown properties fail at translation. The full translator is not closed."
     },
@@ -91,8 +91,8 @@
       "weight": 3,
       "status": "有差异",
       "evidence": [
-        "tests/verify_ast.py",
-        "tests/verify_hir.py"
+        "tests/functional/structure/verify_ast.py",
+        "tests/functional/structure/verify_hir.py"
       ],
       "note": "AST and HIR display were compared on the corpus. walk and walkUntil exist. The upstream visitor trait is not fully audited."
     },
@@ -101,8 +101,8 @@
       "weight": 2,
       "status": "有差异",
       "evidence": [
-        "tests/verify_literals.py",
-        "tests/verify_utf8.py"
+        "tests/functional/tools/verify_literals.py",
+        "tests/functional/tools/verify_utf8.py"
       ],
       "note": "Default prefix and suffix extraction matches regex-syntax on 32 patterns. LiteralLimits configures class, repeat, literal length, and total; seven non-default settings match Extractor. Public UTF-8 sequences match Utf8Sequences debug text. LiteralSeq cross, union, union-into-empty, keep, minimize-by-preference, reverse, sort, dedup, and longest common prefix/suffix, and prefix/suffix optimization match Seq on 66 operations. Sixteen patterns were checked so extracted prefixes and suffixes still explain every real match (38 spans). optimize_for_prefix_by_preference and optimize_for_suffix_by_preference match Seq, including the samantha/sam example, an empty literal becoming infinite, and a rare leading byte collapsed to one byte. A limited corpus does not close the item."
     },
@@ -111,8 +111,8 @@
       "weight": 4,
       "status": "有差异",
       "evidence": [
-        "tests/verify_pike.py",
-        "tests/verify_bytes_nfa.py"
+        "tests/functional/nfa/verify_pike.py",
+        "tests/functional/nfa/verify_bytes_nfa.py"
       ],
       "note": "SearchInput carries string or bytes, a span, anchoring, selected pattern and earliest. Valid UTF-8 uses the scalar graph; invalid UTF-8 uses the shared byte compiler. Original UTF-8 pattern restrictions remain."
     },
@@ -121,7 +121,7 @@
       "weight": 3,
       "status": "有差异",
       "evidence": [
-        "tests/verify_pike.py"
+        "tests/functional/nfa/verify_pike.py"
       ],
       "note": "ThompsonNfa is a public one-graph NFA: each pattern has its own Accept, and PikeVM searches the priority union. State ids are local. There is no Rust graph-equality oracle and no separate configuration-error matrix, so the 3 points stay open."
     },
@@ -130,8 +130,8 @@
       "weight": 2,
       "status": "有差异",
       "evidence": [
-        "tests/verify_reverse.py",
-        "tests/verify_reverse_many.py"
+        "tests/functional/reverse/verify_reverse.py",
+        "tests/functional/reverse/verify_reverse_many.py"
       ],
       "note": "Reverse search walks bytes backward and returns a pattern id and start. Span and end anchoring are supported; selecting a pattern requires explicit pattern-start configuration. Captures are omitted; this byte graph is separate from the scalar ThompsonNfa."
     },
@@ -140,7 +140,7 @@
       "weight": 1,
       "status": "有差异",
       "evidence": [
-        "tests/verify_pike.py"
+        "tests/functional/nfa/verify_pike.py"
       ],
       "note": "Forward search with a range and an anchor exists."
     },
@@ -149,7 +149,7 @@
       "weight": 1,
       "status": "有差异",
       "evidence": [
-        "tests/verify_pike.py"
+        "tests/functional/nfa/verify_pike.py"
       ],
       "note": "Multiple patterns share a ThompsonNfa priority union. SearchInput supports selected-pattern anchoring and unknown ids as misses. Invalid UTF-8 haystacks use a byte graph, with separate byte differential cases."
     },
@@ -158,7 +158,8 @@
       "weight": 1,
       "status": "有差异",
       "evidence": [
-        "examples/consumer/src/pike_test.cj"
+        "examples/consumer/src/backtrack_test.cj",
+        "examples/consumer/src/nfa_test.cj"
       ],
       "note": "PikeCache reuses visited arrays and capture slot rows and records active state ids. This is not the original memory layout or bounded-workspace guarantee; byte search currently uses a different workspace path."
     },
@@ -167,7 +168,7 @@
       "weight": 2,
       "status": "有差异",
       "evidence": [
-        "tests/verify_pike.py"
+        "tests/functional/nfa/verify_pike.py"
       ],
       "note": "whichOverlapping reports matching pattern ids under MatchKind::All, not all spans. Range, anchor and earliest have direct Pike oracle cases. Pike has no quit-byte contract."
     },
@@ -176,7 +177,7 @@
       "weight": 1,
       "status": "有差异",
       "evidence": [
-        "tests/verify_pike.py"
+        "tests/functional/nfa/verify_pike.py"
       ],
       "note": "Earliest has direct original PikeVM differential cases. Broader configuration equivalence remains partial; quit bytes are not part of the original PikeVM contract."
     },
@@ -185,8 +186,8 @@
       "weight": 3,
       "status": "有差异",
       "evidence": [
-        "tests/verify_group_info.py",
-        "tests/verify_api_contracts.py"
+        "tests/functional/capture/verify_group_info.py",
+        "tests/functional/capture/verify_api_contracts.py"
       ],
       "note": "The locked capture-metadata and SetMatches leaf is C4a and is already accepted. These remaining 3 points are the rest of the shared result-type contract."
     },
@@ -195,8 +196,8 @@
       "weight": 2,
       "status": "验收通过",
       "evidence": [
-        "tests/verify_group_info.py",
-        "tests/verify_api_contracts.py"
+        "tests/functional/capture/verify_group_info.py",
+        "tests/functional/capture/verify_api_contracts.py"
       ],
       "note": "Locked 2-point leaf: capturesLen, staticCapturesLen, and captureNames match string and bytes regexes on 21 patterns, and SetMatches next/nextBack/clone/sizeHint match inside the 2414 API contracts. Re-run this turn."
     },
@@ -205,7 +206,7 @@
       "weight": 6,
       "status": "有差异",
       "evidence": [
-        "tests/verify_dfa.py"
+        "tests/functional/dfa/verify_dfa.py"
       ],
       "note": "Multi-pattern dense/sparse search, byte input, optional pattern starts, quit and overlapping half-matches are tested. Span-end assertions inspect outside context. Sparse drops dense transitions; budgets count local slots, not original byte-layout limits."
     },
@@ -214,8 +215,9 @@
       "weight": 4,
       "status": "有差异",
       "evidence": [
-        "tests/verify_dfa.py",
-        "examples/consumer/src/delivery_test.cj"
+        "tests/functional/dfa/verify_dfa.py",
+        "examples/consumer/src/dfa_test.cj",
+        "examples/consumer/src/products_test.cj"
       ],
       "note": "HybridDfa builds transitions while searching. Eight searches and two reset-and-search pairs match hybrid::regex::Regex spans, including quit bytes and the lazy Unicode-word-boundary build error. A cache smaller than the seeded states is rejected. clearLimit 0 gives up with gave up searching at offset. The capacity is a state count, not upstream's byte cache, and the give-up offset is not the upstream offset. dfaSizeLimit is still the string step cache. These 4 points stay open."
     },
@@ -224,8 +226,9 @@
       "weight": 2,
       "status": "有差异",
       "evidence": [
-        "tests/verify_products.py",
-        "examples/consumer/src/delivery_test.cj"
+        "tests/functional/products/verify_products.py",
+        "examples/consumer/src/dfa_test.cj",
+        "examples/consumer/src/products_test.cj"
       ],
       "note": "OnePass is a conservative eligibility adapter executing anchored PikeVM, not a one-pass engine. Some valid original patterns are rejected by the local byte-graph check. No engine parity or performance credit."
     },
@@ -234,7 +237,7 @@
       "weight": 1,
       "status": "有差异",
       "evidence": [
-        "tests/verify_backtrack.py"
+        "tests/functional/backtrack/verify_backtrack.py"
       ],
       "note": "Local memoryUsage and prefix optimizations exist; original layout, prefilter and budget contracts are not fully equivalent. Non-overlapping iteration is tracked separately under D4a."
     },
@@ -243,8 +246,8 @@
       "weight": 1,
       "status": "验收通过",
       "evidence": [
-        "tests/verify_backtrack_iter.py",
-        "tests/verify_backtrack.py"
+        "tests/functional/backtrack/verify_backtrack_iter.py",
+        "tests/functional/backtrack/verify_backtrack.py"
       ],
       "note": "Non-overlapping BoundedBacktracker matches use the same Searcher advance as regex-automata, including empty matches, multiple patterns, and a haystack that is too long for the visited budget. 18 iteration commands and the existing 42 searches plus 9 input queries matched this turn."
     },
@@ -253,8 +256,9 @@
       "weight": 4,
       "status": "有差异",
       "evidence": [
-        "tests/verify_products.py",
-        "examples/consumer/src/delivery_test.cj"
+        "tests/functional/products/verify_products.py",
+        "examples/consumer/src/dfa_test.cj",
+        "examples/consumer/src/products_test.cj"
       ],
       "note": "MetaRegex selects anchored Pike adaptation, HybridDfa or PikeVM and retains captures. This is not the complete original meta optimizer or strategy set."
     },
@@ -263,8 +267,9 @@
       "weight": 2,
       "status": "有差异",
       "evidence": [
-        "tests/verify_products.py",
-        "examples/consumer/src/delivery_test.cj"
+        "tests/functional/products/verify_products.py",
+        "examples/consumer/src/dfa_test.cj",
+        "examples/consumer/src/products_test.cj"
       ],
       "note": "CJD1 replays patterns and checks state count for default search configurations. Nondefault semantic configurations reject export. Not the original automata wire format."
     },
@@ -273,8 +278,9 @@
       "weight": 9,
       "status": "有差异",
       "evidence": [
-        "tests/verify_products.py",
-        "examples/consumer/src/delivery_test.cj"
+        "tests/functional/products/verify_products.py",
+        "examples/consumer/src/dfa_test.cj",
+        "examples/consumer/src/products_test.cj"
       ],
       "note": "Partial LiteRegex and CLI protocols exist. Rure is a Cangjie wrapper only; no C ABI. File input, CLI options, syntax/error parity and remaining product contracts are incomplete."
     },
@@ -283,7 +289,7 @@
       "weight": 1,
       "status": "验收通过",
       "evidence": [
-        "tests/verify_cli_find.py"
+        "tests/functional/cli/verify_cli_find.py"
       ],
       "note": "Locked 1-point leaf: find match pikevm prints pattern:start:end:escaped-text and uses exit status 0 or 1. Twenty commands match, including multiple patterns, empty matches, and syntax errors. Timing tables stay outside this point."
     }

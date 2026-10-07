@@ -1,0 +1,104 @@
+[
+  {
+    "id": "utf8-ascii",
+    "group": "tools",
+    "feature": "UTF-8 编码范围 ascii",
+    "operation": "utf8",
+    "pattern": "0",
+    "text": "127",
+    "extra": [],
+    "args": [
+      "utf8",
+      "0",
+      "127"
+    ],
+    "expected_stdout": "[0-7F]\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "utf8-two-byte",
+    "group": "tools",
+    "feature": "UTF-8 编码范围 two-byte",
+    "operation": "utf8",
+    "pattern": "128",
+    "text": "128",
+    "extra": [],
+    "args": [
+      "utf8",
+      "128",
+      "128"
+    ],
+    "expected_stdout": "[C2][80]\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "utf8-nul",
+    "group": "tools",
+    "feature": "UTF-8 编码范围 nul",
+    "operation": "utf8",
+    "pattern": "0",
+    "text": "0",
+    "extra": [],
+    "args": [
+      "utf8",
+      "0",
+      "0"
+    ],
+    "expected_stdout": "[0]\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "utf8-reject-reversed",
+    "group": "tools",
+    "feature": "拒绝非法编码范围 reversed",
+    "operation": "utf8",
+    "pattern": "10",
+    "text": "9",
+    "extra": [],
+    "args": [
+      "utf8",
+      "10",
+      "9"
+    ],
+    "expected_stdout": "",
+    "expect_error": true,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "utf8-reject-surrogate",
+    "group": "tools",
+    "feature": "拒绝非法编码范围 surrogate",
+    "operation": "utf8",
+    "pattern": "55296",
+    "text": "55296",
+    "extra": [],
+    "args": [
+      "utf8",
+      "55296",
+      "55296"
+    ],
+    "expected_stdout": "",
+    "expect_error": true,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "utf8-reject-overflow",
+    "group": "tools",
+    "feature": "拒绝非法编码范围 overflow",
+    "operation": "utf8",
+    "pattern": "1114112",
+    "text": "1114112",
+    "extra": [],
+    "args": [
+      "utf8",
+      "1114112",
+      "1114112"
+    ],
+    "expected_stdout": "",
+    "expect_error": true,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  }
+]

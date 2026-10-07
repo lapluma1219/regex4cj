@@ -1,0 +1,87 @@
+[
+  {
+    "id": "bytes-raw",
+    "group": "bytes",
+    "feature": "非 UTF-8 字节可以按字节匹配",
+    "operation": "bytes-find",
+    "pattern": "(?-u).",
+    "text": "ff",
+    "extra": [],
+    "args": [
+      "bytes-find",
+      "(?-u).",
+      "ff"
+    ],
+    "expected_stdout": "0\t1\tff\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "bytes-unicode",
+    "group": "bytes",
+    "feature": "Unicode 点匹配完整三字节字符",
+    "operation": "bytes-find",
+    "pattern": ".",
+    "text": "e4b8ad",
+    "extra": [],
+    "args": [
+      "bytes-find",
+      ".",
+      "e4b8ad"
+    ],
+    "expected_stdout": "0\t3\te4b8ad\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "bytes-invalid",
+    "group": "bytes",
+    "feature": "Unicode 模式不匹配非法 UTF-8",
+    "operation": "bytes-find",
+    "pattern": ".",
+    "text": "ff",
+    "extra": [],
+    "args": [
+      "bytes-find",
+      ".",
+      "ff"
+    ],
+    "expected_stdout": "",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "bytes-empty",
+    "group": "bytes",
+    "feature": "空字节输入不匹配非空规则",
+    "operation": "bytes-find",
+    "pattern": "a",
+    "text": "",
+    "extra": [],
+    "args": [
+      "bytes-find",
+      "a",
+      ""
+    ],
+    "expected_stdout": "",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "bytes-nul",
+    "group": "bytes",
+    "feature": "字节串中间的 NUL",
+    "operation": "bytes-find",
+    "pattern": "\\x00",
+    "text": "610062",
+    "extra": [],
+    "args": [
+      "bytes-find",
+      "\\x00",
+      "610062"
+    ],
+    "expected_stdout": "1\t2\t00\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  }
+]

@@ -1,11 +1,11 @@
-# cjregex
+# regex4cj
 
 仓颉1.1.3原生正则库。提供字符串/字节匹配、捕获、替换、分割、RegexSet，以及正在完善的AST/HIR与前向搜索接口。
 
-在调用项目的cjpm.toml中将路径依赖指向本目录，使用`import cjregex.*`。模块不依赖Rust运行库；仓库中的Rust程序仅供对照验证。
+在调用项目的cjpm.toml中将路径依赖指向本目录，使用`import regex4cj.*`。模块不依赖Rust运行库；仓库中的Rust程序仅供对照验证。
 
 ```cangjie
-import cjregex.*
+import regex4cj.*
 
 main(): Int64 {
     println(Regex("[0-9]{6}").isMatch("编号123456"))

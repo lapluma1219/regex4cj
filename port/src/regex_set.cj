@@ -1,4 +1,4 @@
-package cjregex
+package regex4cj
 
 import std.collection.*
 

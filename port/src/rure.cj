@@ -1,4 +1,4 @@
-package cjregex
+package regex4cj
 
 // The callable shape of regex-capi's rure_compile / rure_is_match / rure_find.
 // The Cangjie package is a static library with mangled names, so this type is

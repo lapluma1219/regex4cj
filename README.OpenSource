@@ -2,7 +2,7 @@ regex4cj 开源来源与交付说明
 
 本文件说明实际来源与依赖，不替代组委会可能要求的专用模板或签字材料。
 
-项目：regex4cj；仓颉模块：cjregex；声明版本：0.3.0。
+项目：regex4cj；仓颉模块：regex4cj；声明版本：0.3.0。
 参照项目：https://github.com/rust-lang/regex
 固定提交：72d650cb0a880a01ab6dc2137c0888e8f89740f7
 参照主要库版本：regex 1.13.1；Unicode数据版本：16.0.0。

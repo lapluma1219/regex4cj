@@ -1,4 +1,4 @@
-package cjregex
+package regex4cj
 
 // regex-syntax symbolic_name_normalize: ASCII case/space/underscore/hyphen
 // folding, initial 'is' removal and the special 'isc' alias exception.

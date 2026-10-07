@@ -1,6 +1,41 @@
 package regex_consumer
 
-import cjregex.*
+import regex4cj.*
+import std.collection.*
+
+@Test
+func hybridOverlapBuildsTransitionsAndCanBeReused(): Unit {
+    let engine = HybridDfa.overlap(["a+", "a"])
+    for (_ in 0..2) {
+        let halves = engine.searchOverlapping("aaa")
+        @Expect(halves.size, 6)
+        @Expect(halves[0].pattern, 0)
+        @Expect(halves[0].end, 1)
+        @Expect(halves[5].pattern, 1)
+        @Expect(halves[5].end, 3)
+        engine.reset()
+    }
+}
+
+@Test
+func dfaImagesNeverSilentlyDropConfiguration(): Unit {
+    let patterns = ["a"]
+    let engine = DenseDfa(patterns)
+    patterns[0] = "b"
+    match (DenseDfa.fromImage(engine.toImage()).search("a")) {
+        case Some(hit) => @Expect(hit.text, "a")
+        case None => throw Exception("Image must retain the compiled pattern")
+    }
+    for (configured in [DenseDfa("a", [UInt8(0)]), DenseDfa.overlap(["a"]), DenseDfa(["a"], Array<UInt8>(), false, true)]) {
+        var rejected = false
+        try {
+            configured.toImage()
+        } catch (e: Exception) {
+            rejected = e.toString().contains("default search configuration only")
+        }
+        @Expect(rejected, true)
+    }
+}
 
 @Test
 func denseAndSparseDfaReportTheSameSpan(): Unit {
@@ -82,4 +117,21 @@ func multiPatternDfaPrefersTheEarlierRule(): Unit {
         tooSmall = e.toString().contains("smaller than minimum required")
     }
     @Expect(tooSmall, true)
+}
+
+@Test
+func dfaReverseRecoveryRetainsPriorityAndContext(): Unit {
+    match (DenseDfa("a|ba").search("ba")) {
+        case Some(hit) => @Expect(hit.start, 0)
+        case None => throw Exception("DFA missed an alternative")
+    }
+    match (SparseDfa(#"(?-u:a\B)"#).search("ab")) {
+        case Some(hit) => @Expect(hit.text, "a")
+        case None => throw Exception("DFA lost assertion context")
+    }
+    @Expect(DenseDfa("^[a&&b]").search("a").isNone(), true)
+    match (DenseDfa(#"(?-u:\b\bfoo)"#).search(" foo")) {
+        case Some(hit) => @Expect(hit.start, 1)
+        case None => throw Exception("DFA missed consecutive assertions")
+    }
 }

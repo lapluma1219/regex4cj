@@ -1,131 +1,143 @@
 {
-  "run_id": "63700464-2781-405c-90bc-78afa752554f",
+  "run_id": "b19d1e08-92a6-4458-a19e-c60f618084fd",
   "status": "passed",
-  "started_at": "2026-10-05T13:10:01.768704+00:00",
+  "started_at": "2026-10-07T07:27:02.160606+00:00",
   "stages": [
+    {
+      "name": "feature-catalog",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "scripts/feature_catalog.py",
+        "--check"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:27:02.395801+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:27:02.433987+00:00"
+    },
     {
       "name": "upstream-data",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
         "scripts/check_upstream_data.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:02.063587+00:00",
+      "started_at": "2026-10-07T07:27:02.434558+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:02.087397+00:00"
+      "finished_at": "2026-10-07T07:27:02.456741+00:00"
     },
     {
       "name": "api-inventory",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
         "scripts/audit_api_surface.py",
         "--check"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:02.088034+00:00",
+      "started_at": "2026-10-07T07:27:02.457313+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:02.182079+00:00"
+      "finished_at": "2026-10-07T07:27:02.527766+00:00"
     },
     {
       "name": "cangjie-api-inventory",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
         "scripts/generate_api_catalog.py",
         "--check"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:02.182710+00:00",
+      "started_at": "2026-10-07T07:27:02.528332+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:02.254115+00:00"
+      "finished_at": "2026-10-07T07:27:02.588396+00:00"
     },
     {
       "name": "data-unicode",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
         "scripts/generate_unicode.py",
         "--check"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:02.254766+00:00",
+      "started_at": "2026-10-07T07:27:02.588976+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:02.287279+00:00"
+      "finished_at": "2026-10-07T07:27:02.617199+00:00"
     },
     {
       "name": "data-categories",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
         "scripts/generate_categories.py",
         "--check"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:02.288056+00:00",
+      "started_at": "2026-10-07T07:27:02.617734+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:02.332091+00:00"
+      "finished_at": "2026-10-07T07:27:02.654056+00:00"
     },
     {
       "name": "data-scripts",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
         "scripts/generate_scripts.py",
         "--check"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:02.332741+00:00",
+      "started_at": "2026-10-07T07:27:02.654590+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:02.372784+00:00"
+      "finished_at": "2026-10-07T07:27:02.688605+00:00"
     },
     {
       "name": "data-binary",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
         "scripts/generate_binary.py",
         "--check"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:02.373381+00:00",
+      "started_at": "2026-10-07T07:27:02.689181+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:02.424458+00:00"
+      "finished_at": "2026-10-07T07:27:02.730955+00:00"
     },
     {
       "name": "data-case_fold",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
         "scripts/generate_case_fold.py",
         "--check"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:02.425095+00:00",
+      "started_at": "2026-10-07T07:27:02.731582+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:02.466175+00:00"
+      "finished_at": "2026-10-07T07:27:02.766859+00:00"
     },
     {
       "name": "data-age_break",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
         "scripts/generate_age_break.py",
         "--check"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:02.466815+00:00",
+      "started_at": "2026-10-07T07:27:02.767498+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:02.510932+00:00"
+      "finished_at": "2026-10-07T07:27:02.803924+00:00"
     },
     {
       "name": "python-tests",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
         "-m",
         "unittest",
         "discover",
         "-s",
-        "tests",
+        "tests/tooling",
         "-p",
-        "test_category_generator.py"
+        "test_*.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:02.511682+00:00",
+      "started_at": "2026-10-07T07:27:02.804576+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:02.551939+00:00"
+      "finished_at": "2026-10-07T07:27:02.889239+00:00"
     },
     {
       "name": "rust-build",
@@ -137,9 +149,9 @@
         "oracle/Cargo.toml"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:02.552881+00:00",
+      "started_at": "2026-10-07T07:27:02.889861+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:09.501592+00:00"
+      "finished_at": "2026-10-07T07:27:03.005068+00:00"
     },
     {
       "name": "rust-test",
@@ -151,53 +163,57 @@
         "oracle/Cargo.toml"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:09.502332+00:00",
+      "started_at": "2026-10-07T07:27:03.005684+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:10.534701+00:00"
+      "finished_at": "2026-10-07T07:27:03.066384+00:00"
     },
     {
       "name": "port-build",
       "command": [
         "cjpm",
-        "build"
+        "build",
+        "--coverage"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:10.536753+00:00",
+      "started_at": "2026-10-07T07:27:03.067010+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:15.114789+00:00"
+      "finished_at": "2026-10-07T07:27:07.763313+00:00"
     },
     {
       "name": "cli-build",
       "command": [
         "cjpm",
-        "build"
+        "build",
+        "--coverage"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:15.115475+00:00",
+      "started_at": "2026-10-07T07:27:07.764044+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:22.930379+00:00"
+      "finished_at": "2026-10-07T07:27:15.990402+00:00"
     },
     {
       "name": "examples/consumer-build",
       "command": [
         "cjpm",
-        "build"
+        "build",
+        "--coverage"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:22.931075+00:00",
+      "started_at": "2026-10-07T07:27:15.991049+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:27.644423+00:00"
+      "finished_at": "2026-10-07T07:27:21.056408+00:00"
     },
     {
       "name": "consumer-test",
       "command": [
         "cjpm",
-        "test"
+        "test",
+        "--coverage"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:27.645241+00:00",
+      "started_at": "2026-10-07T07:27:21.057035+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:36.813642+00:00"
+      "finished_at": "2026-10-07T07:27:31.407730+00:00"
     },
     {
       "name": "consumer-run",
@@ -206,602 +222,669 @@
         "run"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:36.814735+00:00",
+      "started_at": "2026-10-07T07:27:31.408648+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:41.952697+00:00"
+      "finished_at": "2026-10-07T07:27:36.568343+00:00"
     },
     {
       "name": "verify",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify.py"
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/search/verify.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:41.954369+00:00",
+      "started_at": "2026-10-07T07:27:36.569414+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:10:55.491815+00:00"
+      "finished_at": "2026-10-07T07:27:54.324414+00:00"
     },
     {
       "name": "verify_matching",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_matching.py"
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/search/verify_matching.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:10:55.493174+00:00",
+      "started_at": "2026-10-07T07:27:54.325326+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:11:19.215424+00:00"
-    },
-    {
-      "name": "verify_classes",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_classes.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:11:19.216155+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:11:57.829550+00:00"
-    },
-    {
-      "name": "verify_captures",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_captures.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:11:57.830402+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:12:37.363213+00:00"
-    },
-    {
-      "name": "verify_text_ops",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_text_ops.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:12:37.364156+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:13:20.855784+00:00"
-    },
-    {
-      "name": "verify_flags",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_flags.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:13:20.857150+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:14:02.096606+00:00"
-    },
-    {
-      "name": "verify_case",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_case.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:14:02.097602+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:14:33.479091+00:00"
-    },
-    {
-      "name": "verify_escapes",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_escapes.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:14:33.480349+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:14:50.544243+00:00"
-    },
-    {
-      "name": "verify_ascii_classes",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_ascii_classes.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:14:50.545430+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:15:12.432208+00:00"
-    },
-    {
-      "name": "verify_unicode",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_unicode.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:15:12.433253+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:15:27.689517+00:00"
-    },
-    {
-      "name": "verify_boundaries",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_boundaries.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:15:27.690392+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:15:50.749915+00:00"
-    },
-    {
-      "name": "verify_properties",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_properties.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:15:50.750812+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:16:21.987994+00:00"
-    },
-    {
-      "name": "verify_scripts",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_scripts.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:16:21.988961+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:17:52.727363+00:00"
-    },
-    {
-      "name": "verify_binary",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_binary.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:17:52.728185+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:18:12.843786+00:00"
-    },
-    {
-      "name": "verify_syntax",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_syntax.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:18:12.844836+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:18:18.374905+00:00"
-    },
-    {
-      "name": "verify_errors",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_errors.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:18:18.375936+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:18:20.568905+00:00"
-    },
-    {
-      "name": "verify_limits",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_limits.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:18:20.570233+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:18:23.011206+00:00"
-    },
-    {
-      "name": "verify_bytes",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_bytes.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:18:23.012190+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:18:24.992737+00:00"
+      "finished_at": "2026-10-07T07:28:25.591374+00:00"
     },
     {
       "name": "verify_upstream_sample",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_upstream_sample.py"
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/search/verify_upstream_sample.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:18:24.993998+00:00",
+      "started_at": "2026-10-07T07:28:25.592021+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:18:33.009808+00:00"
+      "finished_at": "2026-10-07T07:28:35.381857+00:00"
     },
     {
       "name": "verify_upstream_suite",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_upstream_suite.py"
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/search/verify_upstream_suite.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:18:33.010665+00:00",
+      "started_at": "2026-10-07T07:28:35.382625+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:19:08.634204+00:00"
+      "finished_at": "2026-10-07T07:29:08.862426+00:00"
     },
     {
-      "name": "verify_sets",
+      "name": "verify_captures",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_sets.py"
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/capture/verify_captures.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:19:08.635305+00:00",
+      "started_at": "2026-10-07T07:29:08.863158+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:19:51.415597+00:00"
-    },
-    {
-      "name": "verify_api_contracts",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_api_contracts.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:19:51.416424+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:20:14.114959+00:00"
-    },
-    {
-      "name": "verify_hir",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_hir.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:20:14.116351+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:20:30.699583+00:00"
-    },
-    {
-      "name": "verify_ast",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_ast.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:20:30.700827+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:21:31.206446+00:00"
-    },
-    {
-      "name": "verify_pike",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_pike.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:21:31.207733+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:21:54.661702+00:00"
-    },
-    {
-      "name": "verify_props",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_props.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:21:54.663084+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:21:56.701681+00:00"
-    },
-    {
-      "name": "verify_error_spans",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_error_spans.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:21:56.703107+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:21:58.430868+00:00"
-    },
-    {
-      "name": "verify_literals",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_literals.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:21:58.431938+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:08.100875+00:00"
-    },
-    {
-      "name": "verify_utf8",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_utf8.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:22:08.102322+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:08.884140+00:00"
-    },
-    {
-      "name": "verify_reverse",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_reverse.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:22:08.885401+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:12.144102+00:00"
-    },
-    {
-      "name": "verify_backtrack",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_backtrack.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:22:12.145530+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:14.843386+00:00"
-    },
-    {
-      "name": "verify_dfa",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_dfa.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:22:14.844849+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:23.205033+00:00"
-    },
-    {
-      "name": "verify_engine_edges",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_engine_edges.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:22:23.206503+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:41.142522+00:00"
-    },
-    {
-      "name": "verify_capture_modes",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_capture_modes.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:22:41.143991+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:42.687382+00:00"
-    },
-    {
-      "name": "verify_backtrack_iter",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_backtrack_iter.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:22:42.689098+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:43.566086+00:00"
-    },
-    {
-      "name": "verify_backtrack_span",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_backtrack_span.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:22:43.567587+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:44.334955+00:00"
-    },
-    {
-      "name": "verify_bytes_nfa",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_bytes_nfa.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:22:44.336345+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:45.494586+00:00"
-    },
-    {
-      "name": "verify_cli_find",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_cli_find.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:22:45.496089+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:47.280433+00:00"
-    },
-    {
-      "name": "verify_dfa_bytes",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_dfa_bytes.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:22:47.281865+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:51.099148+00:00"
-    },
-    {
-      "name": "verify_dfa_pattern",
-      "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_dfa_pattern.py"
-      ],
-      "status": "passed",
-      "started_at": "2026-10-05T13:22:51.100180+00:00",
-      "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:52.640986+00:00"
+      "finished_at": "2026-10-07T07:29:55.619267+00:00"
     },
     {
       "name": "verify_group_info",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_group_info.py"
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/capture/verify_group_info.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:22:52.642007+00:00",
+      "started_at": "2026-10-07T07:29:55.620174+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:54.582990+00:00"
+      "finished_at": "2026-10-07T07:29:57.783415+00:00"
     },
     {
-      "name": "verify_hybrid_many",
+      "name": "verify_api_contracts",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_hybrid_many.py"
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/capture/verify_api_contracts.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:22:54.584498+00:00",
+      "started_at": "2026-10-07T07:29:57.784413+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:55.374764+00:00"
+      "finished_at": "2026-10-07T07:30:24.085277+00:00"
+    },
+    {
+      "name": "verify_text_ops",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/text/verify_text_ops.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:30:24.086456+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:31:16.910522+00:00"
+    },
+    {
+      "name": "verify_sets",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/set/verify_sets.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:31:16.911551+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:32:06.557681+00:00"
+    },
+    {
+      "name": "verify_bytes",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/bytes/verify_bytes.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:32:06.558349+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:32:09.024678+00:00"
+    },
+    {
+      "name": "verify_classes",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/syntax/verify_classes.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:32:09.025744+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:32:55.485905+00:00"
+    },
+    {
+      "name": "verify_flags",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/syntax/verify_flags.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:32:55.486669+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:33:47.490317+00:00"
+    },
+    {
+      "name": "verify_escapes",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/syntax/verify_escapes.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:33:47.491532+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:34:08.519962+00:00"
+    },
+    {
+      "name": "verify_syntax",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/syntax/verify_syntax.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:34:08.520787+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:34:15.204631+00:00"
+    },
+    {
+      "name": "verify_errors",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/syntax/verify_errors.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:34:15.205736+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:34:17.950073+00:00"
+    },
+    {
+      "name": "verify_limits",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/syntax/verify_limits.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:34:17.951400+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:34:21.200721+00:00"
+    },
+    {
+      "name": "verify_error_spans",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/syntax/verify_error_spans.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:34:21.202007+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:34:23.127404+00:00"
+    },
+    {
+      "name": "verify_case",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/unicode/verify_case.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:34:23.128710+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:35:02.235744+00:00"
+    },
+    {
+      "name": "verify_ascii_classes",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/unicode/verify_ascii_classes.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:35:02.236833+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:35:27.187486+00:00"
+    },
+    {
+      "name": "verify_unicode",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/unicode/verify_unicode.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:35:27.188676+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:35:45.311322+00:00"
+    },
+    {
+      "name": "verify_boundaries",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/unicode/verify_boundaries.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:35:45.312193+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:36:13.494488+00:00"
+    },
+    {
+      "name": "verify_properties",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/unicode/verify_properties.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:36:13.495365+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:36:50.898499+00:00"
+    },
+    {
+      "name": "verify_scripts",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/unicode/verify_scripts.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:36:50.899475+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:38:42.919983+00:00"
+    },
+    {
+      "name": "verify_binary",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/unicode/verify_binary.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:38:42.921195+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:39:06.475915+00:00"
+    },
+    {
+      "name": "verify_ast",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/structure/verify_ast.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:39:06.477031+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:40:17.033367+00:00"
+    },
+    {
+      "name": "verify_hir",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/structure/verify_hir.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:40:17.034508+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:40:38.887818+00:00"
+    },
+    {
+      "name": "verify_props",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/structure/verify_props.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:40:38.889143+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:40:41.163960+00:00"
+    },
+    {
+      "name": "verify_literals",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/tools/verify_literals.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:40:41.165245+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:40:51.876647+00:00"
+    },
+    {
+      "name": "verify_utf8",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/tools/verify_utf8.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:40:51.877932+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:40:52.748591+00:00"
+    },
+    {
+      "name": "verify_pike",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/nfa/verify_pike.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:40:52.749881+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:41:18.659533+00:00"
     },
     {
       "name": "verify_nfa_build",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_nfa_build.py"
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/nfa/verify_nfa_build.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:22:55.376193+00:00",
+      "started_at": "2026-10-07T07:41:18.660730+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:55.676716+00:00"
+      "finished_at": "2026-10-07T07:41:19.010559+00:00"
     },
     {
       "name": "verify_pike_overlap",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_pike_overlap.py"
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/nfa/verify_pike_overlap.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:22:55.678403+00:00",
+      "started_at": "2026-10-07T07:41:19.011717+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:22:56.588190+00:00"
+      "finished_at": "2026-10-07T07:41:20.110258+00:00"
     },
     {
-      "name": "verify_products",
+      "name": "verify_capture_modes",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_products.py"
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/nfa/verify_capture_modes.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:22:56.589743+00:00",
+      "started_at": "2026-10-07T07:41:20.111549+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:23:00.692207+00:00"
+      "finished_at": "2026-10-07T07:41:21.822444+00:00"
     },
     {
-      "name": "verify_rest",
+      "name": "verify_bytes_nfa",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_rest.py"
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/nfa/verify_bytes_nfa.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:23:00.693855+00:00",
+      "started_at": "2026-10-07T07:41:21.823797+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:23:02.104289+00:00"
+      "finished_at": "2026-10-07T07:41:23.136716+00:00"
+    },
+    {
+      "name": "verify_backtrack",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/backtrack/verify_backtrack.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:41:23.137950+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:41:26.186730+00:00"
+    },
+    {
+      "name": "verify_backtrack_iter",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/backtrack/verify_backtrack_iter.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:41:26.188055+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:41:27.143658+00:00"
+    },
+    {
+      "name": "verify_backtrack_span",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/backtrack/verify_backtrack_span.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:41:27.144846+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:41:28.008992+00:00"
+    },
+    {
+      "name": "verify_reverse",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/reverse/verify_reverse.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:41:28.010188+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:41:31.737004+00:00"
     },
     {
       "name": "verify_reverse_many",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
-        "tests/verify_reverse_many.py"
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/reverse/verify_reverse_many.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:23:02.105475+00:00",
+      "started_at": "2026-10-07T07:41:31.738395+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:23:03.226809+00:00"
+      "finished_at": "2026-10-07T07:41:33.038769+00:00"
+    },
+    {
+      "name": "verify_dfa",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/dfa/verify_dfa.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:41:33.040013+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:41:42.406977+00:00"
+    },
+    {
+      "name": "verify_dfa_bytes",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/dfa/verify_dfa_bytes.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:41:42.408259+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:41:46.862888+00:00"
+    },
+    {
+      "name": "verify_dfa_pattern",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/dfa/verify_dfa_pattern.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:41:46.863768+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:41:48.508163+00:00"
+    },
+    {
+      "name": "verify_hybrid_many",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/dfa/verify_hybrid_many.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:41:48.509012+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:41:49.544146+00:00"
+    },
+    {
+      "name": "verify_products",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/products/verify_products.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:41:49.545504+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:41:54.079092+00:00"
+    },
+    {
+      "name": "verify_engine_edges",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/products/verify_engine_edges.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:41:54.080466+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:42:14.366120+00:00"
+    },
+    {
+      "name": "verify_cli_find",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/cli/verify_cli_find.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:42:14.367410+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:42:16.335841+00:00"
+    },
+    {
+      "name": "verify_rest",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_suite.py",
+        "tests/functional/cli/verify_rest.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:42:16.337245+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:42:17.871596+00:00"
+    },
+    {
+      "name": "named-functional-cases",
+      "command": [
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/run_feature_cases.py"
+      ],
+      "status": "passed",
+      "started_at": "2026-10-07T07:42:17.872673+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-07T07:42:22.324671+00:00"
     },
     {
       "name": "coverage-ledger",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
         "scripts/check_coverage.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:23:03.228357+00:00",
+      "started_at": "2026-10-07T07:42:22.325815+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:23:03.256109+00:00"
+      "finished_at": "2026-10-07T07:42:22.352446+00:00"
     },
     {
       "name": "showcase",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
         "scripts/showcase.py"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:23:03.257621+00:00",
+      "started_at": "2026-10-07T07:42:22.353384+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:23:03.802016+00:00"
+      "finished_at": "2026-10-07T07:42:22.965753+00:00"
     },
     {
       "name": "classification",
       "command": [
-        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/Users/jalonyan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
         "scripts/classify.py",
         "--demo"
       ],
       "status": "passed",
-      "started_at": "2026-10-05T13:23:03.803784+00:00",
+      "started_at": "2026-10-07T07:42:22.966985+00:00",
       "exit_code": 0,
-      "finished_at": "2026-10-05T13:23:04.131583+00:00"
+      "finished_at": "2026-10-07T07:42:23.316885+00:00"
     }
   ],
   "scope": "Selected Regex, syntax, literal/UTF-8 tools, PikeVM, reverse NFA, bounded backtracker and DFA contracts; not full workspace parity",
-  "commit": "e322e1ff5f825ae9aa8d3de832fd922f25158022",
-  "dirty": true,
+  "commit": null,
+  "dirty": null,
   "environment": {
     "platform": "macOS-26.6-arm64-arm-64bit",
-    "python": "3.9.6 (default, May 22 2026, 11:13:45) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+    "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
     "cangjie": "Cangjie Compiler: 1.1.3 (cjnative)\nTarget: aarch64-apple-darwin",
     "rust": "rustc 1.98.1 (48a229cea 2026-09-01)",
     "cargo": "cargo 1.98.1 (797e8a9bc 2026-08-05)"
   },
   "tested_source_sha256": {
     "cli/cjpm.lock": "7b09643cc3e7107d2a0f09605871366c547525d40221945a60bee8a9a5e3f3b0",
-    "cli/cjpm.toml": "6d352f09ece1178f5e41e546fb49ac3ca522cf2eb4a4f833ca2d51387d843f22",
-    "cli/src/api_audit.cj": "3029717cd0ea33e652dfa15e8ef4e673f6877213e13967eec1157918b8f63716",
-    "cli/src/append_builder_audit.cj": "700ebda2dc821bb68b82aacc5271bf5da08633687d3f45e302458baaa095da38",
-    "cli/src/group_cursor_audit.cj": "914b81713e33a965918aecb58d0f9d42c0e6b5a2bb34ba982b109129995d38a4",
-    "cli/src/hir_audit.cj": "03bfbf8ed5971d9ea6a6f5d5e525163a5668781d3dc9237b75cc4b88c48c62f8",
-    "cli/src/lazy_audit.cj": "e73f6e44d744b1ec2382598127eeef4e7d09b3eab5acb94b1ee5661d735dcf0b",
-    "cli/src/main.cj": "40c5127f37d23e0fee0f1ba7ec39b269d9172765b05d8850b854f42b5d8748ce",
-    "cli/src/set_iterator_audit.cj": "2dd8f002c2f63481a77c436caf5cd990eabe5c68f5ad8b470cb6b24cd3c182da",
+    "cli/cjpm.toml": "3b155757d2bde73b24fa7ea2a0f896e5a399d7084e201f3a745e49bf7e6441f7",
+    "cli/src/api_audit.cj": "ec4a6060b574c3950d70c0f8345ef52bd7e2b41ddb0822b1a5edbb9ecbe945a8",
+    "cli/src/append_builder_audit.cj": "4be74817a3b8895e97998ecf251738e8055ce0b273ba0a9fda896ac65a803199",
+    "cli/src/group_cursor_audit.cj": "44d9b1fc3203d891dc1aed4d78abc47c1df5b4d524bd055ba4892aede85c6c0c",
+    "cli/src/hir_audit.cj": "239e2c114b91814e03ade360311a45d87191002dfa270ea94e33e90de9e9f31c",
+    "cli/src/lazy_audit.cj": "97c3f69d5eacbf096c5a2934f1f780d44df975a43595a059ef85aefb3c956800",
+    "cli/src/main.cj": "b5b9cea61be8243dbb48b0793e291274f5603629450e5606d4a0ed771bdd6abf",
+    "cli/src/set_iterator_audit.cj": "85216627d991fdb4f2eae48150f95fe154090c316c6c4c685dba4e5f485d7d15",
     "examples/classification-cases.json": "1ff2e102c26e587e618c40eaede9af93a46041bde21758c7c42210f41069d4cd",
     "examples/classification-rules.json": "1318f04b8b5a6d64091be5ebf8d96b23bf29b9d21f8f6a403688d4b039bae6b0",
     "examples/consumer/cjpm.lock": "7b09643cc3e7107d2a0f09605871366c547525d40221945a60bee8a9a5e3f3b0",
-    "examples/consumer/cjpm.toml": "23e65fa031b81b12b261fe8537ca29f1db958a6563cf86be7b212a55cdea37ba",
-    "examples/consumer/src/api_test.cj": "134b69d4b5e39f114b5b1831c41282161b8362e6b36c0d542723e32617c35417",
-    "examples/consumer/src/append_builder_test.cj": "5cf27531642711b345d80b1bdde3179905024dfc0672964eb0e20291e0b10a05",
-    "examples/consumer/src/ast_test.cj": "0e9ac3fd2e14d5a9e6a81670ed376a2b687c112c7c4fc24980b2cbd2114bddc1",
-    "examples/consumer/src/backtrack_test.cj": "80946b7490cd3671abe641505c8fcd52bd86bead7d1b96927436d0786a4e3537",
-    "examples/consumer/src/delivery_test.cj": "e05eb63fcef0b13e070a78f82ab436a0a8bc2a8acaff341df757ba78a3eb3d23",
-    "examples/consumer/src/dfa_test.cj": "eb19d370577aece2aa25493bf7e20f29841ff54996ac8588d870fec14084d630",
-    "examples/consumer/src/engine_edges_test.cj": "d7892a772a320e5ff8c02949df7305c7034d39b0a6e77744650582b1b7290a60",
-    "examples/consumer/src/group_cursor_test.cj": "be5666ef048518331eea83f51f2e6da4b8a21054f2ade18ced52dafb690a55e4",
-    "examples/consumer/src/hir_test.cj": "cfa865132003424c44aa6012272d11cef76537ddeba59b65639cb54ce6041b9e",
-    "examples/consumer/src/literal_test.cj": "9ab563104ec62f4983cae3b749e61ba0d2253719226acf28a6b2c02d182a3659",
-    "examples/consumer/src/main.cj": "9d5937f32a8090ebde5ff0d86929a2efad346d048c09157a9b595cfbb3b0fe39",
-    "examples/consumer/src/pike_test.cj": "dc3c74217568a277b05e019225497b0bcd6902ea9d1d438fa2a91c33c806f219",
-    "examples/consumer/src/reverse_test.cj": "25e6f79f57c94d289e605049b5ddffaf5f704886cd4abeaacd3c1a09d353cd00",
-    "examples/consumer/src/review_test.cj": "d4558f7b9228a10a081b35e0d3537c4d4f5248c217330d6a882f575183aeac8b",
-    "examples/consumer/src/set_test.cj": "96c6d2feef38f983a9bcbda35b1ff4ea6e260f83fac77d325b0759f5c7b1da5e",
+    "examples/consumer/cjpm.toml": "c0c6843111ccc01e7d15ba3901681f9268de85d45ce86ed0057080f6c04a97db",
+    "examples/consumer/src/backtrack_test.cj": "7c72075c88e405ce41bc505bcaf993562776b1360223b6d52642ddd239e550be",
+    "examples/consumer/src/bytes_coverage_test.cj": "83e6119b6d4e1b4b06b67aab295daef77b530890caaf7206a325805a3a52a4ba",
+    "examples/consumer/src/bytes_test.cj": "b5bdd482b5f077e403665512b2d7143a44d4a72ac1f4d2bad68e7f29d4a63688",
+    "examples/consumer/src/capture_test.cj": "c446a45dc9fe8a7ddae5acf608335892365af07e53c62fa4285910d9c28e9a78",
+    "examples/consumer/src/dfa_coverage_test.cj": "a8284cc5ecb1692bb3a6c09696a011b80c6ccff06275f506c1c5fed1f5fd0446",
+    "examples/consumer/src/dfa_test.cj": "414515fec603fc935a62a9baca08c53189eab8b01873dd9a315da2e22c57e862",
+    "examples/consumer/src/main.cj": "00d5736438497ceca8df8dc96326de568de5074a928652227efae1e1279021bd",
+    "examples/consumer/src/nfa_coverage_test.cj": "4a4e2c02126d2cd965338348b9bcfa75a5068d52067d7ecf854ff46b0b3b77a9",
+    "examples/consumer/src/nfa_test.cj": "6e6a0ff814ec5a15c7f68adf54581f9f921d35ddf09da3910d6ac6c3acd9ebe4",
+    "examples/consumer/src/products_coverage_test.cj": "31b9fd4f558157028a1d4f14b570b4428e56b4b32b68fcaf551ec24706ad906b",
+    "examples/consumer/src/products_test.cj": "8b1beb72bc85face6f9d9753a3ba934284382fc7ec592ccbf3062c717a6df13f",
+    "examples/consumer/src/reverse_test.cj": "7e594a6ececeb3d82a194d03259f170471158b1decb2d81535c7f6cb518e9beb",
+    "examples/consumer/src/search_coverage_test.cj": "c99808c2ab0c373de6161b3a8d99e3e02b6a64f73b0c4437c5f5991ec263d28b",
+    "examples/consumer/src/search_test.cj": "6f4b0d52af2a8b0213bcb6d5012251b16dfd32f83c2dacc0a4ba2d8af4262787",
+    "examples/consumer/src/set_test.cj": "3fe55ed4ee8c40f3ee09a44741eb55899cbd8a272afcea20c3acd87ae68cd940",
+    "examples/consumer/src/structure_coverage_test.cj": "5f74b24db59939d363ffb6e6177cbba45fba2f7fe3e9ca5d4d4c76d8ad7c90f2",
+    "examples/consumer/src/structure_test.cj": "9f1c680fa47de76de0620b0af848e750aa15bc49de2358fa82ad04e59ee6059a",
+    "examples/consumer/src/syntax_test.cj": "7e6aac1a840b5755258caddf91a5b7d69fff6aef398b21a201ad4758920093fc",
+    "examples/consumer/src/test_support.cj": "4588d8ea83a6f61c79cd419f2e29ef0bba05e82cdc1e43f758dbff6f9bcd5e84",
+    "examples/consumer/src/text_test.cj": "fc7709d6c33970803121452b867fde776f9b1a83b5a88c1c21152adeb5a3742a",
+    "examples/consumer/src/tools_coverage_test.cj": "5c941586dacd082ce5e9bce42e94b27e637d6a4ea35fbae67977ef2a4e54e033",
+    "examples/consumer/src/tools_test.cj": "e222ed0588ebb681c2566bd1623a09793484aff9bd20e19bf4cfdf797c29e1db",
+    "examples/consumer/src/unicode_test.cj": "9a1b1a0962a54025f9a1f2619469101af9664bd4919a877c9e52ce17b6490dbf",
     "examples/showcase.json": "8c81cf1205bbb21142e83e6bcdbaebb81c04993804bb2c59ae33c3814d652d0f",
+    "oracle/.DS_Store": "c77a7c94217e4fa818b9b7ab80b17eb4ee62405cda4e30431ecc0685a3a21227",
     "oracle/Cargo.lock": "26a89a1b1ae91336f34c0a0549be0c05c871e2713c4e31f1fc4dbb286d448c08",
     "oracle/Cargo.toml": "6ca5d2aba60cc70678fddad6d30a2b9ca9789fa7d974a094d2262fb3656ceb7c",
     "oracle/src/api_audit.rs": "9a8b867dc4ca8d4abedb93c08d25ec3041be9bb80714d0c9703f91c693081b1a",
@@ -820,67 +903,139 @@
     "oracle/src/suite.rs": "c12b7d0fded52e5495be33377f6c4e2313f4226dbf54fc046062f1ef1316e0da",
     "port/LICENSE-APACHE": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
     "port/LICENSE-MIT": "6485b8ed310d3f0340bf1ad1f47645069ce4069dcc6bb46c7d5c6faf41de1fdb",
-    "port/README.md": "df0ce03bfa0590974e98c3779b3a23e624f813283840159bd4542b9c99ce32dc",
+    "port/README.md": "8b032d0c1427af1df0c4de7b007c7b7ae363d665878670524dee5e337de78498",
     "port/THIRD_PARTY_NOTICES.md": "75cdbe17c9f96295c567286829f995aff513f11c140146977c3a5867f69eb45a",
     "port/cjpm.lock": "7b09643cc3e7107d2a0f09605871366c547525d40221945a60bee8a9a5e3f3b0",
-    "port/cjpm.toml": "b9fecdd2038f596d8c6fd840d8c75c2b309df446b46ed3f04a5beafaa343e223",
-    "port/src/ascii_classes.cj": "c06b5c3f89c283aaf25481f088478b601824609297712c646a234d270b4bee03",
-    "port/src/backtrack.cj": "161cde449ea0d42446e314b4bf7578e907b1faff76ba5ae919647ab10dd92085",
-    "port/src/budget.cj": "efa199fa684863adf5b0dcd9e20d2923b4ee5dad34fca56cb45f2825826442ff",
-    "port/src/builder.cj": "02adf7d1bdfd6c42703de1b2234ffb23c89aba0a5a0e132ddbc22b6121f34ed5",
-    "port/src/byte_search.cj": "9e4889380719f71bad2263f96fe4190e4e8076bc7987dc947dc8c733c2901388",
-    "port/src/bytes.cj": "e1b9b5fb5cfde44cda2a40c205847d9c95e78045034f099d78c53e6a25a0c849",
-    "port/src/captures.cj": "74e3aa8dc1646e1b0124885ea105c8f50017f6cc8d0b51b6e2915c038ff078dd",
-    "port/src/case_fold.cj": "2954c4fd6b0c28f9c77e806e31022c5c05b4250cadf6b3e30aa83b29e71f9d1d",
-    "port/src/charset.cj": "69b6f2a2e380dbc44ce084c5ce95dc0351f12e9612021f134c2a65ca48a9ca09",
-    "port/src/dfa.cj": "4ee71c8b8df971838188d2d7d4c4eba9f82283483fff29e3a2e94eddf21c8ba7",
-    "port/src/error.cj": "152ce7913ba011f2606797044e259cdad7486a5ceefd7a5f07023ca43a7acbcb",
-    "port/src/escape.cj": "c7120dc08de6981e30e774396fa743954f039e5db14fc6d04d599f17329f0414",
-    "port/src/lite.cj": "25705f58e0b8534e633a2d3d68e00edfce44fd026aff522c8ab25012cd912a96",
-    "port/src/look.cj": "fb61a65b867d71fc6fe63f757f4f8cb59100058cced1d016abae30ef133511c9",
-    "port/src/meta.cj": "278a4438986ed59400305f9c8d88cb2ef5ed6f57228dd105cc3353e66aad649a",
-    "port/src/nfa.cj": "f3e70d39479a7be4abc9aff948468d53bddf11ad1c64a93d94f48b4109d88363",
-    "port/src/normalize.cj": "1f537ce39d27be81d8ed84972077bb2e612ce8841e393fc4ac117d4af289db6b",
-    "port/src/onepass.cj": "ffabe5d2401e6e78921e13cc7cd01dab557cb9ec1cca769ffb6a5f1f7ace6de0",
-    "port/src/parser.cj": "22fa80f52bfc72c206276d7cc465b12c0d336de6eb049e60261f5efbfb7223ce",
-    "port/src/pikevm.cj": "b7e805c7277a2854148a9d1f6bb977400613c7d5c6b16343aa47d45a9548103c",
-    "port/src/properties.cj": "40f5bcd93c0d1e9a2fb72fbbb5fa9499dd03a3f7798778178ae41471c7dd7ed0",
-    "port/src/regex_set.cj": "a3412f1bfce0d04ce664f2818027cbf78cd7192cafd3615d5c76ab106270a695",
-    "port/src/reverse.cj": "16d27743efefd2f4208cb9a14c16816d2bd1ca8b7e48405f7c92bc7e99ecfad1",
-    "port/src/rure.cj": "03935ab3d4fb828c3331cf898ed820e7c4f580e0164f05921e79fa0800f38cb8",
-    "port/src/search_input.cj": "61309b84b393dd71c7d9f1076a295643cfd2659df26de47cb2c9187df3c251d1",
-    "port/src/syntax_ast.cj": "8572154f93d502beefa7f45af5cc453f01fcda8299050943989633c7958852ec",
-    "port/src/syntax_hir.cj": "df9c01d02736e25161281417a3b3a819dac20b48173e47575154f790dfb6c00a",
-    "port/src/syntax_literal.cj": "53d9b47dde3f7b8e740b16d8190176866f3c07027bf86b3e39246c0a3a9e9323",
-    "port/src/thompson.cj": "40e43482d668c6a83d549c049f54bbd58dbce140f2203cb6b00462d553edf882",
-    "port/src/unicode_age_break.cj": "0e57bfbbab9069f0e9b88f5f5a5353e6a0aa02b10de29209624b823335ef9841",
-    "port/src/unicode_binary.cj": "ce35c2a7b15ac768df53af556d1f6b833051b98184611ab3cb67f79e4a5d556f",
-    "port/src/unicode_categories.cj": "4a8a4a9942b817e09a05d12c1e4760afcd50f88edd56c45b960f505966129012",
-    "port/src/unicode_classes.cj": "781b1497931856944165a75d198b9191cd3e5bf238c3587e82897b393d900408",
-    "port/src/unicode_scripts.cj": "f40ce991288c46d6543ede6d69566333bad6d80f84909cf8ad0311da173b0fc0",
-    "port/src/utf8seq.cj": "69b4b734edd18bceaa9912bdd2ab485890ecc895c367fe06c7e951b5744a5bf9",
-    "scripts/audit_api_surface.py": "51ce7d02f448f338b8e4acb137bceb206b3bed3638a96fd6223ff1d57fe274e6",
+    "port/cjpm.toml": "3df1cbeee8edf671db8579e9bc704bfccb889d45e90dab76b1bb897b760b3b4a",
+    "port/src/ascii_classes.cj": "c00221f896dff955a22010edfca50231fe7ef2424dc73383e28c39bf4186c665",
+    "port/src/backtrack.cj": "c53171737fd8f1d679a4cf4200ed8f977c4d1ad983fec70c08863fc8ff8bcb97",
+    "port/src/budget.cj": "f8c069232cbc63d9cdd52f8d33aa5217b875ed830e10eb926d9e96e2bdbf539e",
+    "port/src/builder.cj": "26f76864e5955509f5e423a1100b1d0d6f94e2c4d4a7191fc1235a99adff3d7c",
+    "port/src/byte_search.cj": "b5969fea4204ff9071355ee4b37114d90b8751a262790c293b72c34f639581d5",
+    "port/src/bytes.cj": "24456bd547f0fb65364d17335dc7c286397e636c9e29dad2b0d38247ca5f328a",
+    "port/src/captures.cj": "89e8892e30ee3a89e07072f4660b25cf8baa42202d67c91b9b9262263fc048ab",
+    "port/src/case_fold.cj": "c427288b1680b88e2d31b5e3a2e4ce100e45d5c55ef0f08ad707518e897b0d11",
+    "port/src/charset.cj": "e1683632d852e0d0e406c36588aeb9a9fef9dc29d8377dced95b8f034d5a66d9",
+    "port/src/dfa.cj": "617d31d2d1b2a8b8a5eaa8b54aebf43d519f7d120565ebf70169292b87c5bb4e",
+    "port/src/error.cj": "6536293086c5b58f0355ff63f3b6d23fbcc65cbb2cebca341e469f47a196ac8d",
+    "port/src/escape.cj": "6e3f9570dff348e63f03b1b88bead6ef7f886c691395917f797f709e36e99c16",
+    "port/src/lite.cj": "6f8fae314f3418cbad1e518f22547aefd42d93da06b0aceba19bf2500636b953",
+    "port/src/look.cj": "372f4364520708c4dd1e1e95e8b5d26a6f6b96ec09c7619f33aac2b82f90ca0e",
+    "port/src/meta.cj": "2bd537d7dc487013f5796aae27a4dbbf04740e2f7bb84f762e639b1df6493ced",
+    "port/src/nfa.cj": "823231223c673dfee7142365a19e86514784148070f16dddcab940ccf65d17c2",
+    "port/src/normalize.cj": "734edce5d061ac5646d2002593d438e14a4ba5f950f7001c38b89b8bd774750e",
+    "port/src/onepass.cj": "64041377d5989d5fcfd4543ddacf27391940bb7676deb884a5e9cd2c51097a93",
+    "port/src/parser.cj": "f22cbd4b9c6d19847eb60ecf108a9c19eaafa8854b4f5487c4c912d6667462e8",
+    "port/src/pikevm.cj": "49e134adec090a9c0d3e37dfe855a203edb33d8a7b92ba14b2c550bf4bf6c5a9",
+    "port/src/properties.cj": "14f2ccc82651340d126ad6cedc673cc806bebb7e21a70af0aa28faa990aa8b3b",
+    "port/src/regex_set.cj": "fb2a3ee6d9e20c6fef8c54da2591d6485647ca9f6ab0fc417b5fab9c51e00cba",
+    "port/src/reverse.cj": "9f00d45e1b2aa8ce71a90d4fe57d613998c174b93ed12ffa7ea36adabe9e3755",
+    "port/src/rure.cj": "7c3b52c313fe6779c1e67f2d70eca5b3e66740ae1e33efc4b73229861958ebee",
+    "port/src/search_input.cj": "05d9808a656683aa4db2f79cf0bf6465e38f5c73f2253799635ce0cdca11f406",
+    "port/src/syntax_ast.cj": "4431d1ef2f59a02fc3b92ccd6d9cb86369905f0d0da135a167fabe00482dde66",
+    "port/src/syntax_hir.cj": "672f5ad78d8a2e2fe530044a79bbec7a4bab1a287f00adb44f5601bb965b3ba0",
+    "port/src/syntax_literal.cj": "b3abf7a7cc16ff8923f38748cd951c26513ba53a7515bf53a12e0e60de34f35f",
+    "port/src/thompson.cj": "8aa8c3e867aa35eb7111db36e55dd020b90446bcf1bf95d33f1d8cd50e5b7070",
+    "port/src/unicode_age_break.cj": "8045d5f71df7ea30c6d9d5f7f2a3649bd0763aa48f1053589f3d6c8f57bd42ed",
+    "port/src/unicode_binary.cj": "dd31d7589aa75e8e65cf6d725051e61ff932e4721fc9a346982ab9ffd47be637",
+    "port/src/unicode_categories.cj": "9ae9adb28d52a9ffad330868946bd0038ad53a83f3cd0d8838ec66c0f4410955",
+    "port/src/unicode_classes.cj": "d2c41a11ab538de460d1f3264d5504d33695a94bb1f1ae8ee97c1681fc25cf3f",
+    "port/src/unicode_scripts.cj": "4dc33462f912f00bf2f21ecc2f2cb7f2e386cdf0ebff752ee7e85c673561b05c",
+    "port/src/utf8seq.cj": "2f2915f67ae569ba076db58f8c5a94bda655d495ae954317966c1748274ad343",
+    "scripts/audit_api_surface.py": "3e4f936b516c5a3249efa3cb0bfeff350d5668e87e9a3c19f32e074e87a04753",
     "scripts/check_coverage.py": "36ccadf5935849f0923963dd17a6f0369838c175d060141b8f15043b724a7bca",
     "scripts/check_upstream_data.py": "fc0ae7860f1d7f7ff67dd1ff625bb072eccf645b51c7066374fbd61a8b2e4b50",
     "scripts/classify.py": "5d81986763c8176cfc63d282db560b5ea5bd8a233f123c2dd637a83d2a85d2de",
     "scripts/demo.sh": "5603593a6a2a0071b82d02f42c3ca8cfb2972037de1e9c824cbd29aa19271853",
     "scripts/env.sh": "dbecb9c377eb231576c0f6c7d8927e4dc145bc715fced2c481f464f533bfbc7d",
-    "scripts/generate_age_break.py": "3f4eabfdbf01ebe3600bef989753ebaa481aee0b74c2229ff821c347822bb979",
+    "scripts/feature_catalog.py": "0c2c1e0ceff2fc9038887aa7f74fe44fa5b6fdaec0ed3cc9e1a5b760201fac43",
+    "scripts/generate_age_break.py": "f54fd7a6fc5975d4f24dc55c0e8f6861b1abfbc176be6e8cdd9ea51c13aae488",
     "scripts/generate_api_catalog.py": "402b079882eeaad93e148bd63b49585b853a3ea426d97f2596d5051c4e73dede",
-    "scripts/generate_binary.py": "d3b05f1b18cc91da9422e904f23f665d0770113eea818ccb46dac686ee2eac57",
-    "scripts/generate_case_fold.py": "6d71e853b6a4427dc5e743e028ea60dadec922d8b53d66074ca3ca1274eedba7",
-    "scripts/generate_categories.py": "75d604ffd8106c56ccf5de8b308866a139bdfcd7a53a3e01c98a680584b2a8b4",
-    "scripts/generate_scripts.py": "dee9cf46aa60fedbddcbe5acbb6e892b1e24e08caa985b8272461b86012c9edc",
-    "scripts/generate_unicode.py": "f34998637638c539912448100938f967ae25bb687ae95aeab034ac740fc60d1a",
+    "scripts/generate_binary.py": "3531386702fd6f2950b4200510cf3a6cd0b8fbbc890546d14042aa50cce0900a",
+    "scripts/generate_case_fold.py": "673475be4dedace0481e66224a7739cfe67c915abdfc8eb874ddd3afce30c785",
+    "scripts/generate_categories.py": "0972a6be3f1f25b70114718436a6503de82655528be67aeece8dd5963b13ca53",
+    "scripts/generate_scripts.py": "234d0501c2214acc21634eeb3631bf29594f0e165dbcc5cb13851baffbdffa89",
+    "scripts/generate_unicode.py": "4fd893c5439dab25c1f3f00c010c0aceab5042e5a15a08667ca11a3e4844c4ed",
+    "scripts/measure_test_coverage.py": "8ea18ccf1e090493663ecf06ddbb82068803b3a4fd1faa2f7e8ab047cdbf00a9",
     "scripts/package.sh": "05cccd04e149e4bfe005b0ecd41d4219df1f334b08efd8f31a3cd707e2c23c14",
-    "scripts/run.sh": "6d99331e3787dddd7d0e4b6095eaa70ce4efbc46d64883b44c4906a90b5f23f5",
+    "scripts/run.sh": "65847c63a7f821b462cf4f4b663475ccd6ef5abfd917c7d785ebfdba42428d0e",
     "scripts/show_captures.py": "ec991aa5f4ed9883de7e97309ba97669af6a67940c8ee2d1cfa225417807da81",
     "scripts/show_text.py": "3588ad18ca07dc079420abcf380b700fc89808356c56fc4552a9539a85f66856",
     "scripts/showcase.py": "1ee17eb5ce5564be3f77149e67723b1522994cc9426282fdba1c19ebd21c925a",
     "scripts/verify.sh": "7e6ea194d0811ceb4e9d1448e2cc9c160534e01e62f73f512b7358255c136833",
-    "scripts/verify_runner.py": "d94cb2786cb7f46d068f549c020c55b0d3f9f85eb113f631fae864a99b8053e3",
-    "tests/regex_test_support.py": "d3617a73f31065f0019778c589b40aa77e3afaa4ab74f11195cce37dae6a85c1",
-    "tests/test_category_generator.py": "f83388dbf6c3c0c6ab035999c01166d43be76bc09423a8404248f83657490677",
+    "scripts/verify_runner.py": "2a7c5fd78a5c6a2779550ded9ffd65b4fbc3e20a1e349a1877b0219de2f10609",
+    "tests/README.md": "65d307e4e64242fbb6e4a93f44c817e2df5f32e3e813b5ce0bcafb85e3f23ae6",
+    "tests/catalog/README.md": "f543a4b554dc27f3e91341d42aab739d5443a8df8b591efe18fcb14074c61d39",
+    "tests/catalog/features.json": "ae16bc657ff1aba6cb1701ae2918bc30de0dc2e9665efe0424d9b56463a60fb9",
+    "tests/catalog/native.json": "fd1b4af63906f4c215ab760b40ddfd6b2a3b822759fc57142be09b956e19c9ed",
+    "tests/functional/backtrack/cases.json": "d30a26a88f49450d91931afb3ad82e762a755132c6ab3d7444e8b4f55b619fb3",
+    "tests/functional/backtrack/verify_backtrack.py": "43fde77583cf2c0febfbc706a34da095a4effa600343b63aedba7a8a345377ec",
+    "tests/functional/backtrack/verify_backtrack_iter.py": "6f9cd152e3108493c46fca2082b9d544b700143f1ebd08dcec23d0d8b5d3355d",
+    "tests/functional/backtrack/verify_backtrack_span.py": "3564d5772a08b5439cc30d504c8b384a4bc5ecfe8b8126625f59eade6474330a",
+    "tests/functional/bytes/cases.json": "495cee34407148d32c89075423e31b5ad4239bf490cc3fe5dd0743b185f86dc8",
+    "tests/functional/bytes/verify_bytes.py": "b8056e4110b31463461950bd559fd63dd6435db2866c0924dad9b127792f8ac3",
+    "tests/functional/capture/cases.json": "a74746d5d20ae5831e0e7df468c48c6b79983bb883a56d4861f932b24eadcf95",
+    "tests/functional/capture/verify_api_contracts.py": "40543bc0ad08099ec474ca3bb4220fff595bf2724d8fa0d8aab84308c7548f3d",
+    "tests/functional/capture/verify_captures.py": "e7fdde711b269c7faa73f2d6a88925d3ddcb75fdb25e42c7cfc24e1eb9002c38",
+    "tests/functional/capture/verify_group_info.py": "d35856cdad92b09ad361ef0491b2e0c14e930e1bb5e95b4dda30ba5dd8d11f95",
+    "tests/functional/cli/cases.json": "7f2208f2a86993b4f69e1454382a11bb3deb293ab9ac78e9713294aa728ac09f",
+    "tests/functional/cli/verify_cli_find.py": "8b89e002228653488f09c60ef56fa660f6c9e3d02bf0f6e839a2e3e3ae524197",
+    "tests/functional/cli/verify_rest.py": "9a5f6e220279f1d15e1e49cd90daac02c33b17a6b535d52d4368622a71136070",
+    "tests/functional/dfa/cases.json": "f20020a49e8cb3157c88542fd22ba5b1148c1b02a134145104598ad4da9f6590",
+    "tests/functional/dfa/verify_dfa.py": "c7173b0bef511326c94e40dbd5e690a1b313732264a88b14fd3ca69321902371",
+    "tests/functional/dfa/verify_dfa_bytes.py": "c0317624c482d2ed1a96c6dc1c92480e2c42729ab60093baafd4e5267674baf9",
+    "tests/functional/dfa/verify_dfa_pattern.py": "007e80cbf16a74b24e0325c21b17c19b04e10946b878e61ebe705103855f336e",
+    "tests/functional/dfa/verify_hybrid_many.py": "29e77f5a1a2844065dfd1d4b6b2f079034688cbea8faf582d89d056b82e13feb",
+    "tests/functional/nfa/cases.json": "f8b74e0986826944160ba96b191ef01f09602f3c0bdc6c6a02a8a94c4e92724e",
+    "tests/functional/nfa/verify_bytes_nfa.py": "e7f672c87f8662ce36d0fca2907d5a8cf8d88fe256c913364ac7b492d3076875",
+    "tests/functional/nfa/verify_capture_modes.py": "19941a23ee13bd42371d377a3261c2e1d725dae0f4375b57641d4755dfe9c0e1",
+    "tests/functional/nfa/verify_nfa_build.py": "3266ebe099e2953f574ced8cbd6c315f171c6126bc8f44a03623190b2443fb5e",
+    "tests/functional/nfa/verify_pike.py": "04e02d8371b023d44901ae1fb056c76901fe6feb782f8acd8f8a5cdd4dc85d72",
+    "tests/functional/nfa/verify_pike_overlap.py": "b14385e01e5562395f10bf7de4ac90d4b473ae529a03b96264fa82a93d962787",
+    "tests/functional/products/cases.json": "0b6074d6784885d3d93bd80b432199108f9c8de3def85582122478bd303c03b1",
+    "tests/functional/products/verify_engine_edges.py": "e41f8bce71df504f986b5e1334128b1729eae50c07cecfbcce2e25a6aaae00ba",
+    "tests/functional/products/verify_products.py": "923c82b852c3663188854f811bf58c81ccdc8cd16c42535c8cdae45b26f07e1e",
+    "tests/functional/reverse/cases.json": "5ce1ddd70e71ff322bc8d4ca21ef30809eb2bb7fcd3a7459d3f4cc1575beae4b",
+    "tests/functional/reverse/verify_reverse.py": "71600ca9bf37a2f5c20f04b9c83cc4b961a6e2468a4f84379b72d965888a3e3a",
+    "tests/functional/reverse/verify_reverse_many.py": "3d4b47de8307ab47fe15ad546c4fea09a6123903b320eac001e272f2158a29bb",
+    "tests/functional/search/cases.json": "db3bdba77ca46171488365564190fa9af1e41088cfcac740e23e23ef71240edd",
+    "tests/functional/search/verify.py": "8fa39e1d06687fa6a00de74fefcc08a66260a8fba93364f927ffb80eb8c0883c",
+    "tests/functional/search/verify_matching.py": "5190bc57ffc6ef4068c50ca368dae68865e762bf9ba3d18b4710c7ca14db22fa",
+    "tests/functional/search/verify_upstream_sample.py": "47c83aaf0b15b3d2f1ebacc4aecd25660c39cfa98db92eeb5f9c67923037de7f",
+    "tests/functional/search/verify_upstream_suite.py": "1763ac3e21d6bdb91ecdf74545f60194c98a77efaee8d2825cdba87e2c0205e1",
+    "tests/functional/set/cases.json": "76d9bb5f2a87e641f1fb9bb6101ca2599eef6d87f942b7a06d4acb206ba99d8f",
+    "tests/functional/set/verify_sets.py": "dc410832895db5021f828911333a1c39d2985a32df53fb10e97d22a68c546bc7",
+    "tests/functional/structure/cases.json": "3dc1ca5267a468506b85459ab1602f9acaabd5e0debd738e1a3607b68e09ea8e",
+    "tests/functional/structure/verify_ast.py": "8e6304d54053141ce1a382a2fa6d13157645c9ac5dc19521859da74d60837696",
+    "tests/functional/structure/verify_hir.py": "2a430106756c2c0e107dfefcbf0998ccf1d252c868c23c68709815e09c516330",
+    "tests/functional/structure/verify_props.py": "2f0828e3667254aa9cd7091896129ed77a7f5a393745fde2724bafd2b1ca00e6",
+    "tests/functional/syntax/cases.json": "914342b9a1ef786cc5165e398feb1f4e1554235044df3b92cb457ade66b9bf10",
+    "tests/functional/syntax/verify_classes.py": "df731d553680dee92ec0d009b69179146c20d9ad6720065949145d190bbf58bf",
+    "tests/functional/syntax/verify_error_spans.py": "c3e0acb47c6b5618457b1197b54cdd618631c44d58fd9524b5a638f9aff40a50",
+    "tests/functional/syntax/verify_errors.py": "da5cf3f1497e0065027b050817dce71b7c0bee7de4fbb4e675aa6536eb9caf08",
+    "tests/functional/syntax/verify_escapes.py": "bca91cb9195325bd03bf9364ded31ec63022bfda33f361fcf7fef008247c3b27",
+    "tests/functional/syntax/verify_flags.py": "a9611fd88d5b3387402fb25c1efe4a04ed86d485bf174d8da52ec8b22565005b",
+    "tests/functional/syntax/verify_limits.py": "d0d84c2446c97a759797ef0fd801ff0aa267597cc488a3ad84340dd76f64357f",
+    "tests/functional/syntax/verify_syntax.py": "fd4512d701f305600fd17c8ed8caca37239f3230c56afdc0052d60b3381a0d2d",
+    "tests/functional/text/cases.json": "b4996670b99551aa301ff0e31f7384a28b7982b0361f55dc597e8585645633c2",
+    "tests/functional/text/verify_text_ops.py": "1cca3a7d14e04ba4e01edd31f672199d83ec0be48912011446e8bb5ea58d6ed0",
+    "tests/functional/tools/cases.json": "ecb9e4d0da633ed430ac64a4d382060e54b7ca2104b2f23d132b736b8670bccd",
+    "tests/functional/tools/verify_literals.py": "c42cf29c300414afd4f6e6aaf299c8204eb96a04e25e25325ac3a4cbb7fef4c4",
+    "tests/functional/tools/verify_utf8.py": "78134d7b66f1700eed047ddea95269ef0df6c312c79413af7d7b54ad5d03b9b4",
+    "tests/functional/unicode/cases.json": "9a8aac4fc3ad32359d3274e85a9505f8e443447a4abdf2c92b6e227d6dc4e415",
+    "tests/functional/unicode/verify_ascii_classes.py": "88992ff0f7ace6bfb033a3da45a8dc2d92a992e30cf32474115e74729c845fa2",
+    "tests/functional/unicode/verify_binary.py": "1d3fd7fe9f487fa9f4e4180ff58664c26e2c2a0947f06e3fc72554173e749671",
+    "tests/functional/unicode/verify_boundaries.py": "c5fc81f8d9cb6f43faaadcf33c844e09c9258d348cff91f4cf1efc48fe32f879",
+    "tests/functional/unicode/verify_case.py": "50e18d6e8bb030acb07d9d118871b1bc526d4fae15155d315300fbde704f07cd",
+    "tests/functional/unicode/verify_properties.py": "477ece6fc4b2bf6fae0a6475da2935e5eb65b117c19792cada7c09e03ce302fe",
+    "tests/functional/unicode/verify_scripts.py": "3bd9741f6154f9a572215705f839b7d8b97ba36ed23a0fa00b1f5a7047fab2f1",
+    "tests/functional/unicode/verify_unicode.py": "514afe107ebaed70d306c43c9680a1dc8fc0a79939ac65d49e0bd5d26b2ab97c",
+    "tests/run_feature_cases.py": "6d226458b1e405c5d694e45e6345ddeeb6e1178b612691a5d4bc14d3694f98ec",
+    "tests/run_suite.py": "ed917c0fb77925a2d0785d04cf39f3efb1a2bd7532b03e0cc37fa4cff7b749a0",
+    "tests/support/regex_test_support.py": "a028159d28662f7d3b360956bb38db49f1a1a5c1662ad25b479983ffb367d913",
+    "tests/tooling/test_category_generator.py": "18b3fe9b3e8d025a3fb480ff4868fceef953bedfbc093a10b2d7ac8bcee25c11",
+    "tests/tooling/test_coverage_report.py": "68914127d4f8e35bd8c081682d57a3ef640519c0a2c4d9dd26029df93a7aaf43",
+    "tests/tooling/test_feature_catalog.py": "d59ae2d55adc499b0e92a26065c552cd4dda3da63aaf775832c362ff2c1ff5d0",
     "tests/upstream/LICENSE-APACHE": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
     "tests/upstream/LICENSE-MIT": "6485b8ed310d3f0340bf1ad1f47645069ce4069dcc6bb46c7d5c6faf41de1fdb",
     "tests/upstream/README.md": "4f20a7906bfe1b84c7823caeb0ca9a3368e9cc09d6d7aee49942433e463646d1",
@@ -910,54 +1065,7 @@
     "tests/upstream/testdata/unicode.toml": "7e4b013039b0cdd85fa73f32d15d096182fe901643d4e40c0910087a736cd46d",
     "tests/upstream/testdata/utf8.toml": "2eabce0582bcacb2073e08bbe7ca413f096d14d06e917b107949691e24f84b20",
     "tests/upstream/testdata/word-boundary-special.toml": "7d0ea2f796478d1ca2a6954430cb1cfbd04031a182f8611cb50a7c73e443ce33",
-    "tests/upstream/testdata/word-boundary.toml": "51bc1c498ab825420340a2dd3e6623de4054937ba6d5020ff8cd14b1c1e45271",
-    "tests/verify.py": "9c00277e4b04c4fd7964122da6d67d071c350e93ff0ce435fafbca3eec8b1a7f",
-    "tests/verify_api_contracts.py": "40543bc0ad08099ec474ca3bb4220fff595bf2724d8fa0d8aab84308c7548f3d",
-    "tests/verify_ascii_classes.py": "88992ff0f7ace6bfb033a3da45a8dc2d92a992e30cf32474115e74729c845fa2",
-    "tests/verify_ast.py": "8e6304d54053141ce1a382a2fa6d13157645c9ac5dc19521859da74d60837696",
-    "tests/verify_backtrack.py": "43fde77583cf2c0febfbc706a34da095a4effa600343b63aedba7a8a345377ec",
-    "tests/verify_backtrack_iter.py": "6f9cd152e3108493c46fca2082b9d544b700143f1ebd08dcec23d0d8b5d3355d",
-    "tests/verify_backtrack_span.py": "3564d5772a08b5439cc30d504c8b384a4bc5ecfe8b8126625f59eade6474330a",
-    "tests/verify_binary.py": "1d3fd7fe9f487fa9f4e4180ff58664c26e2c2a0947f06e3fc72554173e749671",
-    "tests/verify_boundaries.py": "c5fc81f8d9cb6f43faaadcf33c844e09c9258d348cff91f4cf1efc48fe32f879",
-    "tests/verify_bytes.py": "b8056e4110b31463461950bd559fd63dd6435db2866c0924dad9b127792f8ac3",
-    "tests/verify_bytes_nfa.py": "e7f672c87f8662ce36d0fca2907d5a8cf8d88fe256c913364ac7b492d3076875",
-    "tests/verify_capture_modes.py": "19941a23ee13bd42371d377a3261c2e1d725dae0f4375b57641d4755dfe9c0e1",
-    "tests/verify_captures.py": "e7fdde711b269c7faa73f2d6a88925d3ddcb75fdb25e42c7cfc24e1eb9002c38",
-    "tests/verify_case.py": "50e18d6e8bb030acb07d9d118871b1bc526d4fae15155d315300fbde704f07cd",
-    "tests/verify_classes.py": "df731d553680dee92ec0d009b69179146c20d9ad6720065949145d190bbf58bf",
-    "tests/verify_cli_find.py": "8b89e002228653488f09c60ef56fa660f6c9e3d02bf0f6e839a2e3e3ae524197",
-    "tests/verify_dfa.py": "c7173b0bef511326c94e40dbd5e690a1b313732264a88b14fd3ca69321902371",
-    "tests/verify_dfa_bytes.py": "c0317624c482d2ed1a96c6dc1c92480e2c42729ab60093baafd4e5267674baf9",
-    "tests/verify_dfa_pattern.py": "007e80cbf16a74b24e0325c21b17c19b04e10946b878e61ebe705103855f336e",
-    "tests/verify_engine_edges.py": "e41f8bce71df504f986b5e1334128b1729eae50c07cecfbcce2e25a6aaae00ba",
-    "tests/verify_error_spans.py": "c3e0acb47c6b5618457b1197b54cdd618631c44d58fd9524b5a638f9aff40a50",
-    "tests/verify_errors.py": "da5cf3f1497e0065027b050817dce71b7c0bee7de4fbb4e675aa6536eb9caf08",
-    "tests/verify_escapes.py": "bca91cb9195325bd03bf9364ded31ec63022bfda33f361fcf7fef008247c3b27",
-    "tests/verify_flags.py": "a9611fd88d5b3387402fb25c1efe4a04ed86d485bf174d8da52ec8b22565005b",
-    "tests/verify_group_info.py": "d35856cdad92b09ad361ef0491b2e0c14e930e1bb5e95b4dda30ba5dd8d11f95",
-    "tests/verify_hir.py": "2a430106756c2c0e107dfefcbf0998ccf1d252c868c23c68709815e09c516330",
-    "tests/verify_hybrid_many.py": "29e77f5a1a2844065dfd1d4b6b2f079034688cbea8faf582d89d056b82e13feb",
-    "tests/verify_limits.py": "d0d84c2446c97a759797ef0fd801ff0aa267597cc488a3ad84340dd76f64357f",
-    "tests/verify_literals.py": "c42cf29c300414afd4f6e6aaf299c8204eb96a04e25e25325ac3a4cbb7fef4c4",
-    "tests/verify_matching.py": "5190bc57ffc6ef4068c50ca368dae68865e762bf9ba3d18b4710c7ca14db22fa",
-    "tests/verify_nfa_build.py": "3266ebe099e2953f574ced8cbd6c315f171c6126bc8f44a03623190b2443fb5e",
-    "tests/verify_pike.py": "04e02d8371b023d44901ae1fb056c76901fe6feb782f8acd8f8a5cdd4dc85d72",
-    "tests/verify_pike_overlap.py": "b14385e01e5562395f10bf7de4ac90d4b473ae529a03b96264fa82a93d962787",
-    "tests/verify_products.py": "923c82b852c3663188854f811bf58c81ccdc8cd16c42535c8cdae45b26f07e1e",
-    "tests/verify_properties.py": "477ece6fc4b2bf6fae0a6475da2935e5eb65b117c19792cada7c09e03ce302fe",
-    "tests/verify_props.py": "2f0828e3667254aa9cd7091896129ed77a7f5a393745fde2724bafd2b1ca00e6",
-    "tests/verify_rest.py": "9a5f6e220279f1d15e1e49cd90daac02c33b17a6b535d52d4368622a71136070",
-    "tests/verify_reverse.py": "71600ca9bf37a2f5c20f04b9c83cc4b961a6e2468a4f84379b72d965888a3e3a",
-    "tests/verify_reverse_many.py": "3d4b47de8307ab47fe15ad546c4fea09a6123903b320eac001e272f2158a29bb",
-    "tests/verify_scripts.py": "3bd9741f6154f9a572215705f839b7d8b97ba36ed23a0fa00b1f5a7047fab2f1",
-    "tests/verify_sets.py": "dc410832895db5021f828911333a1c39d2985a32df53fb10e97d22a68c546bc7",
-    "tests/verify_syntax.py": "fd4512d701f305600fd17c8ed8caca37239f3230c56afdc0052d60b3381a0d2d",
-    "tests/verify_text_ops.py": "1cca3a7d14e04ba4e01edd31f672199d83ec0be48912011446e8bb5ea58d6ed0",
-    "tests/verify_unicode.py": "514afe107ebaed70d306c43c9680a1dc8fc0a79939ac65d49e0bd5d26b2ab97c",
-    "tests/verify_upstream_sample.py": "b381cc5bb30d084b6603b0e8455623fa875edbfa88f7a8ef7b70364b1d98580f",
-    "tests/verify_upstream_suite.py": "7ccbf9e6066e4eb245c277d445f8a4f725b7f42bc57b6d5ff8fab23eb98772aa",
-    "tests/verify_utf8.py": "78134d7b66f1700eed047ddea95269ef0df6c312c79413af7d7b54ad5d03b9b4"
+    "tests/upstream/testdata/word-boundary.toml": "51bc1c498ab825420340a2dd3e6623de4054937ba6d5020ff8cd14b1c1e45271"
   },
   "baseline": {
     "https://github.com/rust-lang/regex": "72d650cb0a880a01ab6dc2137c0888e8f89740f7",
@@ -975,36 +1083,56 @@
     "invalid_patterns_rejected": 8,
     "resource_limits_checked": 0,
     "cangjie_matching_engine_implemented": true,
-    "class_repetition_differential_passed": 881,
-    "class_repetition_golden_passed": 5,
-    "class_repetition_api_checks_passed": 10,
-    "class_repetition_invalid_rejected": 16,
-    "class_repetition_unsupported_rejected": 0,
-    "class_repetition_resource_limits_checked": 1,
+    "upstream_sample_passed": 198,
+    "upstream_sample_skipped": 141,
+    "upstream_suite_passed": 3213,
     "capture_differential_passed": 880,
     "capture_golden_passed": 2,
     "capture_name_checks_passed": 35,
     "capture_invalid_rejected": 8,
     "capture_unicode_names_passed": 2,
     "capture_resource_limits_checked": 0,
+    "group_cursor_cases_passed": 54,
+    "api_contract_cases_passed": 2414,
+    "api_offset_differential_passed": 513,
+    "append_expansion_cases_passed": 80,
+    "builder_array_cases_passed": 4,
+    "set_iterator_contract_cases_passed": 128,
+    "builder_combination_cases_passed": 384,
+    "lazy_iterator_cases_passed": 1400,
+    "bytes_offset_contract_cases_passed": 260,
     "text_operations_differential_passed": 1037,
     "text_operations_golden_passed": 7,
     "text_operations_negative_limits_rejected": 4,
     "text_operations_scope": "template/literal/callback replacement, expand, eager split and splitN",
+    "regex_set_differential_passed": 577,
+    "regex_set_golden_passed": 4,
+    "regex_set_error_checks_passed": 3,
+    "regex_set_single_regex_baseline_cases": 120,
+    "bytes_differential_passed": 48,
+    "class_repetition_differential_passed": 881,
+    "class_repetition_golden_passed": 5,
+    "class_repetition_api_checks_passed": 10,
+    "class_repetition_invalid_rejected": 16,
+    "class_repetition_unsupported_rejected": 0,
+    "class_repetition_resource_limits_checked": 1,
     "flags_differential_passed": 960,
     "flags_api_checks_passed": 12,
     "flags_golden_passed": 4,
     "flags_invalid_rejected": 14,
     "flags_unsupported_rejected": 0,
-    "case_fold_differential_passed": 721,
-    "case_fold_golden_passed": 7,
-    "case_fold_invalid_rejected": 2,
-    "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
     "scalar_escape_differential_passed": 366,
     "scalar_escape_invalid_rejected": 22,
     "scalar_escape_golden_passed": 3,
     "scalar_escape_api_checks_passed": 4,
     "scalar_escape_scope": "x/u/U fixed and braced scalar escapes plus a/f/v",
+    "syntax_differential_passed": 118,
+    "syntax_invalid_rejected": 9,
+    "error_span_cases_passed": 37,
+    "case_fold_differential_passed": 721,
+    "case_fold_golden_passed": 7,
+    "case_fold_invalid_rejected": 2,
+    "case_folding": "Unicode simple case folding when unicode is on; ASCII A-Z folding when unicode is off",
     "ascii_classes_differential_passed": 496,
     "ascii_classes_golden_passed": 5,
     "ascii_classes_invalid_rejected": 4,
@@ -1041,39 +1169,19 @@
     "binary_property_golden_passed": 6,
     "binary_property_invalid_rejected": 8,
     "binary_property_api_checks_passed": 4,
-    "syntax_differential_passed": 118,
-    "syntax_invalid_rejected": 9,
-    "bytes_differential_passed": 48,
-    "upstream_sample_passed": 198,
-    "upstream_sample_skipped": 141,
-    "upstream_suite_passed": 3213,
-    "regex_set_differential_passed": 577,
-    "regex_set_golden_passed": 4,
-    "regex_set_error_checks_passed": 3,
-    "regex_set_single_regex_baseline_cases": 120,
-    "group_cursor_cases_passed": 54,
-    "api_contract_cases_passed": 2414,
-    "api_offset_differential_passed": 513,
-    "append_expansion_cases_passed": 80,
-    "builder_array_cases_passed": 4,
-    "set_iterator_contract_cases_passed": 128,
-    "builder_combination_cases_passed": 384,
-    "lazy_iterator_cases_passed": 1400,
-    "bytes_offset_contract_cases_passed": 260,
-    "hir_constructor_cases_passed": 235,
-    "hir_parse_cases_passed": 367,
-    "hir_print_cases_passed": 41,
-    "hir_invalid_rejected": 4,
     "ast_octal_cases_passed": 1039,
     "ast_review_regressions_passed": 19,
     "ast_cases_passed": 88,
     "ast_hir_cases_passed": 50,
-    "pike_cases_passed": 503,
-    "pike_invalid_rejected": 1,
+    "hir_constructor_cases_passed": 235,
+    "hir_parse_cases_passed": 367,
+    "hir_print_cases_passed": 41,
+    "hir_invalid_rejected": 4,
     "hir_property_cases_passed": 32,
     "hir_pike_cases_passed": 6,
-    "error_span_cases_passed": 37,
+    "pike_cases_passed": 503,
+    "pike_invalid_rejected": 1,
     "engine_edge_differential_passed": 401
   },
-  "finished_at": "2026-10-05T13:23:04.152443+00:00"
+  "finished_at": "2026-10-07T07:42:23.329280+00:00"
 }

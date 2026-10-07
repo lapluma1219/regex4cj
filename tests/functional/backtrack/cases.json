@@ -1,0 +1,62 @@
+[
+  {
+    "id": "backtrack-greedy",
+    "group": "backtrack",
+    "feature": "有界回溯 greedy",
+    "operation": "backtrack",
+    "pattern": "default",
+    "text": "a+",
+    "extra": [
+      "zaa"
+    ],
+    "args": [
+      "backtrack",
+      "default",
+      "a+",
+      "zaa"
+    ],
+    "expected_stdout": "pattern\t0\nspan\t1\t3\ngroup\t0\t1\t3\t6161\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "backtrack-absent",
+    "group": "backtrack",
+    "feature": "有界回溯 absent",
+    "operation": "backtrack",
+    "pattern": "default",
+    "text": "z",
+    "extra": [
+      "aa"
+    ],
+    "args": [
+      "backtrack",
+      "default",
+      "z",
+      "aa"
+    ],
+    "expected_stdout": "none\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "backtrack-empty",
+    "group": "backtrack",
+    "feature": "有界回溯 empty",
+    "operation": "backtrack",
+    "pattern": "default",
+    "text": "a",
+    "extra": [
+      ""
+    ],
+    "args": [
+      "backtrack",
+      "default",
+      "a",
+      ""
+    ],
+    "expected_stdout": "none\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  }
+]

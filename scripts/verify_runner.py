@@ -3,11 +3,13 @@ import datetime
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import platform
 import subprocess
 import sys
 import uuid
+from feature_catalog import load, validate, documents
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = Path(os.environ['REGEX4CJ_LOCAL']) / 'work'
@@ -37,7 +39,7 @@ def main():
     save(state)
     try:
         # Old counters must never be mistaken for this invocation's results.
-        for name in ['verification.json', 'showcase.json', 'classification.json',
+        for name in ['feature-cases.json', 'functional-report.md', 'verification.json', 'showcase.json', 'classification.json',
                      'matching-failure.json', 'hir-failure.json', 'upstream-suite-failures.json', 'upstream-sample-skips.json',
                      'api-contract-failures.json', 'pike-failure.json', 'ast-failure.json', 'props-failure.json',
                      'error-span-failure.json', 'engine-edges-failure.json', 'dfa-failure.json',
@@ -54,31 +56,29 @@ def main():
         state['tested_source_sha256'] = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_files}
         state['baseline'] = json.loads((ROOT / 'docs/baseline.json').read_text())
         save(state)
-        stages = [('upstream-data', [sys.executable, 'scripts/check_upstream_data.py'], ROOT),
+        catalog, cases = load()
+        validate(catalog, cases)
+        os.environ['REGEX4CJ_RUN_ID'] = state['run_id']
+        stages = [('feature-catalog', [sys.executable, 'scripts/feature_catalog.py', '--check'], ROOT),
+                  ('upstream-data', [sys.executable, 'scripts/check_upstream_data.py'], ROOT),
                   ('api-inventory', [sys.executable, 'scripts/audit_api_surface.py', '--check'], ROOT),
                   ('cangjie-api-inventory', [sys.executable, 'scripts/generate_api_catalog.py', '--check'], ROOT)]
         for name in ['unicode', 'categories', 'scripts', 'binary', 'case_fold', 'age_break']:
             stages.append(('data-' + name, [sys.executable, f'scripts/generate_{name}.py', '--check'], ROOT))
-        stages += [('python-tests', [sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-p', 'test_category_generator.py'], ROOT)]
+        stages += [('python-tests', [sys.executable, '-m', 'unittest', 'discover', '-s', 'tests/tooling', '-p', 'test_*.py'], ROOT)]
         for action in ['build', 'test']:
             stages.append(('rust-' + action, ['cargo', action, '--locked', '--manifest-path', 'oracle/Cargo.toml'], ROOT))
+        instrumentation = ['--coverage'] if os.environ.get('REGEX4CJ_COVERAGE') == '1' else []
         for package in ['port', 'cli', 'examples/consumer']:
-            stages.append((package + '-build', ['cjpm', 'build'], ROOT / package))
+            stages.append((package + '-build', ['cjpm', 'build', *instrumentation], ROOT / package))
         for action in ['test', 'run']:
-            stages.append(('consumer-' + action, ['cjpm', action], ROOT / 'examples/consumer'))
-        for name in ['verify', 'verify_matching', 'verify_classes', 'verify_captures', 'verify_text_ops',
-                     'verify_flags', 'verify_case', 'verify_escapes', 'verify_ascii_classes', 'verify_unicode',
-                     'verify_boundaries', 'verify_properties', 'verify_scripts', 'verify_binary', 'verify_syntax',
-                     'verify_errors', 'verify_limits', 'verify_bytes', 'verify_upstream_sample',
-                     'verify_upstream_suite', 'verify_sets', 'verify_api_contracts', 'verify_hir',
-                     'verify_ast', 'verify_pike', 'verify_props', 'verify_error_spans',
-                     'verify_literals', 'verify_utf8', 'verify_reverse', 'verify_backtrack', 'verify_dfa', 'verify_engine_edges',
-                     'verify_capture_modes', 'verify_backtrack_iter', 'verify_backtrack_span', 'verify_bytes_nfa', 'verify_cli_find',
-                     'verify_dfa_bytes', 'verify_dfa_pattern', 'verify_group_info', 'verify_hybrid_many',
-                     'verify_nfa_build', 'verify_pike_overlap', 'verify_products', 'verify_rest', 'verify_reverse_many']:
-            stages.append((name, [sys.executable, f'tests/{name}.py'], ROOT))
+            stages.append(('consumer-' + action, ['cjpm', action, *(instrumentation if action == 'test' else [])], ROOT / 'examples/consumer'))
+        for group in catalog['groups']:
+            for feature in group['features']:
+                stages.append((feature['id'], [sys.executable, 'tests/run_suite.py', feature['suite']], ROOT))
+        stages.append(('named-functional-cases', [sys.executable, 'tests/run_feature_cases.py'], ROOT))
         registered = {name for name, _, _ in stages if name.startswith('verify')}
-        discovered = {p.stem for p in (ROOT / 'tests').glob('verify*.py')}
+        discovered = {p.stem for p in (ROOT / 'tests/functional').rglob('verify*.py')}
         if registered != discovered:
             raise RuntimeError(f'Unregistered or missing verification suites: {registered ^ discovered}')
         stages.append(('coverage-ledger', [sys.executable, 'scripts/check_coverage.py'], ROOT))
@@ -106,6 +106,21 @@ def main():
     finally:
         state['finished_at'] = now()
         save(state)
+        catalog, cases = load()
+        case_path = WORK / 'feature-cases.json'
+        case_results = json.loads(case_path.read_text()) if case_path.exists() else {}
+        if case_results.get('run_id') != state['run_id']:
+            case_results = {}
+        doc, _ = documents(catalog, cases, state, case_results)
+        # Reports may live outside the repository when an output override is set.
+        def report_link(match):
+            target = match[1]
+            path, marker, anchor = target.partition('#')
+            absolute = (ROOT / 'docs' / path).resolve()
+            relative = os.path.relpath(absolute, WORK)
+            return '](' + relative + (marker + anchor if marker else '') + ')'
+        doc = re.sub(r'\]\(([^)]+)\)', report_link, doc)
+        (WORK / 'functional-report.md').write_text(doc)
     print(f'Complete acceptance passed. Report: {STATUS}', flush=True)
 
 

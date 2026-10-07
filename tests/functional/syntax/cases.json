@@ -1,0 +1,159 @@
+[
+  {
+    "id": "syntax-unclosed-group",
+    "group": "syntax",
+    "feature": "非法规则被拒绝且有错误信息",
+    "operation": "find",
+    "pattern": "(",
+    "text": "a",
+    "extra": [],
+    "expected_stdout": null,
+    "expect_error": true,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": []
+  },
+  {
+    "id": "syntax-unclosed-class",
+    "group": "syntax",
+    "feature": "非法规则被拒绝且有错误信息",
+    "operation": "find",
+    "pattern": "[",
+    "text": "a",
+    "extra": [],
+    "expected_stdout": null,
+    "expect_error": true,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": []
+  },
+  {
+    "id": "syntax-orphan-repeat",
+    "group": "syntax",
+    "feature": "非法规则被拒绝且有错误信息",
+    "operation": "find",
+    "pattern": "*a",
+    "text": "a",
+    "extra": [],
+    "expected_stdout": null,
+    "expect_error": true,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": []
+  },
+  {
+    "id": "capture-duplicate-name",
+    "group": "syntax",
+    "feature": "重复分组名称被拒绝",
+    "operation": "captures",
+    "pattern": "(?<n>a)(?<n>b)",
+    "text": "ab",
+    "extra": [],
+    "expected_stdout": null,
+    "expect_error": true,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": []
+  },
+  {
+    "id": "config-case-sensitive",
+    "group": "syntax",
+    "feature": "默认区分大小写",
+    "operation": "first",
+    "pattern": "a",
+    "text": "A",
+    "extra": [],
+    "expected_stdout": "",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  },
+  {
+    "id": "config-ignore-case",
+    "group": "syntax",
+    "feature": "忽略大小写",
+    "operation": "first",
+    "pattern": "(?i)a",
+    "text": "A",
+    "extra": [],
+    "expected_stdout": "0\t1\tA\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  },
+  {
+    "id": "config-case-scope",
+    "group": "syntax",
+    "feature": "局部选项不泄漏",
+    "operation": "first",
+    "pattern": "(?i:a)b",
+    "text": "AB",
+    "extra": [],
+    "expected_stdout": "",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  },
+  {
+    "id": "config-dot-default",
+    "group": "syntax",
+    "feature": "默认点号不匹配换行",
+    "operation": "first",
+    "pattern": ".",
+    "text": "\n",
+    "extra": [],
+    "expected_stdout": "",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  },
+  {
+    "id": "config-dot-all",
+    "group": "syntax",
+    "feature": "开启点号匹配换行",
+    "operation": "first",
+    "pattern": "(?s:.)",
+    "text": "\n",
+    "extra": [],
+    "expected_stdout": "0\t1\t\n\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  },
+  {
+    "id": "config-multiline",
+    "group": "syntax",
+    "feature": "多行模式行首断言",
+    "operation": "first",
+    "pattern": "(?m)^b",
+    "text": "a\nb",
+    "extra": [],
+    "expected_stdout": "2\t3\tb\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  },
+  {
+    "id": "config-anchor-default",
+    "group": "syntax",
+    "feature": "默认行首只匹配文本开头",
+    "operation": "first",
+    "pattern": "^b",
+    "text": "a\nb",
+    "extra": [],
+    "expected_stdout": "",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.find"
+    ]
+  }
+]

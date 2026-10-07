@@ -1,4 +1,4 @@
-package cjregex
+package regex4cj
 
 // Adapted from regex-syntax hir::translate::ascii_class at the pinned revision.
 // Positive POSIX classes are ASCII; negation uses the Unicode scalar universe.

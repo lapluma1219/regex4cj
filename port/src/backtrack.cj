@@ -1,4 +1,4 @@
-package cjregex
+package regex4cj
 
 import std.collection.*
 
@@ -43,6 +43,7 @@ public class BoundedBacktracker {
         if (visitedCapacity < 0) {
             throw Exception("visited capacity must be nonnegative")
         }
+        validateCaptureMode(whichCaptures)
         this.visitedCapacity = visitedCapacity
         this.whichCaptures = whichCaptures
         let options = PatternOptions()
@@ -134,6 +135,7 @@ public class BoundedBacktracker {
         if (visitedCapacity < 0) {
             throw Exception("visited capacity must be nonnegative")
         }
+        validateCaptureMode(whichCaptures)
         this.visitedCapacity = visitedCapacity
         this.whichCaptures = whichCaptures
         let graph = ThompsonNfa(patterns, whichCaptures)

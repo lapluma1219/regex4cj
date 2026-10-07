@@ -1,0 +1,53 @@
+[
+  {
+    "id": "pike-earliest",
+    "group": "nfa",
+    "feature": "PikeVM 最早匹配 earliest",
+    "operation": "pike-earliest",
+    "pattern": "zaa",
+    "text": "a+",
+    "extra": [],
+    "args": [
+      "pike-earliest",
+      "zaa",
+      "a+"
+    ],
+    "expected_stdout": "pattern\t0\nspan\t1\t2\ngroup\t0\t1\t2\t61\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "pike-absent",
+    "group": "nfa",
+    "feature": "PikeVM 最早匹配 absent",
+    "operation": "pike-earliest",
+    "pattern": "aa",
+    "text": "z",
+    "extra": [],
+    "args": [
+      "pike-earliest",
+      "aa",
+      "z"
+    ],
+    "expected_stdout": "none\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "pike-empty",
+    "group": "nfa",
+    "feature": "PikeVM 最早匹配 empty",
+    "operation": "pike-earliest",
+    "pattern": "",
+    "text": "a",
+    "extra": [],
+    "args": [
+      "pike-earliest",
+      "",
+      "a"
+    ],
+    "expected_stdout": "none\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  }
+]

@@ -8,3 +8,14 @@
 6. [赛事要求](competition-requirements.md)：已记录要求和待官方确认事项。
 
 历史复盘、计划和验收报告已从当前文件树移除，可从Git历史查看。`validation/`只保留当前机器验收证据，不新增按日期堆叠的复盘文档。源码生成清单由`scripts/`维护。
+
+## 按功能查看测试
+
+- [功能—特性—案例目录](testing.md)：区分具名案例、批量证据与未验证内容。
+- [公开接口归属](test-api-map.md)：每个当前公开声明的功能归属；归属不代表逐接口行为已审计。
+- 执行 `bash scripts/run.sh verify` 后，查看 `.build/work/functional-report.md` 的本次结果。
+- [本次按功能验收结果](validation/functional.md)：当前保存的执行证据，与 latest.json 的运行编号一致。
+- [测试文件结构与维护](../tests/README.md)：实际文件按功能归档。
+- [测试覆盖说明](test-coverage.md)：各功能的验证范围、复现命令、代码覆盖率口径及边界。
+
+- [演示视频逐步指南](demo-video-guide.md)：录制准备、命令、预期结果、逐步讲解与五分钟剪辑顺序。

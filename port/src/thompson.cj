@@ -1,6 +1,12 @@
-package cjregex
+package regex4cj
 
 import std.collection.*
+
+func validateCaptureMode(mode: Int64): Unit {
+    if (mode < 0 || mode > 2) {
+        throw Exception("capture mode must be 0 (all), 1 (implicit), or 2 (none)")
+    }
+}
 
 // One Thompson graph for every pattern. Each pattern keeps its own Accept, and
 // the union start prefers the earlier pattern. State numbers are local to this
@@ -186,6 +192,7 @@ func assemble(trees: ArrayList<Expr>, raws: ArrayList<Array<String>>, keepTraili
 }
 
 func buildPatternsUnicode(patterns: Array<String>, whichCaptures: Int64, unicode: Bool): NfaParts {
+    validateCaptureMode(whichCaptures)
     let options = PatternOptions()
     options.unicode = unicode
     let trees = ArrayList<Expr>()
@@ -199,6 +206,7 @@ func buildPatternsUnicode(patterns: Array<String>, whichCaptures: Int64, unicode
 }
 
 func buildPatterns(patterns: Array<String>, whichCaptures: Int64): NfaParts {
+    validateCaptureMode(whichCaptures)
     let options = PatternOptions()
     let trees = ArrayList<Expr>()
     let raws = ArrayList<Array<String>>()

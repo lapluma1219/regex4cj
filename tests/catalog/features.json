@@ -1,0 +1,550 @@
+{
+  "schema_version": 1,
+  "scope": "当前实现的功能组织；套件通过不等于全部特性或全部接口通过。",
+  "groups": [
+    {
+      "id": "search",
+      "title": "查找文本",
+      "source_files": [
+        "port/src/nfa.cj"
+      ],
+      "features": [
+        {
+          "id": "verify",
+          "title": "基础匹配与演示协议",
+          "suite": "tests/functional/search/verify.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Cross-language acceptance tests. No Python regex is used as the oracle.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_matching",
+          "title": "匹配优先级、空匹配与非法规则",
+          "suite": "tests/functional/search/verify_matching.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Behavioral differential tests for the explicitly supported regex subset.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_upstream_sample",
+          "title": "原仓库可适用的平面区间样例（含跳过记录）",
+          "suite": "tests/functional/search/verify_upstream_sample.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Run applicable pinned upstream testdata and record explicit skips.\n\nOnly flat find-span tests are executed. Builder-only options, earliest search,\ncapture-group expectations, bytes, and patterns this port rejects are skips.\nA span mismatch is a failure.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_upstream_suite",
+          "title": "原仓库字符串、字节及规则集验收语料",
+          "suite": "tests/functional/search/verify_upstream_suite.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Run the pinned regex crate's own acceptance tests.\n\nThe cases are the ones tests/suite_string.rs, suite_bytes.rs, suite_string_set.rs\nand suite_bytes_set.rs actually execute, plus the handwritten checks in\ntests/regression.rs and tests/replace.rs. Search options that those suites skip\nstay skipped here too.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/search/cases.json"
+    },
+    {
+      "id": "capture",
+      "title": "提取与遍历捕获",
+      "source_files": [
+        "port/src/captures.cj"
+      ],
+      "features": [
+        {
+          "id": "verify_captures",
+          "title": "捕获槽、重复分组与可空路径优先级",
+          "suite": "tests/functional/capture/verify_captures.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Capture slots, group metadata and repeated/nullable path priority regression.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_group_info",
+          "title": "分组数量、固定分组数与名称",
+          "suite": "tests/functional/capture/verify_group_info.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Capture length, static length, and names against regex::Regex.\n\nSetMatches bidirectional iteration is already compared by the API contract\naudit. This file covers the shared capture-metadata half of that contract for\nboth string and bytes regexes. A passing corpus does not close the coarse item.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_api_contracts",
+          "title": "迭代、配置、起点与捕获等接口契约组合",
+          "suite": "tests/functional/capture/verify_api_contracts.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Public API contracts omitted by the upstream matching-only suite.\n\nBoth programs execute real API calls, including native NUL/invalid UTF-8 values.\nNo Rust source checkout is needed; the oracle is pinned by Cargo.lock.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/capture/cases.json"
+    },
+    {
+      "id": "text",
+      "title": "替换与分割",
+      "source_files": [],
+      "features": [
+        {
+          "id": "verify_text_ops",
+          "title": "模板、字面量、回调替换及分割边界",
+          "suite": "tests/functional/text/verify_text_ops.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Replacement interpolation, callbacks and split differential verification.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/text/cases.json"
+    },
+    {
+      "id": "set",
+      "title": "多规则匹配",
+      "source_files": [
+        "port/src/regex_set.cj"
+      ],
+      "features": [
+        {
+          "id": "verify_sets",
+          "title": "全部命中编号与单规则结果一致性",
+          "suite": "tests/functional/set/verify_sets.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "RegexSet contract: all overlapping pattern IDs, compared with Rust and singles.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/set/cases.json"
+    },
+    {
+      "id": "bytes",
+      "title": "字节数据处理",
+      "source_files": [
+        "port/src/bytes.cj",
+        "port/src/byte_search.cj"
+      ],
+      "features": [
+        {
+          "id": "verify_bytes",
+          "title": "字节匹配和捕获",
+          "suite": "tests/functional/bytes/verify_bytes.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Differential checks for regex::bytes::Regex against BytesRegex.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/bytes/cases.json"
+    },
+    {
+      "id": "syntax",
+      "title": "规则创建与语法选项",
+      "source_files": [
+        "port/src/builder.cj",
+        "port/src/parser.cj",
+        "port/src/normalize.cj",
+        "port/src/error.cj",
+        "port/src/budget.cj"
+      ],
+      "features": [
+        {
+          "id": "verify_classes",
+          "title": "字符集合运算与计数重复",
+          "suite": "tests/functional/syntax/verify_classes.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Character class, set algebra and counted-repetition differential regression.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_flags",
+          "title": "选项作用域与贪婪、多行、点号行为",
+          "suite": "tests/functional/syntax/verify_flags.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Lexically scoped m/s/U inline flags and their matching/capture semantics.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_escapes",
+          "title": "转义、字符范围端点与非法输入",
+          "suite": "tests/functional/syntax/verify_escapes.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Unicode scalar escape parsing, class endpoints and malformed input.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_syntax",
+          "title": "扩展选项、位置与早停匹配",
+          "suite": "tests/functional/syntax/verify_syntax.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Differential checks for x/R/u, boundaries, Age, offsets and shortest match.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_errors",
+          "title": "非法规则与规则集错误文本",
+          "suite": "tests/functional/syntax/verify_errors.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Syntax and RegexSet error text must match the pinned regex Display.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_limits",
+          "title": "大小和缓存限制的有限样例",
+          "suite": "tests/functional/syntax/verify_limits.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "size_limit pass/fail and dfa_size_limit match text against the pinned regex.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_error_spans",
+          "title": "语法错误类别与字节位置",
+          "suite": "tests/functional/syntax/verify_error_spans.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Syntax error kind and byte spans versus regex-syntax, without changing Display.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/syntax/cases.json"
+    },
+    {
+      "id": "unicode",
+      "title": "字符类别与 Unicode",
+      "source_files": [
+        "port/src/ascii_classes.cj",
+        "port/src/case_fold.cj",
+        "port/src/charset.cj",
+        "port/src/look.cj",
+        "port/src/properties.cj",
+        "port/src/unicode_age_break.cj",
+        "port/src/unicode_binary.cj",
+        "port/src/unicode_categories.cj",
+        "port/src/unicode_classes.cj",
+        "port/src/unicode_scripts.cj"
+      ],
+      "features": [
+        {
+          "id": "verify_case",
+          "title": "简单大小写折叠与类运算顺序",
+          "suite": "tests/functional/unicode/verify_case.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Unicode simple case folding for inline i, including class algebra order.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_ascii_classes",
+          "title": "ASCII 类及补集",
+          "suite": "tests/functional/unicode/verify_ascii_classes.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "POSIX ASCII class tables, Unicode complement and parser fallback.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_unicode",
+          "title": "Unicode 简写类的边界及随机标量",
+          "suite": "tests/functional/unicode/verify_unicode.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Unicode 16 shorthand classes: range boundaries, random scalars and set semantics.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_boundaries",
+          "title": "词边界与零宽迭代",
+          "suite": "tests/functional/unicode/verify_boundaries.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Unicode word/nonword boundary assertions and zero-width iteration.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_properties",
+          "title": "类别别名与属性语法",
+          "suite": "tests/functional/unicode/verify_properties.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Unicode general-category aliases, scalar intervals and property grammar.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_scripts",
+          "title": "文字系统及扩展属性",
+          "suite": "tests/functional/unicode/verify_scripts.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Compare Script and Script_Extensions against the pinned Rust implementation.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_binary",
+          "title": "二元属性及别名优先级",
+          "suite": "tests/functional/unicode/verify_binary.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Unicode binary properties, alias precedence and category distinctions.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/unicode/cases.json"
+    },
+    {
+      "id": "structure",
+      "title": "语法结构解析与转换",
+      "source_files": [
+        "port/src/syntax_ast.cj",
+        "port/src/syntax_hir.cj"
+      ],
+      "features": [
+        {
+          "id": "verify_ast",
+          "title": "AST 节点、位置与转换",
+          "suite": "tests/functional/structure/verify_ast.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Concrete syntax: spans and node shape versus regex-syntax, then HIR lowering.\n\nThe AST keeps grouping and bracket form. Lowering must agree with Hir.parse.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_hir",
+          "title": "HIR 结构、长度与打印",
+          "suite": "tests/functional/structure/verify_hir.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Public HIR: compare normalized structure, byte lengths and Display text.\n\nThe fixed Rust library independently parses and builds each input.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_props",
+          "title": "HIR 属性及构建搜索",
+          "suite": "tests/functional/structure/verify_props.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "HIR properties and HIR-built PikeVM versus the pinned Rust libraries.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/structure/cases.json"
+    },
+    {
+      "id": "tools",
+      "title": "字面量和 UTF-8 工具",
+      "source_files": [
+        "port/src/syntax_literal.cj",
+        "port/src/utf8seq.cj",
+        "port/src/escape.cj"
+      ],
+      "features": [
+        {
+          "id": "verify_literals",
+          "title": "前后缀提取与序列操作",
+          "suite": "tests/functional/tools/verify_literals.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Prefix and suffix literal extraction against regex-syntax Extractor defaults.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_utf8",
+          "title": "标量区间到 UTF-8 序列",
+          "suite": "tests/functional/tools/verify_utf8.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "UTF-8 scalar ranges against regex-syntax Utf8Sequences.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/tools/cases.json"
+    },
+    {
+      "id": "nfa",
+      "title": "NFA 构建与 PikeVM",
+      "source_files": [
+        "port/src/thompson.cj",
+        "port/src/pikevm.cj",
+        "port/src/search_input.cj"
+      ],
+      "features": [
+        {
+          "id": "verify_pike",
+          "title": "模式编号、捕获、范围与锚定",
+          "suite": "tests/functional/nfa/verify_pike.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Public PikeVM: pattern id, span, captures, anchoring and search bounds.\n\nThe oracle is regex-automata' PikeVM from the pinned regex revision. Bounds are\nbyte offsets into the original haystack, so look-around can see text outside\nthe searched range.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_nfa_build",
+          "title": "HIR 构建、反向配置与大小错误",
+          "suite": "tests/functional/nfa/verify_nfa_build.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "HIR construction and reverse configuration against the Rust builders.\n\nA successful HIR build prints ok. A parse failure stays on the syntax path.\nA size-limit failure is CompiledTooBig, which is a different kind from a\nparse error even when the automata wording differs.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_pike_overlap",
+          "title": "范围内重叠编号、锚定及早停",
+          "suite": "tests/functional/nfa/verify_pike_overlap.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Pike which_overlapping_matches over a span, with anchor and earliest.\n\nearliest stops before a later byte can reach Accept, so only an empty match\nat the span start is reported. An unknown pattern id is an empty set.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_capture_modes",
+          "title": "全部、隐式、禁用捕获模式",
+          "suite": "tests/functional/nfa/verify_capture_modes.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "WhichCaptures for PikeVM and the bounded backtracker.\n\nall keeps every group. implicit keeps only the whole match. none still\nmatches, but find cannot report a span because no capture states were built.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_bytes_nfa",
+          "title": "非法 UTF-8 的 Pike 与回溯路径",
+          "suite": "tests/functional/nfa/verify_bytes_nfa.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Pike and backtracker searches over haystacks that are not UTF-8.\n\nThe byte automaton is compared with regex-automata PikeVM and\nBoundedBacktracker. Patterns that the UTF-8 parser rejects stay out.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/nfa/cases.json"
+    },
+    {
+      "id": "backtrack",
+      "title": "有界回溯搜索",
+      "source_files": [
+        "port/src/backtrack.cj"
+      ],
+      "features": [
+        {
+          "id": "verify_backtrack",
+          "title": "匹配区间与访问预算错误",
+          "suite": "tests/functional/backtrack/verify_backtrack.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Bounded backtracker spans and budget errors against regex-automata.\n\nMatch text is compared directly. The maximum haystack length uses each\nengine's own NFA state count, so those two numbers are not required to be equal.\nA haystack past that limit must be an error, not a miss.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_backtrack_iter",
+          "title": "非重叠迭代与空匹配推进",
+          "suite": "tests/functional/backtrack/verify_backtrack_iter.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Non-overlapping BoundedBacktracker matches against regex-automata.\n\nEach line is pattern:start:end:escaped-text. Empty matches advance the same\nway as Searcher. A haystack past the visited budget is an error line, not a miss.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_backtrack_span",
+          "title": "指定字节范围的连续搜索",
+          "suite": "tests/functional/backtrack/verify_backtrack_span.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Bounded backtracker non-overlapping iteration inside a byte span.\n\nCompared with regex-automata Searcher over Input::range.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/backtrack/cases.json"
+    },
+    {
+      "id": "reverse",
+      "title": "反向搜索",
+      "source_files": [
+        "port/src/reverse.cj"
+      ],
+      "features": [
+        {
+          "id": "verify_reverse",
+          "title": "反向搜索起点",
+          "suite": "tests/functional/reverse/verify_reverse.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Reverse NFA start offsets against regex-automata dense DFA try_search_rev.\n\nThe reported offset is the beginning of the match. Patterns the DFA refuses,\nincluding Unicode word boundaries, stay outside this comparison.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_reverse_many",
+          "title": "多模式反向搜索与指定模式锚定",
+          "suite": "tests/functional/reverse/verify_reverse_many.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Multi-pattern reverse search against dense DFA try_search_rev.\n\nPattern starts are enabled, so a numeric mode anchors to that pattern.\nThe offset is the match start. Unicode word boundaries stay out because\nthe dense reverse DFA refuses them.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/reverse/cases.json"
+    },
+    {
+      "id": "dfa",
+      "title": "DFA 搜索",
+      "source_files": [
+        "port/src/dfa.cj"
+      ],
+      "features": [
+        {
+          "id": "verify_dfa",
+          "title": "密集、稀疏和惰性引擎的区间搜索",
+          "suite": "tests/functional/dfa/verify_dfa.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Dense and sparse DFA spans against regex-automata dfa::regex::Regex.\n\nUnicode word boundaries must be a build error on both sides. The numeric DFA\nstate count is not compared.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_dfa_bytes",
+          "title": "三类 DFA 的字节输入",
+          "suite": "tests/functional/dfa/verify_dfa_bytes.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Dense, sparse, and hybrid DFA search over raw bytes, including invalid UTF-8.\n\nThe reported span is a byte offset. Match start still comes from the reverse\nbyte NFA. Unicode word boundaries stay rejected at construction.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_dfa_pattern",
+          "title": "指定模式锚定与未知编号",
+          "suite": "tests/functional/dfa/verify_dfa_pattern.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "DFA searches that select one pattern, matching starts_for_each_pattern.\n\nThe default DFA still rejects Anchored::Pattern. These commands build the extra\nstart states, then anchor the search at one pattern. An unknown id is a miss.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_hybrid_many",
+          "title": "惰性 DFA 多模式与锚定",
+          "suite": "tests/functional/dfa/verify_hybrid_many.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Hybrid DFA multi-pattern search, plus anchored search of one pattern.\n\nThe cache is counted in states. These patterns stay inside the default cache,\nso the give-up offset is not part of this comparison.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/dfa/cases.json"
+    },
+    {
+      "id": "products",
+      "title": "组合引擎和扩展入口",
+      "source_files": [
+        "port/src/meta.cj",
+        "port/src/lite.cj",
+        "port/src/onepass.cj",
+        "port/src/rure.cj"
+      ],
+      "features": [
+        {
+          "id": "verify_products",
+          "title": "OnePass、Meta、Lite、Rure 与镜像有限案例",
+          "suite": "tests/functional/products/verify_products.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "One-pass, meta, regex-lite, rure, and DFA image round-trip.\n\nEach command is compared with the corresponding Rust entry. A bad DFA image\nis rejected by the Cangjie loader; regex-automata's wire format is different,\nso that rejection is checked on its own.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_engine_edges",
+          "title": "语法及引擎的固定种子边界回归",
+          "suite": "tests/functional/products/verify_engine_edges.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Seeded differential regressions for syntax and new engine edge cases.\n\nCompare the fixed original implementations directly, including rejection behavior.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/products/cases.json"
+    },
+    {
+      "id": "cli",
+      "title": "命令行协议",
+      "source_files": [],
+      "features": [
+        {
+          "id": "verify_cli_find",
+          "title": "匹配行格式与退出状态",
+          "suite": "tests/functional/cli/verify_cli_find.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "regex-cli find match pikevm: match lines and exit status.\n\nThe line is pattern:start:end:escaped-text, using the same byte escaping as\nbstr's escape_bytes. Timing tables are outside this comparison. A passing\ncorpus accepts only this locked 1-point leaf.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        },
+        {
+          "id": "verify_rest",
+          "title": "半匹配、捕获、编号及资源趋势",
+          "suite": "tests/functional/cli/verify_rest.py",
+          "evidence_level": "批量案例，未逐条特性化",
+          "reviewed_scope": "Half matches, captures, which, timing rows, memory, and DFA byte budget.\n\nTiming values are measured on each side, so only the label is required to\nexist. Memory numbers count each implementation's own tables; the shared\ncheck is that a Unicode class costs more than its ASCII form, and that a\n1-byte DFA budget fails while a large budget succeeds.",
+          "gap": "尚未建立该范围所有特性与单个案例的完整映射；不据套件通过宣称全部覆盖。"
+        }
+      ],
+      "cases": "tests/functional/cli/cases.json"
+    }
+  ]
+}

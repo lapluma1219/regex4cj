@@ -46,10 +46,10 @@
 | `public func visit(enter: (Ast) -> Unit): Unit` | method | [port/src/syntax_ast.cj:154](../port/src/syntax_ast.cj#L154) |
 | `public func walk(enter: (Ast) -> Unit, leave: (Ast) -> Unit): Unit` | method | [port/src/syntax_ast.cj:160](../port/src/syntax_ast.cj#L160) |
 | `public func walkUntil(enter: (Ast) -> Bool, leave: (Ast) -> Bool): Bool` | method | [port/src/syntax_ast.cj:168](../port/src/syntax_ast.cj#L168) |
-| `public func shape(): String` | method | [port/src/syntax_ast.cj:180](../port/src/syntax_ast.cj#L180) |
-| `public func toPattern(): String` | method | [port/src/syntax_ast.cj:197](../port/src/syntax_ast.cj#L197) |
-| `public func toHir(): Hir` | method | [port/src/syntax_ast.cj:202](../port/src/syntax_ast.cj#L202) |
-| `public static func parse(pattern: String): Ast` | method | [port/src/syntax_ast.cj:205](../port/src/syntax_ast.cj#L205) |
+| `public func shape(): String` | method | [port/src/syntax_ast.cj:179](../port/src/syntax_ast.cj#L179) |
+| `public func toPattern(): String` | method | [port/src/syntax_ast.cj:196](../port/src/syntax_ast.cj#L196) |
+| `public func toHir(): Hir` | method | [port/src/syntax_ast.cj:201](../port/src/syntax_ast.cj#L201) |
+| `public static func parse(pattern: String): Ast` | method | [port/src/syntax_ast.cj:204](../port/src/syntax_ast.cj#L204) |
 
 ## AstClassItem
 
@@ -89,8 +89,8 @@
 
 | 声明 | 种类 | 实现 |
 |---|---|---|
-| `public class BacktrackCache` | class | [port/src/backtrack.cj:516](../port/src/backtrack.cj#L516) |
-| `public init()` | constructor | [port/src/backtrack.cj:519](../port/src/backtrack.cj#L519) |
+| `public class BacktrackCache` | class | [port/src/backtrack.cj:518](../port/src/backtrack.cj#L518) |
+| `public init()` | constructor | [port/src/backtrack.cj:521](../port/src/backtrack.cj#L521) |
 
 ## BoundedBacktracker
 
@@ -100,18 +100,18 @@
 | `public init(pattern: String)` | constructor | [port/src/backtrack.cj:36](../port/src/backtrack.cj#L36) |
 | `public init(pattern: String, visitedCapacity: Int64)` | constructor | [port/src/backtrack.cj:39](../port/src/backtrack.cj#L39) |
 | `public init(pattern: String, visitedCapacity: Int64, whichCaptures: Int64)` | constructor | [port/src/backtrack.cj:42](../port/src/backtrack.cj#L42) |
-| `public init(patterns: Array<String>)` | constructor | [port/src/backtrack.cj:127](../port/src/backtrack.cj#L127) |
-| `public init(patterns: Array<String>, visitedCapacity: Int64)` | constructor | [port/src/backtrack.cj:130](../port/src/backtrack.cj#L130) |
-| `public init(patterns: Array<String>, visitedCapacity: Int64, whichCaptures: Int64)` | constructor | [port/src/backtrack.cj:133](../port/src/backtrack.cj#L133) |
-| `public func stateCount(): Int64` | method | [port/src/backtrack.cj:194](../port/src/backtrack.cj#L194) |
-| `public func memoryUsage(): Int64` | method | [port/src/backtrack.cj:197](../port/src/backtrack.cj#L197) |
-| `public func maxHaystackLen(): Int64` | method | [port/src/backtrack.cj:209](../port/src/backtrack.cj#L209) |
-| `public func createCache(): BacktrackCache` | method | [port/src/backtrack.cj:222](../port/src/backtrack.cj#L222) |
-| `public func searchAll(text: String): Array<PikeMatch>` | method | [port/src/backtrack.cj:225](../port/src/backtrack.cj#L225) |
-| `public func searchAll(input: SearchInput): Array<PikeMatch>` | method | [port/src/backtrack.cj:231](../port/src/backtrack.cj#L231) |
-| `public func search(text: String): Option<Captures>` | method | [port/src/backtrack.cj:275](../port/src/backtrack.cj#L275) |
-| `public func isMatch(input: SearchInput): Bool` | method | [port/src/backtrack.cj:281](../port/src/backtrack.cj#L281) |
-| `public func search(cache: BacktrackCache, input: SearchInput): Option<PikeMatch>` | method | [port/src/backtrack.cj:309](../port/src/backtrack.cj#L309) |
+| `public init(patterns: Array<String>)` | constructor | [port/src/backtrack.cj:128](../port/src/backtrack.cj#L128) |
+| `public init(patterns: Array<String>, visitedCapacity: Int64)` | constructor | [port/src/backtrack.cj:131](../port/src/backtrack.cj#L131) |
+| `public init(patterns: Array<String>, visitedCapacity: Int64, whichCaptures: Int64)` | constructor | [port/src/backtrack.cj:134](../port/src/backtrack.cj#L134) |
+| `public func stateCount(): Int64` | method | [port/src/backtrack.cj:196](../port/src/backtrack.cj#L196) |
+| `public func memoryUsage(): Int64` | method | [port/src/backtrack.cj:199](../port/src/backtrack.cj#L199) |
+| `public func maxHaystackLen(): Int64` | method | [port/src/backtrack.cj:211](../port/src/backtrack.cj#L211) |
+| `public func createCache(): BacktrackCache` | method | [port/src/backtrack.cj:224](../port/src/backtrack.cj#L224) |
+| `public func searchAll(text: String): Array<PikeMatch>` | method | [port/src/backtrack.cj:227](../port/src/backtrack.cj#L227) |
+| `public func searchAll(input: SearchInput): Array<PikeMatch>` | method | [port/src/backtrack.cj:233](../port/src/backtrack.cj#L233) |
+| `public func search(text: String): Option<Captures>` | method | [port/src/backtrack.cj:277](../port/src/backtrack.cj#L277) |
+| `public func isMatch(input: SearchInput): Bool` | method | [port/src/backtrack.cj:283](../port/src/backtrack.cj#L283) |
+| `public func search(cache: BacktrackCache, input: SearchInput): Option<PikeMatch>` | method | [port/src/backtrack.cj:311](../port/src/backtrack.cj#L311) |
 
 ## BytesCaptureIter
 
@@ -388,21 +388,21 @@
 | `public func visit(enter: (Hir) -> Unit): Unit` | method | [port/src/syntax_hir.cj:243](../port/src/syntax_hir.cj#L243) |
 | `public func walk(enter: (Hir) -> Unit, leave: (Hir) -> Unit): Unit` | method | [port/src/syntax_hir.cj:257](../port/src/syntax_hir.cj#L257) |
 | `public func walkUntil(enter: (Hir) -> Bool, leave: (Hir) -> Bool): Bool` | method | [port/src/syntax_hir.cj:272](../port/src/syntax_hir.cj#L272) |
-| `public func toPattern(): String` | method | [port/src/syntax_hir.cj:285](../port/src/syntax_hir.cj#L285) |
-| `public static func empty(): Hir` | method | [port/src/syntax_hir.cj:290](../port/src/syntax_hir.cj#L290) |
-| `public static func fail(): Hir` | method | [port/src/syntax_hir.cj:293](../port/src/syntax_hir.cj#L293) |
-| `public static func literal(bytes: Array<UInt8>): Hir` | method | [port/src/syntax_hir.cj:296](../port/src/syntax_hir.cj#L296) |
-| `public static func unicodeClass(ranges: Array<HirRange>): Hir` | method | [port/src/syntax_hir.cj:303](../port/src/syntax_hir.cj#L303) |
-| `public static func byteClass(ranges: Array<HirRange>): Hir` | method | [port/src/syntax_hir.cj:306](../port/src/syntax_hir.cj#L306) |
-| `public static func capture(index: UInt32, name: Option<String>, sub: Hir): Hir` | method | [port/src/syntax_hir.cj:358](../port/src/syntax_hir.cj#L358) |
-| `public static func repetition(min: UInt32, max: Option<UInt32>, greedy: Bool, sub: Hir): Hir` | method | [port/src/syntax_hir.cj:361](../port/src/syntax_hir.cj#L361) |
-| `public static func concat(children: Array<Hir>): Hir` | method | [port/src/syntax_hir.cj:392](../port/src/syntax_hir.cj#L392) |
-| `public static func look(look: HirLook): Hir` | method | [port/src/syntax_hir.cj:435](../port/src/syntax_hir.cj#L435) |
-| `public static func dot(dot: HirDot): Hir` | method | [port/src/syntax_hir.cj:438](../port/src/syntax_hir.cj#L438) |
-| `public static func dotExcept(bytes: Bool, excluded: Int64): Hir` | method | [port/src/syntax_hir.cj:448](../port/src/syntax_hir.cj#L448) |
-| `public static func alternation(subs: Array<Hir>): Hir` | method | [port/src/syntax_hir.cj:451](../port/src/syntax_hir.cj#L451) |
-| `public static func parse(pattern: String): Hir` | method | [port/src/syntax_hir.cj:528](../port/src/syntax_hir.cj#L528) |
-| `public static func parse(pattern: String, utf8: Bool): Hir` | method | [port/src/syntax_hir.cj:531](../port/src/syntax_hir.cj#L531) |
+| `public func toPattern(): String` | method | [port/src/syntax_hir.cj:284](../port/src/syntax_hir.cj#L284) |
+| `public static func empty(): Hir` | method | [port/src/syntax_hir.cj:289](../port/src/syntax_hir.cj#L289) |
+| `public static func fail(): Hir` | method | [port/src/syntax_hir.cj:292](../port/src/syntax_hir.cj#L292) |
+| `public static func literal(bytes: Array<UInt8>): Hir` | method | [port/src/syntax_hir.cj:295](../port/src/syntax_hir.cj#L295) |
+| `public static func unicodeClass(ranges: Array<HirRange>): Hir` | method | [port/src/syntax_hir.cj:302](../port/src/syntax_hir.cj#L302) |
+| `public static func byteClass(ranges: Array<HirRange>): Hir` | method | [port/src/syntax_hir.cj:305](../port/src/syntax_hir.cj#L305) |
+| `public static func capture(index: UInt32, name: Option<String>, sub: Hir): Hir` | method | [port/src/syntax_hir.cj:357](../port/src/syntax_hir.cj#L357) |
+| `public static func repetition(min: UInt32, max: Option<UInt32>, greedy: Bool, sub: Hir): Hir` | method | [port/src/syntax_hir.cj:360](../port/src/syntax_hir.cj#L360) |
+| `public static func concat(children: Array<Hir>): Hir` | method | [port/src/syntax_hir.cj:391](../port/src/syntax_hir.cj#L391) |
+| `public static func look(look: HirLook): Hir` | method | [port/src/syntax_hir.cj:434](../port/src/syntax_hir.cj#L434) |
+| `public static func dot(dot: HirDot): Hir` | method | [port/src/syntax_hir.cj:437](../port/src/syntax_hir.cj#L437) |
+| `public static func dotExcept(bytes: Bool, excluded: Int64): Hir` | method | [port/src/syntax_hir.cj:447](../port/src/syntax_hir.cj#L447) |
+| `public static func alternation(subs: Array<Hir>): Hir` | method | [port/src/syntax_hir.cj:450](../port/src/syntax_hir.cj#L450) |
+| `public static func parse(pattern: String): Hir` | method | [port/src/syntax_hir.cj:527](../port/src/syntax_hir.cj#L527) |
+| `public static func parse(pattern: String, utf8: Bool): Hir` | method | [port/src/syntax_hir.cj:530](../port/src/syntax_hir.cj#L530) |
 
 ## HirCapture
 
@@ -914,44 +914,44 @@
 
 | 声明 | 种类 | 实现 |
 |---|---|---|
-| `public class SyntaxParser` | class | [port/src/syntax_ast.cj:1866](../port/src/syntax_ast.cj#L1866) |
-| `public var caseInsensitive: Bool = false` | field | [port/src/syntax_ast.cj:1867](../port/src/syntax_ast.cj#L1867) |
-| `public var multiLine: Bool = false` | field | [port/src/syntax_ast.cj:1868](../port/src/syntax_ast.cj#L1868) |
-| `public var dotAll: Bool = false` | field | [port/src/syntax_ast.cj:1869](../port/src/syntax_ast.cj#L1869) |
-| `public var swapGreed: Bool = false` | field | [port/src/syntax_ast.cj:1870](../port/src/syntax_ast.cj#L1870) |
-| `public var ignoreWhitespace: Bool = false` | field | [port/src/syntax_ast.cj:1871](../port/src/syntax_ast.cj#L1871) |
-| `public var crlf: Bool = false` | field | [port/src/syntax_ast.cj:1872](../port/src/syntax_ast.cj#L1872) |
-| `public var unicode: Bool = true` | field | [port/src/syntax_ast.cj:1873](../port/src/syntax_ast.cj#L1873) |
-| `public var utf8: Bool = true` | field | [port/src/syntax_ast.cj:1874](../port/src/syntax_ast.cj#L1874) |
-| `public var octal: Bool = false` | field | [port/src/syntax_ast.cj:1875](../port/src/syntax_ast.cj#L1875) |
-| `public var nestLimit: Int64 = 250` | field | [port/src/syntax_ast.cj:1876](../port/src/syntax_ast.cj#L1876) |
-| `public init()` | constructor | [port/src/syntax_ast.cj:1877](../port/src/syntax_ast.cj#L1877) |
-| `public func parseAst(pattern: String): Ast` | method | [port/src/syntax_ast.cj:1878](../port/src/syntax_ast.cj#L1878) |
-| `public func parseHir(pattern: String): Hir` | method | [port/src/syntax_ast.cj:1895](../port/src/syntax_ast.cj#L1895) |
-| `public func translate(ast: Ast): Hir` | method | [port/src/syntax_ast.cj:1900](../port/src/syntax_ast.cj#L1900) |
+| `public class SyntaxParser` | class | [port/src/syntax_ast.cj:1865](../port/src/syntax_ast.cj#L1865) |
+| `public var caseInsensitive: Bool = false` | field | [port/src/syntax_ast.cj:1866](../port/src/syntax_ast.cj#L1866) |
+| `public var multiLine: Bool = false` | field | [port/src/syntax_ast.cj:1867](../port/src/syntax_ast.cj#L1867) |
+| `public var dotAll: Bool = false` | field | [port/src/syntax_ast.cj:1868](../port/src/syntax_ast.cj#L1868) |
+| `public var swapGreed: Bool = false` | field | [port/src/syntax_ast.cj:1869](../port/src/syntax_ast.cj#L1869) |
+| `public var ignoreWhitespace: Bool = false` | field | [port/src/syntax_ast.cj:1870](../port/src/syntax_ast.cj#L1870) |
+| `public var crlf: Bool = false` | field | [port/src/syntax_ast.cj:1871](../port/src/syntax_ast.cj#L1871) |
+| `public var unicode: Bool = true` | field | [port/src/syntax_ast.cj:1872](../port/src/syntax_ast.cj#L1872) |
+| `public var utf8: Bool = true` | field | [port/src/syntax_ast.cj:1873](../port/src/syntax_ast.cj#L1873) |
+| `public var octal: Bool = false` | field | [port/src/syntax_ast.cj:1874](../port/src/syntax_ast.cj#L1874) |
+| `public var nestLimit: Int64 = 250` | field | [port/src/syntax_ast.cj:1875](../port/src/syntax_ast.cj#L1875) |
+| `public init()` | constructor | [port/src/syntax_ast.cj:1876](../port/src/syntax_ast.cj#L1876) |
+| `public func parseAst(pattern: String): Ast` | method | [port/src/syntax_ast.cj:1877](../port/src/syntax_ast.cj#L1877) |
+| `public func parseHir(pattern: String): Hir` | method | [port/src/syntax_ast.cj:1894](../port/src/syntax_ast.cj#L1894) |
+| `public func translate(ast: Ast): Hir` | method | [port/src/syntax_ast.cj:1899](../port/src/syntax_ast.cj#L1899) |
 
 ## ThompsonNfa
 
 | 声明 | 种类 | 实现 |
 |---|---|---|
-| `public class ThompsonNfa` | class | [port/src/thompson.cj:234](../port/src/thompson.cj#L234) |
-| `public init(patterns: Array<String>)` | constructor | [port/src/thompson.cj:237](../port/src/thompson.cj#L237) |
-| `public init(patterns: Array<String>, whichCaptures: Int64)` | constructor | [port/src/thompson.cj:240](../port/src/thompson.cj#L240) |
-| `public init(hirs: Array<Hir>)` | constructor | [port/src/thompson.cj:244](../port/src/thompson.cj#L244) |
-| `public init(patterns: Array<String>, whichCaptures: Int64, unicode: Bool)` | constructor | [port/src/thompson.cj:247](../port/src/thompson.cj#L247) |
-| `public init(hirs: Array<Hir>, sizeLimit: Int64)` | constructor | [port/src/thompson.cj:251](../port/src/thompson.cj#L251) |
-| `public func stateCount(): Int64` | method | [port/src/thompson.cj:279](../port/src/thompson.cj#L279) |
-| `public func memoryUsage(): Int64` | method | [port/src/thompson.cj:282](../port/src/thompson.cj#L282) |
-| `public func patternCount(): Int64` | method | [port/src/thompson.cj:292](../port/src/thompson.cj#L292) |
-| `public func patternStateCount(pattern: Int64): Int64` | method | [port/src/thompson.cj:295](../port/src/thompson.cj#L295) |
-| `public func startState(pattern: Int64): Int64` | method | [port/src/thompson.cj:298](../port/src/thompson.cj#L298) |
-| `public func opName(pattern: Int64, state: Int64): String` | method | [port/src/thompson.cj:302](../port/src/thompson.cj#L302) |
-| `public func opNext(pattern: Int64, state: Int64): Int64` | method | [port/src/thompson.cj:313](../port/src/thompson.cj#L313) |
-| `public func opAlternate(pattern: Int64, state: Int64): Int64` | method | [port/src/thompson.cj:316](../port/src/thompson.cj#L316) |
-| `public func whichOverlapping(text: String): Array<Int64>` | method | [port/src/thompson.cj:319](../port/src/thompson.cj#L319) |
-| `public func whichOverlapping(input: SearchInput): Array<Int64>` | method | [port/src/thompson.cj:325](../port/src/thompson.cj#L325) |
-| `public func search(input: SearchInput, cache: PikeCache): Option<PikeMatch>` | method | [port/src/thompson.cj:416](../port/src/thompson.cj#L416) |
-| `public func isMatch(input: SearchInput, cache: PikeCache): Bool` | method | [port/src/thompson.cj:458](../port/src/thompson.cj#L458) |
+| `public class ThompsonNfa` | class | [port/src/thompson.cj:242](../port/src/thompson.cj#L242) |
+| `public init(patterns: Array<String>)` | constructor | [port/src/thompson.cj:245](../port/src/thompson.cj#L245) |
+| `public init(patterns: Array<String>, whichCaptures: Int64)` | constructor | [port/src/thompson.cj:248](../port/src/thompson.cj#L248) |
+| `public init(hirs: Array<Hir>)` | constructor | [port/src/thompson.cj:252](../port/src/thompson.cj#L252) |
+| `public init(patterns: Array<String>, whichCaptures: Int64, unicode: Bool)` | constructor | [port/src/thompson.cj:255](../port/src/thompson.cj#L255) |
+| `public init(hirs: Array<Hir>, sizeLimit: Int64)` | constructor | [port/src/thompson.cj:259](../port/src/thompson.cj#L259) |
+| `public func stateCount(): Int64` | method | [port/src/thompson.cj:287](../port/src/thompson.cj#L287) |
+| `public func memoryUsage(): Int64` | method | [port/src/thompson.cj:290](../port/src/thompson.cj#L290) |
+| `public func patternCount(): Int64` | method | [port/src/thompson.cj:300](../port/src/thompson.cj#L300) |
+| `public func patternStateCount(pattern: Int64): Int64` | method | [port/src/thompson.cj:303](../port/src/thompson.cj#L303) |
+| `public func startState(pattern: Int64): Int64` | method | [port/src/thompson.cj:306](../port/src/thompson.cj#L306) |
+| `public func opName(pattern: Int64, state: Int64): String` | method | [port/src/thompson.cj:310](../port/src/thompson.cj#L310) |
+| `public func opNext(pattern: Int64, state: Int64): Int64` | method | [port/src/thompson.cj:321](../port/src/thompson.cj#L321) |
+| `public func opAlternate(pattern: Int64, state: Int64): Int64` | method | [port/src/thompson.cj:324](../port/src/thompson.cj#L324) |
+| `public func whichOverlapping(text: String): Array<Int64>` | method | [port/src/thompson.cj:327](../port/src/thompson.cj#L327) |
+| `public func whichOverlapping(input: SearchInput): Array<Int64>` | method | [port/src/thompson.cj:333](../port/src/thompson.cj#L333) |
+| `public func search(input: SearchInput, cache: PikeCache): Option<PikeMatch>` | method | [port/src/thompson.cj:424](../port/src/thompson.cj#L424) |
+| `public func isMatch(input: SearchInput, cache: PikeCache): Bool` | method | [port/src/thompson.cj:466](../port/src/thompson.cj#L466) |
 
 ## Utf8Sequence
 
@@ -968,7 +968,7 @@
 |---|---|---|
 | `public func escape(text: String): String` | function | [port/src/escape.cj:13](../port/src/escape.cj#L13) |
 | `public func debugByte(byte: Int64): String` | function | [port/src/search_input.cj:50](../port/src/search_input.cj#L50) |
-| `public func hirLookName(look: HirLook): String` | function | [port/src/syntax_hir.cj:1495](../port/src/syntax_hir.cj#L1495) |
+| `public func hirLookName(look: HirLook): String` | function | [port/src/syntax_hir.cj:1494](../port/src/syntax_hir.cj#L1494) |
 | `public func extractLiterals(hir: Hir): LiteralSeq` | function | [port/src/syntax_literal.cj:205](../port/src/syntax_literal.cj#L205) |
 | `public func extractLiterals(hir: Hir, suffix: Bool): LiteralSeq` | function | [port/src/syntax_literal.cj:209](../port/src/syntax_literal.cj#L209) |
 | `public func extractLiterals(hir: Hir, suffix: Bool, limits: LiteralLimits): LiteralSeq` | function | [port/src/syntax_literal.cj:213](../port/src/syntax_literal.cj#L213) |

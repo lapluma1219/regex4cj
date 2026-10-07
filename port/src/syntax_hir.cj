@@ -1,4 +1,4 @@
-package cjregex
+package regex4cj
 
 import std.collection.*
 
@@ -280,7 +280,6 @@ public class Hir {
             }
         }
         leave(this)
-        true
     }
     public func toPattern(): String {
         let out = StringBuilder()

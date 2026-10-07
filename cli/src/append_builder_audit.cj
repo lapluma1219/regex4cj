@@ -1,6 +1,6 @@
 package regex_cli
 
-import cjregex.*
+import regex4cj.*
 import std.collection.*
 
 func appendBuilderAudit(): Unit {

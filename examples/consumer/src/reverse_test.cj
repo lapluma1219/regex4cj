@@ -1,6 +1,7 @@
 package regex_consumer
 
-import cjregex.*
+import regex4cj.*
+import std.collection.*
 
 @Test
 func reverseSearchReportsTheMatchStart(): Unit {

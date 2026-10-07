@@ -1,0 +1,70 @@
+[
+  {
+    "id": "reverse-rightmost",
+    "group": "reverse",
+    "feature": "反向搜索 rightmost",
+    "operation": "nfa-rev",
+    "pattern": "a",
+    "text": "aba",
+    "extra": [],
+    "args": [
+      "nfa-rev",
+      "a",
+      "aba"
+    ],
+    "expected_stdout": "offset\t2\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "reverse-unicode",
+    "group": "reverse",
+    "feature": "反向搜索 unicode",
+    "operation": "nfa-rev",
+    "pattern": "中",
+    "text": "a中b",
+    "extra": [],
+    "args": [
+      "nfa-rev",
+      "中",
+      "a中b"
+    ],
+    "expected_stdout": "offset\t1\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "reverse-absent",
+    "group": "reverse",
+    "feature": "反向搜索 absent",
+    "operation": "nfa-rev",
+    "pattern": "z",
+    "text": "aa",
+    "extra": [],
+    "args": [
+      "nfa-rev",
+      "z",
+      "aa"
+    ],
+    "expected_stdout": "none\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "reverse-empty",
+    "group": "reverse",
+    "feature": "反向搜索 empty",
+    "operation": "nfa-rev",
+    "pattern": "",
+    "text": "",
+    "extra": [],
+    "args": [
+      "nfa-rev",
+      "",
+      ""
+    ],
+    "expected_stdout": "offset\t0\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  }
+]

@@ -1,6 +1,53 @@
 package regex_consumer
 
-import cjregex.*
+import regex4cj.*
+import std.collection.*
+
+@Test
+func setBuilderArrayConstructionAndErrors(): Unit {
+    @Expect(RegexSetBuilder(Array<String>()).build().isEmpty(), true)
+    @Expect(BytesRegexSetBuilder(Array<String>()).build().isEmpty(), true)
+    let patterns = ["a", "a"]
+    let builder = RegexSetBuilder(patterns)
+    let bytes = BytesRegexSetBuilder(patterns)
+    patterns[0] = "z"
+    let first = builder.build()
+    builder.pattern("b")
+    bytes.pattern("b")
+    @Expect(first.len(), 2)
+    @Expect(first.matches("a").matchedAll(), true)
+    @Expect(builder.build().len(), 3)
+    @Expect(bytes.build().matches("a".toArray()).indices().size, 2)
+    let invalid = RegexSetBuilder(["("])
+    let invalidBytes = BytesRegexSetBuilder(["("])
+    var rejected = false
+    try { invalid.build() } catch (_: RegexError) { rejected = true }
+    @Expect(rejected, true)
+    rejected = false
+    try { invalidBytes.build() } catch (_: RegexError) { rejected = true }
+    @Expect(rejected, true)
+}
+
+@Test
+func setSizeHintTracksSlotsNotHits(): Unit {
+    let it = RegexSet(["a", "b", "c", "d"]).matches("b").iter()
+    let (start, _) = it.sizeHint()
+    @Expect(start, 4)
+    @Expect(it.next(), Some(1))
+    let (after, upper) = it.sizeHint()
+    @Expect(after, 2)
+    @Expect(upper, Some(2))
+    let copy = it.clone()
+    @Expect(it.nextBack(), None)
+    let (end, _) = it.sizeHint()
+    @Expect(end, 0)
+    let (saved, _) = copy.sizeHint()
+    @Expect(saved, 2)
+    let empty = BytesRegexSet(Array<String>()).matches(Array<UInt8>()).iter()
+    let (zero, zu) = empty.sizeHint()
+    @Expect(zero, 0)
+    @Expect(zu, Some(0))
+}
 
 @Test
 func emptySetAndEmptyMatches(): Unit {

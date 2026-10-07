@@ -1,0 +1,83 @@
+[
+  {
+    "id": "ast-print-literal",
+    "group": "structure",
+    "feature": "语法解析后输出 literal",
+    "operation": "ast-print",
+    "pattern": "a",
+    "text": "",
+    "extra": [],
+    "args": [
+      "ast-print",
+      "a"
+    ],
+    "expected_stdout": "a\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "ast-print-group",
+    "group": "structure",
+    "feature": "语法解析后输出 group",
+    "operation": "ast-print",
+    "pattern": "(a|b)+",
+    "text": "",
+    "extra": [],
+    "args": [
+      "ast-print",
+      "(a|b)+"
+    ],
+    "expected_stdout": "(a|b)+\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "ast-print-empty",
+    "group": "structure",
+    "feature": "语法解析后输出 empty",
+    "operation": "ast-print",
+    "pattern": "",
+    "text": "",
+    "extra": [],
+    "args": [
+      "ast-print",
+      ""
+    ],
+    "expected_stdout": "\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "ast-print-invalid",
+    "group": "structure",
+    "feature": "未闭合分组拒绝解析",
+    "operation": "ast-print",
+    "pattern": "(",
+    "text": "",
+    "extra": [],
+    "args": [
+      "ast-print",
+      "("
+    ],
+    "expected_stdout": "",
+    "expect_error": true,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "hir-literal",
+    "group": "structure",
+    "feature": "HIR 保留字节值与长度",
+    "operation": "hir",
+    "pattern": "a",
+    "text": "true",
+    "extra": [],
+    "args": [
+      "hir",
+      "a",
+      "true"
+    ],
+    "expected_stdout": "L(61){1,1}\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  }
+]

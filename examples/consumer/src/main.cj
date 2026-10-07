@@ -1,6 +1,6 @@
 package regex_consumer
 
-import cjregex.*
+import regex4cj.*
 
 // Start here: this program depends on the library through cjpm.toml.
 // Change the text or pattern and run: bash scripts/run.sh example

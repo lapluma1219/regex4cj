@@ -1,0 +1,162 @@
+[
+  {
+    "id": "dense-greedy",
+    "group": "dfa",
+    "feature": "dense 搜索 greedy",
+    "operation": "dfa",
+    "pattern": "dense",
+    "text": "a+",
+    "extra": [
+      "zaa"
+    ],
+    "args": [
+      "dfa",
+      "dense",
+      "a+",
+      "zaa"
+    ],
+    "expected_stdout": "span\t1\t3\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "dense-lazy",
+    "group": "dfa",
+    "feature": "dense 搜索 lazy",
+    "operation": "dfa",
+    "pattern": "dense",
+    "text": "a+?",
+    "extra": [
+      "aaa"
+    ],
+    "args": [
+      "dfa",
+      "dense",
+      "a+?",
+      "aaa"
+    ],
+    "expected_stdout": "span\t0\t1\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "dense-absent",
+    "group": "dfa",
+    "feature": "dense 搜索 absent",
+    "operation": "dfa",
+    "pattern": "dense",
+    "text": "z",
+    "extra": [
+      "aa"
+    ],
+    "args": [
+      "dfa",
+      "dense",
+      "z",
+      "aa"
+    ],
+    "expected_stdout": "none\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "dense-empty",
+    "group": "dfa",
+    "feature": "dense 搜索 empty",
+    "operation": "dfa",
+    "pattern": "dense",
+    "text": "",
+    "extra": [
+      ""
+    ],
+    "args": [
+      "dfa",
+      "dense",
+      "",
+      ""
+    ],
+    "expected_stdout": "span\t0\t0\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "sparse-greedy",
+    "group": "dfa",
+    "feature": "sparse 搜索 greedy",
+    "operation": "dfa",
+    "pattern": "sparse",
+    "text": "a+",
+    "extra": [
+      "zaa"
+    ],
+    "args": [
+      "dfa",
+      "sparse",
+      "a+",
+      "zaa"
+    ],
+    "expected_stdout": "span\t1\t3\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "sparse-lazy",
+    "group": "dfa",
+    "feature": "sparse 搜索 lazy",
+    "operation": "dfa",
+    "pattern": "sparse",
+    "text": "a+?",
+    "extra": [
+      "aaa"
+    ],
+    "args": [
+      "dfa",
+      "sparse",
+      "a+?",
+      "aaa"
+    ],
+    "expected_stdout": "span\t0\t1\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "sparse-absent",
+    "group": "dfa",
+    "feature": "sparse 搜索 absent",
+    "operation": "dfa",
+    "pattern": "sparse",
+    "text": "z",
+    "extra": [
+      "aa"
+    ],
+    "args": [
+      "dfa",
+      "sparse",
+      "z",
+      "aa"
+    ],
+    "expected_stdout": "none\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  },
+  {
+    "id": "sparse-empty",
+    "group": "dfa",
+    "feature": "sparse 搜索 empty",
+    "operation": "dfa",
+    "pattern": "sparse",
+    "text": "",
+    "extra": [
+      ""
+    ],
+    "args": [
+      "dfa",
+      "sparse",
+      "",
+      ""
+    ],
+    "expected_stdout": "span\t0\t0\n",
+    "expect_error": false,
+    "basis": "人工明确预期 + 固定 Rust 版本逐例对照"
+  }
+]

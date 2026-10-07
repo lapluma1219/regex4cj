@@ -1,0 +1,85 @@
+[
+  {
+    "id": "replace-named",
+    "group": "text",
+    "feature": "命名分组模板替换",
+    "operation": "replace-all",
+    "pattern": "(?<prefix>[A-Z]{2})-[0-9]{3}",
+    "text": "AB-123 CD-456",
+    "extra": [
+      "${prefix}-***"
+    ],
+    "expected_stdout": "41422d2a2a2a2043442d2a2a2a\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.replaceAll"
+    ]
+  },
+  {
+    "id": "replace-zero-width",
+    "group": "text",
+    "feature": "空匹配替换保留完整字符",
+    "operation": "replace-all",
+    "pattern": "",
+    "text": "中🙂",
+    "extra": [
+      "-"
+    ],
+    "expected_stdout": "2de4b8ad2df09f99822d\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.replaceAll"
+    ]
+  },
+  {
+    "id": "split-empty-fields",
+    "group": "text",
+    "feature": "分割保留首尾和中间空字段",
+    "operation": "split",
+    "pattern": ",",
+    "text": ",a,,b,",
+    "extra": [],
+    "expected_stdout": "\n61\n\n62\n\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.split"
+    ]
+  },
+  {
+    "id": "split-limit",
+    "group": "text",
+    "feature": "次数上限保留剩余内容",
+    "operation": "split-n",
+    "pattern": ",",
+    "text": "a,b,c",
+    "extra": [
+      "2"
+    ],
+    "expected_stdout": "61\n622c63\n",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.splitN"
+    ]
+  },
+  {
+    "id": "split-zero",
+    "group": "text",
+    "feature": "零次分割返回空序列",
+    "operation": "split-n",
+    "pattern": ",",
+    "text": "a,b,c",
+    "extra": [
+      "0"
+    ],
+    "expected_stdout": "",
+    "expect_error": false,
+    "basis": "明确预期 + 固定 Rust 版本对照",
+    "api_refs": [
+      "Regex.splitN"
+    ]
+  }
+]

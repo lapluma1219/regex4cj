@@ -1,0 +1,541 @@
+[
+  {
+    "id": "simpleCaseFoldingKeepsOriginalText",
+    "group": "unicode",
+    "feature": "大小写折叠保留原文本",
+    "file": "examples/consumer/src/unicode_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "nulMatchingAndEscape",
+    "group": "tools",
+    "feature": "NUL 字符匹配与转义",
+    "file": "examples/consumer/src/tools_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "nulReplacementAndSplit",
+    "group": "text",
+    "feature": "NUL 字符替换与分割",
+    "file": "examples/consumer/src/text_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "captureAbsenceAndBounds",
+    "group": "capture",
+    "feature": "缺失分组与下标边界",
+    "file": "examples/consumer/src/capture_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "captureResultsAndMetadataAreIndependent",
+    "group": "capture",
+    "feature": "捕获结果和元数据独立",
+    "file": "examples/consumer/src/capture_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "retainedCaptureAndTemplateExpansion",
+    "group": "capture",
+    "feature": "保留捕获结果与模板展开",
+    "file": "examples/consumer/src/capture_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "callbackLimitAndNoMatch",
+    "group": "text",
+    "feature": "回调次数限制与无匹配",
+    "file": "examples/consumer/src/text_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "callbackExceptionAndReuse",
+    "group": "text",
+    "feature": "回调异常后复用",
+    "file": "examples/consumer/src/text_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "callbackCanReuseSameRegex",
+    "group": "text",
+    "feature": "回调内重用同一正则",
+    "file": "examples/consumer/src/text_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "zeroWidthUnicodeAndLimits",
+    "group": "search",
+    "feature": "Unicode 零宽匹配与限制",
+    "file": "examples/consumer/src/search_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "invalidPatternAndNegativeLimit",
+    "group": "syntax",
+    "feature": "非法规则和负数限制",
+    "file": "examples/consumer/src/syntax_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "multilineAndDotAllFlags",
+    "group": "syntax",
+    "feature": "多行和点号选项",
+    "file": "examples/consumer/src/syntax_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "scopedGreedAndAbsoluteAnchors",
+    "group": "syntax",
+    "feature": "局部贪婪选项与绝对锚点",
+    "file": "examples/consumer/src/syntax_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "escapedNulAndUnicodeScalars",
+    "group": "syntax",
+    "feature": "NUL 与标量转义",
+    "file": "examples/consumer/src/syntax_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "posixClassesWithNul",
+    "group": "unicode",
+    "feature": "ASCII 类与 NUL",
+    "file": "examples/consumer/src/unicode_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "posixClassesAreAsciiAndNamesCanFallBack",
+    "group": "unicode",
+    "feature": "ASCII 类范围与名称回退",
+    "file": "examples/consumer/src/unicode_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "unicodeShorthandsAndNul",
+    "group": "unicode",
+    "feature": "Unicode 简写类与 NUL",
+    "file": "examples/consumer/src/unicode_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "unicodeWordBoundaries",
+    "group": "unicode",
+    "feature": "Unicode 词边界",
+    "file": "examples/consumer/src/unicode_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "unicodeGeneralCategories",
+    "group": "unicode",
+    "feature": "Unicode 一般类别",
+    "file": "examples/consumer/src/unicode_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "unicodeScripts",
+    "group": "unicode",
+    "feature": "文字系统属性",
+    "file": "examples/consumer/src/unicode_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "unicodeBinaryProperties",
+    "group": "unicode",
+    "feature": "二元属性",
+    "file": "examples/consumer/src/unicode_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "searchFromOffsetAndConfiguredSyntax",
+    "group": "search",
+    "feature": "指定起点与语法配置",
+    "file": "examples/consumer/src/search_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "bytesRegexMatchesRawBytes",
+    "group": "bytes",
+    "feature": "原始字节匹配",
+    "file": "examples/consumer/src/bytes_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "byteIteratorsSnapshotAndKeepIndependentCursors",
+    "group": "bytes",
+    "feature": "字节迭代器快照与独立位置",
+    "file": "examples/consumer/src/bytes_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "clonedIteratorsKeepIndependentCursors",
+    "group": "search",
+    "feature": "复制迭代器的位置独立",
+    "file": "examples/consumer/src/search_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "lazySplitLimitsAndByteCaptureMetadata",
+    "group": "text",
+    "feature": "惰性分割限制与字节捕获元数据",
+    "file": "examples/consumer/src/text_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "appendExpansionPreservesBuffers",
+    "group": "text",
+    "feature": "追加展开保留缓冲区原内容",
+    "file": "examples/consumer/src/text_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "setBuilderArrayConstructionAndErrors",
+    "group": "set",
+    "feature": "数组构建与构建错误",
+    "file": "examples/consumer/src/set_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "astKeepsTheGroupThatHirCollapses",
+    "group": "structure",
+    "feature": "AST 保留 HIR 简化掉的分组",
+    "file": "examples/consumer/src/structure_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "boundedBacktrackerReportsCapturesAndBudgetErrors",
+    "group": "backtrack",
+    "feature": "捕获结果与预算错误",
+    "file": "examples/consumer/src/backtrack_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "liteMatchesScalarsWithAsciiClasses",
+    "group": "products",
+    "feature": "Lite 标量匹配与 ASCII 类",
+    "file": "examples/consumer/src/products_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "hybridOverlapBuildsTransitionsAndCanBeReused",
+    "group": "dfa",
+    "feature": "惰性引擎重叠搜索及复用",
+    "file": "examples/consumer/src/dfa_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "metaKeepsCapturesWhenUsingHybrid",
+    "group": "products",
+    "feature": "Meta 使用惰性引擎仍保留捕获",
+    "file": "examples/consumer/src/products_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "dfaImagesNeverSilentlyDropConfiguration",
+    "group": "dfa",
+    "feature": "镜像拒绝无法保留的配置",
+    "file": "examples/consumer/src/dfa_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "denseAndSparseDfaReportTheSameSpan",
+    "group": "dfa",
+    "feature": "密集和稀疏引擎区间一致",
+    "file": "examples/consumer/src/dfa_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "multiPatternDfaPrefersTheEarlierRule",
+    "group": "dfa",
+    "feature": "多模式搜索规则优先级",
+    "file": "examples/consumer/src/dfa_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "syntaxValidationKeepsTranslationSeparate",
+    "group": "structure",
+    "feature": "解析与转换分别校验",
+    "file": "examples/consumer/src/structure_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "dfaReverseRecoveryRetainsPriorityAndContext",
+    "group": "dfa",
+    "feature": "反向恢复保留优先级和上下文",
+    "file": "examples/consumer/src/dfa_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "octalAstClassesKeepTheirValueAndSpelling",
+    "group": "structure",
+    "feature": "八进制字符类保留数值和形式",
+    "file": "examples/consumer/src/structure_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "groupCursorCopiesHaveIndependentPositions",
+    "group": "capture",
+    "feature": "分组游标复制后独立推进",
+    "file": "examples/consumer/src/capture_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "setSizeHintTracksSlotsNotHits",
+    "group": "set",
+    "feature": "迭代大小提示跟踪槽位",
+    "file": "examples/consumer/src/set_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "hirExposesSixDigitStructure",
+    "group": "structure",
+    "feature": "HIR 暴露六位数字规则结构",
+    "file": "examples/consumer/src/structure_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "hirSmartConstructorsPreserveSnapshots",
+    "group": "structure",
+    "feature": "HIR 构造保持快照独立",
+    "file": "examples/consumer/src/structure_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "hirLengthOverflowAndEmptyAreDistinctFromFailure",
+    "group": "structure",
+    "feature": "长度溢出、空值与失败区分",
+    "file": "examples/consumer/src/structure_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "hirRejectsUnimplementedStructuresExplicitly",
+    "group": "structure",
+    "feature": "明确拒绝不支持的结构",
+    "file": "examples/consumer/src/structure_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "literalsUtf8AndEarliestMatchThePinnedCorpus",
+    "group": "tools",
+    "feature": "字面量、UTF-8 与早停样例",
+    "file": "examples/consumer/src/tools_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "pikeReportsPatternSpanAndCaptures",
+    "group": "nfa",
+    "feature": "模式编号、区间及捕获",
+    "file": "examples/consumer/src/nfa_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "pikeAnchoredSearchSeesTextOutsideTheRange",
+    "group": "nfa",
+    "feature": "锚定搜索断言能查看范围外上下文",
+    "file": "examples/consumer/src/nfa_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "anchoredSearchIsNotTheSameAsACaret",
+    "group": "nfa",
+    "feature": "搜索锚定与规则开头断言的区别",
+    "file": "examples/consumer/src/nfa_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "oneGraphPikeKeepsThreadsInTheCache",
+    "group": "nfa",
+    "feature": "图搜索复用缓存线程",
+    "file": "examples/consumer/src/nfa_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "backtrackerReusesItsVisitedCache",
+    "group": "backtrack",
+    "feature": "复用访问缓存",
+    "file": "examples/consumer/src/backtrack_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "reverseSearchReportsTheMatchStart",
+    "group": "reverse",
+    "feature": "反向搜索返回起点",
+    "file": "examples/consumer/src/reverse_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "reviewedAstUnicodeAndBoundaryRoundTrips",
+    "group": "structure",
+    "feature": "Unicode 和边界规则结构往返",
+    "file": "examples/consumer/src/structure_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "reviewedPikeByteRangesAndEmptyPatternSet",
+    "group": "nfa",
+    "feature": "字节范围与空模式集",
+    "file": "examples/consumer/src/nfa_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "emptySetAndEmptyMatches",
+    "group": "set",
+    "feature": "空规则集与空匹配",
+    "file": "examples/consumer/src/set_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "setOverlapDuplicatesAndOrdering",
+    "group": "set",
+    "feature": "重叠、重复规则及编号顺序",
+    "file": "examples/consumer/src/set_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "setResultsAndPatternsAreIndependent",
+    "group": "set",
+    "feature": "结果和规则数组独立",
+    "file": "examples/consumer/src/set_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "setNulAndUnicode",
+    "group": "set",
+    "feature": "NUL 与 Unicode",
+    "file": "examples/consumer/src/set_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "setAgreesWithIndependentRegexes",
+    "group": "set",
+    "feature": "规则集与单规则结果一致",
+    "file": "examples/consumer/src/set_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "setInvalidIndexAndConstruction",
+    "group": "set",
+    "feature": "非法下标及构建失败",
+    "file": "examples/consumer/src/set_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "setIteratorDirectionsCloneAndLifetime",
+    "group": "set",
+    "feature": "双向迭代、复制与生命周期",
+    "file": "examples/consumer/src/set_test.cj",
+    "basis": "仓颉原生测试内 @Expect 断言；执行结果按 consumer-test 整套记录"
+  },
+  {
+    "id": "dfaImagesRejectEveryTruncationAndCorruptHeader",
+    "group": "dfa",
+    "feature": "序列化截断、篡改和往返一致性",
+    "file": "examples/consumer/src/dfa_coverage_test.cj",
+    "basis": "原生断言验证正常、边界、异常或状态复用行为"
+  },
+  {
+    "id": "dfaQuitBytesAbortAndCacheResetPreservesResults",
+    "group": "dfa",
+    "feature": "退出字节与缓存重置",
+    "file": "examples/consumer/src/dfa_coverage_test.cj",
+    "basis": "原生断言验证正常、边界、异常或状态复用行为"
+  },
+  {
+    "id": "captureModesRejectUnknownValuesAcrossEngines",
+    "group": "nfa",
+    "feature": "捕获模式非法参数拒绝",
+    "file": "examples/consumer/src/dfa_coverage_test.cj",
+    "basis": "原生断言验证正常、边界、异常或状态复用行为"
+  },
+  {
+    "id": "syntaxSpansAndErrorsRetainCoordinates",
+    "group": "structure",
+    "feature": "错误位置对象保留坐标和文本",
+    "file": "examples/consumer/src/structure_coverage_test.cj",
+    "basis": "原生断言验证正常、边界、异常或状态复用行为"
+  },
+  {
+    "id": "hirClassAlgebraChecksMembershipAndEmptyResults",
+    "group": "structure",
+    "feature": "字符集合运算与空集合",
+    "file": "examples/consumer/src/structure_coverage_test.cj",
+    "basis": "原生断言验证正常、边界、异常或状态复用行为"
+  },
+  {
+    "id": "hirTraversalVisitsEnterLeaveAndHonorsBothStops",
+    "group": "structure",
+    "feature": "语法遍历进入和离开均可提前停止",
+    "file": "examples/consumer/src/structure_coverage_test.cj",
+    "basis": "原生断言验证正常、边界、异常或状态复用行为"
+  },
+  {
+    "id": "searchInputConfigurationPreservesSourceAndRejectsRanges",
+    "group": "nfa",
+    "feature": "搜索配置和非法范围",
+    "file": "examples/consumer/src/nfa_coverage_test.cj",
+    "basis": "原生断言验证正常、边界、异常或状态复用行为"
+  },
+  {
+    "id": "pikeCacheResetsCapturedStateAfterMiss",
+    "group": "nfa",
+    "feature": "缓存复用不泄露旧捕获",
+    "file": "examples/consumer/src/nfa_coverage_test.cj",
+    "basis": "原生断言验证正常、边界、异常或状态复用行为"
+  },
+  {
+    "id": "graphInspectionChecksIndicesAndReachableAccept",
+    "group": "nfa",
+    "feature": "NFA 图检查与下标边界",
+    "file": "examples/consumer/src/nfa_coverage_test.cj",
+    "basis": "原生断言验证正常、边界、异常或状态复用行为"
+  },
+  {
+    "id": "literalSequenceEmptyInfiniteAndFiniteContracts",
+    "group": "tools",
+    "feature": "字面量序列空值、无限值和组合契约",
+    "file": "examples/consumer/src/tools_coverage_test.cj",
+    "basis": "原生断言验证正常、边界、异常或状态复用行为"
+  },
+  {
+    "id": "utf8RangesRejectInvalidScalarsAndKeepBoundaries",
+    "group": "tools",
+    "feature": "UTF-8 范围边界与非法输入",
+    "file": "examples/consumer/src/tools_coverage_test.cj",
+    "basis": "原生断言验证正常、边界、异常或状态复用行为"
+  },
+  {
+    "id": "adaptersRespectAnchorsAndIterationResults",
+    "group": "products",
+    "feature": "扩展入口锚定和迭代",
+    "file": "examples/consumer/src/products_coverage_test.cj",
+    "basis": "原生断言验证正常、边界、异常或状态复用行为"
+  },
+  {
+    "id": "backtrackerEmptyMatchesAndCacheArguments",
+    "group": "backtrack",
+    "feature": "空匹配、缓存参数和反向结果",
+    "file": "examples/consumer/src/products_coverage_test.cj",
+    "basis": "原生断言验证正常、边界、异常或状态复用行为"
+  },
+  {
+    "id": "byteConvenienceMethodsRetainOffsetsAndNames",
+    "group": "bytes",
+    "feature": "字节接口最短匹配、命名捕获和分割限制",
+    "file": "examples/consumer/src/bytes_coverage_test.cj",
+    "basis": "原生断言验证具体结果及重复调用状态"
+  },
+  {
+    "id": "clonedByteIteratorsKeepIndependentCursors",
+    "group": "bytes",
+    "feature": "字节捕获与分割迭代器复制后游标独立",
+    "file": "examples/consumer/src/bytes_coverage_test.cj",
+    "basis": "原生断言验证具体结果及重复调用状态"
+  },
+  {
+    "id": "textConvenienceMethodsAndClonedCapturesPreserveContract",
+    "group": "search",
+    "feature": "文本最早匹配、范围约束与捕获迭代器复制",
+    "file": "examples/consumer/src/search_coverage_test.cj",
+    "basis": "原生断言验证具体结果及重复调用状态"
+  }
+]
