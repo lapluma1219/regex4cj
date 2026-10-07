@@ -3205,5 +3205,5 @@
       ]
     }
   ],
-  "additional_surface": "Root escape, macros, traits and feature gates are classified in docs/api-audit.md; these method counts are NOT a completion percentage."
+  "additional_surface": "Root escape, macros, traits and feature gates are outside this inherent-method inventory; method counts are NOT a completion percentage."
 }

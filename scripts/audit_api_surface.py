@@ -2,7 +2,7 @@
 
 This is a source inventory, not a Rust parser or a semantic coverage percentage.
 --upstream regenerates from verified Git objects; --check needs only this repo.
-Trait/macro/feature contracts are reviewed separately in docs/api-audit.md.
+Trait/macro/feature contracts are outside this inherent-method inventory.
 """
 import argparse
 import hashlib
@@ -150,19 +150,19 @@ def build(upstream):
             methods.append({'id':f'{scope}::{owner}::{name}', 'upstream_file':file,'upstream_line':n,
                             'cangjie':key,'implementation':symbols[key], 'status':status,'note':note,'evidence':evidence})
     return {'revision':revision,'source_sha256':sources,'public_declarations':types,'methods':methods,
-            'additional_surface':'Root escape, macros, traits and feature gates are classified in docs/api-audit.md; these method counts are NOT a completion percentage.'}
+            'additional_surface':'Root escape, macros, traits and feature gates are outside this inherent-method inventory; method counts are NOT a completion percentage.'}
 
 
 NATIVE_EVIDENCE = {'examples/consumer/src/api_test.cj': ['examples/consumer/src/bytes_test.cj', 'examples/consumer/src/capture_test.cj', 'examples/consumer/src/search_test.cj', 'examples/consumer/src/syntax_test.cj', 'examples/consumer/src/text_test.cj', 'examples/consumer/src/tools_test.cj', 'examples/consumer/src/unicode_test.cj'], 'examples/consumer/src/append_builder_test.cj': ['examples/consumer/src/set_test.cj', 'examples/consumer/src/text_test.cj'], 'examples/consumer/src/ast_test.cj': ['examples/consumer/src/structure_test.cj'], 'examples/consumer/src/backtrack_test.cj': ['examples/consumer/src/backtrack_test.cj'], 'examples/consumer/src/delivery_test.cj': ['examples/consumer/src/dfa_test.cj', 'examples/consumer/src/products_test.cj'], 'examples/consumer/src/dfa_test.cj': ['examples/consumer/src/dfa_test.cj'], 'examples/consumer/src/engine_edges_test.cj': ['examples/consumer/src/dfa_test.cj', 'examples/consumer/src/structure_test.cj'], 'examples/consumer/src/group_cursor_test.cj': ['examples/consumer/src/capture_test.cj', 'examples/consumer/src/set_test.cj'], 'examples/consumer/src/hir_test.cj': ['examples/consumer/src/structure_test.cj'], 'examples/consumer/src/literal_test.cj': ['examples/consumer/src/tools_test.cj'], 'examples/consumer/src/pike_test.cj': ['examples/consumer/src/backtrack_test.cj', 'examples/consumer/src/nfa_test.cj'], 'examples/consumer/src/reverse_test.cj': ['examples/consumer/src/reverse_test.cj'], 'examples/consumer/src/review_test.cj': ['examples/consumer/src/nfa_test.cj', 'examples/consumer/src/structure_test.cj'], 'examples/consumer/src/set_test.cj': ['examples/consumer/src/set_test.cj']}
 
 def render(data):
-    lines = ['# 顶层接口逐项对应表', '', '由 `scripts/audit_api_surface.py --upstream PATH` 从固定 Git 提交提取。状态定义、trait 与宏审计见 [审计说明](api-audit.md)。样例验证不等于完整语义证明；170 是方法条目数，不是完成率。', '']
+    lines = ['# 顶层接口逐项对应表', '', '本表对照固定版本 Rust regex 主要库的 170 条固有方法，不是整个原仓库的接口总数，也不计宏、trait 和所有配置组合。原仓库提交见 [基线](baseline.json)，完整本地声明见 [仓颉接口清单](api-catalog.md)。有样例验证表示所列输入通过；有明确差异不表示完全等价。范围边界见 [当前能力](status.md)。由 `scripts/audit_api_surface.py` 及仓库内 [快照](api-audit-inventory.json) 生成，日常校验不依赖另存的原仓库目录。', '']
     group = None
     for row in data['methods']:
         current = row['id'].rsplit('::', 1)[0]
         if current != group:
             group = current
-            lines += ['## ' + group, '', '| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |', '|---|---|---|---|']
+            lines += ['## ' + group, '', '| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |', '|---|---|---|---|']
         source = f"https://github.com/rust-lang/regex/blob/{data['revision']}/{row['upstream_file']}#L{row['upstream_line']}"
         impl = row['implementation']
         local = '../' + impl['file'] + '#L' + str(impl['line'])
@@ -181,7 +181,7 @@ def check(data):
         assert row['cangjie'] in symbols, row
         assert symbols[row['cangjie']]==row['implementation'], 'Regenerate line references: '+row['cangjie']
         for path in row['evidence']: assert (ROOT/path).is_file(), path
-    print(f"API inventory checked: {len(data['methods'])} inherent methods; traits/macros reviewed separately")
+    print(f"API inventory checked: {len(data['methods'])} inherent methods; traits/macros excluded from this count")
 
 
 if __name__=='__main__':

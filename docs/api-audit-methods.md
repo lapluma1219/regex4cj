@@ -1,10 +1,10 @@
 # 顶层接口逐项对应表
 
-由 `scripts/audit_api_surface.py --upstream PATH` 从固定 Git 提交提取。状态定义、trait 与宏审计见 [审计说明](api-audit.md)。样例验证不等于完整语义证明；170 是方法条目数，不是完成率。
+本表对照固定版本 Rust regex 主要库的 170 条固有方法，不是整个原仓库的接口总数，也不计宏、trait 和所有配置组合。原仓库提交见 [基线](baseline.json)，完整本地声明见 [仓颉接口清单](api-catalog.md)。有样例验证表示所列输入通过；有明确差异不表示完全等价。范围边界见 [当前能力](status.md)。由 `scripts/audit_api_surface.py` 及仓库内 [快照](api-audit-inventory.json) 生成，日常校验不依赖另存的原仓库目录。
 
 ## string::Regex
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [new](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/string.rs#L229) | [Regex.init](../port/src/nfa.cj#L528) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_upstream_suite.py](../tests/functional/search/verify_upstream_suite.py)、[verify_captures.py](../tests/functional/capture/verify_captures.py) |
 | [is_match](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/string.rs#L253) | [Regex.isMatch](../port/src/nfa.cj#L825) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_upstream_suite.py](../tests/functional/search/verify_upstream_suite.py)、[verify_captures.py](../tests/functional/capture/verify_captures.py) |
@@ -33,7 +33,7 @@
 | [locations](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/string.rs#L1481) | [Regex.captureLocations](../port/src/nfa.cj#L960) | 有明确差异 | 上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 ## string::Match
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [start](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/string.rs#L1557) | [RegexMatch.start](../port/src/nfa.cj#L250) | 有明确差异 | 使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 | [end](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/string.rs#L1573) | [RegexMatch.end](../port/src/nfa.cj#L251) | 有明确差异 | 使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
@@ -43,7 +43,7 @@
 | [as_str](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/string.rs#L1607) | [RegexMatch.asStr](../port/src/nfa.cj#L264) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 ## string::Captures
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [get](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/string.rs#L1721) | [Captures.get](../port/src/captures.cj#L95) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_captures.py](../tests/functional/capture/verify_captures.py)、[verify_text_ops.py](../tests/functional/text/verify_text_ops.py) |
 | [get_match](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/string.rs#L1744) | [Captures.getMatch](../port/src/captures.cj#L52) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_captures.py](../tests/functional/capture/verify_captures.py)、[verify_text_ops.py](../tests/functional/text/verify_text_ops.py) |
@@ -54,14 +54,14 @@
 | [len](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/string.rs#L1985) | [Captures.size](../port/src/captures.cj#L45) | 有明确差异 | extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。 验证：[verify_captures.py](../tests/functional/capture/verify_captures.py)、[verify_text_ops.py](../tests/functional/text/verify_text_ops.py) |
 ## string::CaptureLocations
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [get](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/string.rs#L2170) | [CaptureLocations.get](../port/src/captures.cj#L25) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 | [len](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/string.rs#L2207) | [CaptureLocations.size](../port/src/captures.cj#L17) | 有明确差异 | len 对应 size 字段；doc(hidden) pos 别名对应 get。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 | [pos](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/string.rs#L2221) | [CaptureLocations.get](../port/src/captures.cj#L25) | 有明确差异 | len 对应 size 字段；doc(hidden) pos 别名对应 get。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 ## bytes::Regex
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [new](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/bytes.rs#L231) | [BytesRegex.init](../port/src/bytes.cj#L33) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_upstream_suite.py](../tests/functional/search/verify_upstream_suite.py)、[verify_bytes.py](../tests/functional/bytes/verify_bytes.py) |
 | [is_match](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/bytes.rs#L255) | [BytesRegex.isMatch](../port/src/bytes.cj#L124) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_upstream_suite.py](../tests/functional/search/verify_upstream_suite.py)、[verify_bytes.py](../tests/functional/bytes/verify_bytes.py) |
@@ -90,7 +90,7 @@
 | [locations](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/bytes.rs#L1482) | [BytesRegex.captureLocations](../port/src/bytes.cj#L118) | 有明确差异 | 上游 doc(hidden) 的历史别名；仓颉使用对应的新名称。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 ## bytes::Match
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [start](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/bytes.rs#L1553) | [BytesMatch.start](../port/src/bytes.cj#L8) | 有明确差异 | 使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 | [end](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/bytes.rs#L1568) | [BytesMatch.end](../port/src/bytes.cj#L9) | 有明确差异 | 使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
@@ -100,7 +100,7 @@
 | [as_bytes](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/bytes.rs#L1598) | [BytesMatch.bytes](../port/src/bytes.cj#L10) | 有明确差异 | 使用公开字段读取；range 用 start/end 构造。bytes 为可变数组，不是 Rust 只读借用切片。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 ## bytes::Captures
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [get](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/bytes.rs#L1715) | [BytesCaptures.get](../port/src/bytes.cj#L606) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_bytes.py](../tests/functional/bytes/verify_bytes.py)、[bytes_test.cj](../examples/consumer/src/bytes_test.cj)、[capture_test.cj](../examples/consumer/src/capture_test.cj)、[search_test.cj](../examples/consumer/src/search_test.cj)、[syntax_test.cj](../examples/consumer/src/syntax_test.cj)、[text_test.cj](../examples/consumer/src/text_test.cj)、[tools_test.cj](../examples/consumer/src/tools_test.cj)、[unicode_test.cj](../examples/consumer/src/unicode_test.cj) |
 | [get_match](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/bytes.rs#L1737) | [BytesCaptures.getMatch](../port/src/bytes.cj#L600) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_bytes.py](../tests/functional/bytes/verify_bytes.py)、[bytes_test.cj](../examples/consumer/src/bytes_test.cj)、[capture_test.cj](../examples/consumer/src/capture_test.cj)、[search_test.cj](../examples/consumer/src/search_test.cj)、[syntax_test.cj](../examples/consumer/src/syntax_test.cj)、[text_test.cj](../examples/consumer/src/text_test.cj)、[tools_test.cj](../examples/consumer/src/tools_test.cj)、[unicode_test.cj](../examples/consumer/src/unicode_test.cj) |
@@ -111,14 +111,14 @@
 | [len](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/bytes.rs#L1978) | [BytesCaptures.size](../port/src/bytes.cj#L593) | 有明确差异 | extract 用运行时数量并返回含组0的数组；expand 返回新结果而非追加缓冲；len 用 size 字段。 验证：[verify_bytes.py](../tests/functional/bytes/verify_bytes.py)、[bytes_test.cj](../examples/consumer/src/bytes_test.cj)、[capture_test.cj](../examples/consumer/src/capture_test.cj)、[search_test.cj](../examples/consumer/src/search_test.cj)、[syntax_test.cj](../examples/consumer/src/syntax_test.cj)、[text_test.cj](../examples/consumer/src/text_test.cj)、[tools_test.cj](../examples/consumer/src/tools_test.cj)、[unicode_test.cj](../examples/consumer/src/unicode_test.cj) |
 ## bytes::CaptureLocations
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [get](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/bytes.rs#L2165) | [CaptureLocations.get](../port/src/captures.cj#L25) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 | [len](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/bytes.rs#L2202) | [CaptureLocations.size](../port/src/captures.cj#L17) | 有明确差异 | len 对应 size 字段；doc(hidden) pos 别名对应 get。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 | [pos](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regex/bytes.rs#L2216) | [CaptureLocations.get](../port/src/captures.cj#L25) | 有明确差异 | len 对应 size 字段；doc(hidden) pos 别名对应 get。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 ## string::RegexSet
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [new](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regexset/string.rs#L154) | [RegexSet.init](../port/src/regex_set.cj#L108) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_sets.py](../tests/functional/set/verify_sets.py)、[verify_upstream_suite.py](../tests/functional/search/verify_upstream_suite.py)、[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 | [empty](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regexset/string.rs#L179) | [RegexSet.init](../port/src/regex_set.cj#L108) | 有明确差异 | empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。 验证：[verify_sets.py](../tests/functional/set/verify_sets.py)、[verify_upstream_suite.py](../tests/functional/search/verify_upstream_suite.py)、[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
@@ -133,7 +133,7 @@
 | [patterns](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regexset/string.rs#L444) | [RegexSet.patterns](../port/src/regex_set.cj#L163) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_sets.py](../tests/functional/set/verify_sets.py)、[verify_upstream_suite.py](../tests/functional/search/verify_upstream_suite.py)、[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 ## string::SetMatches
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [matched_any](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regexset/string.rs#L477) | [SetMatches.matchedAny](../port/src/regex_set.cj#L21) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_sets.py](../tests/functional/set/verify_sets.py)、[set_test.cj](../examples/consumer/src/set_test.cj) |
 | [matched_all](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regexset/string.rs#L495) | [SetMatches.matchedAll](../port/src/regex_set.cj#L29) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_sets.py](../tests/functional/set/verify_sets.py)、[set_test.cj](../examples/consumer/src/set_test.cj) |
@@ -142,7 +142,7 @@
 | [iter](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regexset/string.rs#L600) | [SetMatches.iter](../port/src/regex_set.cj#L47) | 有样例验证 | SetMatchesIter 支持 next/nextBack 交错、耗尽后持续 None、clone 后独立游标；不复刻 Rust 借用或 IntoIterator trait。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py)、[set_test.cj](../examples/consumer/src/set_test.cj) |
 ## bytes::RegexSet
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [new](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regexset/bytes.rs#L158) | [BytesRegexSet.init](../port/src/bytes.cj#L788) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_sets.py](../tests/functional/set/verify_sets.py)、[verify_upstream_suite.py](../tests/functional/search/verify_upstream_suite.py)、[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 | [empty](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regexset/bytes.rs#L183) | [BytesRegexSet.init](../port/src/bytes.cj#L788) | 有明确差异 | empty 用空数组构造；doc(hidden) read_matches_at 使用 matchesReadAt 名称。 验证：[verify_sets.py](../tests/functional/set/verify_sets.py)、[verify_upstream_suite.py](../tests/functional/search/verify_upstream_suite.py)、[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
@@ -157,7 +157,7 @@
 | [patterns](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regexset/bytes.rs#L448) | [BytesRegexSet.patterns](../port/src/bytes.cj#L844) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_sets.py](../tests/functional/set/verify_sets.py)、[verify_upstream_suite.py](../tests/functional/search/verify_upstream_suite.py)、[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 ## bytes::SetMatches
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [matched_any](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regexset/bytes.rs#L481) | [SetMatches.matchedAny](../port/src/regex_set.cj#L21) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_sets.py](../tests/functional/set/verify_sets.py)、[set_test.cj](../examples/consumer/src/set_test.cj) |
 | [matched_all](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regexset/bytes.rs#L499) | [SetMatches.matchedAll](../port/src/regex_set.cj#L29) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_sets.py](../tests/functional/set/verify_sets.py)、[set_test.cj](../examples/consumer/src/set_test.cj) |
@@ -166,7 +166,7 @@
 | [iter](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/regexset/bytes.rs#L604) | [SetMatches.iter](../port/src/regex_set.cj#L47) | 有样例验证 | SetMatchesIter 支持 next/nextBack 交错、耗尽后持续 None、clone 后独立游标；不复刻 Rust 借用或 IntoIterator trait。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py)、[set_test.cj](../examples/consumer/src/set_test.cj) |
 ## string::RegexBuilder
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [new](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/builders.rs#L223) | [RegexBuilder.init](../port/src/builder.cj#L12) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 | [build](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/builders.rs#L232) | [RegexBuilder.build](../port/src/builder.cj#L15) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
@@ -184,7 +184,7 @@
 | [nest_limit](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/builders.rs#L774) | [RegexBuilder.nestLimit](../port/src/builder.cj#L57) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[bytes_test.cj](../examples/consumer/src/bytes_test.cj)、[capture_test.cj](../examples/consumer/src/capture_test.cj)、[search_test.cj](../examples/consumer/src/search_test.cj)、[syntax_test.cj](../examples/consumer/src/syntax_test.cj)、[text_test.cj](../examples/consumer/src/text_test.cj)、[tools_test.cj](../examples/consumer/src/tools_test.cj)、[unicode_test.cj](../examples/consumer/src/unicode_test.cj)、[verify_syntax.py](../tests/functional/syntax/verify_syntax.py)、[verify_limits.py](../tests/functional/syntax/verify_limits.py) |
 ## string::RegexSetBuilder
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [new](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/builders.rs#L798) | [RegexSetBuilder.init](../port/src/builder.cj#L84) | 有样例验证 | 支持直接从规则数组构造并保留快照，也保留无参构造和pattern追加；build时编译。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py)、[set_test.cj](../examples/consumer/src/set_test.cj)、[text_test.cj](../examples/consumer/src/text_test.cj) |
 | [build](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/builders.rs#L811) | [RegexSetBuilder.build](../port/src/builder.cj#L91) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
@@ -202,7 +202,7 @@
 | [nest_limit](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/builders.rs#L1350) | [RegexSetBuilder.nestLimit](../port/src/builder.cj#L133) | 有样例验证 | 四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 ## bytes::RegexBuilder
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [new](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/builders.rs#L1383) | [BytesRegexBuilder.init](../port/src/builder.cj#L160) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 | [build](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/builders.rs#L1392) | [BytesRegexBuilder.build](../port/src/builder.cj#L164) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
@@ -220,7 +220,7 @@
 | [nest_limit](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/builders.rs#L1953) | [BytesRegexBuilder.nestLimit](../port/src/builder.cj#L207) | 有样例验证 | 四种 Builder 显式设置全部选项，覆盖16组配置、6种模式；有限样例不证明所有组合。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |
 ## bytes::RegexSetBuilder
 
-| 上游方法 | 仓颉入口 | 状态 | 差异或证据 |
+| 原仓库方法 | 仓颉入口 | 状态 | 差异或证据 |
 |---|---|---|---|
 | [new](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/builders.rs#L1977) | [BytesRegexSetBuilder.init](../port/src/builder.cj#L236) | 有样例验证 | 支持直接从规则数组构造并保留快照，也保留无参构造和pattern追加；build时编译。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py)、[set_test.cj](../examples/consumer/src/set_test.cj)、[text_test.cj](../examples/consumer/src/text_test.cj) |
 | [build](https://github.com/rust-lang/regex/blob/72d650cb0a880a01ab6dc2137c0888e8f89740f7/src/builders.rs#L1990) | [BytesRegexSetBuilder.build](../port/src/builder.cj#L244) | 有样例验证 | 证据仅覆盖所列测试的输入，不代表任意输入的等价证明。 验证：[verify_api_contracts.py](../tests/functional/capture/verify_api_contracts.py) |

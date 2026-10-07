@@ -64,10 +64,10 @@ def documents(catalog, cases, run=None, case_results=None):
     stages = {s['name']: s['status'] for s in (run or {}).get('stages', [])}
     results = {c['id']: c['status'] for c in (case_results or {}).get('cases', [])}
     lines = ['# 按功能阅读测试', '',
-             '入口：`bash scripts/run.sh verify`。静态目录检查：`python3 scripts/feature_catalog.py --check`。', '',
+             '运行命令见 [README](../README.md)，已归档结果见 [测试结果](test-coverage.md)。本页是自动生成的案例目录，静态目录不表示实际运行结果。', '',
              '本目录区分**功能组 → 特性 → 具体案例**与尚未细分的批量回归证据。一个脚本可以覆盖多个特性；其通过不能证明整组功能完整。', '',
              '具名案例含输入、操作和独立预期，同时与固定 Rust 版本对照。批量套件保持原断言、固定种子、语料和跳过规则，不重复计数。', '',
-             '当前全部公开声明均有功能归属，但归属不是行为验证。逐接口特性审计尚未完成，详见 [接口归属](test-api-map.md)。', '',
+             '当前全部公开声明均有功能归属，但归属不是行为验证。逐接口特性审计尚未完成。完整声明见 [接口清单](api-catalog.md)，案例中的 `api_refs` 记录已核实的部分特性关联。', '',
              '范围边界以 [当前能力](status.md) 为准：不支持与未验证分开看；下列未验证项不表示功能不存在。', '']
     if run:
         lines += [f"运行编号：`{run['run_id']}`；本次结果：**{run['status']}**。未运行与失败分开显示。", '', run.get('scope', '完整验收'), '']
@@ -93,7 +93,7 @@ def documents(catalog, cases, run=None, case_results=None):
         lines += ['', '**未验证清单：** 尚未逐项关联所有公开接口与具体断言；未穷举配置交互、异常分支及极端输入。已有明确限制见当前能力文档。', '']
     lines += ['## 构建与交付（不计为功能特性通过）', '',
               '完整验收另执行数据一致性、接口清单、Python 工具测试、Rust/仓颉构建、仓颉原生测试及演示。', '',
-              '静态检查、打包和独立消费者另有 docs/validation/lint.json 与 package.json 证据；不自动复用为本次结果。跨平台、性能基准及代码分支覆盖率未纳入本流程。另可运行 `bash scripts/run.sh coverage` 测量本实现的代码行执行覆盖；执行过不代表行为穷尽。', '',
+              '跨平台、性能基准及代码分支覆盖率未纳入本流程。验收摘要与测量口径见 [测试结果](test-coverage.md)。运行方式见 [README](../README.md)。', '',
               '报告只展示实际执行结果，不生成原仓库完成百分比，也不把套件通过提升成全部特性通过。', '']
     items = json.loads((ROOT / 'docs/cangjie-api-inventory.json').read_text())['items']
     api = ['# 公开接口的功能归属', '', '由当前声明清单生成。包括重载、字段与类型；每条独立保留。', '',
@@ -122,7 +122,7 @@ def main():
     if run is not None:
         assert case_results and run['run_id'] == case_results['run_id'], 'case results belong to a different run'
     doc, api = documents(catalog, cases, run, case_results)
-    outputs = {args.output: doc} if args.output else {ROOT/'docs/testing.md':doc, ROOT/'docs/test-api-map.md':api}
+    outputs = {args.output: doc} if args.output else {ROOT/'docs/testing.md':doc}
     for path, content in outputs.items():
         if args.check:
             assert path.exists() and path.read_text() == content, f'stale catalog: {path}'

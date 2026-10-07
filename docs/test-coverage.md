@@ -1,17 +1,17 @@
-# 测试覆盖范围与复现
+# 测试结果与覆盖口径
 
 测试采用“功能 → 特性 → 输入与预期结果”的组织方式。详细案例见 [功能测试目录](testing.md)，受支持的能力边界见 [当前能力](status.md)。
 
 ## 本次实测结果
 
-仓颉 **1.1.3**，Apple Silicon macOS。完整验收成功结束，受测源码哈希已与当前工作区核对一致。
+仓颉 **1.1.3**，Apple Silicon macOS。完整验收成功结束，报告保留受测文件的 SHA-256，可核对记录对应的实现与测试快照。
 
 | 指标 | 结果 |
 |---|---:|
 | 功能组 | 15 |
 | 批量对照套件 | 47 个全部通过 |
-| 仓颉原生测试 | 77 项全部通过（原有 61 项，新增 16 项） |
-| 具名输入/预期案例 | 91 个全部通过（原有 44 个，新增 47 个） |
+| 仓颉原生测试 | 77 项全部通过 |
+| 具名输入/预期案例 | 91 个全部通过 |
 | Python 工具测试 | 15 项全部通过 |
 | 演示场景 | 13 个单模式 + 7 个分类，全部通过 |
 | 库代码可执行行 | 10883 / 11671，即 93.25% |
@@ -19,21 +19,11 @@
 
 公开声明数包含构造方法与重载，不是独立功能点数量。执行过仍不代表所有输入、分支及配置组合已穷举。
 
-证据：[完整验收](validation/latest.json)、[功能结果](validation/functional.md)、[逐项代码覆盖数据](validation/code-coverage.json)、[完整日志](validation/latest.log)。它们的运行编号一致；旧的打包、lint 和测试重组证据不视为本轮重新执行。
+证据：[完整验收](validation/latest.json)、[逐例结果](validation/feature-cases.json)、[逐项代码覆盖数据](validation/code-coverage.json)、[完整日志](validation/latest.log)。这些记录的运行编号一致。记录中的路径和步骤保留实际运行时的信息，不将后续文档整理视为重新执行完整验收。
 
-## 如何复现
+## 复现入口
 
-先按 README 配置仓颉 1.1.3、Python 和 Rust 工具链，再从项目根目录运行：
-
-```bash
-bash scripts/run.sh check       # 原生调用和用户演示，不需要 Rust
-bash scripts/run.sh verify      # 全部验收，包含 Rust 对照
-bash scripts/run.sh coverage    # 同一套完整验收，加代码执行覆盖测量
-```
-
-`coverage` 还需要仓颉 SDK 中的 `cjcov`。它在 `.build/coverage/run-*/` 建立全新副本并重新编译，不混入日常构建或历史覆盖记录。日志保存在 `.build/coverage/latest.log`，成功后写入 `.build/coverage/latest.json`。后者记录运行编号、编译器版本、受测源码哈希、逐文件未执行行及公开入口执行状态。具体副本路径也保存在报告中，可查看 HTML 明细和完整验收日志。
-
-代码及测试数据均来自本仓库。只需安装工具链；Rust 参考程序按锁文件下载依赖，不需要另备原仓库目录。
+环境、命令、输出目录与失败处理统一见 [README 的复现说明](../README.md#4-如何确认复现成功)。测试文件结构与维护见 [tests/README.md](../tests/README.md)。
 
 ## 各功能重点检查什么
 
@@ -57,7 +47,7 @@ bash scripts/run.sh coverage    # 同一套完整验收，加代码执行覆盖�
 
 DFA 序列化另做有效数据往返检查、每个截断位置的拒绝检查，以及头部篡改和尾部多余数据检查。仓颉格式只验证自身往返契约，不声称能读取 Rust 序列化格式。
 
-## 本次增加的回归保护
+## 重点边界检查
 
 - `Ast.walkUntil`、`Hir.walkUntil`：进入或离开回调返回 `false` 都必须立即停止，不能继续访问后续节点。
 - `ThompsonNfa`、`BoundedBacktracker`：捕获模式只接受 `0/1/2`，未知值必须报错。

@@ -22,5 +22,4 @@ regex-automata、regex-test及锁文件依赖。首次获取依赖需要网络�
 regex4cj-local目录、原仓库检出、Skills、Corpus或临时探针。
 .build为可删除的构建/验收输出目录，不是源码输入。
 
-本项目尚未完整实现原仓库全部公开行为，范围及差异见docs/status.md、
-docs/delivery-plan.md。通过样例验收不代表全量兼容或官方评分结论。
+本项目尚未完整实现原仓库全部公开行为，范围及差异见docs/status.md。通过样例验收不代表全量兼容或官方评分结论。

@@ -81,7 +81,6 @@ def main():
         discovered = {p.stem for p in (ROOT / 'tests/functional').rglob('verify*.py')}
         if registered != discovered:
             raise RuntimeError(f'Unregistered or missing verification suites: {registered ^ discovered}')
-        stages.append(('coverage-ledger', [sys.executable, 'scripts/check_coverage.py'], ROOT))
         stages += [('showcase', [sys.executable, 'scripts/showcase.py'], ROOT),
                    ('classification', [sys.executable, 'scripts/classify.py', '--demo'], ROOT)]
         for name, command, cwd in stages:

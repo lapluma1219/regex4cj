@@ -37,7 +37,7 @@ EOF
 }
 need() {
   if ! command -v "$1" >/dev/null 2>&1; then
-    echo "缺少命令：$1。请按 docs/getting-started.md 配置环境。" >&2
+    echo "缺少命令：$1。请按 README.md 配置环境。" >&2
     exit 2
   fi
 }

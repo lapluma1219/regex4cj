@@ -16,7 +16,7 @@
 | 运行本文的演示命令和仓颉测试 | 上述环境，加 Python 3.9 或更新版本 |
 | 执行完整的 Rust/仓颉结果对照 | 上述环境，加 Git、Rust/Cargo；首次下载依赖需要网络 |
 
-macOS 还需安装 Command Line Tools 或提供兼容的系统 SDK。若遇到链接错误，请看[环境与故障处理](docs/getting-started.md)。仓颉 SDK 需自行安装，不包含在本仓库中。
+macOS 还需安装 Command Line Tools 或提供兼容的系统 SDK。若遇到链接错误，请看本文第 6 节的环境故障处理。仓颉 SDK 需自行安装，不包含在本仓库中。
 
 ### 获取代码并指定 SDK
 
@@ -150,7 +150,7 @@ regex4cj = { path = "../regex4cj/port" }
 
 覆盖率命令的详细日志位于 `.build/coverage/latest.log`，报告记录各源码文件未执行的行，以及公开接口是否被执行。它衡量本仓库代码的执行范围，不能解释为原仓库完成度或所有行为组合均已验证。
 
-只有 `verification-run.json` 中的 `status: passed` 才表示整次完整验收通过。仓库中的 [已归档报告](docs/validation/functional.md) 是此前执行的证据，不代替你本机新运行的结果。
+只有 `verification-run.json` 中的 `status: passed` 才表示整次完整验收通过。仓库中的 [已归档报告](docs/validation/latest.json) 是此前执行的证据，不代替你本机新运行的结果。
 
 原仓库参考语料和 Unicode 数据已包含在仓库内。完整验证不需要本机另存一份原仓库源码；Rust 参考程序由 Cargo 按固定提交和锁文件获取。默认缓存放在 `.build/`，仓颉构建产物放在各包的 `target/`。可通过 `REGEX4CJ_LOCAL` 更改缓存与报告目录，它不是额外源码依赖。
 
@@ -187,7 +187,48 @@ bash scripts/run.sh classify '订单 AB-123 需要退款，也需要开发票'
 | 匹配位置看起来比字符数大 | 返回的是 UTF-8 字节偏移 |
 | 模式报错或没有结果 | 先用本文固定输入复现，再检查规则、引号和支持范围 |
 
-系统 SDK、动态库、打包以及独立克隆复现的详细说明见[上手与故障指南](docs/getting-started.md)。
+### SDK 路径、动态库与版本切换
+
+如果提示“缺少命令 cjc”，在当前终端设置已安装 SDK 的实际路径，再运行构建：
+
+```sh
+export CANGJIE_HOME="/实际安装目录/cangjie-1.1.3"
+bash scripts/run.sh build
+```
+
+新开终端后需重新设置环境变量。`run.sh` 会配置编译器、项目管理器及运行库路径；直接运行生成的二进制如果提示动态库缺失，优先通过这个入口运行。
+
+macOS 的系统 SDK 不兼容时，可通过 `export SDKROOT="/兼容的MacOSX.sdk路径"` 指定已安装的版本。切换仓颉 SDK 版本后，应清理三个包的旧构建缓存再重新构建：
+
+```sh
+bash -c '
+source scripts/env.sh
+for package in port cli examples/consumer; do
+  (cd "$package" && cjpm clean) || exit 1
+done
+'
+bash scripts/run.sh build
+```
+
+出现 `unused import` 或测试辅助函数的 `unused function` 警告不等于构建失败；以命令退出码及最终构建结果为准。
+
+### 可选：构建仓颉制品包
+
+```sh
+bash -c '
+source scripts/env.sh
+cd port
+cjpm bundle
+'
+```
+
+当前版本的产物为 `port/target/regex4cj-0.3.0.cjp`。macOS 上若打包工具提示 OpenSSL 动态库问题，可在已配置 SDK 的环境中将已安装的 OpenSSL 3 库目录加入 `DYLD_LIBRARY_PATH` 后重试；不要将本机绝对路径写入项目清单。打包成功不等于已经发布到中心仓。
+
+### 完整验收耗时与失败定位
+
+`verify` 或 `coverage` 需要 Rust/Cargo；首次获取依赖需要网络。覆盖率命令已经包含完整验收，不必紧接着重复执行 `verify`。命令可能超过十分钟：`coverage` 的进度可以通过另一个终端的 `tail -f .build/coverage/latest.log` 查看。
+
+验收失败时，先查看报告中最后一个步骤及其日志。`verification.json` 只有部分计数，不能独立证明全套通过。重新克隆项目并使用新的缓存目录可以检查独立复现；工具链仍需按本文配置。
 
 ## 7. 代码和文档在哪里
 
@@ -203,6 +244,6 @@ bash scripts/run.sh classify '订单 AB-123 需要退款，也需要开发票'
 | `docs/`、`data/` | 使用文档、验收记录与 Unicode 数据 |
 | `presentation/` | 项目汇报材料 |
 
-进一步阅读：[学习指南](docs/learning-guide.md)、[测试结构](tests/README.md)、[功能与特性目录](docs/testing.md)、[接口对应审计](docs/api-audit.md)、[语法结构说明](docs/hir.md)。原仓库固定版本记录在 [baseline.json](docs/baseline.json)。
+进一步阅读：[文档索引](docs/README.md)、[测试结构](tests/README.md)、[功能与特性目录](docs/testing.md)、[原仓库接口对应](docs/api-audit-methods.md)、[语法结构说明](docs/hir.md)。原仓库固定版本记录在 [baseline.json](docs/baseline.json)。
 
 代码采用 MIT OR Apache-2.0，Unicode 数据遵循其独立许可证，见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
